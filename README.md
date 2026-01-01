@@ -1,5 +1,10 @@
-# Diffuse
+<p align="center" width="100%">
+    <img width="25%" src="Assets/Diffuse-Logo-512.png">
+</p> 
+
 `Diffuse` is a Windows desktop UI for `Huggingface Diffusers`. It integrates directly with Python using the Python C API via `CSnakes`, enabling high-performance interop between .NET and Python for running diffusion models.
+
+---
 
 ## Features
 - Automatic installation of isolated portable Python
