@@ -57,3 +57,13 @@
 <p align="center" width="100%">
     <img src="Screenshots/ImgeEdit-Multi.png">
 </p> 
+
+### TextToVideo
+<p align="center" width="100%">
+    <img src="Screenshots/TextToVideo.png">
+</p> 
+
+### ImageToVideo
+<p align="center" width="100%">
+    <img src="Screenshots/ImageToVideo.png">
+</p> 
