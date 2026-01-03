@@ -1,0 +1,146 @@
+﻿<Views:ViewBase x:Class="Diffuse.Views.ImageToImageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:Diffuse.Views"
+    xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
+    xmlns:Controls="clr-namespace:Diffuse.Controls"
+    xmlns:Views="clr-namespace:Diffuse.Views">
+    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ImageToImageView}}}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="360"/>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="4*" />
+            </Grid.ColumnDefinitions>
+
+
+            <!--***Left Panel***-->
+            <Grid Grid.Column="0">
+                <Border Margin="4">
+                    <DockPanel x:Name="LeftPanelContainer" Margin="4">
+
+                        <!--ModelControl-->
+                        <StackPanel DockPanel.Dock="Top" IsEnabled="{Binding DiffusionService.IsLoading, Converter={StaticResource InverseBoolConverter}}">
+                            <Grid IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}">
+                                <Controls:DiffusionModelControl
+                                    ProcessType="ImageToImage"
+                                    IsLoraSupported="True"
+                                    IsUpscalerSupported="True"
+                                    IsExtractorSupported="True"
+                                    Settings="{Binding Settings, Mode=OneWay}" 
+                                    CurrentPipeline="{Binding CurrentPipeline, Mode=TwoWay}"
+                                    SelectionChanged="SelectedPipelineChanged"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <DockPanel DockPanel.Dock="Bottom">
+
+                            <!--Execute/Cancel-->
+                            <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="30" >
+                                <Button Content="Cancel" Command="{Binding CancelCommand}" />
+                                <Button Content="Generate" Command="{Binding ExecuteCommand}" />
+                            </UniformGrid>
+
+                            <!--InputControl-->
+                            <Grid IsEnabled="{Binding DiffusionService.IsLoaded}">
+                                <Controls:DiffusionInputControl 
+                                    ProcessType="ImageToImage"
+                                    Options="{Binding Options}"
+                                    Pipeline="{Binding CurrentPipeline}" 
+                                    IsImageInputEnabled="True"
+                                    IsControlNetEnabled="False"
+                                    IsEnabled="{Binding CurrentPipeline, Converter={StaticResource InverseNullBooleanConverter}}"/>
+                            </Grid>
+
+                        </DockPanel>
+                    </DockPanel>
+                </Border>
+            </Grid>
+
+
+            <!--GridSplitter-->
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5" Opacity=".4" Margin="0,20" />
+
+
+            <!--***Middle Panel***-->
+            <Grid Grid.Column="2" Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="0" />
+                </Grid.ColumnDefinitions>
+
+
+                <!--Content-->
+                <DockPanel Grid.Column="0" >
+                    <CommonControls:ProgressElement  
+                        DockPanel.Dock="Bottom"
+                        Height="20"
+                        Margin="14,0,14,8"
+                        Progress="{Binding Progress}" />
+
+                    <Border Margin="4">
+                        <UniformGrid Columns="2">
+                            <Border Margin="10" Style="{StaticResource ImageDropZoneStyle}" IsEnabled="{Binding DiffusionService.IsLoaded}">
+                                <CommonControls:ImageElement 
+                                    AllowDrop="True"
+                                    CropWidth="{Binding Options.Width}"
+                                    CropHeight="{Binding Options.Height}"
+                                    SplitterVisibility="Auto"
+                                    SplitterPosition="Source"
+                                    SplitterDirection="LeftToRight"
+                                    Source="{Binding SourceImage, Mode=TwoWay}" 
+                                    IsLoadEnabled="True" 
+                                    IsSaveEnabled="False"
+                                    IsLoadOverlayEnabled="False"
+                                    IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
+                            </Border>
+                            <Grid Margin="10" >
+                                <CommonControls:ImageElement 
+                                    SplitterVisibility="Auto"
+                                    SplitterPosition="Source"
+                                    SplitterDirection="LeftToRight"
+                                    Source="{Binding ResultImage, Mode=TwoWay}" 
+                                    OverlaySource="{Binding CompareImage, Mode=TwoWay}" 
+                                    IsLoadEnabled="False" 
+                                    IsLoadOverlayEnabled="False"/>
+                            </Grid>
+                        </UniformGrid>
+                    </Border>
+                </DockPanel>
+
+
+                <!--GridSplitter-->
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5" Opacity=".4" Margin="0,20"/>
+
+
+                <!--***Right Panel***-->
+                <Grid Grid.Column="2" >
+                    <Border Margin="4">
+                        <DockPanel Margin="4">
+
+                            <!--Debug Panel-->
+                            <StackPanel DockPanel.Dock="Bottom" Margin="4">
+                                <TextBlock Text="{Binding CurrentPipeline.Device.Type, StringFormat={}Device: {0}}" />
+                                <TextBlock Text="{Binding CurrentPipeline.Device.DeviceId, StringFormat={}DeviceId: {0}}" />
+                                <TextBlock Text="{Binding CurrentPipeline.DiffusionModel.Name, StringFormat={}Model: {0}}" />
+                                <TextBlock Text="{Binding DiffusionService.IsLoaded, StringFormat={}IsLoaded: {0}}" />
+                                <TextBlock Text="{Binding DiffusionService.IsLoading, StringFormat={}IsLoading: {0}}" />
+                                <TextBlock Text="{Binding DiffusionService.IsExecuting, StringFormat={}IsExecuting: {0}}" />
+                                <TextBlock Text="{Binding DiffusionService.CanCancel, StringFormat={}CanCancel: {0}}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Views:ViewBase>
