@@ -2,7 +2,7 @@
     <img width="25%" src="Assets/Diffuse-Logo-512.png">
 </p> 
 
-`Diffuse` is a Windows desktop UI for `Huggingface Diffusers`. It integrates directly with Python using the Python C API via `CSnakes`, enabling high-performance interop between .NET and Python for running diffusion models.
+Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/huggingface/diffusers). It integrates directly with Python using the Python C API via [CSnakes](https://github.com/tonybaloney/CSnakes), enabling high-performance interop between .NET and Python for running diffusion models.
 
 ---
 
@@ -15,43 +15,22 @@
 
 
 ## Supported Pipelines
-**Z-Image**
-- ZImagePipeline
-- ZImageImg2ImgPipeline
-
-**Qwen Image**
-- QwenImagePipeline
-- QwenImageImg2ImgPipeline
-- QwenImageEditPlusPipeline
-
-**FLUX.1**
-- FluxPipeline
-- FluxImg2ImgPipeline
-- FluxKontextPipeline
-- FluxControlNetPipeline
-
-**FLUX.2**
-- Flux2Pipeline
-
-**Chroma**
-- ChromaPipeline
-- ChromaImg2ImgPipeline
-
-**Wan Video**
-- WanPipeline
-- WanImageToVideoPipeline
-
-**StableDiffusionXL**
-- StableDiffusionXLPipeline
-- StableDiffusionXLImg2ImgPipeline
-- StableDiffusionXLControlNetPipeline
-- StableDiffusionXLControlNetImg2ImgPipeline
+- **Z-Image:** ZImagePipeline, ZImageImg2ImgPipeline
+- **Qwen Image:** QwenImagePipeline, QwenImageImg2ImgPipeline, QwenImageEditPlusPipeline
+- **FLUX.1:** FluxPipeline, FluxImg2ImgPipeline, FluxKontextPipeline, FluxControlNetPipeline
+- **FLUX.2:** Flux2Pipeline
+- **Chroma:** ChromaPipeline, ChromaImg2ImgPipeline
+- **LTX-Video:** LTXPipeline, LTXImageToVideoPipeline
+- **Wan Video:** WanPipeline, WanImageToVideoPipeline
+- **CogVideoX:** CogVideoXPipeline, CogVideoXImageToVideoPipeline, CogVideoXVideoToVideoPipeline
+- **Kandinsky5:** Kandinsky5T2IPipeline, Kandinsky5I2IPipeline, Kandinsky5T2VPipeline, Kandinsky5I2VPipeline
+- **StableDiffusionXL:** StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline, StableDiffusionXLControlNetPipeline, StableDiffusionXLControlNetImg2ImgPipeline
 
 ---
 
 ## Installation
 
-1. Download and extract **Diffuse.zip**  
+1. Download and extract **Diffuse_XXXX.zip**  
    *A fast SSD with plenty of free space is recommended, as model downloads can be large.*
 
 2. Run **Diffuse.exe**
@@ -82,6 +61,7 @@ Proof of concept, Focus on core functionality.
 ### Beta
 Focus on usability, stability, and feature expansion.
 - Fully isolated Python execution
+- Multiple virtual environments
 - Installer and deployment tooling
 - Advanced UI and workflow options
 - ControlNet support
@@ -95,30 +75,30 @@ Focus on usability, stability, and feature expansion.
 
 ### TextToImage
 <p align="center" width="100%">
-    <img src="Screenshots/TextToImage.png">
+    <img src="Assets/Screenshots/TextToImage.png">
 </p> 
 
 ### ImageToImage
 <p align="center" width="100%">
-    <img src="Screenshots/ImageToImage.png">
+    <img src="Assets/Screenshots/ImageToImage.png">
 </p> 
 
 ### ImageEdit
 <p align="center" width="100%">
-    <img src="Screenshots/ImgeEdit.png">
+    <img src="Assets/Screenshots/ImgeEdit.png">
 </p> 
 
 ### ImageEdit-Multi
 <p align="center" width="100%">
-    <img src="Screenshots/ImgeEdit-Multi.png">
+    <img src="Assets/Screenshots/ImgeEdit-Multi.png">
 </p> 
 
 ### TextToVideo
 <p align="center" width="100%">
-    <img src="Screenshots/TextToVideo.png">
+    <img src="Assets/Screenshots/TextToVideo.png">
 </p> 
 
 ### ImageToVideo
 <p align="center" width="100%">
-    <img src="Screenshots/ImageToVideo.png">
+    <img src="Assets/Screenshots/ImageToVideo.png">
 </p> 
