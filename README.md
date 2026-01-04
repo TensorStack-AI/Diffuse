@@ -4,6 +4,11 @@
 
 Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/huggingface/diffusers). It integrates directly with Python using the Python C API via [CSnakes](https://github.com/tonybaloney/CSnakes), enabling high-performance interop between .NET and Python for running diffusion models.
 
+
+![GitHub Release](https://img.shields.io/github/v/release/TensorStack-AI/Diffuse?label=version&color=%2344cc11)
+![GitHub all releases](https://img.shields.io/github/downloads/TensorStack-AI/Diffuse/total)
+![GitHub last commit](https://img.shields.io/github/last-commit/TensorStack-AI/Diffuse)
+[![Discord](https://img.shields.io/discord/1457477275246268451?label=Discord&)](https://discord.gg/ptgMMv36Xu)
 ---
 
 ## Features
