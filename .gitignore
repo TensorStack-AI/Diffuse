@@ -347,4 +347,5 @@ site/
 docker-test-output/*
 
 *.otf
+*.pubxml
 

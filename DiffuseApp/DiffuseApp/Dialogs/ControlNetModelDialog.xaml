@@ -1,0 +1,49 @@
+﻿<CommonControls:DialogControl x:Class="Diffuse.Dialogs.ControlNetModelDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Diffuse.Dialogs"
+        xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
+        mc:Ignorable="d"
+        MinWidth="400"
+        MaxWidth="400"
+        Title="ControlNet"
+        Icon="{StaticResource ImageIcon}"
+        Style="{StaticResource {x:Type CommonControls:DialogControl}}">
+    <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ControlNetModelDialog}}}" Margin="15, 15, 15, 10">
+
+        <!--Model Settings-->
+        <StackPanel DockPanel.Dock="Top" Margin="10">
+            <StackPanel>
+                <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}"/>
+                <TextBox Text="{Binding ControlNetModel.Name, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="ModelUrl" Style="{StaticResource FieldTextBlockStyle}"/>
+                <TextBox Text="{Binding ControlNetModel.Path, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Pipeline" Style="{StaticResource FieldTextBlockStyle}"/>
+                <ComboBox ItemsSource="{Binding Pipelines}" SelectedItem="{Binding ControlNetModel.Pipeline}" SelectedIndex="0" />
+            </StackPanel>
+        </StackPanel>
+
+        <!--Save/Cancel/Errors-->
+        <DockPanel DockPanel.Dock="Bottom" Height="30" Margin="0,15,0,0">
+            <UniformGrid DockPanel.Dock="Right" Columns="2" >
+                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" IsDefault="True"/>
+                <Button Content="Cancel" Command="{Binding CancelCommand}"/>
+            </UniformGrid>
+            <ItemsControl ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Foreground="IndianRed" TextWrapping="Wrap" FontSize="11"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+
+        <TextBlock/>
+    </DockPanel>
+</CommonControls:DialogControl>
