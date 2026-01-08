@@ -22,6 +22,7 @@ namespace Diffuse.Common
         public int ScaleFactor { get; set; } = 1;
         public Normalization Normalization { get; set; } = Normalization.ZeroToOne;
         public Normalization OutputNormalization { get; set; } = Normalization.OneToOne;
+        public UpscaleInputOptions DefaultOptions { get; set; }
         public string[] UrlPaths { get; set; }
 
 

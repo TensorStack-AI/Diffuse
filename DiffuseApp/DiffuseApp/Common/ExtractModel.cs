@@ -9,7 +9,7 @@ using TensorStack.WPF.Services;
 
 namespace Diffuse.Common
 {
-    public class ExtractorModel : BaseModel
+    public class ExtractModel : BaseModel
     {
         private bool _isValid;
 
@@ -23,6 +23,7 @@ namespace Diffuse.Common
         public Normalization OutputNormalization { get; set; } = Normalization.OneToOne;
         public int OutputChannels { get; set; }
         public bool IsDynamicOutput { get; set; }
+        public ExtractInputOptions DefaultOptions { get; set; }
         public string[] UrlPaths { get; set; }
 
 

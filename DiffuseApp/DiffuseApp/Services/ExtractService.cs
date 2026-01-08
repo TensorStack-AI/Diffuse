@@ -14,23 +14,24 @@ using TensorStack.Video;
 
 namespace Diffuse.Services
 {
-    public class ExtractorService : ServiceBase, IExtractorService
+    public class ExtractService : ServiceBase, IExtractService
     {
         private readonly Settings _settings;
         private readonly IMediaService _mediaService;
         private PipelineModel _currentPipeline;
-        private IPipeline _extractorPipeline;
+        private IPipeline _extractPipeline;
         private CancellationTokenSource _cancellationTokenSource;
         private bool _isLoaded;
         private bool _isLoading;
         private bool _isExecuting;
         private ExtractorConfig _currentConfig;
+        private ExtractInputOptions _defaultOptions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExtractorService"/> class.
+        /// Initializes a new instance of the <see cref="ExtractService"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public ExtractorService(Settings settings, IMediaService mediaService)
+        public ExtractService(Settings settings, IMediaService mediaService)
         {
             _settings = settings;
             _mediaService = mediaService;
@@ -41,6 +42,11 @@ namespace Diffuse.Services
         /// Gets the pipeline.
         /// </summary>
         public PipelineModel Pipeline => _currentPipeline;
+
+        /// <summary>
+        /// Gets the default options.
+        /// </summary>
+        public ExtractInputOptions DefaultOptions => _defaultOptions;
 
         /// <summary>
         /// Gets a value indicating whether this instance is loaded.
@@ -88,17 +94,18 @@ namespace Diffuse.Services
                 using (_cancellationTokenSource = new CancellationTokenSource())
                 {
                     var cancellationToken = _cancellationTokenSource.Token;
-                    if (_extractorPipeline != null)
+                    if (_extractPipeline != null)
                     {
-                        if (_currentConfig.Path == pipeline.ExtractorModel.Path)
+                        if (_currentConfig.Path == pipeline.ExtractModel.Path)
                             return; // Already loaded
 
-                        await _extractorPipeline.UnloadAsync(cancellationToken);
+                        await _extractPipeline.UnloadAsync(cancellationToken);
                     }
 
                     _currentPipeline = pipeline;
                     var device = _currentPipeline.Device;
-                    var model = _currentPipeline.ExtractorModel;
+                    var model = _currentPipeline.ExtractModel;
+                    _defaultOptions = model.DefaultOptions;
                     _currentConfig = new ExtractorConfig
                     {
                         Path = model.Path,
@@ -111,19 +118,20 @@ namespace Diffuse.Services
                     };
 
                     _currentConfig.SetProvider(device.GetProvider());
-                    _extractorPipeline = model.Type switch
+                    _extractPipeline = model.Type switch
                     {
                         ExtractorType.Pose => PosePipeline.Create(_currentConfig),
                         ExtractorType.Background => BackgroundPipeline.Create(_currentConfig),
                         _ => ExtractorPipeline.Create(_currentConfig)
                     };
-                    await Task.Run(() => _extractorPipeline.LoadAsync(cancellationToken), cancellationToken);
+
+                    await Task.Run(() => _extractPipeline.LoadAsync(cancellationToken), cancellationToken);
                 }
             }
             catch (OperationCanceledException)
             {
-                _extractorPipeline?.Dispose();
-                _extractorPipeline = null;
+                _extractPipeline?.Dispose();
+                _extractPipeline = null;
                 _currentConfig = null;
                 _currentPipeline = null;
                 throw;
@@ -140,16 +148,16 @@ namespace Diffuse.Services
         /// Execute the image ExtractorPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> ExecuteAsync(ExtractorImageRequest options)
+        public async Task<ImageTensor> ExecuteAsync(ExtractImageRequest request)
         {
             try
             {
                 IsExecuting = true;
-                var imageTensor = _currentPipeline.ExtractorModel.Type switch
+                var imageTensor = _currentPipeline.ExtractModel.Type switch
                 {
-                    ExtractorType.Default => await ExecuteDefaultAsync(options),
-                    ExtractorType.Background => await ExecuteBackgroundAsync(options),
-                    ExtractorType.Pose => await ExecutePoseAsync(options),
+                    ExtractorType.Default => await ExecuteDefaultAsync(request),
+                    ExtractorType.Background => await ExecuteBackgroundAsync(request),
+                    ExtractorType.Pose => await ExecutePoseAsync(request),
                     _ => throw new NotImplementedException()
                 };
 
@@ -162,16 +170,16 @@ namespace Diffuse.Services
         }
 
 
-        public async Task<VideoInputStream> ExecuteAsync(ExtractorVideoRequest options, IProgress<RunProgress> progressCallback)
+        public async Task<VideoInputStream> ExecuteAsync(ExtractVideoRequest request, IProgress<RunProgress> progressCallback)
         {
             try
             {
                 IsExecuting = true;
-                var videoStream = _currentPipeline.ExtractorModel.Type switch
+                var videoStream = _currentPipeline.ExtractModel.Type switch
                 {
-                    ExtractorType.Default => await ExecuteDefaultAsync(options, progressCallback),
-                    ExtractorType.Background => await ExecuteBackgroundAsync(options, progressCallback),
-                    ExtractorType.Pose => await ExecutePoseAsync(options, progressCallback),
+                    ExtractorType.Default => await ExecuteDefaultAsync(request, progressCallback),
+                    ExtractorType.Background => await ExecuteBackgroundAsync(request, progressCallback),
+                    ExtractorType.Pose => await ExecutePoseAsync(request, progressCallback),
                     _ => throw new NotImplementedException()
                 };
 
@@ -190,19 +198,19 @@ namespace Diffuse.Services
         /// Execute the image ExtractorPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecuteDefaultAsync(ExtractorImageRequest options)
+        private async Task<ImageTensor> ExecuteDefaultAsync(ExtractImageRequest request)
         {
-            var pipeline = _extractorPipeline as ExtractorPipeline;
+            var pipeline = _extractPipeline as ExtractorPipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
                 return await Task.Run(() => pipeline.RunAsync(new ExtractorImageOptions
                 {
-                    Image = options.Image,
-                    IsInverted = options.IsInverted,
-                    MaxTileSize = options.MaxTileSize,
-                    TileMode = options.TileMode,
-                    TileOverlap = options.TileOverlap,
-                    MergeInput = options.MergeInput
+                    Image = request.Image,
+                    IsInverted = request.Options.IsInverted,
+                    MaxTileSize = request.Options.TileSize,
+                    TileMode = request.Options.TileMode,
+                    TileOverlap = request.Options.TileOverlap,
+                    MergeInput = request.Options.MergeInput
                 }, cancellationToken: _cancellationTokenSource.Token));
             }
         }
@@ -212,15 +220,15 @@ namespace Diffuse.Services
         /// Execute the image BackgroundPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecuteBackgroundAsync(ExtractorImageRequest options)
+        private async Task<ImageTensor> ExecuteBackgroundAsync(ExtractImageRequest request)
         {
-            var pipeline = _extractorPipeline as BackgroundPipeline;
+            var pipeline = _extractPipeline as BackgroundPipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
                 return await Task.Run(() => pipeline.RunAsync(new BackgroundImageOptions
                 {
-                    Mode = options.Mode,
-                    Image = options.Image
+                    Image = request.Image,
+                    Mode = request.Options.Mode
                 }, cancellationToken: _cancellationTokenSource.Token));
             }
         }
@@ -230,22 +238,22 @@ namespace Diffuse.Services
         /// Execute the image PosePipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecutePoseAsync(ExtractorImageRequest options)
+        private async Task<ImageTensor> ExecutePoseAsync(ExtractImageRequest request)
         {
-            var pipeline = _extractorPipeline as PosePipeline;
+            var pipeline = _extractPipeline as PosePipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
                 return await Task.Run(() => pipeline.RunAsync(new PoseImageOptions
                 {
-                    Image = options.Image,
-                    BodyConfidence = options.BodyConfidence,
-                    BoneRadius = options.BoneRadius,
-                    BoneThickness = options.BoneThickness,
-                    ColorAlpha = options.ColorAlpha,
-                    Detections = options.Detections,
-                    IsTransparent = options.IsTransparent,
-                    JointConfidence = options.JointConfidence,
-                    JointRadius = options.JointRadius,
+                    Image = request.Image,
+                    BodyConfidence = request.Options.BodyConfidence,
+                    BoneRadius = request.Options.BoneRadius,
+                    BoneThickness = request.Options.BoneThickness,
+                    ColorAlpha = request.Options.ColorAlpha,
+                    Detections = request.Options.Detections,
+                    IsTransparent = request.Options.IsTransparent,
+                    JointConfidence = request.Options.JointConfidence,
+                    JointRadius = request.Options.JointRadius,
                 }, cancellationToken: _cancellationTokenSource.Token));
             }
         }
@@ -254,16 +262,16 @@ namespace Diffuse.Services
         /// <summary>
         /// Execute the video ExtractorPipeline
         /// </summary>
-        /// <param name="options">The options.</param>
+        /// <param name="request">The options.</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <returns>A Task&lt;VideoInputStream&gt; representing the asynchronous operation.</returns>
-        private async Task<VideoInputStream> ExecuteDefaultAsync(ExtractorVideoRequest options, IProgress<RunProgress> progressCallback)
+        private async Task<VideoInputStream> ExecuteDefaultAsync(ExtractVideoRequest request, IProgress<RunProgress> progressCallback)
         {
-            var pipeline = _extractorPipeline as ExtractorPipeline;
+            var pipeline = _extractPipeline as ExtractorPipeline;
             var resultVideoFile = FileHelper.RandomFileName(_settings.DirectoryTemp, "mp4");
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
-                var frameCount = options.VideoStream.FrameCount;
+                var frameCount = request.VideoStream.FrameCount;
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 async Task<VideoFrame> FrameProcessor(VideoFrame frame)
@@ -271,18 +279,18 @@ namespace Diffuse.Services
                     var processedFrame = await pipeline.RunAsync(new ExtractorImageOptions
                     {
                         Image = frame.Frame,
-                        IsInverted = options.IsInverted,
-                        MaxTileSize = options.MaxTileSize,
-                        TileMode = options.TileMode,
-                        TileOverlap = options.TileOverlap,
-                        MergeInput = options.MergeInput
+                        IsInverted = request.Options.IsInverted,
+                        MaxTileSize = request.Options.TileSize,
+                        TileMode = request.Options.TileMode,
+                        TileOverlap = request.Options.TileOverlap,
+                        MergeInput = request.Options.MergeInput
                     }, cancellationToken: cancellationToken);
 
                     progressCallback.Report(new RunProgress(frame.Index, frameCount));
                     return new VideoFrame(frame.Index, processedFrame, frame.SourceFrameRate, frame.AuxFrame);
                 }
 
-                return await _mediaService.SaveWithAudioAsync(options.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
+                return await _mediaService.SaveWithAudioAsync(request.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
             }
         }
 
@@ -290,16 +298,16 @@ namespace Diffuse.Services
         /// <summary>
         /// Execute the video BackgroundPipeline
         /// </summary>
-        /// <param name="options">The options.</param>
+        /// <param name="request">The options.</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <returns>A Task&lt;VideoInputStream&gt; representing the asynchronous operation.</returns>
-        private async Task<VideoInputStream> ExecuteBackgroundAsync(ExtractorVideoRequest options, IProgress<RunProgress> progressCallback)
+        private async Task<VideoInputStream> ExecuteBackgroundAsync(ExtractVideoRequest request, IProgress<RunProgress> progressCallback)
         {
-            var pipeline = _extractorPipeline as BackgroundPipeline;
+            var pipeline = _extractPipeline as BackgroundPipeline;
             var resultVideoFile = FileHelper.RandomFileName(_settings.DirectoryTemp, "mp4");
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
-                var frameCount = options.VideoStream.FrameCount;
+                var frameCount = request.VideoStream.FrameCount;
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 async Task<VideoFrame> FrameProcessor(VideoFrame frame)
@@ -307,7 +315,7 @@ namespace Diffuse.Services
                     var processedFrame = await pipeline.RunAsync(new BackgroundImageOptions
                     {
                         Image = frame.Frame,
-                        Mode = options.Mode,
+                        Mode = request.Options.Mode,
                         IsTransparentSupported = false
                     }, cancellationToken: cancellationToken);
 
@@ -315,7 +323,7 @@ namespace Diffuse.Services
                     return new VideoFrame(frame.Index, processedFrame, frame.SourceFrameRate, frame.AuxFrame);
                 }
 
-                return await _mediaService.SaveWithAudioAsync(options.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
+                return await _mediaService.SaveWithAudioAsync(request.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
             }
         }
 
@@ -323,16 +331,16 @@ namespace Diffuse.Services
         /// <summary>
         /// Execute the video PosePipeline
         /// </summary>
-        /// <param name="options">The options.</param>
+        /// <param name="request">The options.</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <returns>A Task&lt;VideoInputStream&gt; representing the asynchronous operation.</returns>
-        private async Task<VideoInputStream> ExecutePoseAsync(ExtractorVideoRequest options, IProgress<RunProgress> progressCallback)
+        private async Task<VideoInputStream> ExecutePoseAsync(ExtractVideoRequest request, IProgress<RunProgress> progressCallback)
         {
-            var pipeline = _extractorPipeline as PosePipeline;
+            var pipeline = _extractPipeline as PosePipeline;
             var resultVideoFile = FileHelper.RandomFileName(_settings.DirectoryTemp, "mp4");
             using (_cancellationTokenSource = new CancellationTokenSource())
             {
-                var frameCount = options.VideoStream.FrameCount;
+                var frameCount = request.VideoStream.FrameCount;
                 var cancellationToken = _cancellationTokenSource.Token;
 
                 async Task<VideoFrame> FrameProcessor(VideoFrame frame)
@@ -340,21 +348,21 @@ namespace Diffuse.Services
                     var processedFrame = await pipeline.RunAsync(new PoseImageOptions
                     {
                         Image = frame.Frame,
-                        BodyConfidence = options.BodyConfidence,
-                        BoneRadius = options.BoneRadius,
-                        BoneThickness = options.BoneThickness,
-                        ColorAlpha = options.ColorAlpha,
-                        Detections = options.Detections,
-                        IsTransparent = options.IsTransparent,
-                        JointConfidence = options.JointConfidence,
-                        JointRadius = options.JointRadius,
+                        BodyConfidence = request.Options.BodyConfidence,
+                        BoneRadius = request.Options.BoneRadius,
+                        BoneThickness = request.Options.BoneThickness,
+                        ColorAlpha = request.Options.ColorAlpha,
+                        Detections = request.Options.Detections,
+                        IsTransparent = request.Options.IsTransparent,
+                        JointConfidence = request.Options.JointConfidence,
+                        JointRadius = request.Options.JointRadius,
                     }, cancellationToken: cancellationToken);
 
                     progressCallback.Report(new RunProgress(frame.Index, frameCount));
                     return new VideoFrame(frame.Index, processedFrame, frame.SourceFrameRate, frame.AuxFrame);
                 }
 
-                return await _mediaService.SaveWithAudioAsync(options.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
+                return await _mediaService.SaveWithAudioAsync(request.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
             }
         }
 
@@ -373,12 +381,12 @@ namespace Diffuse.Services
         /// </summary>
         public async Task UnloadAsync()
         {
-            if (_extractorPipeline != null)
+            if (_extractPipeline != null)
             {
                 await _cancellationTokenSource.SafeCancelAsync();
-                await _extractorPipeline.UnloadAsync();
-                _extractorPipeline?.Dispose();
-                _extractorPipeline = null;
+                await _extractPipeline.UnloadAsync();
+                _extractPipeline?.Dispose();
+                _extractPipeline = null;
                 _currentConfig = null;
                 _currentPipeline = null;
             }
@@ -390,9 +398,10 @@ namespace Diffuse.Services
     }
 
 
-    public interface IExtractorService
+    public interface IExtractService
     {
         PipelineModel Pipeline { get; }
+        ExtractInputOptions DefaultOptions { get; }
         bool IsLoaded { get; }
         bool IsLoading { get; }
         bool IsExecuting { get; }
@@ -400,64 +409,22 @@ namespace Diffuse.Services
         Task LoadAsync(PipelineModel pipeline);
         Task UnloadAsync();
         Task CancelAsync();
-        Task<ImageTensor> ExecuteAsync(ExtractorImageRequest options);
-        Task<VideoInputStream> ExecuteAsync(ExtractorVideoRequest options, IProgress<RunProgress> progressCallback);
+        Task<ImageTensor> ExecuteAsync(ExtractImageRequest options);
+        Task<VideoInputStream> ExecuteAsync(ExtractVideoRequest options, IProgress<RunProgress> progressCallback);
     }
 
 
-    public record ExtractorImageRequest
+    public record ExtractImageRequest
     {
-        // Default
-        public TileMode TileMode { get; init; }
-        public int MaxTileSize { get; init; }
-        public int TileOverlap { get; init; }
-        public bool IsInverted { get; init; }
-        public bool MergeInput { get; init; }
-        public bool IsTransparent { get; set; }
-
-        // Background
-        public BackgroundMode Mode { get; init; }
-
-
-        // Pose
-        public int Detections { get; set; } = 0;
-        public float BodyConfidence { get; init; } = 0.4f;
-        public float JointConfidence { get; init; } = 0.1f;
-        public float ColorAlpha { get; init; } = 0.8f;
-        public float JointRadius { get; init; } = 7f;
-        public float BoneRadius { get; init; } = 8f;
-        public float BoneThickness { get; init; } = 1f;
-
-
-        public ImageTensor Image { get; set; }
+        public ImageTensor Image { get; init; }
+        public ExtractInputOptions Options { get; init; }
     }
 
 
-    public record ExtractorVideoRequest
+    public record ExtractVideoRequest
     {
-        // Default
-        public TileMode TileMode { get; init; }
-        public int MaxTileSize { get; init; }
-        public int TileOverlap { get; init; }
-        public bool IsInverted { get; init; }
-        public bool MergeInput { get; init; }
-        public bool IsTransparent { get; set; }
-
-        // Background
-        public BackgroundMode Mode { get; init; }
-
-
-        // Pose
-        public int Detections { get; set; } = 0;
-        public float BodyConfidence { get; init; } = 0.4f;
-        public float JointConfidence { get; init; } = 0.1f;
-        public float ColorAlpha { get; init; } = 0.8f;
-        public float JointRadius { get; init; } = 7f;
-        public float BoneRadius { get; init; } = 8f;
-        public float BoneThickness { get; init; } = 1f;
         public VideoInputStream VideoStream { get; init; }
+        public ExtractInputOptions Options { get; init; }
     }
-
-
 
 }

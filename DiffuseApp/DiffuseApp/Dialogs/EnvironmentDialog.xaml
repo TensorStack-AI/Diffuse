@@ -10,7 +10,7 @@
         MaxWidth="400"
         x:Name="UI"
         Title="Environment"
-        Icon="{StaticResource ImageIcon}"
+        Icon="/Images/Icon.ico"
         Style="{StaticResource {x:Type CommonControls:DialogControl}}">
     <DockPanel DataContext="{Binding ElementName=UI}" Margin="15, 15, 15, 10">
 

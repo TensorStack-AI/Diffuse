@@ -265,7 +265,7 @@ namespace Diffuse.Services
                             var sharedUsage = (ulong)result.Properties["SharedUsage"].Value;
                             var dedicatedUsage = (ulong)result.Properties["DedicatedUsage"].Value;
                             var totalCommitted = (ulong)result.Properties["TotalCommitted"].Value;
-                            gpuMemory.Add(adapterId, new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, 0));
+                            gpuMemory[adapterId] = new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, 0);
                         }
                     }
                 }
@@ -296,7 +296,7 @@ namespace Diffuse.Services
                             var sharedUsage = (ulong)result.Properties["SharedUsage"].Value;
                             var dedicatedUsage = (ulong)result.Properties["DedicatedUsage"].Value;
                             var totalCommitted = (ulong)result.Properties["TotalCommitted"].Value;
-                            gpuMemory.Add(adapterId, new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, pid));
+                            gpuMemory[adapterId] =  new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, pid);
                         }
                     }
                 }

@@ -19,7 +19,7 @@ namespace Diffuse.Controls
         private ListCollectionView _deviceCollectionView;
         private ListCollectionView _modelCollectionView;
         private ListCollectionView _controlNetCollectionView;
-        private ListCollectionView _extractorCollectionView;
+        private ListCollectionView _extractCollectionView;
         private ListCollectionView _loraCollectionView;
         private ListCollectionView _upscaleCollectionView;
 
@@ -27,7 +27,7 @@ namespace Diffuse.Controls
         private Device _selectedDevice;
         private DiffusionModel _selectedModel;
         private ControlNetModel _selectedControlNet;
-        private ExtractorModel _selectedExtractor;
+        private ExtractModel _selectedExtractor;
         private LoraAdapterModel _selectedLora;
         private UpscaleModel _selectedUpscaler;
         private MemoryMode _selectedMemoryMode;
@@ -44,7 +44,7 @@ namespace Diffuse.Controls
         private Device _currentDevice;
         private DiffusionModel _currentModel;
         private ControlNetModel _currentControlNet;
-        private ExtractorModel _currentExtractor;
+        private ExtractModel _currentExtractor;
         private LoraAdapterModel _currentLora;
         private UpscaleModel _currentUpscaler;
         private MemoryMode _currentMemoryMode;
@@ -115,7 +115,7 @@ namespace Diffuse.Controls
             set { SetProperty(ref _selectedControlNet, value); }
         }
 
-        public ExtractorModel SelectedExtractor
+        public ExtractModel SelectedExtractor
         {
             get { return _selectedExtractor; }
             set { SetProperty(ref _selectedExtractor, value); }
@@ -163,10 +163,10 @@ namespace Diffuse.Controls
             set { SetProperty(ref _controlNetCollectionView, value); }
         }
 
-        public ListCollectionView ExtractorCollectionView
+        public ListCollectionView ExtractCollectionView
         {
-            get { return _extractorCollectionView; }
-            set { SetProperty(ref _extractorCollectionView, value); }
+            get { return _extractCollectionView; }
+            set { SetProperty(ref _extractCollectionView, value); }
         }
 
         public ListCollectionView LoraCollectionView
@@ -244,7 +244,7 @@ namespace Diffuse.Controls
                 Device = _currentDevice,
                 DiffusionModel = _currentModel,
                 ControlNetModel = _isControlNetSupported ? _currentControlNet : default,
-                ExtractorModel = _currentExtractorEnabled ? _currentExtractor : default,
+                ExtractModel = _currentExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _currentUpscalerEnabled ? _currentUpscaler : default,
                 LoraAdapterModel = _currentLoraEnabled ? _currentLora : default,
                 MemoryMode = _currentMemoryMode,
@@ -384,10 +384,10 @@ namespace Diffuse.Controls
             };
 
             // Extractor Models
-            ExtractorCollectionView = new ListCollectionView(Settings.ExtractorModels);
-            ExtractorCollectionView.Filter = (obj) =>
+            ExtractCollectionView = new ListCollectionView(Settings.ExtractModels);
+            ExtractCollectionView.Filter = (obj) =>
             {
-                if (obj is not ExtractorModel viewModel)
+                if (obj is not ExtractModel viewModel)
                     return false;
 
                 if (_selectedModel is null)
@@ -450,12 +450,12 @@ namespace Diffuse.Controls
                              ?? ModelCollectionView.Cast<DiffusionModel>().FirstOrDefault();
             }
 
-            if (ExtractorCollectionView is not null)
+            if (ExtractCollectionView is not null)
             {
-                ExtractorCollectionView.Refresh();
-                SelectedExtractor = ExtractorCollectionView.Cast<ExtractorModel>().FirstOrDefault(x => x == _currentExtractor)
-                                 ?? ExtractorCollectionView.Cast<ExtractorModel>().FirstOrDefault(x => x.IsDefault)
-                                 ?? ExtractorCollectionView.Cast<ExtractorModel>().FirstOrDefault();
+                ExtractCollectionView.Refresh();
+                SelectedExtractor = ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x == _currentExtractor)
+                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x.IsDefault)
+                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault();
             }
 
             if (UpscaleCollectionView is not null)

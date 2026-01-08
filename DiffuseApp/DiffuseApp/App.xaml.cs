@@ -68,9 +68,10 @@ namespace Diffuse
             builder.Services.AddSingleton<IMediaService, MediaService>();
             builder.Services.AddSingleton<IHistoryService, HistoryService>();
             builder.Services.AddSingleton<IUpscaleService, UpscaleService>();
-            builder.Services.AddSingleton<IExtractorService, ExtractorService>();
+            builder.Services.AddSingleton<IExtractService, ExtractService>();
             builder.Services.AddSingleton<IDiffusionService, DiffusionService>();
             builder.Services.AddSingleton<IEnvironmentService, EnvironmentService>();
+            builder.Services.AddSingleton<IInterpolationService, InterpolationService>();
 
             // Build
             _appHost = builder.Build();

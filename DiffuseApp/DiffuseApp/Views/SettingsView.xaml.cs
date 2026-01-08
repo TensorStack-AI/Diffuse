@@ -19,7 +19,7 @@ namespace Diffuse.Views
         private EnvironmentModel _selectedEnvironment;
         private DiffusionModel _selectedDiffusionModel;
         private ControlNetModel _selectedControlNetModel;
-        private ExtractorModel _selectedExtractorModel;
+        private ExtractModel _selectedExtractModel;
         private LoraAdapterModel _selectedLoraModel;
         private UpscaleModel _selectedUpscaleModel;
 
@@ -31,27 +31,31 @@ namespace Diffuse.Views
             CopyEnvironmentCommand = new AsyncRelayCommand(CopyEnvironmentAsync, () => SelectedEnvironment is not null);
             UpdateEnvironmentCommand = new AsyncRelayCommand(UpdateEnvironmentAsync, () => SelectedEnvironment?.Id > _fixedIdRange);
             RemoveEnvironmentCommand = new AsyncRelayCommand(RemoveEnvironmentAsync, () => SelectedEnvironment?.Id > _fixedIdRange);
+
             AddDiffusionModelCommand = new AsyncRelayCommand(AddDiffusionModelAsync);
             CopyDiffusionModelCommand = new AsyncRelayCommand(CopyDiffusionModelAsync, () => SelectedDiffusionModel is not null);
             UpdateDiffusionModelCommand = new AsyncRelayCommand(UpdateDiffusionModelAsync, () => SelectedDiffusionModel?.Id > _fixedIdRange);
             RemoveDiffusionModelCommand = new AsyncRelayCommand(RemoveDiffusionModelAsync, () => SelectedDiffusionModel?.Id > _fixedIdRange);
+
             AddControlNetModelCommand = new AsyncRelayCommand(AddControlNetModelAsync);
             CopyControlNetModelCommand = new AsyncRelayCommand(CopyControlNetModelAsync, () => SelectedControlNetModel is not null);
             UpdateControlNetModelCommand = new AsyncRelayCommand(UpdateControlNetModelAsync, () => SelectedControlNetModel?.Id > _fixedIdRange);
             RemoveControlNetModelCommand = new AsyncRelayCommand(RemoveControlNetModelAsync, () => SelectedControlNetModel?.Id > _fixedIdRange);
-            AddExtractorModelCommand = new AsyncRelayCommand(AddExtractorModelAsync);
-            CopyExtractorModelCommand = new AsyncRelayCommand(CopyExtractorModelAsync, () => SelectedExtractorModel is not null);
-            UpdateExtractorModelCommand = new AsyncRelayCommand(UpdateExtractorModelAsync, () => SelectedExtractorModel?.Id > _fixedIdRange);
-            RemoveExtractorModelCommand = new AsyncRelayCommand(RemoveExtractorModelAsync, () => SelectedExtractorModel?.Id > _fixedIdRange);
+
+            AddExtractModelCommand = new AsyncRelayCommand(AddExtractModelAsync);
+            CopyExtractModelCommand = new AsyncRelayCommand(CopyExtractModelAsync, () => SelectedExtractModel is not null);
+            UpdateExtractModelCommand = new AsyncRelayCommand(UpdateExtractModelAsync, () => SelectedExtractModel?.Id > _fixedIdRange);
+            RemoveExtractModelCommand = new AsyncRelayCommand(RemoveExtractModelAsync, () => SelectedExtractModel?.Id > _fixedIdRange);
+
             AddLoraModelCommand = new AsyncRelayCommand(AddLoraModelAsync);
             CopyLoraModelCommand = new AsyncRelayCommand(CopyLoraModelAsync, () => SelectedLoraModel is not null);
             UpdateLoraModelCommand = new AsyncRelayCommand(UpdateLoraModelAsync, () => SelectedLoraModel?.Id > _fixedIdRange);
             RemoveLoraModelCommand = new AsyncRelayCommand(RemoveLoraModelAsync, () => SelectedLoraModel?.Id > _fixedIdRange);
+
             AddUpscaleModelCommand = new AsyncRelayCommand(AddUpscaleModel);
             CopyUpscaleModelCommand = new AsyncRelayCommand(CopyUpscaleModelAsync, () => SelectedUpscaleModel is not null);
             UpdateUpscaleModelCommand = new AsyncRelayCommand(UpdateUpscaleModelAsync, () => SelectedUpscaleModel?.Id > _fixedIdRange);
             RemoveUpscaleModelCommand = new AsyncRelayCommand(RemoveUpscaleModelAsync, () => SelectedUpscaleModel?.Id > _fixedIdRange);
-
 
             EnvironmentServiceCreateCommand = new AsyncRelayCommand(EnvironmentCreateAsync, CanEnvironmentCreate);
             EnvironmentServiceUpdateCommand = new AsyncRelayCommand(EnvironmentUpdateAsync, CanEnvironmentUpdate);
@@ -76,10 +80,10 @@ namespace Diffuse.Views
         public AsyncRelayCommand CopyControlNetModelCommand { get; }
         public AsyncRelayCommand UpdateControlNetModelCommand { get; }
         public AsyncRelayCommand RemoveControlNetModelCommand { get; }
-        public AsyncRelayCommand AddExtractorModelCommand { get; }
-        public AsyncRelayCommand CopyExtractorModelCommand { get; }
-        public AsyncRelayCommand UpdateExtractorModelCommand { get; }
-        public AsyncRelayCommand RemoveExtractorModelCommand { get; }
+        public AsyncRelayCommand AddExtractModelCommand { get; }
+        public AsyncRelayCommand CopyExtractModelCommand { get; }
+        public AsyncRelayCommand UpdateExtractModelCommand { get; }
+        public AsyncRelayCommand RemoveExtractModelCommand { get; }
         public AsyncRelayCommand AddLoraModelCommand { get; }
         public AsyncRelayCommand CopyLoraModelCommand { get; }
         public AsyncRelayCommand UpdateLoraModelCommand { get; }
@@ -113,10 +117,10 @@ namespace Diffuse.Views
             set { SetProperty(ref _selectedControlNetModel, value); }
         }
 
-        public ExtractorModel SelectedExtractorModel
+        public ExtractModel SelectedExtractModel
         {
-            get { return _selectedExtractorModel; }
-            set { SetProperty(ref _selectedExtractorModel, value); }
+            get { return _selectedExtractModel; }
+            set { SetProperty(ref _selectedExtractModel, value); }
         }
 
         public LoraAdapterModel SelectedLoraModel
@@ -258,9 +262,9 @@ namespace Diffuse.Views
         }
 
 
-        private async Task AddExtractorModelAsync()
+        private async Task AddExtractModelAsync()
         {
-            var dialog = DialogService.GetDialog<ExtractorModelDialog>();
+            var dialog = DialogService.GetDialog<ExtractModelDialog>();
             if (await dialog.AddAsync())
             {
                 await SaveAsync();
@@ -268,32 +272,32 @@ namespace Diffuse.Views
         }
 
 
-        private async Task CopyExtractorModelAsync()
+        private async Task CopyExtractModelAsync()
         {
-            var dialog = DialogService.GetDialog<ExtractorModelDialog>();
-            if (await dialog.CopyAsync(SelectedExtractorModel))
+            var dialog = DialogService.GetDialog<ExtractModelDialog>();
+            if (await dialog.CopyAsync(SelectedExtractModel))
             {
                 await SaveAsync();
             }
         }
 
 
-        private async Task UpdateExtractorModelAsync()
+        private async Task UpdateExtractModelAsync()
         {
-            var dialog = DialogService.GetDialog<ExtractorModelDialog>();
-            if (await dialog.UpdateAsync(SelectedExtractorModel))
+            var dialog = DialogService.GetDialog<ExtractModelDialog>();
+            if (await dialog.UpdateAsync(SelectedExtractModel))
             {
                 await SaveAsync();
             }
         }
 
 
-        private async Task RemoveExtractorModelAsync()
+        private async Task RemoveExtractModelAsync()
         {
             if (await DialogService.ShowMessageAsync("Delete Model", $"Are you sure you want to delete this model?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Warning, TensorStack.WPF.Dialogs.MessageBoxStyleType.Danger))
             {
-                Settings.ExtractorModels.Remove(SelectedExtractorModel);
-                SelectedExtractorModel = default;
+                Settings.ExtractModels.Remove(SelectedExtractModel);
+                SelectedExtractModel = default;
                 await SaveAsync();
             }
         }
@@ -432,6 +436,7 @@ namespace Diffuse.Views
         private async Task SaveAsync()
         {
             await Json.SaveAsync<Settings>("Settings.json", Settings);
+            Settings.ScanModels();
         }
     }
 }

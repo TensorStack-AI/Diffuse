@@ -21,14 +21,17 @@ namespace Diffuse.Views
         private ImageInput _resultImage;
         private ImageInput _compareImage;
         private ImageInput _sourceImage;
-        private GenerateOptions _options;
+        private DiffusionInputOptions _options;
+        private ImageInput _extractImage;
+        private UpscaleInputOptions _upscaleOptions;
+        private ExtractInputOptions _extractOptions;
 
-        public ImageToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractorService extractorService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageToImageView> logger)
+        public ImageToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageToImageView> logger)
             : base(settings, navigationService, environmentService, historyService)
         {
             _logger = logger;
             UpscaleService = upscaleService;
-            ExtractorService = extractorService;
+            ExtractService = extractService;
             DiffusionService = diffusionService;
             ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
             CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
@@ -38,7 +41,7 @@ namespace Diffuse.Views
         public override int Id => (int)View.ImageToImage;
         public IDiffusionService DiffusionService { get; }
         public IUpscaleService UpscaleService { get; }
-        public IExtractorService ExtractorService { get; }
+        public IExtractService ExtractService { get; }
         public AsyncRelayCommand ExecuteCommand { get; set; }
         public AsyncRelayCommand CancelCommand { get; set; }
 
@@ -60,10 +63,22 @@ namespace Diffuse.Views
             set { SetProperty(ref _sourceImage, value); }
         }
 
-        public GenerateOptions Options
+        public DiffusionInputOptions Options
         {
             get { return _options; }
             set { SetProperty(ref _options, value); }
+        }
+
+        public UpscaleInputOptions UpscaleOptions
+        {
+            get { return _upscaleOptions; }
+            set { SetProperty(ref _upscaleOptions, value); }
+        }
+
+        public ExtractInputOptions ExtractOptions
+        {
+            get { return _extractOptions; }
+            set { SetProperty(ref _extractOptions, value); }
         }
 
 
@@ -80,36 +95,31 @@ namespace Diffuse.Views
         protected override async Task LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
-
             try
             {
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ImageToImageView] [LoadPipelineAsync] - Loading pipeline..");
 
                 await base.LoadPipelineAsync();
-                if (CurrentPipeline.DiffusionModel == null)
-                    await DiffusionService.UnloadAsync();
-                if (CurrentPipeline.ExtractorModel == null)
-                    await ExtractorService.UnloadAsync();
-                if (CurrentPipeline.UpscaleModel == null)
-                    await UpscaleService.UnloadAsync();
+                await UnloadServicesAsync();
 
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
                     await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                     SetDefaultOptions(DiffusionService.DefaultOptions);
                 }
-
-                if (CurrentPipeline.ExtractorModel is not null)
+                if (CurrentPipeline.ExtractModel is not null)
                 {
-                    await ExtractorService.LoadAsync(CurrentPipeline);
+                    await ExtractService.LoadAsync(CurrentPipeline);
+                    SetDefaultOptions(ExtractService.DefaultOptions);
                 }
-
                 if (CurrentPipeline.UpscaleModel is not null)
                 {
                     await UpscaleService.LoadAsync(CurrentPipeline);
+                    SetDefaultOptions(UpscaleService.DefaultOptions);
                 }
 
+                SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageToImageView] [LoadPipelineAsync] - Loading pipeline complete.");
             }
@@ -124,44 +134,60 @@ namespace Diffuse.Views
             }
 
             Progress.Clear();
+            Statistics.Clear();
             _logger?.LogInformation($"[ImageToImageView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+        }
+
+
+        protected override async Task UnloadPipelineAsync()
+        {
+            try
+            {
+                _logger?.LogInformation($"[ImageToImageView] [UnloadPipelineAsync] - Unloading pipeline...");
+                await base.UnloadPipelineAsync();
+                await UnloadServicesAsync();
+                _logger?.LogInformation($"[ImageToImageView] [UnloadPipelineAsync] -  Pipeline unloaded.");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"[ImageToImageView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
+                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
+            }
+
+            Progress.Clear();
+            Statistics.Clear();
         }
 
 
         private async Task ExecuteAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
-
             try
             {
                 Progress.Clear();
+                Statistics.Clear();
+                ResultImage = default;
                 CompareImage = default;
                 _logger?.LogInformation($"[ImageToImageView] [ExecuteAsync] - Executing pipeline..");
 
-                var sourceImage = _sourceImage;
-                var extractorImage = default(ImageTensor);
-
-                // Run Extractor
-                if (ExtractorService.IsLoaded)
-                {
-                    extractorImage = await ExtractorService.ExecuteAsync(new ExtractorImageRequest
-                    {
-                        Image = sourceImage
-                    });
-                }
+                Statistics.Start();
 
                 // Run Diffusion
-                var resultTensor = await DiffusionService.GenerateImageAsync(_options with
+                var options = _options with
                 {
-                    InputImages = [sourceImage]
-                });
+                    InputImage = _sourceImage
+                };
+                var resultTensor = await DiffusionService.GenerateImageAsync(options);
+
+                Statistics.Stop();
 
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
                     resultTensor = await UpscaleService.ExecuteAsync(new UpscaleImageRequest
                     {
-                        Image = resultTensor
+                        Image = resultTensor,
+                        Options = _upscaleOptions
                     });
                 }
 
@@ -170,16 +196,28 @@ namespace Diffuse.Views
                 ResultImage = new ImageInput(resultTensor);
 
                 // History
-                await HistoryService.AddAsync(ResultImage, View.ImageToImage, _options);
+                await HistoryService.AddAsync(ResultImage, new DiffusionHistory
+                {
+                    Options = options,
+                    Model = CurrentPipeline.DiffusionModel.Name,
+                    LoraModel = CurrentPipeline.LoraAdapterModel?.Name,
+                    UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
+                    UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
+                    ExtractModel = CurrentPipeline.ExtractModel?.Name,
+                    ExtractOptions = CurrentPipeline.ExtractModel is not null ? _extractOptions : null,
+                    Source = View.ImageToImage,
+                });
 
                 _logger?.LogInformation($"[ImageToImageView] [ExecuteAsync] - Executing pipeline complete.");
             }
             catch (OperationCanceledException)
             {
+                Statistics.Clear();
                 _logger?.LogInformation($"[ImageToImageView] [ExecuteAsync] - Executing pipeline cancelled.");
             }
             catch (Exception ex)
             {
+                Statistics.Clear();
                 _logger?.LogError(ex, $"[ImageToImageView] [ExecuteAsync] - An exception occurred executing pipeline.");
                 await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
             }
@@ -197,6 +235,9 @@ namespace Diffuse.Views
 
         private async Task CancelAsync()
         {
+            if (DiffusionService.IsLoading)
+                CurrentPipeline = null;
+
             await DiffusionService.CancelAsync();
         }
 
@@ -209,7 +250,7 @@ namespace Diffuse.Views
 
         private void SetDefaultOptions(DiffusionDefaultOptions options)
         {
-            Options = new GenerateOptions
+            Options = new DiffusionInputOptions
             {
                 Prompt = Options?.Prompt,
                 NegativePrompt = Options?.NegativePrompt,
@@ -223,6 +264,80 @@ namespace Diffuse.Views
                 Scheduler = options.Scheduler,
                 GuidanceScale = options.GuidanceScale
             };
+        }
+
+
+        private void SetDefaultOptions(UpscaleInputOptions options)
+        {
+            UpscaleOptions = new UpscaleInputOptions
+            {
+                TileMode = options.TileMode,
+                TileSize = options.TileSize,
+                TileOverlap = options.TileOverlap,
+            };
+        }
+
+
+        private void SetDefaultOptions(ExtractInputOptions options)
+        {
+            ExtractOptions = new ExtractInputOptions
+            {
+                TileMode = options.TileMode,
+                TileSize = options.TileSize,
+                TileOverlap = options.TileOverlap,
+                IsInverted = options.IsInverted,
+                IsTransparent = options.IsTransparent,
+                MergeInput = options.MergeInput,
+                Mode = options.Mode,
+                Detections = options.Detections,
+                BodyConfidence = options.BodyConfidence,
+                JointConfidence = options.JointConfidence,
+                ColorAlpha = options.ColorAlpha,
+                JointRadius = options.JointRadius,
+                BoneRadius = options.BoneRadius,
+                BoneThickness = options.BoneThickness
+            };
+        }
+
+
+        private async Task UnloadServicesAsync()
+        {
+            if (DiffusionService.IsLoaded)
+                await DiffusionService.UnloadAsync();
+            if (ExtractService.IsLoaded)
+                await ExtractService.UnloadAsync();
+            if (UpscaleService.IsLoaded)
+                await UpscaleService.UnloadAsync();
+        }
+
+
+        protected async void SourceImage_SourceChanged(object sender, ImageInput image)
+        {
+            if (ExtractService.IsLoaded)
+            {
+                try
+                {
+                    if (_extractImage == _sourceImage)
+                        return;
+
+                    if (_sourceImage == null)
+                        return;
+
+                    IsViewBusy = true;
+                    Progress.Indeterminate("Extracting Image Features...");
+                    _extractImage = new ImageInput(await ExtractService.ExecuteAsync(new ExtractImageRequest
+                    {
+                        Image = _sourceImage,
+                        Options = _extractOptions
+                    }));
+                    SourceImage = _extractImage;
+                    Progress.Clear();
+                }
+                finally
+                {
+                    IsViewBusy = false;
+                }
+            }
         }
     }
 }

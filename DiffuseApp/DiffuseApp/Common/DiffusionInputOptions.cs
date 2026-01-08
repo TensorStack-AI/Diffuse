@@ -7,7 +7,7 @@ using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
-    public record GenerateOptions : BaseRecord
+    public record DiffusionInputOptions : BaseRecord
     {
         private int _width;
         private int _height;

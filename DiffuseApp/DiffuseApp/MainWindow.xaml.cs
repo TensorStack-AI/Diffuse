@@ -24,8 +24,8 @@ namespace Diffuse
             HistoryService = historyService;
             NavigateCommand = new AsyncRelayCommand<View>(NavigateAsync, CanNavigate);
             NavigateCategoryCommand = new AsyncRelayCommand<ViewCategory>(NavigateCategoryAsync, CanNavigateCategory);
-            RemoveHistoryItemCommand = new AsyncRelayCommand<HistoryItem>(RemoveHistoryItemAsync, CanRemoveHistoryItem);
-            PreviewHistoryItemCommand = new AsyncRelayCommand<HistoryItem>(PreviewHistoryItemAsync, CanPreviewHistoryItem);
+            RemoveHistoryItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveHistoryItemAsync, CanRemoveHistoryItem);
+            PreviewHistoryItemCommand = new AsyncRelayCommand<IHistoryItem>(PreviewHistoryItemAsync, CanPreviewHistoryItem);
             InitializeComponent();
             NavigateCommand.Execute(_defaultView);
         }
@@ -35,8 +35,8 @@ namespace Diffuse
         public NavigationService Navigation { get; }
         public AsyncRelayCommand<View> NavigateCommand { get; }
         public AsyncRelayCommand<ViewCategory> NavigateCategoryCommand { get; }
-        public AsyncRelayCommand<HistoryItem> RemoveHistoryItemCommand { get; }
-        public AsyncRelayCommand<HistoryItem> PreviewHistoryItemCommand { get; }
+        public AsyncRelayCommand<IHistoryItem> RemoveHistoryItemCommand { get; }
+        public AsyncRelayCommand<IHistoryItem> PreviewHistoryItemCommand { get; }
         public IHistoryService HistoryService { get; }
 
 
@@ -105,18 +105,18 @@ namespace Diffuse
         }
 
 
-        private async Task RemoveHistoryItemAsync(HistoryItem item)
+        private async Task RemoveHistoryItemAsync(IHistoryItem item)
         {
             await HistoryService.DeleteAsync(item);
         }
 
-        private bool CanRemoveHistoryItem(HistoryItem item)
+        private bool CanRemoveHistoryItem(IHistoryItem item)
         {
             return true;
         }
 
 
-        private async Task PreviewHistoryItemAsync(HistoryItem item)
+        private async Task PreviewHistoryItemAsync(IHistoryItem item)
         {
             if (item.MediaType == MediaType.Image)
             {
@@ -130,7 +130,7 @@ namespace Diffuse
             }
         }
 
-        private bool CanPreviewHistoryItem(HistoryItem item)
+        private bool CanPreviewHistoryItem(IHistoryItem item)
         {
             return true;
         }

@@ -263,8 +263,8 @@ namespace Diffuse.Dialogs
         {
             if (string.IsNullOrWhiteSpace(DiffusionModel.Name))
                 yield return "Name cannot be empty";
-            if (string.IsNullOrWhiteSpace(DiffusionModel.ModelUrl))
-                yield return "ModelUrl cannot be empty";
+            if (string.IsNullOrWhiteSpace(DiffusionModel.Path))
+                yield return "Path cannot be empty";
             if (string.IsNullOrWhiteSpace(DiffusionModel.Pipeline))
                 yield return "Pipeline cannot be empty";
             if (!IsUpdateMode && Settings.DiffusionModels.Any(x => x.Name.Equals(DiffusionModel.Name, StringComparison.OrdinalIgnoreCase)))
@@ -398,7 +398,7 @@ namespace Diffuse.Dialogs
             {
                 Id = modelId,
                 Name = diffusionModel.Name,
-                ModelUrl = diffusionModel.ModelUrl,
+                Path = diffusionModel.Path,
                 Pipeline = diffusionModel.Pipeline,
                 IsDefault = diffusionModel.IsDefault,
                 MemoryModes = [.. diffusionModel.MemoryModes],

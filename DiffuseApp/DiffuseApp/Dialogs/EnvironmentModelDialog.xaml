@@ -10,7 +10,7 @@
         MaxWidth="900"
         MinHeight="560"
         Title="Environment"
-        Icon="{StaticResource ImageIcon}"
+        Icon="/Images/Icon.ico"
         Style="{StaticResource {x:Type CommonControls:DialogControl}}">
     <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:EnvironmentModelDialog}}}" Margin="15, 15, 15, 10">
 

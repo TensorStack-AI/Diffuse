@@ -60,7 +60,13 @@ namespace Diffuse.Dialogs
             var modelId = GetNextModelId();
             UpscaleModel = new UpscaleModel
             {
-                Id = modelId
+                Id = modelId,
+                DefaultOptions = new UpscaleInputOptions
+                {
+                    TileMode = TileMode.ClipBlend,
+                    TileOverlap = 16,
+                    TileSize = 512
+                }
             };
             return base.ShowDialogAsync();
         }
@@ -192,6 +198,7 @@ namespace Diffuse.Dialogs
                 SampleSize = upscaleModel.SampleSize,
                 ScaleFactor = upscaleModel.ScaleFactor,
                 UrlPaths = upscaleModel.UrlPaths.ToArray(),
+                DefaultOptions = upscaleModel.DefaultOptions with { }
             };
         }
     }

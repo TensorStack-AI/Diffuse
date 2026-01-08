@@ -228,7 +228,7 @@
                                         <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" FontSize="12" Margin="3,0,0,0" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
                                         <StackPanel>
                                             <TextBlock Text="{Binding Pipeline}" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
-                                            <TextBlock Text="{Binding ModelUrl}" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
+                                            <TextBlock Text="{Binding Path}" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
                                         </StackPanel>
                                     </DockPanel>
                                 </DataTemplate>
@@ -305,32 +305,32 @@
             </TabItem>
 
 
-            <!--Extractor Models-->
+            <!--Extract Models-->
             <TabItem DockPanel.Dock="Top">
                 <TabItem.Header>
                     <DockPanel Width="200" Height="35" >
-                        <TextBlock Text="Extractor Models" TextAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Text="Extract Models" TextAlignment="Center" VerticalAlignment="Center" />
                     </DockPanel>
                 </TabItem.Header>
 
                 <UniformGrid Columns="3">
                     <DockPanel Margin="10,0,0,0">
-                        <TextBlock DockPanel.Dock="Top" Text="Extractor Models" Style="{StaticResource FieldTextBlockStyle}" />
+                        <TextBlock DockPanel.Dock="Top" Text="Extract Models" Style="{StaticResource FieldTextBlockStyle}" />
                         <UniformGrid DockPanel.Dock="Bottom" Columns="4" Height="30">
-                            <Button Command="{Binding AddExtractorModelCommand}" ToolTip="Add New Model">
+                            <Button Command="{Binding AddExtractModelCommand}" ToolTip="Add New Model">
                                 <CommonControls:FontAwesome Icon="2b" IconStyle="Light" Color="{StaticResource SuccessColour}"/>
                             </Button>
-                            <Button Command="{Binding UpdateExtractorModelCommand}" ToolTip="Model Settings">
+                            <Button Command="{Binding UpdateExtractModelCommand}" ToolTip="Model Settings">
                                 <CommonControls:FontAwesome Icon="f0ad" IconStyle="Light" Color="{StaticResource InfoColour}"/>
                             </Button>
-                            <Button Command="{Binding RemoveExtractorModelCommand}" ToolTip="Remove Model">
+                            <Button Command="{Binding RemoveExtractModelCommand}" ToolTip="Remove Model">
                                 <CommonControls:FontAwesome Icon="f2ed" IconStyle="Light" Color="{StaticResource DangerColour}"/>
                             </Button>
-                            <Button Command="{Binding CopyExtractorModelCommand}" ToolTip="Copy Model">
+                            <Button Command="{Binding CopyExtractModelCommand}" ToolTip="Copy Model">
                                 <CommonControls:FontAwesome Icon="f24d" IconStyle="Light" Color="{StaticResource InfoColour}"/>
                             </Button>
                         </UniformGrid>
-                        <ListBox ItemsSource="{Binding Settings.ExtractorModels}" SelectedItem="{Binding SelectedExtractorModel}" ItemContainerStyle="{StaticResource SettingsListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox ItemsSource="{Binding Settings.ExtractModels}" SelectedItem="{Binding SelectedExtractModel}" ItemContainerStyle="{StaticResource SettingsListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel DockPanel.Dock="Left">

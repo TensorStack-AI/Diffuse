@@ -99,14 +99,14 @@ namespace Diffuse.Services
                     await UnloadPythonPipeline();
 
                     _currentPipeline = pipeline;
-
                     var device = _currentPipeline.Device;
                     var model = _currentPipeline.DiffusionModel;
                     var controlNet = _currentPipeline.ControlNetModel;
+                    _defaultOptions = model.DefaultOptions;
 
                     var pipelineConfig = new PipelineConfig
                     {
-                        Path = model.ModelUrl,
+                        Path = model.Path,
                         ControlNetPath = controlNet?.Path,
                         Pipeline = model.Pipeline,
                         ProcessType = _currentPipeline.ProcessType,
@@ -119,9 +119,9 @@ namespace Diffuse.Services
                     };
 
                     SetMemoryMode(pipeline, pipelineConfig);
-                    _defaultOptions = model.DefaultOptions;
-                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback);
+                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback, cancellationToken);
                 }
+                IsLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -133,7 +133,6 @@ namespace Diffuse.Services
             }
             finally
             {
-                IsLoaded = true;
                 IsLoading = false;
             }
         }
@@ -143,7 +142,7 @@ namespace Diffuse.Services
         /// Execute the upscaler
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> GenerateImageAsync(Common.GenerateOptions options)
+        public async Task<ImageTensor> GenerateImageAsync(Common.DiffusionInputOptions options)
         {
             try
             {
@@ -183,7 +182,7 @@ namespace Diffuse.Services
         }
 
 
-        public async Task<VideoInputStream> GenerateVideoAsync(GenerateOptions options)
+        public async Task<VideoInputStream> GenerateVideoAsync(DiffusionInputOptions options)
         {
             try
             {
@@ -243,10 +242,9 @@ namespace Diffuse.Services
         /// </summary>
         public async Task UnloadAsync()
         {
-            await _cancellationTokenSource.SafeCancelAsync();
             await UnloadPythonPipeline();
-
             _currentPipeline = null;
+            _defaultOptions = null;
             IsLoaded = false;
             IsLoading = false;
             IsExecuting = false;
@@ -267,7 +265,7 @@ namespace Diffuse.Services
         }
 
 
-        private static List<LoraOptions> GetLoraOptions(LoraAdapterModel loraAdapterModel, Common.GenerateOptions options)
+        private static List<LoraOptions> GetLoraOptions(LoraAdapterModel loraAdapterModel, Common.DiffusionInputOptions options)
         {
             if (loraAdapterModel is null)
                 return default;
@@ -348,7 +346,7 @@ namespace Diffuse.Services
         Task LoadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
         Task UnloadAsync();
         Task CancelAsync();
-        Task<ImageTensor> GenerateImageAsync(GenerateOptions options);
-        Task<VideoInputStream> GenerateVideoAsync(GenerateOptions options);
+        Task<ImageTensor> GenerateImageAsync(DiffusionInputOptions options);
+        Task<VideoInputStream> GenerateVideoAsync(DiffusionInputOptions options);
     }
 }

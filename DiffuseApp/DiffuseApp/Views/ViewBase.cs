@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using DiffuseApp.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,7 @@ namespace Diffuse.Views
 {
     public abstract class ViewBase : ViewControl
     {
+        private bool _isViewBusy;
         private PipelineModel _currentPipeline;
         private Dictionary<string, PipelineProgress> _downloadStatistics;
 
@@ -25,6 +27,7 @@ namespace Diffuse.Views
             EnvironmentService = environmentService;
             HistoryService = historyService;
             Progress = new ProgressInfo();
+            Statistics = new StatisticsModel(Dispatcher);
             ProgressCallback = new Progress<RunProgress>(OnProgress);
             PythonProgressCallback = new Progress<PipelineProgress>(OnProgress);
             _downloadStatistics = new Dictionary<string, PipelineProgress>();
@@ -36,12 +39,20 @@ namespace Diffuse.Views
         public ProgressInfo Progress { get; }
         protected IProgress<RunProgress> ProgressCallback { get; }
         protected IProgress<PipelineProgress> PythonProgressCallback { get; }
+        public StatisticsModel Statistics { get; }
+
+        public bool IsViewBusy
+        {
+            get { return _isViewBusy; }
+            set { SetProperty(ref _isViewBusy, value); }
+        }
 
         public PipelineModel CurrentPipeline
         {
             get { return _currentPipeline; }
             set { SetProperty(ref _currentPipeline, value); }
         }
+
 
         protected virtual async Task<bool> LoadEnvironment()
         {
@@ -53,9 +64,16 @@ namespace Diffuse.Views
             return EnvironmentService.Exists(_currentPipeline);
         }
 
+
         protected virtual Task LoadPipelineAsync()
         {
             _downloadStatistics.Clear();
+            return Task.CompletedTask;
+        }
+
+
+        protected virtual Task UnloadPipelineAsync()
+        {
             return Task.CompletedTask;
         }
 
@@ -68,6 +86,9 @@ namespace Diffuse.Views
 
         protected virtual void OnProgress(PipelineProgress progress)
         {
+            if (_currentPipeline is null)
+                return;
+
             if (progress.IsDownloading)
             {
                 _downloadStatistics[progress.Message] = progress;
@@ -82,6 +103,7 @@ namespace Diffuse.Views
             }
             else if (progress.IsGenerating)
             {
+                Statistics.Update(progress);
                 Progress.Update(progress.Iteration, progress.Iterations, $"Step: {progress.Iteration}/{progress.Iterations}");
             }
         }
@@ -89,31 +111,37 @@ namespace Diffuse.Views
 
         protected async void SelectedPipelineChanged(object sender, PipelineModel pipeline)
         {
-            if (await LoadEnvironment())
+            if (pipeline.DiffusionModel == null)
             {
-                if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
-                {
-                    if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale"))) ;
-                    CurrentPipeline = default;
-                }
-                if (pipeline.ExtractorModel is not null && !pipeline.ExtractorModel.IsValid)
-                {
-                    if (!await pipeline.ExtractorModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extractor")))
-                        CurrentPipeline = default;
-                }
+                await UnloadPipelineAsync();
+                CurrentPipeline = default;
             }
             else
             {
-                CurrentPipeline = default;
+                if (await LoadEnvironment())
+                {
+                    if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
+                    {
+                        if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
+                            CurrentPipeline = default;
+                    }
+                    if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+                    {
+                        if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
+                            CurrentPipeline = default;
+                    }
+                }
+                else
+                {
+                    CurrentPipeline = default;
+                }
+
+                if (CurrentPipeline is not null)
+                    await LoadPipelineAsync();
             }
-
-            if (CurrentPipeline is not null)
-                await LoadPipelineAsync();
-
             await Task.Delay(500);
             Progress.Clear();
         }
 
     }
-
 }

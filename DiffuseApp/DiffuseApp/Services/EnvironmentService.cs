@@ -29,7 +29,7 @@ namespace Diffuse.Services
         }
 
 
-        public async Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback)
+        public async Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
             var environment = await GetAsync(pipeline);
             var pipelineClientConfig = new ClientConfig
@@ -39,8 +39,18 @@ namespace Diffuse.Services
             };
 
             var diffusionPipeline = new PipelineClient(pipelineClientConfig, progressCallback, _logger);
-            await diffusionPipeline.LoadAsync(pipelineConfig);
-            return diffusionPipeline;
+
+            try
+            {
+                await diffusionPipeline.LoadAsync(pipelineConfig, cancellationToken);
+                return diffusionPipeline;
+            }
+            catch (OperationCanceledException)
+            {
+                await diffusionPipeline.KillServerAsync();
+                diffusionPipeline?.Dispose();
+                throw;
+            }
         }
 
 
@@ -159,7 +169,7 @@ namespace Diffuse.Services
     {
         Task<EnvironmentConfig> GetAsync(PipelineModel pipeline);
         Task<EnvironmentConfig> GetAsync(EnvironmentModel environment);
-        Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback);
+        Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
 
         bool Exists(PipelineModel pipeline);
         bool Exists(EnvironmentModel environment);

@@ -23,8 +23,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release_Installer|Any CPU.ActiveCfg = Release|Any CPU
-		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release_Installer|Any CPU.Build.0 = Release|Any CPU
+		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
+		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
 		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -35,8 +35,8 @@ Global
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.ActiveCfg = Release|Any CPU
-		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.Build.0 = Release|Any CPU
+		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
+		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

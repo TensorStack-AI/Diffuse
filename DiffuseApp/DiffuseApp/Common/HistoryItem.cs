@@ -4,14 +4,34 @@ using System.Text.Json.Serialization;
 
 namespace Diffuse.Common
 {
-    public class HistoryItem
+    public interface IHistoryItem
     {
-        public string Id { get; set; }
+        int Version { get; init; }
+        string Id { get; init; }
+        View Source { get; init; }
+        MediaType MediaType { get; init; }
+        DateTime Timestamp { get; init; }
+        string Extension { get; init; }
+        int Width { get; init; }
+        int Height { get; init; }
+
+        string FilePath { get; set; }
+        string MediaPath { get; set; }
+        string ThumbPath { get; set; }
+    }
+
+
+    public record RecentHistory : IHistoryItem
+    {
+        public int Version { get; init; }
+        public string Id { get; init; }
+
         public View Source { get; init; }
         public MediaType MediaType { get; init; }
         public DateTime Timestamp { get; init; }
-        public string Extension { get; set; }
-
+        public string Extension { get; init; }
+        public int Width { get; init; }
+        public int Height { get; init; }
 
         [JsonIgnore]
         public string FilePath { get; set; }
@@ -21,24 +41,5 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public string ThumbPath { get; set; }
-    }
-
-
-    public enum MediaType
-    {
-        Image = 0,
-        Video = 1,
-        Audio = 2,
-        Text = 3
-    }
-
-    public class RecentHistory : HistoryItem
-    {
-
-    }
-
-    public class GenerateHistory : HistoryItem
-    {
-        public GenerateOptions Options { get; set; }
     }
 }

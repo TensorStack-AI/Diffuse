@@ -125,7 +125,7 @@
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageEdit}">
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
-                                Text="ControlNet Image" 
+                                Text="ControlNet" 
                                 Icon="f03e"
                                 Style="{StaticResource SubmenuIconButton}"
                                 Command="{Binding NavigateCommand}" 
@@ -133,12 +133,28 @@
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ControlNetImage}">
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
-                                Text="ControlNet&#x0a;Image To Image" 
+                                Text="ControlNet Image" 
                                 Icon="f03e"
                                 Style="{StaticResource SubmenuIconButton}"
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.ControlNetImageToImage}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ControlNetImageToImage}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Image Extract" 
+                                Icon="f302"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.ImageExtract}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageExtract}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Image Upscale" 
+                                Icon="f424"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.ImageUpscale}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageUpscale}">
                             </CommonControls:IconButton>
                         </UniformGrid>
                     </Grid>
@@ -169,6 +185,30 @@
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.VideoToVideo}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=VideoToVideo}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Video Extract" 
+                                Icon="f302"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.VideoExtract}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=VideoExtract}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Video Upscale" 
+                                Icon="f424"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.VideoUpscale}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=VideoUpscale}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Video Interpolate" 
+                                Icon="e4a2"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.VideoInterpolate}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=VideoInterpolate}">
                             </CommonControls:IconButton>
                         </UniformGrid>
                     </Grid>

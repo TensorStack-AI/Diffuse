@@ -9,7 +9,7 @@
         MinWidth="400"
         MaxWidth="400"
         Title="ControlNet"
-        Icon="{StaticResource ImageIcon}"
+        Icon="/Images/Icon.ico"
         Style="{StaticResource {x:Type CommonControls:DialogControl}}">
     <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ControlNetModelDialog}}}" Margin="15, 15, 15, 10">
 
@@ -20,7 +20,7 @@
                 <TextBox Text="{Binding ControlNetModel.Name, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel>
-                <TextBlock Text="ModelUrl" Style="{StaticResource FieldTextBlockStyle}"/>
+                <TextBlock Text="Huggingface Url  or  Local Folder" Style="{StaticResource FieldTextBlockStyle}"/>
                 <TextBox Text="{Binding ControlNetModel.Path, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel>

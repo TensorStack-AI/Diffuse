@@ -9,7 +9,7 @@
         MinWidth="900"
         MaxWidth="900"
         Title="Diffusion Model"
-        Icon="{StaticResource ImageIcon}"
+        Icon="/Images/Icon.ico"
         Style="{StaticResource {x:Type CommonControls:DialogControl}}">
     <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DiffusionModelDialog}}}" Margin="15, 15, 15, 10">
 
@@ -24,8 +24,8 @@
                         <TextBox Text="{Binding DiffusionModel.Name, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="ModelUrl" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.ModelUrl, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Huggingface Url  or  Local Folder" Style="{StaticResource FieldTextBlockStyle}"/>
+                        <TextBox Text="{Binding DiffusionModel.Path, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <DockPanel>
                         <CheckBox DockPanel.Dock="Right" Content="IsCustom" IsChecked="{Binding IsCustomPipeline}" VerticalAlignment="Bottom" Margin="3,0,0,2" />

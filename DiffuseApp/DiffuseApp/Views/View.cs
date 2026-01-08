@@ -13,11 +13,18 @@ namespace Diffuse.Views
 
         ControlNetImage = 110,
         ControlNetImageToImage = 111,
+        ImageUpscale = 150,
+        ImageExtract = 151,
 
         TextToVideo = 200,
         ImageToVideo = 201,
         VideoToVideo = 202,
-        History = 203
+        VideoUpscale = 250,
+        VideoExtract = 251,
+        VideoInterpolate = 252,
+
+        History = 1000,
+      
     }
 
     public enum ViewCategory
@@ -51,11 +58,16 @@ namespace Diffuse.Views
             { View.ImageEdit, ViewCategory.Image  },
             { View.ControlNetImage, ViewCategory.Image  },
             { View.ControlNetImageToImage, ViewCategory.Image  },
+            { View.ImageExtract, ViewCategory.Image  },
+            { View.ImageUpscale, ViewCategory.Image  },
 
             // Video
             { View.TextToVideo, ViewCategory.Video  },
             { View.ImageToVideo, ViewCategory.Video  },
             { View.VideoToVideo, ViewCategory.Video  },
+            { View.VideoExtract, ViewCategory.Video  },
+            { View.VideoUpscale, ViewCategory.Video  },
+            { View.VideoInterpolate, ViewCategory.Video  }
         };
 
 

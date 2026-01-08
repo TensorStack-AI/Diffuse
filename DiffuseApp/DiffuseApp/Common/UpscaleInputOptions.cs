@@ -3,11 +3,11 @@ using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
-    public class UpscaleOptions : BaseModel
+    public record UpscaleInputOptions : BaseRecord
     {
-        private TileMode _tileMode = TileMode.ClipBlend;
-        private int _tileSize = 512;
-        private int _tileOverlap = 16;
+        private TileMode _tileMode;
+        private int _tileSize;
+        private int _tileOverlap;
 
         public TileMode TileMode
         {

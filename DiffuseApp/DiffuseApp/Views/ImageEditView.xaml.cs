@@ -26,14 +26,14 @@ namespace Diffuse.Views
         private ImageInput _sourceImage2;
         private ImageInput _sourceImage3;
         private ImageInput _sourceImage4;
-        private GenerateOptions _options;
+        private DiffusionInputOptions _options;
+        private UpscaleInputOptions _upscaleOptions;
 
-        public ImageEditView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractorService extractorService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageEditView> logger)
+        public ImageEditView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageEditView> logger)
             : base(settings, navigationService, environmentService, historyService)
         {
             _logger = logger;
             UpscaleService = upscaleService;
-            ExtractorService = extractorService;
             DiffusionService = diffusionService;
             ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
             CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
@@ -43,7 +43,6 @@ namespace Diffuse.Views
         public override int Id => (int)View.ImageEdit;
         public IDiffusionService DiffusionService { get; }
         public IUpscaleService UpscaleService { get; }
-        public IExtractorService ExtractorService { get; }
         public AsyncRelayCommand ExecuteCommand { get; set; }
         public AsyncRelayCommand CancelCommand { get; set; }
 
@@ -83,10 +82,16 @@ namespace Diffuse.Views
             set { SetProperty(ref _sourceImage4, value); }
         }
 
-        public GenerateOptions Options
+        public DiffusionInputOptions Options
         {
             get { return _options; }
             set { SetProperty(ref _options, value); }
+        }
+
+        public UpscaleInputOptions UpscaleOptions
+        {
+            get { return _upscaleOptions; }
+            set { SetProperty(ref _upscaleOptions, value); }
         }
 
 
@@ -103,36 +108,26 @@ namespace Diffuse.Views
         protected override async Task LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
-
             try
             {
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ImageEditView] [LoadPipelineAsync] - Loading pipeline..");
 
                 await base.LoadPipelineAsync();
-                if (CurrentPipeline.DiffusionModel == null)
-                    await DiffusionService.UnloadAsync();
-                if (CurrentPipeline.ExtractorModel == null)
-                    await ExtractorService.UnloadAsync();
-                if (CurrentPipeline.UpscaleModel == null)
-                    await UpscaleService.UnloadAsync();
+                await UnloadServicesAsync();
 
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
                     await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                     SetDefaultOptions(DiffusionService.DefaultOptions);
                 }
-
-                if (CurrentPipeline.ExtractorModel is not null)
-                {
-                    await ExtractorService.LoadAsync(CurrentPipeline);
-                }
-
                 if (CurrentPipeline.UpscaleModel is not null)
                 {
                     await UpscaleService.LoadAsync(CurrentPipeline);
+                    SetDefaultOptions(UpscaleService.DefaultOptions);
                 }
 
+                SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageEditView] [LoadPipelineAsync] - Loading pipeline complete.");
             }
@@ -147,17 +142,39 @@ namespace Diffuse.Views
             }
 
             Progress.Clear();
+            Statistics.Clear();
             _logger?.LogInformation($"[ImageEditView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+        }
+
+
+        protected override async Task UnloadPipelineAsync()
+        {
+            try
+            {
+                _logger?.LogInformation($"[ImageEditView] [UnloadPipelineAsync] - Unloading pipeline...");
+                await base.UnloadPipelineAsync();
+                await UnloadServicesAsync();
+                _logger?.LogInformation($"[ImageEditView] [UnloadPipelineAsync] -  Pipeline unloaded.");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"[ImageEditView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
+                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
+            }
+
+            Progress.Clear();
+            Statistics.Clear();
         }
 
 
         private async Task ExecuteAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
-
             try
             {
                 Progress.Clear();
+                Statistics.Clear();
+                ResultImage = default;
                 CompareImage = default;
                 _logger?.LogInformation($"[ImageEditView] [ExecuteAsync] - Executing pipeline..");
 
@@ -167,15 +184,20 @@ namespace Diffuse.Views
                     InputImages = [.. images.Where(x => x != null).Take(_options.InputImageCount)]
                 };
 
+                Statistics.Start();
+
                 // Run Diffusion
                 var resultTensor = await DiffusionService.GenerateImageAsync(options);
+
+                Statistics.Stop();
 
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
                     resultTensor = await UpscaleService.ExecuteAsync(new UpscaleImageRequest
                     {
-                        Image = resultTensor
+                        Image = resultTensor,
+                        Options = _upscaleOptions
                     });
                 }
 
@@ -184,16 +206,26 @@ namespace Diffuse.Views
                 ResultImage = new ImageInput(resultTensor);
 
                 // History
-                await HistoryService.AddAsync(ResultImage, View.ImageEdit, options);
+                await HistoryService.AddAsync(ResultImage, new DiffusionHistory
+                {
+                    Options = options,
+                    Model = CurrentPipeline.DiffusionModel.Name,
+                    LoraModel = CurrentPipeline.LoraAdapterModel?.Name,
+                    UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
+                    UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
+                    Source = View.ImageEdit,
+                });
 
                 _logger?.LogInformation($"[ImageEditView] [ExecuteAsync] - Executing pipeline complete.");
             }
             catch (OperationCanceledException)
             {
+                Statistics.Clear();
                 _logger?.LogInformation($"[ImageEditView] [ExecuteAsync] - Executing pipeline cancelled.");
             }
             catch (Exception ex)
             {
+                Statistics.Clear();
                 _logger?.LogError(ex, $"[ImageEditView] [ExecuteAsync] - An exception occurred executing pipeline.");
                 await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
             }
@@ -211,6 +243,9 @@ namespace Diffuse.Views
 
         private async Task CancelAsync()
         {
+            if (DiffusionService.IsLoading)
+                CurrentPipeline = null;
+
             await DiffusionService.CancelAsync();
         }
 
@@ -223,7 +258,7 @@ namespace Diffuse.Views
 
         private void SetDefaultOptions(DiffusionDefaultOptions options)
         {
-            Options = new GenerateOptions
+            Options = new DiffusionInputOptions
             {
                 Prompt = Options?.Prompt,
                 NegativePrompt = Options?.NegativePrompt,
@@ -239,5 +274,24 @@ namespace Diffuse.Views
             };
         }
 
+
+        private void SetDefaultOptions(UpscaleInputOptions options)
+        {
+            UpscaleOptions = new UpscaleInputOptions
+            {
+                TileMode = options.TileMode,
+                TileSize = options.TileSize,
+                TileOverlap = options.TileOverlap,
+            };
+        }
+
+
+        private async Task UnloadServicesAsync()
+        {
+            if (DiffusionService.IsLoaded)
+                await DiffusionService.UnloadAsync();
+            if (UpscaleService.IsLoaded)
+                await UpscaleService.UnloadAsync();
+        }
     }
 }

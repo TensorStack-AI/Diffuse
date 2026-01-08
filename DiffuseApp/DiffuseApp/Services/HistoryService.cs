@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 using TensorStack.Common.Common;
 using TensorStack.Image;
 using TensorStack.Video;
@@ -14,8 +13,9 @@ namespace Diffuse.Services
 {
     public class HistoryService : IHistoryService
     {
+        private const int HistoryVersion = 1;
         private readonly Settings _settings;
-        private readonly ObservableCollection<HistoryItem> _historyCollection;
+        private readonly ObservableCollection<IHistoryItem> _historyCollection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryService"/> class.
@@ -30,7 +30,7 @@ namespace Diffuse.Services
         /// <summary>
         /// Gets the history collection.
         /// </summary>
-        public ObservableCollection<HistoryItem> HistoryCollection => _historyCollection;
+        public ObservableCollection<IHistoryItem> HistoryCollection => _historyCollection;
 
 
         public async Task InitializeAsync()
@@ -42,28 +42,40 @@ namespace Diffuse.Services
                 .ToList();
             foreach (var historyFile in historyFiles)
             {
-                var historyItem = default(HistoryItem);
+                var historyItem = default(IHistoryItem);
                 if (historyFile.Name.StartsWith("Recent_"))
                     historyItem = await Json.LoadAsync<RecentHistory>(historyFile.FullName);
-                if (historyFile.Name.StartsWith("GenerateImage_"))
-                    historyItem = await Json.LoadAsync<GenerateHistory>(historyFile.FullName);
-                if (historyFile.Name.StartsWith("GenerateVideo_"))
-                    historyItem = await Json.LoadAsync<GenerateHistory>(historyFile.FullName);
-                if (historyItem == null)
+                else if (historyFile.Name.StartsWith("GenerateImage_"))
+                    historyItem = await Json.LoadAsync<DiffusionHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("GenerateVideo_"))
+                    historyItem = await Json.LoadAsync<DiffusionHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("ExtractImage_"))
+                    historyItem = await Json.LoadAsync<ExtractHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("ExtractVideo_"))
+                    historyItem = await Json.LoadAsync<ExtractHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("UpscaleImage_"))
+                    historyItem = await Json.LoadAsync<UpscaleHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("UpscaleVideo_"))
+                    historyItem = await Json.LoadAsync<UpscaleHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("Interpolate_"))
+                    historyItem = await Json.LoadAsync<InterpolateHistory>(historyFile.FullName);
+                if (historyItem == null || historyItem.Version != HistoryVersion)
                     continue;
 
                 historyItem.FilePath = historyFile.FullName;
                 historyItem.MediaPath = Path.Combine(historyFile.DirectoryName, historyFile.Name.Replace(".json", $".{historyItem.Extension}"));
                 historyItem.ThumbPath = Path.Combine(historyFile.DirectoryName, historyFile.Name.Replace(".json", ".png"));
                 if (!File.Exists(historyItem.MediaPath))
-                    continue;
+                    continue; // Delete?
 
                 _historyCollection.Add(historyItem);
+                if (_historyCollection.Count == _settings.MaxHistory)
+                    break;
             }
         }
 
 
-        public Task DeleteAsync(HistoryItem historyItem)
+        public Task DeleteAsync(IHistoryItem historyItem)
         {
             _historyCollection.Remove(historyItem);
             FileHelper.DeleteFiles(historyItem.FilePath, historyItem.MediaPath, historyItem.ThumbPath);
@@ -71,7 +83,7 @@ namespace Diffuse.Services
         }
 
 
-        public async Task AddRecentAsync(ImageInput image)
+        public async Task AddAsync(ImageInput image)
         {
             if (_settings.MaxHistory <= 0)
                 return;
@@ -80,12 +92,15 @@ namespace Diffuse.Services
             var history = new RecentHistory
             {
                 Id = key,
+                Version = HistoryVersion,
                 Extension = "png",
                 MediaType = MediaType.Image,
                 Timestamp = DateTime.Now,
                 Source = View.History,
                 FilePath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.json"),
                 MediaPath = image.SourceFile,
+                Width = image.Width,
+                Height = image.Height,
             };
 
             await Json.SaveAsync(history.FilePath, history);
@@ -93,80 +108,195 @@ namespace Diffuse.Services
         }
 
 
-        public async Task AddRecentAsync(VideoInputStream videoStream)
+        public async Task<ImageInput> AddAsync(ImageInput image, DiffusionHistory diffusionHistory)
         {
             if (_settings.MaxHistory <= 0)
-                return;
+                return image;
+
+            var key = GetRandomName();
+            var history = diffusionHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "png",
+                MediaType = MediaType.Image,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.png"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.png"),
+                Width = image.Width,
+                Height = image.Height,
+            };
+            return await AddImageInternalAsync(image, history);
+        }
+
+
+        public async Task<ImageInput> AddAsync(ImageInput image, ExtractHistory extractHistory)
+        {
+            if (_settings.MaxHistory <= 0)
+                return image;
+
+            var key = GetRandomName();
+            var history = extractHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "png",
+                MediaType = MediaType.Image,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"ExtractImage_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"ExtractImage_{key}.png"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"ExtractImage_{key}.png"),
+                Width = image.Width,
+                Height = image.Height,
+            };
+
+            return await AddImageInternalAsync(image, history);
+        }
+
+
+        public async Task<ImageInput> AddAsync(ImageInput image, UpscaleHistory upscaleHistory)
+        {
+            if (_settings.MaxHistory <= 0)
+                return image;
+
+            var key = GetRandomName();
+            var history = upscaleHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "png",
+                MediaType = MediaType.Image,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.png"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.png"),
+                Width = image.Width,
+                Height = image.Height,
+            };
+
+            return await AddImageInternalAsync(image, history);
+        }
+
+
+        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream)
+        {
+            if (_settings.MaxHistory <= 0)
+                return videoStream;
 
             var key = GetRandomName();
             var history = new RecentHistory
             {
                 Id = key,
+                Version = HistoryVersion,
                 Extension = "mp4",
                 MediaType = MediaType.Video,
                 Timestamp = DateTime.Now,
                 Source = View.History,
                 FilePath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.json"),
                 MediaPath = videoStream.SourceFile,
-                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png")
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png"),
+                Width = videoStream.Width,
+                Height = videoStream.Height,
             };
 
-            await videoStream.Thumbnail.SaveAsync(history.ThumbPath);
-            await Json.SaveAsync(history.FilePath, history);
-            AddHistoryItem(history);
+            return await AddVideoInternalAsync(videoStream, history);
         }
 
 
-        public async Task<ImageInput> AddAsync(ImageInput image, View source, GenerateOptions options)
-        {
-            if (_settings.MaxHistory <= 0)
-                return image;
-
-            var key = GetRandomName();
-            var history = new GenerateHistory
-            {
-                Id = key,
-                Extension = "png",
-                MediaType = MediaType.Image,
-                Timestamp = DateTime.Now,
-                Source = source,
-                FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.json"),
-                MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.png"),
-                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateImage_{key}.png"),
-                Options = options,
-            };
-
-            await image.SaveAsync(history.MediaPath);
-            await Json.SaveAsync(history.FilePath, history);
-            AddHistoryItem(history);
-            return image;
-        }
-
-
-        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, View source, GenerateOptions options)
+        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, DiffusionHistory diffusionHistory)
         {
             if (_settings.MaxHistory <= 0)
                 return videoStream;
 
             var key = GetRandomName();
-            var history = new GenerateHistory
+            var history = diffusionHistory with
             {
                 Id = key,
+                Version = HistoryVersion,
                 Extension = "mp4",
                 MediaType = MediaType.Video,
                 Timestamp = DateTime.Now,
-                Source = source,
                 FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateVideo_{key}.json"),
                 MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateVideo_{key}.mp4"),
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateVideo_{key}.png"),
-                Options = options
+                Width = videoStream.Width,
+                Height = videoStream.Height,
             };
 
-            var newStream = await videoStream.MoveAsync(history.MediaPath);
-            await videoStream.Thumbnail.SaveAsync(history.ThumbPath);
-            await Json.SaveAsync(history.FilePath, history);
-            AddHistoryItem(history);
-            return newStream;
+            return await AddVideoInternalAsync(videoStream, history);
+        }
+
+
+        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, ExtractHistory extractHistory)
+        {
+            if (_settings.MaxHistory <= 0)
+                return videoStream;
+
+            var key = GetRandomName();
+            var history = extractHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "mp4",
+                MediaType = MediaType.Video,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"ExtractVideo_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"ExtractVideo_{key}.mp4"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"ExtractVideo_{key}.png"),
+                Width = videoStream.Width,
+                Height = videoStream.Height,
+            };
+
+            return await AddVideoInternalAsync(videoStream, history);
+        }
+
+
+        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, UpscaleHistory upscaleHistory)
+        {
+            if (_settings.MaxHistory <= 0)
+                return videoStream;
+
+            var key = GetRandomName();
+            var history = upscaleHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "mp4",
+                MediaType = MediaType.Video,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.mp4"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.png"),
+                Width = videoStream.Width,
+                Height = videoStream.Height,
+            };
+
+            return await AddVideoInternalAsync(videoStream, history);
+        }
+
+
+        public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, InterpolateHistory interpolateHistory)
+        {
+            if (_settings.MaxHistory <= 0)
+                return videoStream;
+
+            var key = GetRandomName();
+            var history = interpolateHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "mp4",
+                MediaType = MediaType.Video,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"Interpolate_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"Interpolate_{key}.mp4"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Interpolate_{key}.png"),
+                Width = videoStream.Width,
+                Height = videoStream.Height,
+            };
+
+            return await AddVideoInternalAsync(videoStream, history);
         }
 
 
@@ -176,7 +306,26 @@ namespace Diffuse.Services
         }
 
 
-        private void AddHistoryItem(HistoryItem historyItem)
+        private async Task<ImageInput> AddImageInternalAsync<T>(ImageInput image, T history) where T : IHistoryItem
+        {
+            await image.SaveAsync(history.MediaPath);
+            await Json.SaveAsync<T>(history.FilePath, history);
+            AddHistoryItem(history);
+            return image;
+        }
+
+
+        private async Task<VideoInputStream> AddVideoInternalAsync<T>(VideoInputStream videoStream, T history) where T : IHistoryItem
+        {
+            var newStream = await videoStream.MoveAsync(history.MediaPath);
+            await videoStream.Thumbnail.SaveAsync(history.ThumbPath);
+            await Json.SaveAsync(history.FilePath, history);
+            AddHistoryItem(history);
+            return newStream;
+        }
+
+
+        private void AddHistoryItem(IHistoryItem historyItem)
         {
             while (_historyCollection.Count > Math.Max(0, _settings.MaxHistory))
             {
@@ -190,14 +339,21 @@ namespace Diffuse.Services
 
     public interface IHistoryService
     {
-        ObservableCollection<HistoryItem> HistoryCollection { get; }
+        ObservableCollection<IHistoryItem> HistoryCollection { get; }
 
         Task InitializeAsync();
-        Task<ImageInput> AddAsync(ImageInput image, View source, GenerateOptions options);
-        Task<VideoInputStream> AddAsync(VideoInputStream videoStream, View source, GenerateOptions options);
-        Task AddRecentAsync(ImageInput image);
-        Task AddRecentAsync(VideoInputStream videoStream);
-        Task DeleteAsync(HistoryItem historyItem);
+        Task DeleteAsync(IHistoryItem historyItem);
+
+        Task AddAsync(ImageInput image);
+        Task<ImageInput> AddAsync(ImageInput image, DiffusionHistory diffusionHistory);
+        Task<ImageInput> AddAsync(ImageInput image, ExtractHistory extractHistory);
+        Task<ImageInput> AddAsync(ImageInput image, UpscaleHistory upscaleHistory);
+
+        Task<VideoInputStream> AddAsync(VideoInputStream videoStream);
+        Task<VideoInputStream> AddAsync(VideoInputStream videoStream, DiffusionHistory diffusionHistory);
+        Task<VideoInputStream> AddAsync(VideoInputStream videoStream, ExtractHistory extractHistory);
+        Task<VideoInputStream> AddAsync(VideoInputStream videoStream, UpscaleHistory upscaleHistory);
+        Task<VideoInputStream> AddAsync(VideoInputStream videoStream, InterpolateHistory interpolateHistory);
     }
 
 }

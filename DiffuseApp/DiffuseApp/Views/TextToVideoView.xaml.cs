@@ -19,7 +19,8 @@ namespace Diffuse.Views
         private readonly ILogger _logger;
         private VideoInputStream _resultVideo;
         private VideoInputStream _compareVideo;
-        private GenerateOptions _options;
+        private DiffusionInputOptions _options;
+        private UpscaleInputOptions _upscaleOptions;
 
         public TextToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<TextToVideoView> logger)
             : base(settings, navigationService, environmentService, historyService)
@@ -50,10 +51,16 @@ namespace Diffuse.Views
             set { SetProperty(ref _compareVideo, value); }
         }
 
-        public Common.GenerateOptions Options
+        public DiffusionInputOptions Options
         {
             get { return _options; }
             set { SetProperty(ref _options, value); }
+        }
+
+        public UpscaleInputOptions UpscaleOptions
+        {
+            get { return _upscaleOptions; }
+            set { SetProperty(ref _upscaleOptions, value); }
         }
 
 
@@ -76,22 +83,20 @@ namespace Diffuse.Views
                 _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Loading pipeline..");
 
                 await base.LoadPipelineAsync();
-                if (CurrentPipeline.DiffusionModel == null)
-                    await DiffusionService.UnloadAsync();
-                if (CurrentPipeline.UpscaleModel == null)
-                    await UpscaleService.UnloadAsync();
+                await UnloadServicesAsync();
 
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
                     await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                     SetDefaultOptions(DiffusionService.DefaultOptions);
                 }
-
                 if (CurrentPipeline.UpscaleModel is not null)
                 {
                     await UpscaleService.LoadAsync(CurrentPipeline);
+                    SetDefaultOptions(UpscaleService.DefaultOptions);
                 }
 
+                SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Loading pipeline complete.");
             }
@@ -106,7 +111,28 @@ namespace Diffuse.Views
             }
 
             Progress.Clear();
+            Statistics.Clear();
             _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+        }
+
+
+        protected override async Task UnloadPipelineAsync()
+        {
+            try
+            {
+                _logger?.LogInformation($"[TextToVideoView] [UnloadPipelineAsync] - Unloading pipeline...");
+                await base.UnloadPipelineAsync();
+                await UnloadServicesAsync();
+                _logger?.LogInformation($"[TextToVideoView] [UnloadPipelineAsync] -  Pipeline unloaded.");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"[TextToVideoView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
+                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
+            }
+
+            Progress.Clear();
+            Statistics.Clear();
         }
 
 
@@ -116,21 +142,26 @@ namespace Diffuse.Views
             try
             {
                 Progress.Clear();
+                Statistics.Clear();
+                ResultVideo = default;
                 CompareVideo = default;
                 _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline..");
 
+                Statistics.Start();
+
                 // Run Diffusion
-                var resultVideo = await DiffusionService.GenerateVideoAsync(_options with
-                {
-                    Strength = 1
-                });
+                var options = _options with { Strength = 1 };
+                var resultVideo = await DiffusionService.GenerateVideoAsync(options);
+
+                Statistics.Stop();
 
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
                     resultVideo = await UpscaleService.ExecuteAsync(new UpscaleVideoRequest
                     {
-                        VideoStream = resultVideo
+                        VideoStream = resultVideo,
+                        Options = _upscaleOptions
                     }, ProgressCallback);
                 }
 
@@ -138,16 +169,26 @@ namespace Diffuse.Views
                 CompareVideo = ResultVideo;
 
                 // History
-                ResultVideo = await HistoryService.AddAsync(resultVideo, View.TextToVideo, _options);
+                ResultVideo = await HistoryService.AddAsync(resultVideo, new DiffusionHistory
+                {
+                    Options = options,
+                    Model = CurrentPipeline.DiffusionModel.Name,
+                    LoraModel = CurrentPipeline.LoraAdapterModel?.Name,
+                    UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
+                    UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
+                    Source = View.TextToVideo,
+                });
 
                 _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline complete.");
             }
             catch (OperationCanceledException)
             {
+                Statistics.Clear();
                 _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline cancelled.");
             }
             catch (Exception ex)
             {
+                Statistics.Clear();
                 _logger?.LogError(ex, $"[TextToVideoView] [ExecuteAsync] - An exception occurred executing pipeline.");
                 await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
             }
@@ -165,6 +206,9 @@ namespace Diffuse.Views
 
         private async Task CancelAsync()
         {
+            if (DiffusionService.IsLoading)
+                CurrentPipeline = null;
+
             await DiffusionService.CancelAsync();
         }
 
@@ -177,7 +221,7 @@ namespace Diffuse.Views
 
         private void SetDefaultOptions(DiffusionDefaultOptions options)
         {
-            Options = new GenerateOptions
+            Options = new DiffusionInputOptions
             {
                 Prompt = Options?.Prompt,
                 NegativePrompt = Options?.NegativePrompt,
@@ -192,5 +236,24 @@ namespace Diffuse.Views
             };
         }
 
+
+        private void SetDefaultOptions(UpscaleInputOptions options)
+        {
+            UpscaleOptions = new UpscaleInputOptions
+            {
+                TileMode = options.TileMode,
+                TileSize = options.TileSize,
+                TileOverlap = options.TileOverlap,
+            };
+        }
+
+
+        private async Task UnloadServicesAsync()
+        {
+            if (DiffusionService.IsLoaded)
+                await DiffusionService.UnloadAsync();
+            if (UpscaleService.IsLoaded)
+                await UpscaleService.UnloadAsync();
+        }
     }
 }

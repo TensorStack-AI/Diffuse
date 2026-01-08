@@ -24,6 +24,7 @@ namespace Diffuse.Services
         private bool _isLoading;
         private bool _isExecuting;
         private UpscalerConfig _currentConfig;
+        private UpscaleInputOptions _defaultOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpscaleService"/> class.
@@ -39,6 +40,11 @@ namespace Diffuse.Services
         /// Gets the model.
         /// </summary>
         public PipelineModel Pipeline => _currentPipeline;
+
+        /// <summary>
+        /// Gets the default options.
+        /// </summary>
+        public UpscaleInputOptions DefaultOptions => _defaultOptions;
 
         /// <summary>
         /// Gets a value indicating whether this instance is loaded.
@@ -97,6 +103,7 @@ namespace Diffuse.Services
                     _currentPipeline = pipeline;
                     var device = _currentPipeline.Device;
                     var model = _currentPipeline.UpscaleModel;
+                    _defaultOptions = model.DefaultOptions;
                     _currentConfig = new UpscalerConfig
                     {
                         Channels = model.Channels,
@@ -131,7 +138,7 @@ namespace Diffuse.Services
         /// Execute the upscaler
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> ExecuteAsync(UpscaleImageRequest options)
+        public async Task<ImageTensor> ExecuteAsync(UpscaleImageRequest request)
         {
             try
             {
@@ -140,10 +147,10 @@ namespace Diffuse.Services
                 {
                     var imageOptions = new UpscaleImageOptions
                     {
-                        Image = options.Image,
-                        MaxTileSize = options.MaxTileSize,
-                        TileMode = options.TileMode,
-                        TileOverlap = options.TileOverlap
+                        Image = request.Image,
+                        MaxTileSize = request.Options.TileSize,
+                        TileMode = request.Options.TileMode,
+                        TileOverlap = request.Options.TileOverlap
                     };
 
                     return await Task.Run(() => _upscalePipeline.RunAsync(imageOptions, cancellationToken: _cancellationTokenSource.Token));
@@ -159,10 +166,10 @@ namespace Diffuse.Services
         /// <summary>
         /// Execute as an asynchronous operation.
         /// </summary>
-        /// <param name="options">The options.</param>
+        /// <param name="request">The options.</param>
         /// <param name="progressCallback">The progress callback.</param>
         /// <returns>A Task&lt;VideoInputStream&gt; representing the asynchronous operation.</returns>
-        public async Task<VideoInputStream> ExecuteAsync(UpscaleVideoRequest options, IProgress<RunProgress> progressCallback)
+        public async Task<VideoInputStream> ExecuteAsync(UpscaleVideoRequest request, IProgress<RunProgress> progressCallback)
         {
             try
             {
@@ -170,7 +177,7 @@ namespace Diffuse.Services
                 var resultVideoFile = _mediaService.GetTempVideoFile();
                 using (_cancellationTokenSource = new CancellationTokenSource())
                 {
-                    var frameCount = options.VideoStream.FrameCount;
+                    var frameCount = request.VideoStream.FrameCount;
                     var cancellationToken = _cancellationTokenSource.Token;
 
                     async Task<VideoFrame> FrameProcessor(VideoFrame frame)
@@ -178,16 +185,16 @@ namespace Diffuse.Services
                         var processedFrame = await _upscalePipeline.RunAsync(new UpscaleImageOptions
                         {
                             Image = frame.Frame,
-                            MaxTileSize = options.MaxTileSize,
-                            TileMode = options.TileMode,
-                            TileOverlap = options.TileOverlap
+                            MaxTileSize = request.Options.TileSize,
+                            TileMode = request.Options.TileMode,
+                            TileOverlap = request.Options.TileOverlap
                         }, cancellationToken: cancellationToken);
 
                         progressCallback.Report(new RunProgress(frame.Index, frameCount));
                         return new VideoFrame(frame.Index, processedFrame, frame.SourceFrameRate, frame.AuxFrame);
                     }
 
-                    return await _mediaService.SaveWithAudioAsync(options.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
+                    return await _mediaService.SaveWithAudioAsync(request.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
                 }
             }
             finally
@@ -231,6 +238,7 @@ namespace Diffuse.Services
     public interface IUpscaleService
     {
         PipelineModel Pipeline { get; }
+        UpscaleInputOptions DefaultOptions { get; }
         bool IsLoaded { get; }
         bool IsLoading { get; }
         bool IsExecuting { get; }
@@ -245,19 +253,15 @@ namespace Diffuse.Services
 
     public record UpscaleImageRequest
     {
-        public TileMode TileMode { get; init; }
-        public int MaxTileSize { get; init; }
-        public int TileOverlap { get; init; }
         public ImageTensor Image { get; set; }
+        public UpscaleInputOptions Options { get; set; }
     }
 
 
     public record UpscaleVideoRequest
     {
-        public TileMode TileMode { get; init; }
-        public int MaxTileSize { get; init; }
-        public int TileOverlap { get; init; }
         public VideoInputStream VideoStream { get; set; }
+        public UpscaleInputOptions Options { get; set; }
     }
 
 }

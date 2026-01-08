@@ -13,15 +13,15 @@ using TensorStack.WPF.Controls;
 namespace Diffuse.Dialogs
 {
     /// <summary>
-    /// Interaction logic for ExtractorModelDialog.xaml
+    /// Interaction logic for ExtractModelDialog.xaml
     /// </summary>
-    public partial class ExtractorModelDialog : DialogControl
+    public partial class ExtractModelDialog : DialogControl
     {
-        private ExtractorModel _extractorModel;
-        private ExtractorModel _originalExtractorModel;
+        private ExtractModel _extractModel;
+        private ExtractModel _originalExtractModel;
         private string _selectedFile;
 
-        public ExtractorModelDialog(Settings settings)
+        public ExtractModelDialog(Settings settings)
         {
             Settings = settings;
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
@@ -40,12 +40,12 @@ namespace Diffuse.Dialogs
         public AsyncRelayCommand AddFileCommand { get; }
         public AsyncRelayCommand<string> RemoveFileCommand { get; }
         public ObservableCollection<string> Files { get; }
-        public bool IsUpdateMode => _originalExtractorModel is not null;
+        public bool IsUpdateMode => _originalExtractModel is not null;
 
-        public ExtractorModel ExtractorModel
+        public ExtractModel ExtractModel
         {
-            get { return _extractorModel; }
-            set { SetProperty(ref _extractorModel, value); }
+            get { return _extractModel; }
+            set { SetProperty(ref _extractModel, value); }
         }
 
         public string SelectedFile
@@ -58,20 +58,24 @@ namespace Diffuse.Dialogs
         public Task<bool> AddAsync()
         {
             var modelId = GetNextModelId();
-            ExtractorModel = new ExtractorModel
+            ExtractModel = new ExtractModel
             {
-                Id = modelId
+                Id = modelId,
+                DefaultOptions = new ExtractInputOptions
+                {
+  
+                }
             };
             return base.ShowDialogAsync();
         }
 
 
-        public Task<bool> UpdateAsync(ExtractorModel extractorModel)
+        public Task<bool> UpdateAsync(ExtractModel extractModel)
         {
-            var modelId = extractorModel.Id;
-            _originalExtractorModel = extractorModel;
-            ExtractorModel = DeepClone(extractorModel, modelId);
-            foreach (var path in ExtractorModel.UrlPaths)
+            var modelId = extractModel.Id;
+            _originalExtractModel = extractModel;
+            ExtractModel = DeepClone(extractModel, modelId);
+            foreach (var path in ExtractModel.UrlPaths)
             {
                 Files.Add(path);
             }
@@ -79,11 +83,11 @@ namespace Diffuse.Dialogs
         }
 
 
-        public Task<bool> CopyAsync(ExtractorModel extractorModel)
+        public Task<bool> CopyAsync(ExtractModel extractModel)
         {
             var modelId = GetNextModelId();
-            ExtractorModel = DeepClone(extractorModel, modelId);
-            foreach (var path in ExtractorModel.UrlPaths)
+            ExtractModel = DeepClone(extractModel, modelId);
+            foreach (var path in ExtractModel.UrlPaths)
             {
                 Files.Add(path);
             }
@@ -115,22 +119,22 @@ namespace Diffuse.Dialogs
 
         protected override Task SaveAsync()
         {
-            var index = Settings.ExtractorModels.Count;
+            var index = Settings.ExtractModels.Count;
             if (IsUpdateMode)
             {
-                index = Settings.ExtractorModels.IndexOf(_originalExtractorModel);
-                Settings.ExtractorModels.Remove(_originalExtractorModel);
+                index = Settings.ExtractModels.IndexOf(_originalExtractModel);
+                Settings.ExtractModels.Remove(_originalExtractModel);
             }
 
-            ExtractorModel.UrlPaths = Files.ToArray();
-            Settings.ExtractorModels.Insert(index, ExtractorModel);
+            ExtractModel.UrlPaths = Files.ToArray();
+            Settings.ExtractModels.Insert(index, ExtractModel);
             return base.SaveAsync();
         }
 
 
         protected override bool CanExecuteSave()
         {
-            if (ExtractorModel == null)
+            if (ExtractModel == null)
                 return false;
 
             Errors.Clear();
@@ -143,8 +147,8 @@ namespace Diffuse.Dialogs
 
         protected override Task CancelAsync()
         {
-            ExtractorModel = default;
-            _originalExtractorModel = null;
+            ExtractModel = default;
+            _originalExtractModel = null;
             return base.CancelAsync();
         }
 
@@ -157,41 +161,42 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.ExtractorModels.Max(x => x.Id)) + 1;
+            return Math.Max(100, Settings.ExtractModels.Max(x => x.Id)) + 1;
         }
 
 
         private IEnumerable<string> GetValidationErrors()
         {
-            if (string.IsNullOrWhiteSpace(ExtractorModel.Name))
+            if (string.IsNullOrWhiteSpace(ExtractModel.Name))
                 yield return "Name cannot be empty";
-            if (ExtractorModel.Channels < 3)
+            if (ExtractModel.Channels < 3)
                 yield return "Channels must be >= 3";
-            if (ExtractorModel.SampleSize < 0)
+            if (ExtractModel.SampleSize < 0)
                 yield return "Sample Size must be >= 0";
             if (Files.IsNullOrEmpty())
                 yield return "No files have been added";
-            if (!IsUpdateMode && Settings.ExtractorModels.Any(x => x.Name.Equals(ExtractorModel.Name, StringComparison.OrdinalIgnoreCase)))
-                yield return $"Model with name '{ExtractorModel.Name}' already exists";
+            if (!IsUpdateMode && Settings.ExtractModels.Any(x => x.Name.Equals(ExtractModel.Name, StringComparison.OrdinalIgnoreCase)))
+                yield return $"Model with name '{ExtractModel.Name}' already exists";
         }
 
 
-        private static ExtractorModel DeepClone(ExtractorModel extractorModel, int modelId)
+        private static ExtractModel DeepClone(ExtractModel extractModel, int modelId)
         {
-            return new ExtractorModel
+            return new ExtractModel
             {
                 Id = modelId,
-                Name = extractorModel.Name,
-                Path = extractorModel.Path,
-                Channels = extractorModel.Channels,
-                IsDefault = extractorModel.IsDefault,
-                Normalization = extractorModel.Normalization,
-                OutputNormalization = extractorModel.OutputNormalization,
-                SampleSize = extractorModel.SampleSize,
-                OutputChannels = extractorModel.OutputChannels,
-                IsDynamicOutput = extractorModel.IsDynamicOutput,
-                Type = extractorModel.Type,
-                UrlPaths = extractorModel.UrlPaths.ToArray(),
+                Name = extractModel.Name,
+                Path = extractModel.Path,
+                Channels = extractModel.Channels,
+                IsDefault = extractModel.IsDefault,
+                Normalization = extractModel.Normalization,
+                OutputNormalization = extractModel.OutputNormalization,
+                SampleSize = extractModel.SampleSize,
+                OutputChannels = extractModel.OutputChannels,
+                IsDynamicOutput = extractModel.IsDynamicOutput,
+                Type = extractModel.Type,
+                UrlPaths = extractModel.UrlPaths.ToArray(),
+                DefaultOptions = extractModel.DefaultOptions with { }
             };
         }
     }

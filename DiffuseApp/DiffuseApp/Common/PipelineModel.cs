@@ -9,7 +9,7 @@ namespace Diffuse.Common
         private Device _device;
         private DiffusionModel _diffusionModel;
         private ControlNetModel _controlNetModel;
-        private ExtractorModel _extractorModel;
+        private ExtractModel _extractModel;
         private LoraAdapterModel _loraAdapterModel;
         private UpscaleModel _upscaleModel;
         private MemoryMode _memoryMode;
@@ -34,10 +34,10 @@ namespace Diffuse.Common
             set { SetProperty(ref _controlNetModel, value); }
         }
 
-        public ExtractorModel ExtractorModel
+        public ExtractModel ExtractModel
         {
-            get { return _extractorModel; }
-            set { SetProperty(ref _extractorModel, value); }
+            get { return _extractModel; }
+            set { SetProperty(ref _extractModel, value); }
         }
 
         public LoraAdapterModel LoraAdapterModel

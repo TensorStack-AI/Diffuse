@@ -6,6 +6,7 @@
              xmlns:CoreCommon="clr-namespace:TensorStack.Common;assembly=TensorStack.Common"
              xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
              xmlns:PythonOptions="clr-namespace:TensorStack.Python.Common;assembly=TensorStack.Python"
+             xmlns:Extractors="clr-namespace:TensorStack.Extractors.Common;assembly=TensorStack.Extractors"
              xmlns:Common="clr-namespace:Diffuse.Common"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -112,6 +113,12 @@
             <ObjectDataProvider x:Key="SchedulerType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="PythonOptions:SchedulerType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="BackgroundMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Extractors:BackgroundMode"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
@@ -233,12 +240,13 @@
             </Style>
 
             <Style x:Key="SubmenuIconButton" TargetType="CommonControls:IconButton">
-                <Setter Property="Height" Value="70"/>
+                <Setter Property="Height" Value="60"/>
                 <Setter Property="Width" Value="120"/>
                 <Setter Property="LineHeight" Value="14"/>
                 <Setter Property="Orientation" Value="Vertical"/>
                 <Setter Property="Placement" Value="Right"/>
                 <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Medium"/>
                 <Setter Property="IconSize" Value="20"/>
                 <Setter Property="IconStyle" Value="Solid"/>
                 <Setter Property="IconColor" Value="{StaticResource AccentColour2}"/>
@@ -247,7 +255,23 @@
 
 
 
-
+            <DataTemplate x:Key="ComboBoxDataTemplateModel">
+                <DockPanel>
+                    <CommonControls:FontAwesome DockPanel.Dock="Right" Icon="f019" Size="10" IconStyle="Solid" Opacity=".6"  >
+                        <CommonControls:FontAwesome.Style>
+                            <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
+                                <Setter Property="Color" Value="#10FFFFFF"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsValid}" Value="True">
+                                        <Setter Property="Color" Value="{StaticResource AccentColour2}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CommonControls:FontAwesome.Style>
+                    </CommonControls:FontAwesome>
+                    <TextBlock Text="{Binding Name}" />
+                </DockPanel>
+            </DataTemplate>
 
         </ResourceDictionary>
 

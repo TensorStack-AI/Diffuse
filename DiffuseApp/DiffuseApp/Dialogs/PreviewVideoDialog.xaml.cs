@@ -28,7 +28,7 @@ namespace Diffuse.Dialogs
             {
                 Filter = (obj) =>
                 {
-                    if (obj is not HistoryItem item)
+                    if (obj is not IHistoryItem item)
                         return false;
                     return item.MediaType == MediaType.Video;
                 }
@@ -50,7 +50,7 @@ namespace Diffuse.Dialogs
         }
 
 
-        public Task<bool> ShowDialogAsync(HistoryItem selectedItem)
+        public Task<bool> ShowDialogAsync(IHistoryItem selectedItem)
         {
             VideoCollection.MoveCurrentTo(selectedItem);
             SetCurrentVideoStream();
@@ -98,7 +98,7 @@ namespace Diffuse.Dialogs
 
         private void SetCurrentVideoStream()
         {
-            var currentItem = VideoCollection.CurrentItem as HistoryItem;
+            var currentItem = VideoCollection.CurrentItem as IHistoryItem;
             if (currentItem == null)
                 return;
 

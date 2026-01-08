@@ -23,7 +23,7 @@
             <!--***Left Panel***-->
             <Grid Grid.Column="0">
                 <Border Margin="4">
-                    <DockPanel x:Name="LeftPanelContainer" Margin="4">
+                    <DockPanel x:Name="LeftPanelContainer" Margin="4" IsEnabled="{Binding IsViewBusy, Converter={StaticResource InverseBoolConverter}}">
 
                         <!--ModelControl-->
                         <StackPanel DockPanel.Dock="Top" IsEnabled="{Binding DiffusionService.IsLoading, Converter={StaticResource InverseBoolConverter}}">
@@ -52,6 +52,7 @@
                                     x:Name="InputControl"
                                     ProcessType="ImageEdit"
                                     Options="{Binding Options}"
+                                    UpscaleOptions="{Binding UpscaleOptions}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="True"
                                     IsControlNetEnabled="False"
@@ -79,16 +80,18 @@
 
                 <!--Content-->
                 <DockPanel Grid.Column="0" >
-                    <CommonControls:ProgressElement  
+
+                    <!--Statistics-->
+                    <Controls:StatisticsControl 
                         DockPanel.Dock="Bottom"
-                        Height="20"
                         Margin="14,0,14,8"
+                        Statistics="{Binding Statistics}"
                         Progress="{Binding Progress}" />
 
-                    <Border Margin="4">
+                    <Border Margin="4" IsEnabled="{Binding IsViewBusy, Converter={StaticResource InverseBoolConverter}}">
                         <UniformGrid Columns="2">
 
-                            <Grid Margin="10" IsEnabled="{Binding DiffusionService.IsLoaded}">
+                            <Grid Margin="10,10,10,2" IsEnabled="{Binding DiffusionService.IsLoaded}">
                                 <UniformGrid IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}">
                                     <Border >
                                         <CommonControls:ImageElement 
@@ -223,7 +226,7 @@
                                 </UniformGrid>
                             </Grid>
 
-                            <Grid Margin="10" >
+                            <Grid Margin="10,10,10,2" >
                                 <CommonControls:ImageElement 
                                     SplitterVisibility="Auto"
                                     SplitterPosition="Source"

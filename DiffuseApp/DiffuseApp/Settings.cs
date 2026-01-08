@@ -1,4 +1,5 @@
 ﻿using Diffuse.Common;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -26,7 +27,7 @@ namespace Diffuse
         public ObservableCollection<DiffusionModel> DiffusionModels { get; set; }
         public ObservableCollection<LoraAdapterModel> LoraAdapterModels { get; set; }
         public ObservableCollection<ControlNetModel> ControlNetModels { get; set; }
-        public ObservableCollection<ExtractorModel> ExtractorModels { get; set; }
+        public ObservableCollection<ExtractModel> ExtractModels { get; set; }
 
         [JsonIgnore]
         public Device DefaultDevice { get; set; }
@@ -45,10 +46,18 @@ namespace Diffuse
                 DirectoryTemp = Path.Combine(directoryData, "Temp");
             if (string.IsNullOrEmpty(DirectoryModel) || !Path.Exists(DirectoryModel))
                 DirectoryModel = Path.Combine(directoryData, "Models");
-            if (string.IsNullOrEmpty(DirectoryCache) || !Path.Exists(DirectoryCache))
-                DirectoryCache = Path.Combine(directoryData, "Models");
             if (string.IsNullOrEmpty(DirectoryHistory) || !Path.Exists(DirectoryHistory))
                 DirectoryHistory = Path.Combine(directoryData, "History");
+            if (string.IsNullOrEmpty(DirectoryCache) || !Path.Exists(DirectoryCache))
+            {
+                var huggingfaceCache = Environment.GetEnvironmentVariable("HUGGINGFACE_HUB_CACHE");
+                if (!Directory.Exists(huggingfaceCache))
+                    huggingfaceCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache", "huggingface", "hub");
+
+                DirectoryCache = Directory.Exists(huggingfaceCache)
+                    ? huggingfaceCache
+                    : Path.Combine(directoryData, "Models");
+            }
 
             Directory.CreateDirectory(DirectoryTemp);
             Directory.CreateDirectory(DirectoryModel);
@@ -57,11 +66,12 @@ namespace Diffuse
 
             Provider.Initialize();
             Devices = Provider.GetDevices()
-                .Where(x => x.Type == DeviceType.GPU)
+                .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor))
                 .ToList();
             DefaultDevice = Devices.FirstOrDefault();
 
             ScanModels();
+            Json.Save(App.FileSettings, this);
         }
 
 
@@ -83,13 +93,13 @@ namespace Diffuse
 
                 pipeline.UpscaleModel.IsDefault = true;
             }
-            if (pipeline.ExtractorModel != null)
+            if (pipeline.ExtractModel != null)
             {
-                var defaultModel = ExtractorModels.FirstOrDefault(x => x.IsDefault);
+                var defaultModel = ExtractModels.FirstOrDefault(x => x.IsDefault);
                 if (defaultModel is not null)
                     defaultModel.IsDefault = false;
 
-                pipeline.ExtractorModel.IsDefault = true;
+                pipeline.ExtractModel.IsDefault = true;
             }
 
             await Json.SaveAsync(App.FileSettings, this);
@@ -101,9 +111,11 @@ namespace Diffuse
             var pipelines = new HashSet<string>(
             [
                 "ChromaPipeline",
+                "CogVideoXPipeline",
                 "FluxPipeline",
                 "Flux2Pipeline",
                 "Kandinsky5Pipeline",
+                "LTXPipeline",
                 "QwenImagePipeline",
                 "StableDiffusionXLPipeline",
                 "WanPipeline",
@@ -118,14 +130,20 @@ namespace Diffuse
         }
 
 
-        private void ScanModels()
+        public void ScanModels()
         {
             var upscaleDirectory = Path.Combine(DirectoryModel, "Upscale");
             foreach (var upscaleModel in UpscaleModels)
                 upscaleModel.Initialize(upscaleDirectory);
-            var extractorDirectory = Path.Combine(DirectoryModel, "Extractor");
-            foreach (var extractorModel in ExtractorModels)
-                extractorModel.Initialize(extractorDirectory);
+            var extractDirectory = Path.Combine(DirectoryModel, "Extract");
+            foreach (var extractModel in ExtractModels)
+                extractModel.Initialize(extractDirectory);
+            foreach (var diffusionModel in DiffusionModels)
+                diffusionModel.Initialize(DirectoryCache);
+            foreach (var loraAdapterModel in LoraAdapterModels)
+                loraAdapterModel.Initialize(DirectoryCache);
+            foreach (var controlNetModel in ControlNetModels)
+                controlNetModel.Initialize(DirectoryCache);
         }
     }
 }

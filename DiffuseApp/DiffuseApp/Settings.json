@@ -66,6 +66,11 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-ESRGAN-Soft-2x/model.onnx" ]
     },
     {
@@ -74,7 +79,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/AnimeSharpV2-MoSR-Sharp-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Sharp-2x/model.onnx" ]
     },
     {
       "Id": 103,
@@ -82,7 +92,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/AnimeSharpV2-MoSR-Soft-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Soft-2x/model.onnx" ]
     },
     {
       "Id": 104,
@@ -91,6 +106,11 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Sharp-2x/model.onnx" ]
     },
     {
@@ -99,7 +119,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/AnimeSharpV2-RPLKSR-Soft-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Soft-2x/model.onnx" ]
     },
     {
       "Id": 106,
@@ -107,7 +132,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/AnimeSharpV3-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV3-2x/model.onnx" ]
     },
     {
       "Id": 107,
@@ -115,7 +145,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/APISR-GRL-GAN-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-GRL-GAN-4x/model.onnx" ]
     },
     {
       "Id": 108,
@@ -123,7 +158,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/APISR-RRDB-GAN-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-RRDB-GAN-2x/model.onnx" ]
     },
     {
       "Id": 109,
@@ -131,7 +171,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/BSRGAN-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/BSRGAN-2x/model.onnx" ]
     },
     {
       "Id": 110,
@@ -139,7 +184,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/RealESRGAN-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-2x/model.onnx" ]
     },
     {
       "Id": 111,
@@ -147,7 +197,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/RealESRGAN-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-4x/model.onnx" ]
     },
     {
       "Id": 112,
@@ -155,7 +210,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/RealESR-General-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESR-General-4x/model.onnx" ]
     },
     {
       "Id": 113,
@@ -163,7 +223,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/RealWebPhoto-RGT-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealWebPhoto-RGT-4x/model.onnx" ]
     },
     {
       "Id": 114,
@@ -171,7 +236,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/Swin2SR-Classical-2x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-2x/model.onnx" ]
     },
     {
       "Id": 115,
@@ -179,7 +249,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/Swin2SR-Classical-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-4x/model.onnx" ]
     },
     {
       "Id": 116,
@@ -187,7 +262,12 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
     },
     {
       "Id": 117,
@@ -195,15 +275,25 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/SwinIR-BSRGAN-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/SwinIR-BSRGAN-4x/model.onnx" ]
     },
     {
       "Id": 118,
       "Name": "UltraMix Smooth 4x",
       "Channels": 3,
       "SampleSize": 0,
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/UltraMix-Smooth-4x/model.onnx" ]
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraMix-Smooth-4x/model.onnx" ]
     },
     {
       "Id": 119,
@@ -211,10 +301,15 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscaler/UltraSharp-4x/model.onnx" ]
+      "DefaultOptions": {
+        "TileMode": "ClipBlend",
+        "TileSize": 512,
+        "TileOverlap": 16
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraSharp-4x/model.onnx" ]
     }
   ],
-  "ExtractorModels": [
+  "ExtractModels": [
     {
       "Id": 101,
       "Name": "Canny",
@@ -222,6 +317,14 @@
       "Channels": 3,
       "SampleSize": 0,
       "OutputChannels": 1,
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Canny/model.onnx" ]
     },
     {
@@ -232,6 +335,14 @@
       "Channels": 3,
       "SampleSize": 0,
       "OutputChannels": 1,
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/SoftEdge/model.onnx" ]
     },
     {
@@ -243,6 +354,14 @@
       "OutputChannels": 1,
       "OutputNormalization": "MinMaxOneToOne",
       "IsDynamicOutput": true,
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Depth/model.onnx" ]
     },
     {
@@ -252,6 +371,14 @@
       "Channels": 3,
       "SampleSize": 0,
       "OutputChannels": 1,
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/LineDrawing/model.onnx" ]
     },
     {
@@ -263,6 +390,14 @@
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Small/model.onnx" ]
     },
     {
@@ -274,6 +409,14 @@
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Base/model.onnx" ]
     },
     {
@@ -285,6 +428,14 @@
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
+      "DefaultOptions": {
+        "TileMode": "None",
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Large/model.onnx" ]
     },
     {
@@ -294,6 +445,9 @@
       "Channels": 3,
       "SampleSize": 1024,
       "OutputChannels": 1,
+      "DefaultOptions": {
+        "Mode": "RemoveBackground"
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/BiRefNet/model.onnx" ]
     },
     {
@@ -303,7 +457,9 @@
       "IsDefault": true,
       "Channels": 3,
       "SampleSize": 1024,
-      "OutputChannels": 1,
+      "DefaultOptions": {
+        "Mode": "RemoveBackground"
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/RMBGv1.4/model.onnx" ]
     },
     {
@@ -313,6 +469,9 @@
       "Channels": 3,
       "SampleSize": 1024,
       "OutputChannels": 1,
+      "DefaultOptions": {
+        "Mode": "RemoveBackground"
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/RMBGv2.0/model.onnx" ]
     },
     {
@@ -322,6 +481,15 @@
       "IsDefault": true,
       "Channels": 3,
       "SampleSize": 640,
+      "DefaultOptions": {
+        "Detections": 0,
+        "BodyConfidence": 0.4,
+        "JointConfidence": 0.1,
+        "ColorAlpha": 0.8,
+        "JointRadius": 7,
+        "BoneRadius": 8,
+        "BoneThickness": 1
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Pose-Body7/model.onnx" ]
     },
     {
@@ -330,6 +498,15 @@
       "Type": "Pose",
       "Channels": 3,
       "SampleSize": 640,
+      "DefaultOptions": {
+        "Detections": 0,
+        "BodyConfidence": 0.4,
+        "JointConfidence": 0.1,
+        "ColorAlpha": 0.8,
+        "JointRadius": 7,
+        "BoneRadius": 8,
+        "BoneThickness": 1
+      },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Pose-Coco/model.onnx" ]
     }
   ],
@@ -338,7 +515,7 @@
       "Id": 101,
       "Name": "Z-Image Turbo",
       "Pipeline": "ZImagePipeline",
-      "ModelUrl": "TensorStack/Z-Image-Turbo-ts",
+      "Path": "TensorStack/Z-Image-Turbo-ts",
       "MemoryModes": [ 2, 2, 14, 24 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
@@ -400,7 +577,7 @@
       "Id": 102,
       "Name": "Qwen Image",
       "Pipeline": "QwenImagePipeline",
-      "ModelUrl": "TensorStack/Qwen-Image-ts",
+      "Path": "TensorStack/Qwen-Image-ts",
       "MemoryModes": [ 5, 5, 40, 60 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
@@ -460,7 +637,7 @@
       "Id": 104,
       "Name": "Qwen Image Edit(2511)",
       "Pipeline": "QwenImagePipeline",
-      "ModelUrl": "Qwen/Qwen-Image-Edit-2511",
+      "Path": "Qwen/Qwen-Image-Edit-2511",
       "MemoryModes": [ 5, 5, 40, 60 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageEdit" ],
@@ -521,7 +698,7 @@
       "Id": 105,
       "Name": "Chroma HD",
       "Pipeline": "ChromaPipeline",
-      "ModelUrl": "TensorStack/Chroma1-HD-ts",
+      "Path": "TensorStack/Chroma1-HD-ts",
       "MemoryModes": [ 2, 2, 19, 30 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
@@ -581,7 +758,7 @@
       "Id": 106,
       "Name": "FLUX.1 Schnell",
       "Pipeline": "FluxPipeline",
-      "ModelUrl": "TensorStack/FLUX.1-schnell-ts",
+      "Path": "TensorStack/FLUX.1-schnell-ts",
       "MemoryModes": [ 4, 8, 23, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
@@ -641,7 +818,7 @@
       "Id": 107,
       "Name": "FLUX.1 Dev",
       "Pipeline": "FluxPipeline",
-      "ModelUrl": "TensorStack/FLUX.1-dev-ts",
+      "Path": "TensorStack/FLUX.1-dev-ts",
       "MemoryModes": [ 4, 8, 23, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
@@ -701,7 +878,7 @@
       "Id": 108,
       "Name": "FLUX.1 Kontext",
       "Pipeline": "FluxPipeline",
-      "ModelUrl": "TensorStack/FLUX.1-Kontext-dev-ts",
+      "Path": "TensorStack/FLUX.1-Kontext-dev-ts",
       "MemoryModes": [ 4, 8, 23, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageEdit" ],
@@ -758,70 +935,10 @@
       ]
     },
     {
-      "Id": 109,
-      "Name": "FLUX.2 Dev",
-      "Pipeline": "Flux2Pipeline",
-      "ModelUrl": "TensorStack/FLUX.2-dev-ts",
-      "MemoryModes": [ 4, 8, 64, 128 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
-      "ProcessTypes": [ "TextToImage", "ImageEdit" ],
-      "DefaultOptions": {
-        "Steps": 30,
-        "Width": 1024,
-        "Height": 1024,
-        "GuidanceScale": 2.5,
-        "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
-      },
-      "Resolutions": [
-        {
-          "Width": 640,
-          "Height": 1536
-        },
-        {
-          "Width": 768,
-          "Height": 1344
-        },
-        {
-          "Width": 832,
-          "Height": 1280
-        },
-        {
-          "Width": 896,
-          "Height": 1152
-        },
-        {
-          "Width": 768,
-          "Height": 768
-        },
-        {
-          "Width": 1024,
-          "Height": 1024,
-          "IsDefault": true
-        },
-        {
-          "Width": 1152,
-          "Height": 896
-        },
-        {
-          "Width": 1280,
-          "Height": 832
-        },
-        {
-          "Width": 1344,
-          "Height": 768
-        },
-        {
-          "Width": 1536,
-          "Height": 640
-        }
-      ]
-    },
-    {
       "Id": 110,
       "Name": "StableDiffusionXL",
       "Pipeline": "StableDiffusionXLPipeline",
-      "ModelUrl": "TensorStack/StableDiffusionXL-ts",
+      "Path": "TensorStack/StableDiffusionXL-ts",
       "MemoryModes": [ 2, 2, 8, 16 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ControlNetImageToImage" ],
@@ -882,7 +999,7 @@
       "Id": 111,
       "Name": "Wan-T2V 2.1 1.3B",
       "Pipeline": "WanPipeline",
-      "ModelUrl": "TensorStack/Wan2.1-T2V-1.3B-ts",
+      "Path": "TensorStack/Wan2.1-T2V-1.3B-ts",
       "MemoryModes": [ 8, 16, 18, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],
@@ -907,7 +1024,7 @@
       "Id": 112,
       "Name": "Wan-I2V 2.1 14B 480P",
       "Pipeline": "WanPipeline",
-      "ModelUrl": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
+      "Path": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
       "MemoryModes": [ 8, 16, 18, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
@@ -933,7 +1050,7 @@
       "Id": 200,
       "Name": "Kandinsky5 T2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
-      "ModelUrl": "kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
+      "Path": "kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
       "MemoryModes": [ 8, 16, 18, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToImage" ],
@@ -981,7 +1098,7 @@
       "Id": 201,
       "Name": "Kandinsky5 I2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
-      "ModelUrl": "kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
+      "Path": "kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
       "MemoryModes": [ 8, 16, 18, 32 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageEdit" ],
@@ -1029,7 +1146,7 @@
       "Id": 202,
       "Name": "Kandinsky5 T2V Lite",
       "Pipeline": "Kandinsky5Pipeline",
-      "ModelUrl": "kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
+      "Path": "kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
       "MemoryModes": [ 16, 32, 32, 64 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],
@@ -1055,7 +1172,7 @@
       "Id": 203,
       "Name": "Kandinsky5 I2V Pro",
       "Pipeline": "Kandinsky5Pipeline",
-      "ModelUrl": "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
+      "Path": "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
       "MemoryModes": [ 16, 32, 32, 64 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
@@ -1081,7 +1198,7 @@
       "Id": 300,
       "Name": "CogVideoX T2V 2B",
       "Pipeline": "CogVideoXPipeline",
-      "ModelUrl": "zai-org/CogVideoX-2b",
+      "Path": "zai-org/CogVideoX-2b",
       "MemoryModes": [ 8, 16, 54, 64 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],
@@ -1107,7 +1224,7 @@
       "Id": 301,
       "Name": "CogVideoX T2V 5B",
       "Pipeline": "CogVideoXPipeline",
-      "ModelUrl": "zai-org/CogVideoX-5b",
+      "Path": "zai-org/CogVideoX-5b",
       "MemoryModes": [ 8, 16, 54, 72 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],
@@ -1133,7 +1250,7 @@
       "Id": 302,
       "Name": "CogVideoX I2V 5B",
       "Pipeline": "CogVideoXPipeline",
-      "ModelUrl": "zai-org/CogVideoX-5b-I2V",
+      "Path": "zai-org/CogVideoX-5b-I2V",
       "MemoryModes": [ 8, 18, 54, 72 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
@@ -1159,7 +1276,7 @@
       "Id": 303,
       "Name": "CogVideoX 1.5 T2V 5B",
       "Pipeline": "CogVideoXPipeline",
-      "ModelUrl": "zai-org/CogVideoX1.5-5B",
+      "Path": "zai-org/CogVideoX1.5-5B",
       "MemoryModes": [ 8, 16, 54, 72 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],
@@ -1185,7 +1302,7 @@
       "Id": 304,
       "Name": "CogVideoX 1.5 I2V 5B",
       "Pipeline": "CogVideoXPipeline",
-      "ModelUrl": "zai-org/CogVideoX1.5-5B-I2V",
+      "Path": "zai-org/CogVideoX1.5-5B-I2V",
       "MemoryModes": [ 8, 18, 54, 72 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
@@ -1211,7 +1328,7 @@
       "Id": 400,
       "Name": "LTX Video",
       "Pipeline": "LTXPipeline",
-      "ModelUrl": "Lightricks/LTX-Video",
+      "Path": "Lightricks/LTX-Video",
       "MemoryModes": [ 16, 23, 32, 48 ],
       "DataTypes": [ "BFloat16", "Float16" ],
       "ProcessTypes": [ "TextToVideo" ],

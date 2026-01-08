@@ -97,6 +97,19 @@ namespace DiffuseApp.Common
 
 
         /// <summary>
+        /// Kill server.
+        /// </summary>
+        public async Task KillServerAsync()
+        {
+            if (_serverProcess is not null)
+            {
+                _serverProcess.Kill(true);
+                await _serverProcess.WaitForExitAsync();
+            }
+        }
+
+
+        /// <summary>
         /// Send as request to the Server
         /// </summary>
         /// <param name="request">The request.</param>
@@ -186,7 +199,8 @@ namespace DiffuseApp.Common
                         continue;
                     }
 
-                    progressCallback?.Report(await _objectPipe.ReceiveObject<PipelineProgress>(_cancellationTokenSource.Token));
+                    if (!_cancellationTokenSource.IsCancellationRequested)
+                        progressCallback?.Report(await _objectPipe.ReceiveObject<PipelineProgress>(_cancellationTokenSource.Token));
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception ex)

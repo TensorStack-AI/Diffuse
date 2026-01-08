@@ -32,8 +32,12 @@ namespace Diffuse.Controls
 
 
         public static readonly DependencyProperty PipelineProperty = DependencyProperty.Register(nameof(Pipeline), typeof(PipelineModel), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, PipelineModel>((c, o, n) => c.OnPipelineChanged(o, n)));
-        public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(GenerateOptions), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, GenerateOptions>((c, o, n) => c.OnOptionsChanged(o, n)));
+        public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(DiffusionInputOptions), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, DiffusionInputOptions>((c, o, n) => c.OnOptionsChanged(o, n)));
+        public static readonly DependencyProperty UpscaleOptionsProperty = DependencyProperty.Register(nameof(UpscaleOptions), typeof(UpscaleInputOptions), typeof(DiffusionInputControl));
+        public static readonly DependencyProperty ExtractOptionsProperty = DependencyProperty.Register(nameof(ExtractOptions), typeof(ExtractInputOptions), typeof(DiffusionInputControl));
         private HashSet<int> _defaultResolutions;
+
+
         public ProcessType ProcessType { get; set; }
         public RelayCommand<bool> SeedCommand { get; }
         public AsyncRelayCommand<string> AddTriggerWordCommand { get; }
@@ -44,11 +48,28 @@ namespace Diffuse.Controls
             set { SetValue(PipelineProperty, value); }
         }
 
-        public GenerateOptions Options
+        public DiffusionInputOptions Options
         {
-            get { return (GenerateOptions)GetValue(OptionsProperty); }
+            get { return (DiffusionInputOptions)GetValue(OptionsProperty); }
             set { SetValue(OptionsProperty, value); }
         }
+
+        public UpscaleInputOptions UpscaleOptions
+        {
+
+            get { return (UpscaleInputOptions)GetValue(UpscaleOptionsProperty); }
+            set { SetValue(UpscaleOptionsProperty, value); }
+        }
+
+        public ExtractInputOptions ExtractOptions
+        {
+
+            get { return (ExtractInputOptions)GetValue(ExtractOptionsProperty); }
+            set { SetValue(ExtractOptionsProperty, value); }
+        }
+
+
+
 
         //public HashSet<int> DefaultResolutions
         //{
@@ -133,7 +154,7 @@ namespace Diffuse.Controls
         }
 
 
-        private Task OnOptionsChanged(GenerateOptions oldOptions, GenerateOptions newOptions)
+        private Task OnOptionsChanged(DiffusionInputOptions oldOptions, DiffusionInputOptions newOptions)
         {
             if (newOptions is null)
                 return Task.CompletedTask;

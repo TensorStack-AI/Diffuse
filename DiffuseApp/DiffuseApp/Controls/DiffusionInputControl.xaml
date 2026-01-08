@@ -170,7 +170,7 @@
                         <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
                     </StackPanel>
 
-                 
+
 
                     <!--ControlNetImage-->
                     <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ControlNetImage}">
@@ -196,7 +196,7 @@
                     </StackPanel>
 
                     <!--LoraStrength-->
-                    <UniformGrid Visibility="{Binding Pipeline.LoraAdapterModel, Converter={StaticResource NullVisibilityConverter}}">
+                    <UniformGrid Visibility="{Binding Pipeline.LoraAdapterModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
                         <CommonControls:SliderControl Text="Lora Strength" Value="{Binding Options.LoraStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
                     </UniformGrid>
 
@@ -215,8 +215,28 @@
 
                 <StackPanel Margin="0,4,0,0" >
 
-                    <!--Shift-->
-                    <CommonControls:SliderControl Text="Shift" Value="{Binding Options.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                    <!--SchedulerOptions-->
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Text="Scheduler Options" Opacity=".8"  FontSize="11"/>
+                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
+                        <StackPanel>
+                            <CommonControls:SliderControl Text="Shift" Value="{Binding Options.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!--UpscaleOptions-->
+                    <DockPanel Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <TextBlock DockPanel.Dock="Top" Text="Upscale Options" Margin="0,10,0,0" Opacity=".8" FontSize="11"/>
+                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
+                        <Controls:UpscaleInputControl Options="{Binding UpscaleOptions}" />
+                    </DockPanel>
+
+                    <!--ExtractOptions-->
+                    <DockPanel Visibility="{Binding Pipeline.ExtractModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <TextBlock DockPanel.Dock="Top" Text="Extractor Options" Margin="0,10,0,0" Opacity=".8" FontSize="11"/>
+                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
+                        <Controls:ExtractInputControl Options="{Binding ExtractOptions}" ExtractorType="{Binding Pipeline.ExtractModel.Type}" />
+                    </DockPanel>
 
                 </StackPanel>
             </TabItem>
@@ -291,6 +311,6 @@
                 </UniformGrid.Style>
             </UniformGrid>
         </DockPanel>
-     
+
     </DockPanel>
 </CommonControls:BaseControl>

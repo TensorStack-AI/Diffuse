@@ -23,7 +23,7 @@
             <!--***Left Panel***-->
             <Grid Grid.Column="0">
                 <Border Margin="4">
-                    <DockPanel x:Name="LeftPanelContainer" Margin="4">
+                    <DockPanel x:Name="LeftPanelContainer" Margin="4" IsEnabled="{Binding IsViewBusy, Converter={StaticResource InverseBoolConverter}}">
 
                         <!--ModelControl-->
                         <StackPanel DockPanel.Dock="Top" IsEnabled="{Binding DiffusionService.IsLoading, Converter={StaticResource InverseBoolConverter}}">
@@ -53,6 +53,8 @@
                                 <Controls:DiffusionInputControl 
                                     ProcessType="ControlNetImageToImage"
                                     Options="{Binding Options}"
+                                    UpscaleOptions="{Binding UpscaleOptions}"
+                                    ExtractOptions="{Binding ExtractOptions}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="True"
                                     IsControlNetEnabled="False"
@@ -80,29 +82,49 @@
 
                 <!--Content-->
                 <DockPanel Grid.Column="0" >
-                    <CommonControls:ProgressElement  
+
+                    <!--Statistics-->
+                    <Controls:StatisticsControl 
                         DockPanel.Dock="Bottom"
-                        Height="20"
                         Margin="14,0,14,8"
+                        Statistics="{Binding Statistics}"
                         Progress="{Binding Progress}" />
 
-                    <Border Margin="4">
+                    <Border Margin="4" IsEnabled="{Binding IsViewBusy, Converter={StaticResource InverseBoolConverter}}">
                         <UniformGrid Columns="2">
-                            <Border Margin="10" Style="{StaticResource ImageDropZoneStyle}" IsEnabled="{Binding DiffusionService.IsLoaded}">
-                                <CommonControls:ImageElement 
-                                    AllowDrop="True"
-                                    CropWidth="{Binding Options.Width}"
-                                    CropHeight="{Binding Options.Height}"
-                                    SplitterVisibility="Auto"
-                                    SplitterPosition="Source"
-                                    SplitterDirection="LeftToRight"
-                                    Source="{Binding SourceImage, Mode=TwoWay}" 
-                                    IsLoadEnabled="True" 
-                                    IsSaveEnabled="False"
-                                    IsLoadOverlayEnabled="False"
-                                    IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
-                            </Border>
-                            <Grid Margin="10" >
+                            <UniformGrid Columns="1" Rows="2" Margin="10,10,10,2" IsEnabled="{Binding DiffusionService.IsLoaded}">
+                                <Border  Style="{StaticResource ImageDropZoneStyle}" Margin="0,0,0,4">
+                                    <CommonControls:ImageElement 
+                                        AllowDrop="True"
+                                        CropWidth="{Binding Options.Width}"
+                                        CropHeight="{Binding Options.Height}"
+                                        SplitterVisibility="Auto"
+                                        SplitterPosition="Source"
+                                        SplitterDirection="LeftToRight"
+                                        Source="{Binding SourceImage1, Mode=TwoWay}" 
+                                        IsLoadEnabled="True" 
+                                        IsSaveEnabled="False"
+                                        IsLoadOverlayEnabled="False"
+                                        SourceChanged="SourceImage1_SourceChanged"
+                                        IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
+                                </Border>
+                                <Border Style="{StaticResource ImageDropZoneStyle}" IsEnabled="{Binding ExtractService.IsLoaded, Converter={StaticResource InverseBoolConverter}}" Margin="0,4,0,0">
+                                    <CommonControls:ImageElement 
+                                        AllowDrop="True"
+                                        CropWidth="{Binding Options.Width}"
+                                        CropHeight="{Binding Options.Height}"
+                                        SplitterVisibility="Auto"
+                                        SplitterPosition="Source"
+                                        SplitterDirection="LeftToRight"
+                                        Source="{Binding SourceImage2, Mode=TwoWay}" 
+                                        IsLoadEnabled="True" 
+                                        IsSaveEnabled="False"
+                                        IsLoadOverlayEnabled="False"
+                                        IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
+                                </Border>
+                            </UniformGrid>
+                        
+                            <Grid Margin="10,10,10,2" >
                                 <CommonControls:ImageElement 
                                     SplitterVisibility="Auto"
                                     SplitterPosition="Source"

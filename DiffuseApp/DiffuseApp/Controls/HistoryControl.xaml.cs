@@ -27,10 +27,10 @@ namespace Diffuse.Controls
         }
 
         public static readonly DependencyProperty ItemSourceProperty =
-            DependencyProperty.Register(nameof(ItemSource), typeof(ObservableCollection<HistoryItem>), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnItemSourceChanged()));
+            DependencyProperty.Register(nameof(ItemSource), typeof(ObservableCollection<IHistoryItem>), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnItemSourceChanged()));
 
         public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register(nameof(SelectedItem), typeof(HistoryItem), typeof(HistoryControl));
+            DependencyProperty.Register(nameof(SelectedItem), typeof(IHistoryItem), typeof(HistoryControl));
    
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(HistoryControl));
@@ -45,23 +45,23 @@ namespace Diffuse.Controls
             DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(HistoryControl), new PropertyMetadata(ScrollBarVisibility.Visible));
 
         public static readonly DependencyProperty SortPropertyProperty =
-            DependencyProperty.Register(nameof(SortProperty), typeof(string), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = nameof(HistoryItem.Timestamp) });
+            DependencyProperty.Register(nameof(SortProperty), typeof(string), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = nameof(IHistoryItem.Timestamp) });
 
         public static readonly DependencyProperty SortDirectionProperty =
             DependencyProperty.Register(nameof(SortDirection), typeof(ListSortDirection), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = ListSortDirection.Descending });
 
-        public static readonly DependencyProperty PreviewItemCommandProperty = DependencyProperty.Register(nameof(PreviewItemCommand), typeof(AsyncRelayCommand<HistoryItem>), typeof(HistoryControl));
-        public static readonly DependencyProperty RemoveItemCommandProperty = DependencyProperty.Register(nameof(RemoveItemCommand), typeof(AsyncRelayCommand<HistoryItem>), typeof(HistoryControl));
+        public static readonly DependencyProperty PreviewItemCommandProperty = DependencyProperty.Register(nameof(PreviewItemCommand), typeof(AsyncRelayCommand<IHistoryItem>), typeof(HistoryControl));
+        public static readonly DependencyProperty RemoveItemCommandProperty = DependencyProperty.Register(nameof(RemoveItemCommand), typeof(AsyncRelayCommand<IHistoryItem>), typeof(HistoryControl));
 
-        public ObservableCollection<HistoryItem> ItemSource
+        public ObservableCollection<IHistoryItem> ItemSource
         {
-            get { return (ObservableCollection<HistoryItem>)GetValue(ItemSourceProperty); }
+            get { return (ObservableCollection<IHistoryItem>)GetValue(ItemSourceProperty); }
             set { SetValue(ItemSourceProperty, value); }
         }
 
-        public HistoryItem SelectedItem
+        public IHistoryItem SelectedItem
         {
-            get { return (HistoryItem)GetValue(SelectedItemProperty); }
+            get { return (IHistoryItem)GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
         }
 
@@ -107,15 +107,15 @@ namespace Diffuse.Controls
             set { SetProperty(ref _collectionView, value); }
         }
 
-        public AsyncRelayCommand<HistoryItem> PreviewItemCommand
+        public AsyncRelayCommand<IHistoryItem> PreviewItemCommand
         {
-            get { return (AsyncRelayCommand<HistoryItem>)GetValue(PreviewItemCommandProperty); }
+            get { return (AsyncRelayCommand<IHistoryItem>)GetValue(PreviewItemCommandProperty); }
             set { SetValue(PreviewItemCommandProperty, value); }
         }
 
-        public AsyncRelayCommand<HistoryItem> RemoveItemCommand
+        public AsyncRelayCommand<IHistoryItem> RemoveItemCommand
         {
-            get { return (AsyncRelayCommand<HistoryItem>)GetValue(RemoveItemCommandProperty); }
+            get { return (AsyncRelayCommand<IHistoryItem>)GetValue(RemoveItemCommandProperty); }
             set { SetValue(RemoveItemCommandProperty, value); }
         }
 
@@ -125,7 +125,7 @@ namespace Diffuse.Controls
             CollectionView = new ListCollectionView(ItemSource) { IsLiveSorting = true };
             CollectionView.Filter = (obj) =>
             {
-                if (obj is not HistoryItem item)
+                if (obj is not IHistoryItem item)
                     return false;
 
                 return true;
@@ -231,7 +231,7 @@ namespace Diffuse.Controls
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item is HistoryItem historyItem)
+            if (item is IHistoryItem historyItem)
             {
                 return historyItem.MediaType switch
                 {

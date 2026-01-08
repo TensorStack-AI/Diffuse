@@ -80,9 +80,10 @@
                     <TextBox DockPanel.Dock="Left" Text="Model" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            DisplayMemberPath="Name"
                             SelectedItem="{Binding SelectedModel}"
                             ItemsSource="{Binding ModelCollectionView}"
+                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                            HorizontalContentAlignment="Stretch"
                             IsSynchronizedWithCurrentItem="False"
                             SelectionChanged="Model_SelectionChanged"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ModelCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -94,9 +95,10 @@
                     <TextBox DockPanel.Dock="Left" Text="Control" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            DisplayMemberPath="Name"
                             SelectedItem="{Binding SelectedControlNet}"
                             ItemsSource="{Binding ControlNetCollectionView}"
+                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                            HorizontalContentAlignment="Stretch"
                             IsSynchronizedWithCurrentItem="False"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ControlNetCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
@@ -107,11 +109,12 @@
                     <TextBox DockPanel.Dock="Left" Text="Extractor" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            DisplayMemberPath="Name"
                             SelectedItem="{Binding SelectedExtractor}"
-                            ItemsSource="{Binding ExtractorCollectionView}"
+                            ItemsSource="{Binding ExtractCollectionView}"
+                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                            HorizontalContentAlignment="Stretch"
                             IsSynchronizedWithCurrentItem="False"/>
-                        <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ExtractorCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ExtractCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
                 </DockPanel>
 
@@ -120,9 +123,10 @@
                     <TextBox DockPanel.Dock="Left" Text="LoRA" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            DisplayMemberPath="Name"
                             SelectedItem="{Binding SelectedLora}"
                             ItemsSource="{Binding LoraCollectionView}"
+                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                            HorizontalContentAlignment="Stretch"
                             IsSynchronizedWithCurrentItem="False"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding LoraCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
@@ -133,9 +137,10 @@
                     <TextBox DockPanel.Dock="Left" Text="Upscaler" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            DisplayMemberPath="Name"
                             SelectedItem="{Binding SelectedUpscaler}" 
                             ItemsSource="{Binding UpscaleCollectionView}" 
+                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                            HorizontalContentAlignment="Stretch"
                             IsSynchronizedWithCurrentItem="False" />
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding UpscaleCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>

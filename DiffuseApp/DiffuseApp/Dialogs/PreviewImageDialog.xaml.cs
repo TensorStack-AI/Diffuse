@@ -28,7 +28,7 @@ namespace Diffuse.Dialogs
             {
                 Filter = (obj) =>
                 {
-                    if (obj is not HistoryItem item)
+                    if (obj is not IHistoryItem item)
                         return false;
                     return item.MediaType == MediaType.Image;
                 }
@@ -50,7 +50,7 @@ namespace Diffuse.Dialogs
         }
 
 
-        public Task<bool> ShowDialogAsync(HistoryItem selectedItem)
+        public Task<bool> ShowDialogAsync(IHistoryItem selectedItem)
         {
             ImageCollection.MoveCurrentTo(selectedItem);
             SetCurrentImage();
@@ -100,7 +100,7 @@ namespace Diffuse.Dialogs
 
         private void SetCurrentImage()
         {
-            var currentItem = ImageCollection.CurrentItem as HistoryItem;
+            var currentItem = ImageCollection.CurrentItem as IHistoryItem;
             if (currentItem == null)
                 return;
 
