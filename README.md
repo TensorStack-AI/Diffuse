@@ -35,13 +35,17 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 
 ## Installation
 
-1. Download and extract **Diffuse_XXXX.zip**  
+### 1. Installer Version
+1. Download and run **Diffuse_vX.X.X.exe**  
+2. Follow the on-screen instructions
+
+### 2. Portable Version
+1. Download and extract **Diffuse_vX.X.X.zip**  
    *A fast SSD with plenty of free space is recommended, as model downloads can be large.*
 
 2. Run **Diffuse.exe**
 
-3. Load a model  
-   Diffuse will automatically:
+Diffuse will automatically:
    - Install an isolated portable Python runtime  
    - Create the required virtual environment  
    - Download the selected model from Hugging Face  
@@ -49,7 +53,11 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 ### First-run notice
 On first launch or when loading a model for the first time, setup may take several minutes while Python, dependencies, and model files are downloaded and initialized. This is expected behavior.
 
+
 No manual Python setup is required.
+
+### Device Support
+Supports CUDA and ROCM  based devices
 
 
 ---
@@ -58,16 +66,16 @@ No manual Python setup is required.
 
 ### Alpha
 Proof of concept, Focus on core functionality.
-- Portable Python installation and management
-- Device-specific virtual environments
-- Minimal but functional Windows UI
-- Basic Diffusers pipeline support
+- ~~Portable Python installation and management~~
+- ~~Device-specific virtual environments~~
+- ~~Minimal but functional Windows UI~~
+- B~~asic Diffusers pipeline support~~
 
 ### Beta
 Focus on usability, stability, and feature expansion.
-- Fully isolated Python execution
-- Multiple virtual environments
-- Installer and deployment tooling
+- ~~Fully isolated Python execution~~
+- ~~Multiple virtual environments~~
+- ~~Installer and deployment tooling~~
 - Advanced UI and workflow options
 - ControlNet support
 - Upscaling and interpolation support
