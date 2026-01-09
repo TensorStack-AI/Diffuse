@@ -336,7 +336,7 @@
                                     <DockPanel DockPanel.Dock="Left">
                                         <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" FontSize="12" Margin="3,0,0,0" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
                                         <StackPanel>
-                                            <TextBlock Text="{Binding ScaleFactor, StringFormat={}x{0}}" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
+                                            <TextBlock Text="{Binding Type}" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
                                             <TextBlock Text="OnnxRuntime" TextAlignment="Right" Margin="0,0,2,2" Opacity=".7" FontSize="11"/>
                                         </StackPanel>
                                     </DockPanel>

@@ -18,7 +18,6 @@ namespace Diffuse.Controls
     /// </summary>
     public partial class SystemInfoControl : UserControl
     {
-        private readonly IReadOnlyList<Device> _devices;
         private readonly IHardwareService _hardwareService;
         private readonly DispatcherTimer _updateTimer;
 
@@ -29,20 +28,24 @@ namespace Diffuse.Controls
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                _devices = Provider.GetDevices();
                 _hardwareService = App.GetService<IHardwareService>();
-                DeviceCollection = [.. _devices.Select(x => new DeviceInfo
-                {
-                    Id = x.Id,
-                    DeviceId = x.Id,
-                    Name = x.Name,
-                    HardwareLUID = x.HardwareLUID,
-                    HardwareID = x.HardwareID,
-                    HardwareVendor = x.HardwareVendor,
-                    HardwareVendorId = x.HardwareVendorId,
-                    Memory = x.Memory,
-                    Type = x.Type
-                })];
+
+                var devices = Provider.GetDevices()
+                    .Where(x => !string.IsNullOrEmpty(x.HardwareVendor))
+                    .Select(x => new DeviceInfo
+                    {
+                        Id = x.Id,
+                        DeviceId = x.Id,
+                        Name = x.Name,
+                        HardwareLUID = x.HardwareLUID,
+                        HardwareID = x.HardwareID,
+                        HardwareVendor = x.HardwareVendor,
+                        HardwareVendorId = x.HardwareVendorId,
+                        Memory = x.Memory,
+                        Type = x.Type
+                    });
+
+                DeviceCollection = [.. devices];
                 _updateTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(300), DispatcherPriority.Normal, UpdateDevices, Dispatcher);
                 _updateTimer.Start();
                 _ = Task.Run(UpdateDevices);
@@ -72,7 +75,6 @@ namespace Diffuse.Controls
         private async Task UpdateDevices()
         {
             var process = Process.GetCurrentProcess();
-            // var devices = Provider.GetDevices().Select(x => new DeviceInfo { Device = x });
             while (!process.HasExited)
             {
                 try
@@ -110,10 +112,7 @@ namespace Diffuse.Controls
                         gpuUpdate.ProcessMemoryUsage = gpuStatus.ProcessMemoryTotal / 1024f;
                     }
                 }
-                catch (Exception ex)
-                {
-                    //_logger.LogError(ex, "Error occured updating device statistics");
-                }
+                catch (Exception) { }
                 await Task.Delay(250); // Non-blocking delay
             }
         }
@@ -131,17 +130,6 @@ namespace Diffuse.Controls
             var usage = Math.Max(status.UsageCuda, Math.Max(compute, graphics));
             return Math.Min(usage, 100);
         }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 

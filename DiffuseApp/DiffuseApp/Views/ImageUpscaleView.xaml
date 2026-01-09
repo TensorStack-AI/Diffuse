@@ -47,7 +47,7 @@
                         </UniformGrid>
 
 
-                        <StackPanel>
+                        <StackPanel IsEnabled="{Binding UpscaleService.IsLoaded}">
 
                             <!--Input Image-->
                             <Border Margin="0,15,0,15"
@@ -76,17 +76,11 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5" Opacity=".4" Margin="0,20" />
 
 
-            <!--***Middle Panel***-->
+            <!--***Right Panel***-->
             <Grid Grid.Column="2" Grid.Row="0" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="7*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="0" />
-                </Grid.ColumnDefinitions>
-
 
                 <!--Content-->
-                <DockPanel Grid.Column="0" >
+                <DockPanel>
 
                     <!--Statistics-->
                     <Controls:StatisticsControl 
@@ -108,18 +102,6 @@
                         </Grid>
                     </Border>
                 </DockPanel>
-
-
-                <!--GridSplitter-->
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5" Opacity=".4" Margin="0,20"/>
-
-
-                <!--***Right Panel***-->
-                <Grid Grid.Column="2" >
-                    <Border Margin="4">
-                     
-                    </Border>
-                </Grid>
 
             </Grid>
         </Grid>

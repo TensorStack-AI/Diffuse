@@ -198,6 +198,8 @@ namespace Diffuse.Services
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png"),
                 Width = videoStream.Width,
                 Height = videoStream.Height,
+                FrameRate = videoStream.FrameRate,
+                FrameCount = videoStream.FrameCount
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -222,6 +224,8 @@ namespace Diffuse.Services
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateVideo_{key}.png"),
                 Width = videoStream.Width,
                 Height = videoStream.Height,
+                FrameRate = videoStream.FrameRate,
+                FrameCount = videoStream.FrameCount
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -246,6 +250,8 @@ namespace Diffuse.Services
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"ExtractVideo_{key}.png"),
                 Width = videoStream.Width,
                 Height = videoStream.Height,
+                FrameRate = videoStream.FrameRate,
+                FrameCount = videoStream.FrameCount
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -270,6 +276,8 @@ namespace Diffuse.Services
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"UpscaleImage_{key}.png"),
                 Width = videoStream.Width,
                 Height = videoStream.Height,
+                FrameRate = videoStream.FrameRate,
+                FrameCount = videoStream.FrameCount
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -294,6 +302,8 @@ namespace Diffuse.Services
                 ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Interpolate_{key}.png"),
                 Width = videoStream.Width,
                 Height = videoStream.Height,
+                FrameRate = videoStream.FrameRate,
+                OriginalFrameRate = videoStream.FrameCount
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -331,7 +341,7 @@ namespace Diffuse.Services
             {
                 _historyCollection.RemoveAt(_historyCollection.Count - 1);
             }
-            _historyCollection.Add(historyItem);
+            _historyCollection.Insert(0, historyItem);
         }
 
     }

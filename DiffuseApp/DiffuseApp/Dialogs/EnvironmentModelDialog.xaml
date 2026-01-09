@@ -69,7 +69,7 @@
             <!--Requirements-->
             <DockPanel Margin="0,0,4,0">
                 <TextBlock DockPanel.Dock="Top" Text="Requirements" Style="{StaticResource FieldTextBlockStyle}"/>
-                <TextBox Text="{Binding Requirements, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Text="{Binding Requirements, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"/>
             </DockPanel>
 
             <!--Environment Variables-->
@@ -81,13 +81,12 @@
                     <StackPanel>
                         <TextBlock Text="Environment Variables" Style="{StaticResource FieldTextBlockStyle}"/>
                         <UniformGrid Columns="2" >
-                            <TextBox Text="{Binding SelectedVariable.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0"/>
-                            <TextBox Text="{Binding SelectedVariable.Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0"/>
+                            <TextBox Text="{Binding CurrentVariable.Name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,0"/>
+                            <TextBox Text="{Binding CurrentVariable.Value, UpdateSourceTrigger=PropertyChanged}" Margin="2,0,2,0"/>
                         </UniformGrid>
-
                     </StackPanel>
                 </DockPanel>
-                <ListBox ItemsSource="{Binding Variables}" SelectedItem="{Binding SelectedVariable}" ItemContainerStyle="{StaticResource TransparentListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,3,0,0" Background="Transparent">
+                <ListBox ItemsSource="{Binding Variables}" SelectedItem="{Binding SelectedVariable}" ItemContainerStyle="{StaticResource TransparentListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,3,0,0" Background="Transparent" >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border Background="{StaticResource ButtonBackgroundDisabled}" Margin="2">

@@ -1,5 +1,6 @@
 ﻿using Diffuse.Views;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Diffuse.Common
@@ -25,11 +26,18 @@ namespace Diffuse.Common
         public int Width { get; init; }
         public int Height { get; init; }
 
-        public DiffusionInputOptions Options { get; init; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
+        public DiffusionInputOptions Options { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string ExtractModel { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public ExtractorType? ExtractorType { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ExtractInputOptions ExtractOptions { get; init; }
@@ -49,6 +57,9 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public string ThumbPath { get; set; }
-      
+
+
+        public virtual bool Equals(DiffusionHistory other) => ReferenceEquals(this, other);
+        public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     }
 }

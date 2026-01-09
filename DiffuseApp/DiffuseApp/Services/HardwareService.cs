@@ -338,7 +338,7 @@ namespace Diffuse.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

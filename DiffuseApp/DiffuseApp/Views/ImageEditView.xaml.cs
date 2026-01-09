@@ -112,19 +112,34 @@ namespace Diffuse.Views
             {
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ImageEditView] [LoadPipelineAsync] - Loading pipeline..");
-
                 await base.LoadPipelineAsync();
-                await UnloadServicesAsync();
 
+                //DiffusionModel
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
-                    await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
-                    SetDefaultOptions(DiffusionService.DefaultOptions);
+                    if (!DiffusionService.IsLoaded || DiffusionService.Pipeline.DiffusionModel != CurrentPipeline.DiffusionModel)
+                    {
+                        await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
+                        SetDefaultOptions(DiffusionService.DefaultOptions);
+                    }
                 }
+                else
+                {
+                    await DiffusionService.UnloadAsync();
+                }
+
+                //UpscaleService
                 if (CurrentPipeline.UpscaleModel is not null)
                 {
-                    await UpscaleService.LoadAsync(CurrentPipeline);
-                    SetDefaultOptions(UpscaleService.DefaultOptions);
+                    if (!UpscaleService.IsLoaded || UpscaleService.Pipeline.UpscaleModel != CurrentPipeline.UpscaleModel)
+                    {
+                        await UpscaleService.LoadAsync(CurrentPipeline);
+                        SetDefaultOptions(UpscaleService.DefaultOptions);
+                    }
+                }
+                else
+                {
+                    await UpscaleService.UnloadAsync();
                 }
 
                 SetDefaultOptions(DiffusionService.DefaultOptions);
@@ -153,7 +168,10 @@ namespace Diffuse.Views
             {
                 _logger?.LogInformation($"[ImageEditView] [UnloadPipelineAsync] - Unloading pipeline...");
                 await base.UnloadPipelineAsync();
-                await UnloadServicesAsync();
+                if (DiffusionService.IsLoaded)
+                    await DiffusionService.UnloadAsync();
+                if (UpscaleService.IsLoaded)
+                    await UpscaleService.UnloadAsync();
                 _logger?.LogInformation($"[ImageEditView] [UnloadPipelineAsync] -  Pipeline unloaded.");
             }
             catch (Exception ex)
@@ -285,13 +303,5 @@ namespace Diffuse.Views
             };
         }
 
-
-        private async Task UnloadServicesAsync()
-        {
-            if (DiffusionService.IsLoaded)
-                await DiffusionService.UnloadAsync();
-            if (UpscaleService.IsLoaded)
-                await UpscaleService.UnloadAsync();
-        }
     }
 }

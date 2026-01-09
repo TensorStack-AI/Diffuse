@@ -1,5 +1,6 @@
 ﻿using Diffuse.Views;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Diffuse.Common
@@ -13,11 +14,17 @@ namespace Diffuse.Common
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
 
+        public string Model { get; init; } = "Interpolation";
         public int Width { get; init; }
         public int Height { get; init; }
-        public float FrameRate { get; set; }
-        public float OriginalFrameRate { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
         public int Multiplier { get; init; }
+        public float OriginalFrameRate { get; set; }
 
         [JsonIgnore]
         public string FilePath { get; set; }
@@ -27,5 +34,8 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public string ThumbPath { get; set; }
+
+        public virtual bool Equals(InterpolateHistory other) => ReferenceEquals(this, other);
+        public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     }
 }

@@ -3,6 +3,8 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Diffuse
 {
@@ -31,6 +33,7 @@ namespace Diffuse
             }
             catch (Exception ex)
             {
+                Log.Logger.Error(ex, "[Json] [LoadA] An exception occurred loading JSON file: {filePath}", filePath);
                 return default;
             }
         }
@@ -47,6 +50,7 @@ namespace Diffuse
             }
             catch (Exception ex)
             {
+                Log.Logger.Error(ex, "[Json] [LoadAsync] An exception occurred loading JSON file: {filePath}", filePath);
                 return default;
             }
         }
@@ -63,7 +67,7 @@ namespace Diffuse
             }
             catch (Exception ex)
             {
-
+                Log.Logger.Error(ex, "[Json] [Save] An exception occurred saving JSON file: {filePath}", filePath);
             }
         }
 
@@ -81,7 +85,7 @@ namespace Diffuse
             }
             catch (Exception ex)
             {
-
+                Log.Logger.Error(ex, "[Json] [SaveAsync] An exception occurred saving JSON file: {filePath}", filePath);
             }
         }
     }

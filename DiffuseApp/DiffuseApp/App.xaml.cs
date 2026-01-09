@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Threading;
 using TensorStack.WPF;
 using TensorStack.WPF.Services;
+using Logger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Diffuse
 {
@@ -214,9 +215,9 @@ namespace Diffuse
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="DispatcherUnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        private void OnDispatcherException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private async void OnDispatcherException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            ShowExceptionMessage(e.Exception);
+            await ShowExceptionMessage(e.Exception);
 
             // Prevent application from crashing
             e.Handled = true;
@@ -228,11 +229,11 @@ namespace Diffuse
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="UnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        private void OnAppDomainException(object sender, UnhandledExceptionEventArgs e)
+        private async void OnAppDomainException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
             {
-                ShowExceptionMessage(ex);
+                await ShowExceptionMessage(ex);
             }
         }
 
@@ -242,9 +243,9 @@ namespace Diffuse
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="UnobservedTaskExceptionEventArgs"/> instance containing the event data.</param>
-        private void OnTaskSchedulerException(object sender, UnobservedTaskExceptionEventArgs e)
+        private async void OnTaskSchedulerException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            ShowExceptionMessage(e.Exception);
+            await ShowExceptionMessage(e.Exception);
 
             // Prevent application from crashing
             e.SetObserved();
@@ -278,7 +279,7 @@ namespace Diffuse
         /// <returns>System.String.</returns>
         private static string GetAppVersionDisplay()
         {
-            return $"v{AppVersion}-alpha";
+            return $"v{AppVersion}-beta";
         }
 
 

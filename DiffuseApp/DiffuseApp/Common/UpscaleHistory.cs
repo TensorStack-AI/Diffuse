@@ -1,5 +1,6 @@
 ﻿using Diffuse.Views;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Diffuse.Common
@@ -13,15 +14,24 @@ namespace Diffuse.Common
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
 
+        public string Model { get; init; }
+
         public int Width { get; init; }
         public int Height { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
+
         public int ScaleFactor { get; init; }
         public int OriginalWidth { get; init; }
         public int OriginalHeight { get; init; }
-        public string Model { get; init; }
+      
         public UpscaleInputOptions Options { get; init; }
 
-
+      
         [JsonIgnore]
         public string FilePath { get; set; }
 
@@ -30,5 +40,8 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public string ThumbPath { get; set; }
+
+        public virtual bool Equals(UpscaleHistory other) => ReferenceEquals(this, other);
+        public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     }
 }

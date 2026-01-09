@@ -47,7 +47,7 @@ namespace DiffuseApp.Common
         private const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x2000;
 
         [DllImport("kernel32.dll")]
-        static extern IntPtr CreateJobObject(IntPtr lpJobAttributes, string? name);
+        static extern IntPtr CreateJobObject(IntPtr lpJobAttributes, string name);
 
         [DllImport("kernel32.dll")]
         static extern bool SetInformationJobObject(

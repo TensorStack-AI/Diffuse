@@ -15,7 +15,7 @@
         Focusable="False"
         IsHitTestVisible="False"
         IsTabStop="False">
-    <Border DataContext="{Binding ElementName=UI}" UseLayoutRounding="True" Background="#FF272727" BorderBrush="#80c5a343" BorderThickness="1">
+    <Border UseLayoutRounding="True" Background="#FF272727" BorderBrush="#80c5a343" BorderThickness="1">
         <Grid>
             <StackPanel VerticalAlignment="Center" Width="240">
                 <Image Source="/Images/Diffuse-Logo-512.png" />

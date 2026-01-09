@@ -19,6 +19,7 @@ namespace Diffuse.Dialogs
     {
         private EnvironmentModel _environmentModel;
         private EnvironmentModel _originalEnvironmentModel;
+        private VariableModel _currentVariable;
         private VariableModel _selectedVariable;
         private string _requirements;
 
@@ -32,6 +33,7 @@ namespace Diffuse.Dialogs
             Variables = new ObservableCollection<VariableModel>();
             Pipelines = new ObservableCollection<string>();
             Errors = new ObservableCollection<string>();
+            CurrentVariable = new VariableModel();
             InitializeComponent();
         }
 
@@ -57,10 +59,24 @@ namespace Diffuse.Dialogs
             set { SetProperty(ref _requirements, value); }
         }
 
+        public VariableModel CurrentVariable
+        {
+            get { return _currentVariable; }
+            set { SetProperty(ref _currentVariable, value); }
+        }
+
         public VariableModel SelectedVariable
         {
             get { return _selectedVariable; }
-            set { SetProperty(ref _selectedVariable, value); }
+            set
+            {
+                SetProperty(ref _selectedVariable, value);
+                if (_selectedVariable is not null)
+                {
+                    CurrentVariable.Name = _selectedVariable.Name;
+                    CurrentVariable.Value = _selectedVariable.Value;
+                }
+            }
         }
 
 
@@ -100,25 +116,33 @@ namespace Diffuse.Dialogs
 
         private Task AddVariableAsync()
         {
-            Variables.Add(SelectedVariable);
-            SelectedVariable = null;
+            var existing = Variables.FirstOrDefault(x => x.Name == _currentVariable.Name);
+            if (existing != null)
+                Variables.Remove(existing);
+
+            Variables.Add(new VariableModel
+            {
+                Name = _currentVariable.Name,
+                Value = _currentVariable.Value,
+            });
+
+            CurrentVariable.Clear();
             return Task.CompletedTask;
         }
 
 
         private bool CanAddVariable()
         {
-            return SelectedVariable is not null
-                && !string.IsNullOrEmpty(SelectedVariable.Name)
-                && !string.IsNullOrEmpty(SelectedVariable.Value)
-                && !Variables.Any(x => x.Name == SelectedVariable.Name);
+            return !string.IsNullOrEmpty(_currentVariable.Name)
+                && !string.IsNullOrEmpty(_currentVariable.Value)
+                && !Variables.Any(x => x.Name == _currentVariable.Name && x.Value == _currentVariable.Value);
         }
 
 
         private Task RemoveVariableAsync(VariableModel variable)
         {
             Variables.Remove(variable);
-            SelectedVariable = null;
+            CurrentVariable.Clear();
             return Task.CompletedTask;
         }
 
@@ -287,6 +311,12 @@ namespace Diffuse.Dialogs
             {
                 get { return _value; }
                 set { SetProperty(ref _value, value); }
+            }
+
+            public void Clear()
+            {
+                Name = null;
+                Value = null;
             }
         }
     }

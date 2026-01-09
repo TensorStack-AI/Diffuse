@@ -19,6 +19,9 @@
                 <ResourceDictionary Source="pack://application:,,,/TensorStack.WPF;component/ThemeDefault.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <!--Images-->
+            <BitmapImage x:Key="ImageIcon" UriSource="pack://application:,,,/Diffuse;component/Images/Icon.png" />
+
             <!--Fonts-->
             <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Diffuse;component/Fonts/Brands-Regular-400.otf#Font Awesome 6 Brands Regular</FontFamily>
             <FontFamily x:Key="FontAwesomeDuotone">pack://application:,,,/Diffuse;component/Fonts/Duotone-Solid-900.otf#Font Awesome 6 Duotone Solid</FontFamily>
@@ -101,6 +104,18 @@
             <ObjectDataProvider x:Key="EnvironmentType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="Common:EnvironmentType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="MediaType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Common:MediaType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="ProcessType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Common:ProcessType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
@@ -231,6 +246,7 @@
             </Style>
 
             <Style x:Key="MenuIconButton" TargetType="CommonControls:IconButton">
+                <Setter Property="Width" Value="300"/>
                 <Setter Property="Orientation" Value="Horizontal"/>
                 <Setter Property="Placement" Value="Bottom"/>
                 <Setter Property="FontSize" Value="14"/>
@@ -272,6 +288,464 @@
                     <TextBlock Text="{Binding Name}" />
                 </DockPanel>
             </DataTemplate>
+
+
+
+
+
+
+
+
+
+
+
+
+            <DataTemplate DataType="{x:Type Common:DiffusionHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Diffusion {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+
+                        <!--Models-->
+                        <StackPanel Margin="0,4,0,0">
+                            <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Model}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                        </StackPanel>
+                        <StackPanel Margin="0,4,0,0" Visibility="{Binding LoraModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                            <TextBlock DockPanel.Dock="Left"  Text="Lora Model" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding LoraModel}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                        </StackPanel>
+                        <StackPanel Margin="0,4,0,0" Visibility="{Binding ControlNetModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                            <TextBlock DockPanel.Dock="Left"  Text="ControlNet Model" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding ControlNetModel}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                        </StackPanel>
+                        <UniformGrid Columns="3" Margin="0,4,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding Width}" />
+                           <Run Text="x" />
+                           <Run Text="{Binding Height}" />
+                           <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding FrameRate}" />
+                           <Run Text="fps" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding FrameCount}" />
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <!--Prompts-->
+                        <StackPanel Margin="0,4,0,0">
+                            <TextBlock Text="Prompt" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Options.Prompt}" Style="{StaticResource TextBlockStyle}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Margin="0,4,0,0" Visibility="{Binding Options.NegativePrompt, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                            <TextBlock Text="Negative Prompt" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Options.NegativePrompt}" Style="{StaticResource TextBlockStyle}" TextWrapping="Wrap" />
+                        </StackPanel>
+
+
+                        <!--Scheduler Settings-->
+                        <UniformGrid Columns="3" Margin="0,4,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Seed" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding Options.Seed}" Style="{StaticResource TextBlockStyle}" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.Scheduler, Converter={StaticResource EnumDescriptionConverter}}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,3,0,0">
+                                <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.Steps}" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Guidance" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.GuidanceScale}" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Input Image Count" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.InputImageCount}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,3,0,0">
+                                <TextBlock Text="Strength" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.Strength}" />
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding LoraModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                                <TextBlock Text="Lora Strength" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.LoraStrength}" />
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding ControlNetModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                                <TextBlock Text="ControlNet Strength" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Options.ControlNetStrength}" />
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <!--Extract Settings-->
+                        <StackPanel Margin="0,10,0,0" Visibility="{Binding ExtractModel, Converter={StaticResource NullVisibilityConverter}}">
+                            <TextBlock Text="Extract Settings"  FontSize="13" />
+                            <Separator Opacity=".7"/>
+                            <StackPanel Margin="0,3,0,0">
+                                <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding ExtractModel}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                            </StackPanel>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Default}">
+                                <StackPanel>
+                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.TileMode}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.TileSize, StringFormat={}{0} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Overlap" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.TileOverlap, StringFormat={}{0} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Background}">
+                                <StackPanel>
+                                    <TextBlock Text="Background Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.Mode, Converter={StaticResource EnumDescriptionConverter}}" />
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pose}">
+                                <StackPanel>
+                                    <TextBlock Text="Detections" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.Detections}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Joint Confidence" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.JointConfidence, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Joint Radius" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.JointRadius, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Body Confidence" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.BodyConfidence, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Bone Radius" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.BoneRadius, StringFormat={}{0:N2} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Bone Thickness" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.BoneThickness, StringFormat={}{0:N2} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+
+                        <!--Upscale Settings-->
+                        <StackPanel Margin="0,10,0,0" Visibility="{Binding UpscaleModel, Converter={StaticResource NullVisibilityConverter}}">
+                            <TextBlock Text="Upscale Settings"  FontSize="13" />
+                            <Separator Opacity=".7"/>
+                            <StackPanel Margin="0,3,0,0">
+                                <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding UpscaleModel}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                            </StackPanel>
+                            <UniformGrid Columns="3" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding UpscaleOptions.TileMode}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding UpscaleOptions.TileSize, StringFormat={}{0} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Overlap" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding UpscaleOptions.TileOverlap, StringFormat={}{0} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+
+                        <!--General-->
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Common:ExtractHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Extracted {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+                        <StackPanel Margin="0,3,0,0">
+                            <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Model}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                        </StackPanel>
+
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding Width}" />
+                           <Run Text="x" />
+                           <Run Text="{Binding Height}" />
+                           <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                          <Run Text="{Binding FrameRate}" />
+                          <Run Text="fps" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding FrameCount}" />
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Extract Options" />
+                            <Separator Opacity=".7"/>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Default}">
+                                <StackPanel>
+                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileMode}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileSize, StringFormat={}{0} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Overlap" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileOverlap, StringFormat={}{0} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Background}">
+                                <StackPanel>
+                                    <TextBlock Text="Background Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.Mode, Converter={StaticResource EnumDescriptionConverter}}" />
+                                </StackPanel>
+                            </UniformGrid>
+                            <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pose}">
+                                <StackPanel>
+                                    <TextBlock Text="Detections" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.Detections}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Joint Confidence" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.JointConfidence, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Joint Radius" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.JointRadius, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Body Confidence" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.BodyConfidence, StringFormat={}{0:N2}}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Bone Radius" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.BoneRadius, StringFormat={}{0:N2} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Bone Thickness" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.BoneThickness, StringFormat={}{0:N2} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Common:UpscaleHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Upscaled {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+                        <StackPanel Margin="0,3,0,0">
+                            <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Model}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                        </StackPanel>
+
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding Width}" />
+                           <Run Text="x" />
+                           <Run Text="{Binding Height}" />
+                           <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding FrameRate}" />
+                           <Run Text="fps" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding FrameCount}" />
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Original Size" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding OriginalWidth}" />
+                           <Run Text="x" />
+                           <Run Text="{Binding OriginalHeight}" /> 
+                       <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Scale Factor" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding ScaleFactor, StringFormat={}{0}x}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Upscale Options" />
+                            <Separator Opacity=".7"/>
+                            <UniformGrid Columns="3" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileMode}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileSize, StringFormat={}{0} px}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="Tile Overlap" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.TileOverlap, StringFormat={}{0} px}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </StackPanel>
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Common:InterpolateHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Interpolated {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding Width}" />
+                           <Run Text="x" />
+                           <Run Text="{Binding Height}" />
+                           <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding FrameRate}" />
+                           <Run Text="fps" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
+                                <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding FrameCount}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Original" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                           <Run Text="{Binding OriginalFrameRate}" />
+                           <Run Text="fps" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Multiplier" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="{Binding Multiplier, StringFormat={}{0}x}" />
+                            </StackPanel>
+                            <TextBlock />
+                        </UniformGrid>
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </ResourceDictionary>
 

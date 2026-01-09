@@ -35,6 +35,7 @@
       "IsDefault": true,
       "Variables": {
         "MIOPEN_FIND_MODE": "2",
+        "HIP_VISIBLE_DEVICES": "0,1",
         "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL": "1"
       },
       "Requirements": [

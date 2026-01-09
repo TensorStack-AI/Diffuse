@@ -1,5 +1,6 @@
 ﻿using Diffuse.Views;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Diffuse.Common
@@ -12,12 +13,17 @@ namespace Diffuse.Common
         public MediaType MediaType { get; init; }
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
-
+        public string Model { get; init; }
         public int Width { get; init; }
         public int Height { get; init; }
-        public string Model { get; init; }
-        public ExtractInputOptions Options { get; init; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
+        public ExtractorType ExtractorType { get; init; }
+        public ExtractInputOptions Options { get; init; }
 
         [JsonIgnore]
         public string FilePath { get; set; }
@@ -27,5 +33,8 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public string ThumbPath { get; set; }
+
+        public virtual bool Equals(ExtractHistory other) => ReferenceEquals(this, other);
+        public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     }
 }

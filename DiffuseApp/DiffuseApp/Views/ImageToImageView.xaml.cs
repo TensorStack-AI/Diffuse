@@ -99,24 +99,48 @@ namespace Diffuse.Views
             {
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ImageToImageView] [LoadPipelineAsync] - Loading pipeline..");
-
                 await base.LoadPipelineAsync();
-                await UnloadServicesAsync();
 
+                //DiffusionModel
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
-                    await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
-                    SetDefaultOptions(DiffusionService.DefaultOptions);
+                    if (!DiffusionService.IsLoaded || DiffusionService.Pipeline.DiffusionModel != CurrentPipeline.DiffusionModel)
+                    {
+                        await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
+                        SetDefaultOptions(DiffusionService.DefaultOptions);
+                    }
                 }
+                else
+                {
+                    await DiffusionService.UnloadAsync();
+                }
+
+                //ExtractModel
                 if (CurrentPipeline.ExtractModel is not null)
                 {
-                    await ExtractService.LoadAsync(CurrentPipeline);
-                    SetDefaultOptions(ExtractService.DefaultOptions);
+                    if (!ExtractService.IsLoaded || ExtractService.Pipeline.ExtractModel != CurrentPipeline.ExtractModel)
+                    {
+                        await ExtractService.LoadAsync(CurrentPipeline);
+                        SetDefaultOptions(ExtractService.DefaultOptions);
+                    }
                 }
+                else
+                {
+                    await ExtractService.UnloadAsync();
+                }
+
+                //UpscaleService
                 if (CurrentPipeline.UpscaleModel is not null)
                 {
-                    await UpscaleService.LoadAsync(CurrentPipeline);
-                    SetDefaultOptions(UpscaleService.DefaultOptions);
+                    if (!UpscaleService.IsLoaded || UpscaleService.Pipeline.UpscaleModel != CurrentPipeline.UpscaleModel)
+                    {
+                        await UpscaleService.LoadAsync(CurrentPipeline);
+                        SetDefaultOptions(UpscaleService.DefaultOptions);
+                    }
+                }
+                else
+                {
+                    await UpscaleService.UnloadAsync();
                 }
 
                 SetDefaultOptions(DiffusionService.DefaultOptions);
@@ -145,7 +169,12 @@ namespace Diffuse.Views
             {
                 _logger?.LogInformation($"[ImageToImageView] [UnloadPipelineAsync] - Unloading pipeline...");
                 await base.UnloadPipelineAsync();
-                await UnloadServicesAsync();
+                if (DiffusionService.IsLoaded)
+                    await DiffusionService.UnloadAsync();
+                if (ExtractService.IsLoaded)
+                    await ExtractService.UnloadAsync();
+                if (UpscaleService.IsLoaded)
+                    await UpscaleService.UnloadAsync();
                 _logger?.LogInformation($"[ImageToImageView] [UnloadPipelineAsync] -  Pipeline unloaded.");
             }
             catch (Exception ex)
@@ -204,6 +233,7 @@ namespace Diffuse.Views
                     UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
                     UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
                     ExtractModel = CurrentPipeline.ExtractModel?.Name,
+                    ExtractorType = CurrentPipeline.ExtractModel?.Type,
                     ExtractOptions = CurrentPipeline.ExtractModel is not null ? _extractOptions : null,
                     Source = View.ImageToImage,
                 });
@@ -297,17 +327,6 @@ namespace Diffuse.Views
                 BoneRadius = options.BoneRadius,
                 BoneThickness = options.BoneThickness
             };
-        }
-
-
-        private async Task UnloadServicesAsync()
-        {
-            if (DiffusionService.IsLoaded)
-                await DiffusionService.UnloadAsync();
-            if (ExtractService.IsLoaded)
-                await ExtractService.UnloadAsync();
-            if (UpscaleService.IsLoaded)
-                await UpscaleService.UnloadAsync();
         }
 
 

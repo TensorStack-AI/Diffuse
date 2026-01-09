@@ -22,70 +22,71 @@
 
         <!--Main Menu-->
         <Grid DockPanel.Dock="Top" WindowChrome.IsHitTestVisibleInChrome="True">
-            <UniformGrid Columns="4" Height="34" Margin="0,0,1,0">
+            <DockPanel  Height="34" Margin="0,0,1,0">
 
                 <!--Logo-->
-                <Grid IsHitTestVisible="False" >
+                <Grid DockPanel.Dock="Left" IsHitTestVisible="False" >
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Images/Diffuse-Logo-Long-64.png" Stretch="Uniform"  HorizontalAlignment="Left" Margin="4,2,0,2" />
                         <TextBlock Text="{x:Static local:App.AppVersionDisplay}" Style="{StaticResource FieldTextBlockStyle}" FontSize="10" Margin="2,14,0,0" Opacity=".7"/>
                     </StackPanel>
                 </Grid>
 
-                <!--Categories-->
-                <CommonControls:IconButton 
-                    Text="Image Generation" 
-                    Icon="f03e" 
-                    Style="{StaticResource MenuIconButton}"
-                    Command="{Binding NavigateCategoryCommand}" 
-                    CommandParameter="{x:Static Views:ViewCategory.Image}" 
-                    IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Image}">
-                </CommonControls:IconButton>
-                <CommonControls:IconButton 
-                    Text="Video Generation" 
-                    Icon="f008" 
-                    Style="{StaticResource MenuIconButton}"
-                    Command="{Binding NavigateCategoryCommand}" 
-                    CommandParameter="{x:Static Views:ViewCategory.Video}" 
-                    IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Video}">
-                </CommonControls:IconButton>
-
                 <!--Window Options-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <UniformGrid  Columns="4"   >
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static Views:View.Settings}"  >
-                            <CommonControls:FontAwesome Icon="&#xf013;" Color="{StaticResource AccentColour2}" IconStyle="Solid"/>
-                        </Button>
-                        <Button Command="{Binding MinimizeCommand}" Padding="10,1" >
-                            <CommonControls:FontAwesome Icon="&#xf2d1;" />
-                        </Button>
-                        <Grid>
-                            <Button Command="{Binding RestoreCommand}" Padding="10,1" Visibility="{Binding WindowState, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Maximized}">
-                                <CommonControls:FontAwesome Icon="&#xf2d2;" />
+                <Grid DockPanel.Dock="Right">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                        <UniformGrid  Columns="4"   >
+                            <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static Views:View.Settings}"  >
+                                <CommonControls:FontAwesome Icon="&#xf013;" Color="{StaticResource AccentColour2}" IconStyle="Solid"/>
                             </Button>
-                            <Button Command="{Binding MaximizeCommand}" Padding="10,1" Visibility="{Binding WindowState, Converter={StaticResource InverseEnumToVisibilityConverter}, ConverterParameter=Maximized}">
-                                <CommonControls:FontAwesome Icon="&#xf2d0;" />
+                            <Button Command="{Binding MinimizeCommand}" Padding="10,1" >
+                                <CommonControls:FontAwesome Icon="&#xf2d1;" />
                             </Button>
-                        </Grid>
-                        <Button x:Name="CloseButton" Command="{Binding CloseCommand}" Padding="12,0" >
-                            <CommonControls:FontAwesome Icon="&#xf00d;" />
-                        </Button>
-                    </UniformGrid>
-                </StackPanel>
+                            <Grid>
+                                <Button Command="{Binding RestoreCommand}" Padding="10,1" Visibility="{Binding WindowState, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Maximized}">
+                                    <CommonControls:FontAwesome Icon="&#xf2d2;" />
+                                </Button>
+                                <Button Command="{Binding MaximizeCommand}" Padding="10,1" Visibility="{Binding WindowState, Converter={StaticResource InverseEnumToVisibilityConverter}, ConverterParameter=Maximized}">
+                                    <CommonControls:FontAwesome Icon="&#xf2d0;" />
+                                </Button>
+                            </Grid>
+                            <Button x:Name="CloseButton" Command="{Binding CloseCommand}" Padding="12,0" >
+                                <CommonControls:FontAwesome Icon="&#xf00d;" />
+                            </Button>
+                        </UniformGrid>
+                    </StackPanel>
+                </Grid>
 
-            </UniformGrid>
+                <!--Categories-->
+                <UniformGrid Rows="1" HorizontalAlignment="Center">
+                    <CommonControls:IconButton 
+                        Text="Image" 
+                        Icon="f03e" 
+                        Style="{StaticResource MenuIconButton}"
+                        Command="{Binding NavigateCategoryCommand}" 
+                        CommandParameter="{x:Static Views:ViewCategory.Image}" 
+                        IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Image}">
+                    </CommonControls:IconButton>
+                    <CommonControls:IconButton 
+                        Text="Video" 
+                        Icon="f008" 
+                        Style="{StaticResource MenuIconButton}"
+                        Command="{Binding NavigateCategoryCommand}" 
+                        CommandParameter="{x:Static Views:ViewCategory.Video}" 
+                        IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Video}">
+                    </CommonControls:IconButton>
+                    <CommonControls:IconButton 
+                        Text="Gallery" 
+                        Icon="e3aa" 
+                        Style="{StaticResource MenuIconButton}"
+                        Command="{Binding NavigateCommand}" 
+                        CommandParameter="{x:Static Views:View.Gallery}" 
+                        IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Gallery}">
+                    </CommonControls:IconButton>
+                </UniformGrid>
+
+            </DockPanel>
         </Grid>
-
-
-        <!--History-->
-        <Border Panel.ZIndex="0" DockPanel.Dock="Bottom" BorderThickness="0,2,0,0" BorderBrush="{StaticResource DefaultBorderColor}" Opacity=".8">
-            <Controls:HistoryControl 
-                ItemSource="{Binding HistoryService.HistoryCollection}"
-                RemoveItemCommand="{Binding RemoveHistoryItemCommand}" 
-                PreviewItemCommand="{Binding PreviewHistoryItemCommand}"
-                HorizontalScrollBarVisibility="Visible" 
-                VerticalScrollBarVisibility="Hidden" />
-        </Border>
 
 
         <!--Sub Menu-->
@@ -226,6 +227,17 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
+        </Border>
+
+
+        <!--History-->
+        <Border Panel.ZIndex="0" DockPanel.Dock="Bottom" BorderThickness="0,2,0,0" BorderBrush="{StaticResource DefaultBorderColor}" Opacity=".8" Visibility="{Binding ViewCategory, Converter={StaticResource InverseEnumToVisibilityConverter}, ConverterParameter=Other}" Margin="7,0,0,0">
+            <Controls:HistoryControl 
+              ItemSource="{Binding HistoryService.HistoryCollection}"
+              RemoveItemCommand="{Binding RemoveHistoryItemCommand}" 
+              PreviewItemCommand="{Binding PreviewHistoryItemCommand}"
+              HorizontalScrollBarVisibility="Visible" 
+              VerticalScrollBarVisibility="Hidden" />
         </Border>
 
 

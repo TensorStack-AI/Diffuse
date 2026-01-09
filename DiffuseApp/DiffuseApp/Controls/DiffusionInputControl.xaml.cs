@@ -25,18 +25,13 @@ namespace Diffuse.Controls
         {
             SeedCommand = new RelayCommand<bool>(GenerateSeed);
             AddTriggerWordCommand = new AsyncRelayCommand<string>(AddTriggerWordAsync);
-            // DefaultResolutions = [.. Enumerable.Range(4, 24).Select(x => 64 * x)];
             InitializeComponent();
         }
-
-
 
         public static readonly DependencyProperty PipelineProperty = DependencyProperty.Register(nameof(Pipeline), typeof(PipelineModel), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, PipelineModel>((c, o, n) => c.OnPipelineChanged(o, n)));
         public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(DiffusionInputOptions), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, DiffusionInputOptions>((c, o, n) => c.OnOptionsChanged(o, n)));
         public static readonly DependencyProperty UpscaleOptionsProperty = DependencyProperty.Register(nameof(UpscaleOptions), typeof(UpscaleInputOptions), typeof(DiffusionInputControl));
         public static readonly DependencyProperty ExtractOptionsProperty = DependencyProperty.Register(nameof(ExtractOptions), typeof(ExtractInputOptions), typeof(DiffusionInputControl));
-        private HashSet<int> _defaultResolutions;
-
 
         public ProcessType ProcessType { get; set; }
         public RelayCommand<bool> SeedCommand { get; }
@@ -56,26 +51,15 @@ namespace Diffuse.Controls
 
         public UpscaleInputOptions UpscaleOptions
         {
-
             get { return (UpscaleInputOptions)GetValue(UpscaleOptionsProperty); }
             set { SetValue(UpscaleOptionsProperty, value); }
         }
 
         public ExtractInputOptions ExtractOptions
         {
-
             get { return (ExtractInputOptions)GetValue(ExtractOptionsProperty); }
             set { SetValue(ExtractOptionsProperty, value); }
         }
-
-
-
-
-        //public HashSet<int> DefaultResolutions
-        //{
-        //    get { return _defaultResolutions; }
-        //    set { SetProperty(ref _defaultResolutions, value); }
-        //}
 
         public SchedulerType[] Schedulers
         {
@@ -123,9 +107,6 @@ namespace Diffuse.Controls
                 NotifyPropertyChanged();
             }
         }
-
-
-
 
 
         private Task OnPipelineChanged(PipelineModel oldPipeline, PipelineModel newPipeline)

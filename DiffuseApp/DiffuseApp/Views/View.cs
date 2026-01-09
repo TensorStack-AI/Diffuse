@@ -24,7 +24,7 @@ namespace Diffuse.Views
         VideoInterpolate = 252,
 
         History = 1000,
-      
+        Gallery = 1001,
     }
 
     public enum ViewCategory
@@ -51,6 +51,7 @@ namespace Diffuse.Views
         {
             // General
             { View.Settings, ViewCategory.Other  },
+            { View.Gallery, ViewCategory.Other  },
 
             // Image
             { View.TextToImage, ViewCategory.Image  },

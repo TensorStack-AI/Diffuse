@@ -118,16 +118,8 @@ namespace Diffuse
 
         private async Task PreviewHistoryItemAsync(IHistoryItem item)
         {
-            if (item.MediaType == MediaType.Image)
-            {
-                var dialog = DialogService.GetDialog<PreviewImageDialog>();
-                await dialog.ShowDialogAsync(item);
-            }
-            else if (item.MediaType == MediaType.Video)
-            {
-                var dialog = DialogService.GetDialog<PreviewVideoDialog>();
-                await dialog.ShowDialogAsync(item);
-            }
+            var dialog = DialogService.GetDialog<MediaPreviewDialog>();
+            await dialog.ShowDialogAsync(item);
         }
 
         private bool CanPreviewHistoryItem(IHistoryItem item)

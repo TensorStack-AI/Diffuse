@@ -84,19 +84,30 @@ namespace DiffuseApp.Common
                     }
                     else if (message.Type == RequestType.Environment && _currentState == RequestType.Start)
                     {
-                        _currentState = message.Type;
-                        CallbackMessage("Create Envrironment...", "Initialize");
+                        try
+                        {
+                            _currentState = message.Type;
+                            CallbackMessage("Create Environment...", "Initialize");
+                            var environment = message.Environment;
+                            var pythonService = new PythonManager(environment.Config, _logger);
+                            if (pythonService.Exists() && !environment.IsRebuild)
+                                await pythonService.LoadAsync(_progressCallback);
+                            else
+                                await pythonService.CreateAsync(environment.IsRebuild, environment.IsReinstall, _progressCallback);
 
-                        var environment = message.Environment;
-                        var pythonService = new PythonManager(environment.Config, _logger);
-                        if (pythonService.Exists() && !environment.IsRebuild)
-                            await pythonService.LoadAsync(_progressCallback);
-                        else
-                            await pythonService.CreateAsync(environment.IsRebuild, environment.IsReinstall, _progressCallback);
+                            await _messagePipe.SendResponse(cancellationToken);
+                            CallbackMessage(string.Empty, "Initialize");
 
-                        await _messagePipe.SendResponse(cancellationToken);
-                        CallbackMessage(string.Empty, "Initialize");
-                        continue;
+                        }
+                        catch (Exception ex)
+                        {
+                            await _messagePipe.SendMessage(new PipelineResponse
+                            {
+                                Error = ex.Message
+                            }, cancellationToken: cancellationToken);
+
+                            throw;
+                        }
                     }
 
                     // Environment Loaded

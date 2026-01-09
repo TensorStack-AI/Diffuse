@@ -57,6 +57,7 @@
     <Resource Include="Images\Diffuse-Logo-512.png" />
     <Resource Include="Images\Diffuse-Logo-Long-64.png" />
     <Resource Include="Images\Icon.ico" />
+    <Resource Include="Images\Icon.png" />
   </ItemGroup>
 
   <!--Fonts-->

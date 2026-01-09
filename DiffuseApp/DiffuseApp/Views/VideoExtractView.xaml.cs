@@ -157,6 +157,7 @@ namespace Diffuse.Views
                 {
                     Options = _options,
                     Model = CurrentPipeline.ExtractModel.Name,
+                    ExtractorType = CurrentPipeline.ExtractModel.Type,
                     Source = View.VideoExtract,
                 });
 
