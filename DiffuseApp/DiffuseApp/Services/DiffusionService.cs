@@ -89,13 +89,12 @@ namespace Diffuse.Services
         /// <param name="config">The configuration.</param>
         public async Task LoadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback)
         {
+            IsLoaded = false;
+            IsLoading = true;
             try
             {
-                IsLoaded = false;
-                IsLoading = true;
                 using (_cancellationTokenSource = new CancellationTokenSource())
                 {
-                    var cancellationToken = _cancellationTokenSource.Token;
                     await UnloadPythonPipeline();
 
                     _currentPipeline = pipeline;
@@ -119,7 +118,7 @@ namespace Diffuse.Services
                     };
 
                     SetMemoryMode(pipeline, pipelineConfig);
-                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback, cancellationToken);
+                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback, _cancellationTokenSource.Token);
                 }
                 IsLoaded = true;
             }
@@ -134,6 +133,7 @@ namespace Diffuse.Services
             finally
             {
                 IsLoading = false;
+                _cancellationTokenSource = null;
             }
         }
 
@@ -142,38 +142,35 @@ namespace Diffuse.Services
         /// Execute the upscaler
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> GenerateImageAsync(Common.DiffusionInputOptions options)
+        public async Task<ImageTensor> GenerateImageAsync(DiffusionInputOptions options)
         {
+            IsExecuting = true;
             try
             {
-                IsExecuting = true;
-                using (_cancellationTokenSource = new CancellationTokenSource())
+                options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
+                options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
+                var generateOptions = new PipelineOptions
                 {
-                    options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
-                    options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
-                    var generateOptions = new PipelineOptions
-                    {
-                        Width = options.Width,
-                        Height = options.Height,
-                        Steps = options.Steps,
-                        Steps2 = options.Steps2,
-                        GuidanceScale = options.GuidanceScale,
-                        GuidanceScale2 = options.GuidanceScale2,
-                        Seed = options.Seed,
-                        Prompt = options.Prompt,
-                        NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt,
-                        Scheduler = options.Scheduler,
-                        Strength = options.Strength,
-                        ControlNetScale = options.ControlNetStrength,
-                        Shift = options.Shift,
-                        InputImages = options.InputImages,
-                        InputControlImages = options.InputControlImages,
-                        LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
-                    };
+                    Width = options.Width,
+                    Height = options.Height,
+                    Steps = options.Steps,
+                    Steps2 = options.Steps2,
+                    GuidanceScale = options.GuidanceScale,
+                    GuidanceScale2 = options.GuidanceScale2,
+                    Seed = options.Seed,
+                    Prompt = options.Prompt,
+                    NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt,
+                    Scheduler = options.Scheduler,
+                    Strength = options.Strength,
+                    ControlNetScale = options.ControlNetStrength,
+                    InputImages = options.InputImages,
+                    InputControlImages = options.InputControlImages,
+                    SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
+                    LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
+                };
 
-                    var tensorResult = await Task.Run(() => _pipelineClient.RunAsync(generateOptions, _cancellationTokenSource.Token));
-                    return tensorResult.AsImageTensor();
-                }
+                var tensorResult = await _pipelineClient.RunAsync(generateOptions);
+                return tensorResult.AsImageTensor();
             }
             finally
             {
@@ -184,42 +181,38 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> GenerateVideoAsync(DiffusionInputOptions options)
         {
+            IsExecuting = true;
             try
             {
-                IsExecuting = true;
-                using (_cancellationTokenSource = new CancellationTokenSource())
+                options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
+                options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
+                var generateOptions = new PipelineOptions
                 {
-                    options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
-                    options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
-                    var generateOptions = new PipelineOptions
-                    {
-                        Width = options.Width,
-                        Height = options.Height,
-                        Steps = options.Steps,
-                        Steps2 = options.Steps2,
-                        GuidanceScale = options.GuidanceScale,
-                        GuidanceScale2 = options.GuidanceScale2,
-                        Frames = _defaultOptions.Frames,
-                        FrameRate = _defaultOptions.FrameRate,
-                        Seed = options.Seed,
-                        Prompt = options.Prompt,
-                        NegativePrompt = options.NegativePrompt,
-                        Scheduler = options.Scheduler,
-                        Strength = options.Strength,
-                        ControlNetScale = options.ControlNetStrength,
-                        Shift = options.Shift,
-                        InputImages = options.InputImages,
-                        InputControlImages = options.InputControlImages,
-                        LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
-                    };
+                    Width = options.Width,
+                    Height = options.Height,
+                    Steps = options.Steps,
+                    Steps2 = options.Steps2,
+                    GuidanceScale = options.GuidanceScale,
+                    GuidanceScale2 = options.GuidanceScale2,
+                    Frames = _defaultOptions.Frames,
+                    FrameRate = _defaultOptions.FrameRate,
+                    Seed = options.Seed,
+                    Prompt = options.Prompt,
+                    NegativePrompt = options.NegativePrompt,
+                    Scheduler = options.Scheduler,
+                    Strength = options.Strength,
+                    ControlNetScale = options.ControlNetStrength,
+                    InputImages = options.InputImages,
+                    InputControlImages = options.InputControlImages,
+                    SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
+                    LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
+                };
 
-                    var videoFileName = _mediaService.GetTempVideoFile();
-                    var tensorResult = await Task.Run(() => _pipelineClient.RunAsync(generateOptions, _cancellationTokenSource.Token));
-
-                    var videotensor = tensorResult.AsVideoTensor(generateOptions.FrameRate);
-                    await videotensor.SaveAync(videoFileName);
-                    return new VideoInputStream(videoFileName);
-                }
+                var videoFileName = _mediaService.GetTempVideoFile();
+                var tensorResult = await _pipelineClient.RunAsync(generateOptions);
+                var videoTensor = tensorResult.AsVideoTensor(generateOptions.FrameRate);
+                await videoTensor.SaveAync(videoFileName);
+                return new VideoInputStream(videoFileName);
             }
             finally
             {
@@ -233,6 +226,9 @@ namespace Diffuse.Services
         /// </summary>
         public async Task CancelAsync()
         {
+            if (_pipelineClient is not null)
+                await _pipelineClient.CancelAsync();
+
             await _cancellationTokenSource.SafeCancelAsync();
         }
 
@@ -242,6 +238,7 @@ namespace Diffuse.Services
         /// </summary>
         public async Task UnloadAsync()
         {
+            await CancelAsync();
             await UnloadPythonPipeline();
             _currentPipeline = null;
             _defaultOptions = null;
@@ -249,6 +246,47 @@ namespace Diffuse.Services
             IsLoading = false;
             IsExecuting = false;
         }
+
+
+
+        private static SchedulerOptions GetSchedulerOptions(SchedulerInputOptions schedulerOptions)
+        {
+            return new SchedulerOptions
+            {
+                AlgorithmType = schedulerOptions.AlgorithmType,
+                BaseShift = schedulerOptions.BaseShift,
+                BetaEnd = schedulerOptions.BetaEnd,
+                BetaSchedule = schedulerOptions.BetaSchedule,
+                BetaStart = schedulerOptions.BetaStart,
+                ClipSample = schedulerOptions.ClipSample,
+                ClipSampleRange = schedulerOptions.ClipSampleRange,
+                DynamicThresholdingRatio = schedulerOptions.DynamicThresholdingRatio,
+                Eta = schedulerOptions.Eta,
+                LowerOrderFinal = schedulerOptions.LowerOrderFinal,
+                MaxShift = schedulerOptions.MaxShift,
+                NumTrainTimesteps = schedulerOptions.NumTrainTimesteps,
+                PredictionType = schedulerOptions.PredictionType,
+                Rho = schedulerOptions.Rho,
+                SampleMaxValue = schedulerOptions.SampleMaxValue,
+                SChurn = schedulerOptions.SChurn,
+                Shift = schedulerOptions.Shift,
+                SigmaMax = schedulerOptions.SigmaMax > 0 ? schedulerOptions.SigmaMax : null,
+                SigmaMin = schedulerOptions.SigmaMin > 0 ? schedulerOptions.SigmaMin : null,
+                SNoise = schedulerOptions.SNoise,
+                SolverOrder = schedulerOptions.SolverOrder,
+                SolverType = schedulerOptions.SolverType,
+                StepsOffset = schedulerOptions.StepsOffset,
+                STmax = schedulerOptions.STmax,
+                STmin = schedulerOptions.STmin,
+                StochasticSampling = schedulerOptions.StochasticSampling,
+                Thresholding = schedulerOptions.Thresholding,
+                TimestepSpacing = schedulerOptions.TimestepSpacing,
+                UseDynamicShifting = schedulerOptions.UseDynamicShifting,
+                UseKarrasSigmas = schedulerOptions.UseKarrasSigmas,
+                VarianceType = schedulerOptions.VarianceType
+            };
+        }
+
 
 
         private static List<LoraConfig> GetLoraAdapters(LoraAdapterModel loraAdapterModel)

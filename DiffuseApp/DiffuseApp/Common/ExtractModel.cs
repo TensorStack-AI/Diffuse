@@ -13,7 +13,8 @@ namespace Diffuse.Common
     {
         private bool _isValid;
 
-        public int Id { get; init; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsDefault { get; set; }
         public ExtractorType Type { get; set; }

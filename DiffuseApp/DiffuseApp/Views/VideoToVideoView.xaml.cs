@@ -95,6 +95,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[VideoToVideoView] [LoadPipelineAsync] - Loading pipeline..");
                 await base.LoadPipelineAsync();
@@ -102,7 +103,7 @@ namespace Diffuse.Views
                 //DiffusionModel
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
-                    if (!DiffusionService.IsLoaded || DiffusionService.Pipeline.DiffusionModel != CurrentPipeline.DiffusionModel)
+                    if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
                     {
                         await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                         SetDefaultOptions(DiffusionService.DefaultOptions);
@@ -144,6 +145,7 @@ namespace Diffuse.Views
                 SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[VideoToVideoView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -183,6 +185,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -202,11 +205,10 @@ namespace Diffuse.Views
                 var options = _options with { };
                 var resultVideo = await DiffusionService.GenerateVideoAsync(options);
 
-                Statistics.Stop();
-
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
+                    Progress.Indeterminate("Upscaling Video...");
                     resultVideo = await UpscaleService.ExecuteAsync(new UpscaleVideoRequest
                     {
                         VideoStream = resultVideo,
@@ -214,10 +216,9 @@ namespace Diffuse.Views
                     }, ProgressCallback);
                 }
 
-                // Set Result
-                CompareVideo = ResultVideo;
+                Statistics.Stop();
 
-                // History
+                // Set Result
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new DiffusionHistory
                 {
                     Options = options,
@@ -230,6 +231,7 @@ namespace Diffuse.Views
                     ExtractOptions = CurrentPipeline.ExtractModel is not null ? _extractOptions : null,
                     Source = View.VideoToVideo
                 });
+                CompareVideo = _sourceVideo;
 
                 _logger?.LogInformation($"[VideoToVideoView] [ExecuteAsync] - Executing pipeline complete.");
             }
@@ -284,7 +286,11 @@ namespace Diffuse.Views
                 Height = options.Height,
                 Steps = options.Steps,
                 Scheduler = options.Scheduler,
-                GuidanceScale = options.GuidanceScale
+                GuidanceScale = options.GuidanceScale,
+                SchedulerOptions = new SchedulerInputOptions
+                {
+                    Shift = options.Shift
+                }
             };
         }
 

@@ -14,6 +14,8 @@ namespace Diffuse
 {
     public class Settings : IUIConfiguration
     {
+        [AppDefault]
+        public string FileVersion { get; set; } = "2";
         public string DirectoryTemp { get; set; }
         public string DirectoryModel { get; set; }
         public string DirectoryCache { get; set; }
@@ -22,11 +24,26 @@ namespace Diffuse
         public int ReadBuffer { get; set; } = 32;
         public int WriteBuffer { get; set; } = 32;
         public string VideoCodec { get; set; } = "mp4v";
+        public bool IsLegacyDeviceDetection { get; set; }
+        public int MaxHistory { get; set; } = 500;
+        public bool IsServerDebugEnabled { get; set; } = false;
+
+        [AppDefault]
         public ObservableCollection<EnvironmentModel> Environments { get; set; }
+
+        [AppDefault]
         public ObservableCollection<UpscaleModel> UpscaleModels { get; set; }
+
+        [AppDefault]
         public ObservableCollection<DiffusionModel> DiffusionModels { get; set; }
+
+        [AppDefault]
         public ObservableCollection<LoraAdapterModel> LoraAdapterModels { get; set; }
+
+        [AppDefault]
         public ObservableCollection<ControlNetModel> ControlNetModels { get; set; }
+
+        [AppDefault]
         public ObservableCollection<ExtractModel> ExtractModels { get; set; }
 
         [JsonIgnore]
@@ -34,10 +51,6 @@ namespace Diffuse
 
         [JsonIgnore]
         public List<Device> Devices { get; set; }
-        public bool IsLegacyDeviceDetection { get; set; }
-
-
-        public int MaxHistory { get; set; } = 500;
 
 
         public void Initialize(string directoryData)
@@ -71,7 +84,7 @@ namespace Diffuse
             DefaultDevice = Devices.FirstOrDefault();
 
             ScanModels();
-            Json.Save(App.FileSettings, this);
+            SettingsManager.Save(this);
         }
 
 
@@ -102,7 +115,7 @@ namespace Diffuse
                 pipeline.ExtractModel.IsDefault = true;
             }
 
-            await Json.SaveAsync(App.FileSettings, this);
+            await SettingsManager.SaveAsync(this);
         }
 
 

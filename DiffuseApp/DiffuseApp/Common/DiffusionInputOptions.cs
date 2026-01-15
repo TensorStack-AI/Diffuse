@@ -22,9 +22,8 @@ namespace Diffuse.Common
         private float _strength = 1;
         private float _controlNetStrength = 1;
         private float _loraStrength = 1;
-        private float _shift = 1;
         private int _inputImageCount = 0;
-
+        private SchedulerInputOptions _schedulerOptions = new SchedulerInputOptions();
 
         public int Width
         {
@@ -104,17 +103,18 @@ namespace Diffuse.Common
             set { SetProperty(ref _controlNetStrength, value); }
         }
 
-        public float Shift
-        {
-            get { return _shift; }
-            set { SetProperty(ref _shift, value); }
-        }
-
         public int InputImageCount
         {
             get { return _inputImageCount; }
             set { SetProperty(ref _inputImageCount, value); }
         }
+
+        public SchedulerInputOptions SchedulerOptions
+        {
+            get { return _schedulerOptions; }
+            set { SetProperty(ref _schedulerOptions, value); }
+        }
+
 
         [JsonIgnore]
         public ImageTensor InputImage

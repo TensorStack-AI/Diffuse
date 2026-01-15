@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using TensorStack.Common.Tensor;
 using TensorStack.Image;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -103,6 +102,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ControlNetImageToImageView] [LoadPipelineAsync] - Loading pipeline..");
                 await base.LoadPipelineAsync();
@@ -110,7 +110,7 @@ namespace Diffuse.Views
                 //DiffusionModel
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
-                    if (!DiffusionService.IsLoaded || DiffusionService.Pipeline.DiffusionModel != CurrentPipeline.DiffusionModel)
+                    if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
                     {
                         await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                         SetDefaultOptions(DiffusionService.DefaultOptions);
@@ -152,6 +152,7 @@ namespace Diffuse.Views
                 SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[TextToImageView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -191,6 +192,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -216,11 +218,10 @@ namespace Diffuse.Views
                 };
                 var resultTensor = await DiffusionService.GenerateImageAsync(options);
 
-                Statistics.Stop();
-
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
+                    Progress.Indeterminate("Upscaling Image...");
                     resultTensor = await UpscaleService.ExecuteAsync(new UpscaleImageRequest
                     {
                         Image = resultTensor,
@@ -228,9 +229,11 @@ namespace Diffuse.Views
                     });
                 }
 
+                Statistics.Stop();
+
                 // Set Result
+                ResultImage = await resultTensor.ToImageInputAsync();
                 CompareImage = _sourceImage1;
-                ResultImage = new ImageInput(resultTensor);
 
                 // History
                 await HistoryService.AddAsync(ResultImage, new DiffusionHistory
@@ -300,7 +303,11 @@ namespace Diffuse.Views
                 Height = options.Height,
                 Steps = options.Steps,
                 Scheduler = options.Scheduler,
-                GuidanceScale = options.GuidanceScale
+                GuidanceScale = options.GuidanceScale,
+                SchedulerOptions = new SchedulerInputOptions
+                {
+                    Shift = options.Shift
+                }
             };
         }
 
@@ -355,11 +362,12 @@ namespace Diffuse.Views
 
                     IsViewBusy = true;
                     Progress.Indeterminate("Extracting Image Features...");
-                    SourceImage2 = new ImageInput(await ExtractService.ExecuteAsync(new ExtractImageRequest
+                    var resultTensor = await ExtractService.ExecuteAsync(new ExtractImageRequest
                     {
                         Image = _sourceImage1,
                         Options = _extractOptions
-                    }));
+                    });
+                    SourceImage2 = await resultTensor.ToImageInputAsync();
                     Progress.Clear();
                 }
                 finally

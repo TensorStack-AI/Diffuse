@@ -18,7 +18,8 @@ namespace Diffuse.Views
     {
         private bool _isViewBusy;
         private PipelineModel _currentPipeline;
-        private Dictionary<string, PipelineProgress> _downloadStatistics;
+        private bool _isPipelineLoaded;
+        private readonly Dictionary<string, PipelineProgress> _downloadStatistics;
 
         public ViewBase(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
             : base(navigationService)
@@ -52,6 +53,13 @@ namespace Diffuse.Views
             get { return _currentPipeline; }
             set { SetProperty(ref _currentPipeline, value); }
         }
+
+        public bool IsPipelineLoaded
+        {
+            get { return _isPipelineLoaded; }
+            set { SetProperty(ref _isPipelineLoaded, value); }
+        }
+
 
 
         protected virtual async Task<bool> LoadEnvironment()

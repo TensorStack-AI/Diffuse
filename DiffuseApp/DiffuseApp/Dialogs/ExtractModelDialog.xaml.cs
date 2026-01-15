@@ -95,6 +95,18 @@ namespace Diffuse.Dialogs
         }
 
 
+        public Task<bool> ImportAsync(ExtractModel extractModel)
+        {
+            extractModel.Id = GetNextModelId();
+            ExtractModel = extractModel;
+            foreach (var path in ExtractModel.UrlPaths)
+            {
+                Files.Add(path);
+            }
+            return base.ShowDialogAsync();
+        }
+
+
         private Task AddFileAsync()
         {
             Files.Add(SelectedFile);
@@ -161,7 +173,7 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.ExtractModels.Max(x => x.Id)) + 1;
+            return Math.Max(Utils.FixedIdRange, Settings.ExtractModels.Max(x => x.Id)) + 1;
         }
 
 

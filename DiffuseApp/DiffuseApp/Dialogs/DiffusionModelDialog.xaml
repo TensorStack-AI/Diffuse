@@ -23,10 +23,27 @@
                         <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}"/>
                         <TextBox Text="{Binding DiffusionModel.Name, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
+
                     <StackPanel>
-                        <TextBlock Text="Huggingface Url  or  Local Folder" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.Path, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Model Source" Style="{StaticResource FieldTextBlockStyle}"/>
+                        <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding Source={StaticResource ModelSourceType}}" SelectedItem="{Binding DiffusionModel.Source}" />
                     </StackPanel>
+
+                    <Grid>
+                        <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Folder}">
+                            <TextBlock Text="Model Folder (diffusers)" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FilePickerTextBox FileName="{Binding DiffusionModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" IsRequired="True" />
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
+                            <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FilePickerTextBox FileName="{Binding DiffusionModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
+                            <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding DiffusionModel.Path, UpdateSourceTrigger=PropertyChanged}"  />
+                        </StackPanel>
+                    </Grid>
+
                     <DockPanel>
                         <CheckBox DockPanel.Dock="Right" Content="IsCustom" IsChecked="{Binding IsCustomPipeline}" VerticalAlignment="Bottom" Margin="3,0,0,2" />
                         <Grid>

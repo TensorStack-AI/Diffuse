@@ -21,7 +21,7 @@ namespace Diffuse.Dialogs
 
         public MediaPreviewDialog(Settings settings, IHistoryService historyService)
         {
-        
+
             Settings = settings;
             HistoryService = historyService;
             CancelCommand = new AsyncRelayCommand(CancelAsync);
@@ -82,38 +82,36 @@ namespace Diffuse.Dialogs
 
         private bool CanMovePrev()
         {
-            return !HistoryCollection.IsCurrentBeforeFirst 
+            return !HistoryCollection.IsCurrentBeforeFirst
                  && HistoryCollection.CurrentPosition > 0;
         }
 
 
-        private Task NextAsync()
+        private async Task NextAsync()
         {
             if (CanMoveNext())
             {
                 HistoryCollection.MoveCurrentToNext();
-                SetCurrentImage();
+                await SetCurrentImage();
             }
-
-            return Task.CompletedTask;
         }
 
 
         private bool CanMoveNext()
         {
-            return !HistoryCollection.IsCurrentAfterLast 
+            return !HistoryCollection.IsCurrentAfterLast
                  && HistoryCollection.CurrentPosition < HistoryCollection.Count - 1;
         }
 
 
-        private void SetCurrentImage()
+        private async Task SetCurrentImage()
         {
             var currentItem = HistoryCollection.CurrentItem as IHistoryItem;
             if (currentItem == null)
                 return;
 
-            CurrentImage = currentItem.MediaType != MediaType.Image ? default : new ImageInput(currentItem.MediaPath);
-            CurrentVideoStream = currentItem.MediaType != MediaType.Video ? default : new VideoInputStream(currentItem.MediaPath);
+            CurrentImage = currentItem.MediaType != MediaType.Image ? default : await ImageInput.CreateAsync(currentItem.MediaPath);
+            CurrentVideoStream = currentItem.MediaType != MediaType.Video ? default : await VideoInputStream.CreateAsync(currentItem.MediaPath);
         }
     }
 }

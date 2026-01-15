@@ -30,9 +30,21 @@
 
                     <UniformGrid Columns="2">
 
+                        <!--Presets-->
+                        <StackPanel Margin="0,0,2,0" IsEnabled="False">
+                            <TextBlock Text="Presets" Style="{StaticResource FieldTextBlockStyle}" />
+                            <DockPanel>
+                                <UniformGrid DockPanel.Dock="Right" Columns="2">
+                                    <CommonControls:AddOnButton Icon="f00c" IconSize="12" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8"/>
+                                    <CommonControls:AddOnButton Icon="f0c7" IconSize="13" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8" />
+                                </UniformGrid>
+                                <ComboBox />
+                            </DockPanel>
+                        </StackPanel>
+
                         <!--Resolution-->
-                        <DockPanel Margin="0,0,2,0">
-                            <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsResolutionEnabled}" Style="{StaticResource ToggleButtonBasic}" Width="32" Height="22" VerticalAlignment="Bottom">
+                        <DockPanel Margin="2,0,0,0">
+                            <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsResolutionEnabled}" Style="{StaticResource ToggleButtonBasic}" Width="25" Height="22" VerticalAlignment="Bottom">
                                 <CommonControls:FontAwesome Icon="&#xf1ec;" IconStyle="Light" Size="12"/>
                             </ToggleButton>
                             <Grid>
@@ -55,7 +67,7 @@
                                         </CollectionViewSource>
                                     </StackPanel.Resources>
                                     <TextBlock Text="Resolution" Style="{StaticResource FieldTextBlockStyle}"/>
-                                    <ComboBox ItemsSource="{Binding Source={StaticResource GroupedResolutions}}" SelectedItem="{Binding SelectedResolution}" IsSynchronizedWithCurrentItem="False" HorizontalContentAlignment="Stretch">
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource GroupedResolutions}}" SelectedItem="{Binding SelectedResolution}" IsSynchronizedWithCurrentItem="False" HorizontalContentAlignment="Stretch" SelectionChanged="ComboBoxResolution_SelectionChanged" >
                                         <ComboBox.ItemContainerStyle>
                                             <Style TargetType="{x:Type ComboBoxItem}" >
                                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -84,35 +96,16 @@
                             </Grid>
                         </DockPanel>
 
-                        <StackPanel Margin="2,0,0,0">
-                        </StackPanel>
-
-                        <!--Scheduler-->
-                        <StackPanel Margin="0,0,2,0">
-                            <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
-                            <ComboBox SelectedItem="{Binding Options.Scheduler}" ItemsSource="{Binding Pipeline.DiffusionModel.DefaultOptions.Schedulers}" Validation.ErrorTemplate="{x:Null}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding ., Converter={StaticResource EnumDescriptionConverter}}" />
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
 
                         <!--Seed-->
-                        <DockPanel Margin="2,0,0,0">
+                        <DockPanel Margin="0,0,2,0">
                             <UniformGrid DockPanel.Dock="Right" Columns="2" VerticalAlignment="Bottom" Height="22">
-                                <Button Command="{Binding SeedCommand}" CommandParameter="{StaticResource False}" BorderThickness="0,1,1,1" ToolTip="New Seed" Width="25" >
-                                    <CommonControls:FontAwesome Icon="&#xf051;" IconStyle="Light" Size="15"/>
-                                </Button>
-                                <Button Command="{Binding SeedCommand}" CommandParameter="{StaticResource True}" BorderThickness="0,1,1,1" ToolTip="Random Seeds" >
-                                    <CommonControls:FontAwesome Icon="&#xf074;" IconStyle="Light"/>
-                                </Button>
+                                <CommonControls:AddOnButton Icon="f051" IconSize="14" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8" Command="{Binding SeedCommand}" CommandParameter="{StaticResource False}" ToolTip="New Seed"/>
+                                <CommonControls:AddOnButton Icon="f074" IconSize="14" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8" Command="{Binding SeedCommand}" CommandParameter="{StaticResource True}" ToolTip="Random Seeds"/>
                             </UniformGrid>
                             <StackPanel>
                                 <TextBlock Text="Seed" Style="{StaticResource FieldTextBlockStyle}" />
                                 <Grid>
-                                    <!-- TextBox -->
                                     <TextBox x:Name="TextBoxSeed" Text="{Binding Options.Seed, UpdateSourceTrigger=PropertyChanged}" >
                                         <TextBox.Style>
                                             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -127,7 +120,6 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </TextBox.Style>
-
                                     </TextBox>
                                     <TextBlock Text="Random" IsHitTestVisible="False" Opacity=".8" Margin="4,2,0,0">
                                         <TextBlock.Style>
@@ -148,6 +140,19 @@
                                 </Grid>
                             </StackPanel>
                         </DockPanel>
+
+
+                        <!--Scheduler-->
+                        <StackPanel Margin="2,0,0,0">
+                            <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
+                            <ComboBox SelectedItem="{Binding Options.Scheduler}" ItemsSource="{Binding Pipeline.DiffusionModel.DefaultOptions.Schedulers}" Validation.ErrorTemplate="{x:Null}" SelectionChanged="ComboBoxScheduler_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource EnumDescriptionConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
 
                     </UniformGrid>
 
@@ -200,6 +205,29 @@
                         <CommonControls:SliderControl Text="Lora Strength" Value="{Binding Options.LoraStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
                     </UniformGrid>
 
+
+
+                    <!--FlowMatch-->
+                    <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <StackPanel>
+                            <CommonControls:SliderControl Text="Shift" Value="{Binding Options.SchedulerOptions.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <Grid HorizontalAlignment="Left">
+                                <CheckBox Content="Dynamic Shifting" IsChecked="{Binding Options.SchedulerOptions.UseDynamicShifting}" />
+                            </Grid>
+                            <Grid HorizontalAlignment="Right">
+                                <CheckBox Content="Stochastic Sampling" IsChecked="{Binding Options.SchedulerOptions.StochasticSampling}" />
+                            </Grid>
+                        </UniformGrid>
+                    </StackPanel>
+
+                    <!--Karras-->
+                    <StackPanel Margin="0,6,0,0" Visibility="{Binding IsSchedulerKarras, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <Grid>
+                            <CheckBox Content="Karras Sigmas" IsChecked="{Binding Options.SchedulerOptions.UseKarrasSigmas}" />
+                        </Grid>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
 
@@ -213,48 +241,209 @@
                     </StackPanel>
                 </TabItem.Header>
 
-                <StackPanel Margin="0,4,0,0" >
+                <StackPanel VerticalAlignment="Top">
 
-                    <!--SchedulerOptions-->
-                    <DockPanel>
-                        <TextBlock DockPanel.Dock="Top" Text="Scheduler Options" Opacity=".8"  FontSize="11"/>
-                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
-                        <StackPanel>
-                            <CommonControls:SliderControl Text="Shift" Value="{Binding Options.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                    <!--General-->
+                    <UniformGrid Columns="3" Margin="0,4,0,0">
+                        <StackPanel Margin="0,0,2,0">
+                            <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
+                            <ComboBox SelectedItem="{Binding Options.Scheduler}" ItemsSource="{Binding Pipeline.DiffusionModel.DefaultOptions.Schedulers}" Validation.ErrorTemplate="{x:Null}" SelectionChanged="ComboBoxScheduler_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource EnumDescriptionConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
-                    </DockPanel>
+                        <StackPanel Margin="2,0,0,0">
+                            <TextBlock Text="Timesteps" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Options.SchedulerOptions.NumTrainTimesteps, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Steps Offset" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding Options.SchedulerOptions.StepsOffset, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </UniformGrid>
 
-                    <!--UpscaleOptions-->
-                    <DockPanel Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <TextBlock DockPanel.Dock="Top" Text="Upscale Options" Margin="0,10,0,0" Opacity=".8" FontSize="11"/>
-                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
-                        <Controls:UpscaleInputControl Options="{Binding UpscaleOptions}" />
-                    </DockPanel>
 
-                    <!--ExtractOptions-->
-                    <DockPanel Visibility="{Binding Pipeline.ExtractModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <TextBlock DockPanel.Dock="Top" Text="Extractor Options" Margin="0,10,0,0" Opacity=".8" FontSize="11"/>
-                        <Separator DockPanel.Dock="Top" Opacity=".4"/>
-                        <Controls:ExtractInputControl Options="{Binding ExtractOptions}" ExtractorType="{Binding Pipeline.ExtractModel.Type}" />
-                    </DockPanel>
+                    <!--IsSchedulerTimeStep-->
+                    <UniformGrid  Columns="3" Visibility="{Binding IsSchedulerTimeStep, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,4,0,0">
+                        <StackPanel Margin="0,0,2,0">
+                            <TextBlock Text="Timestep Spacing" Style="{StaticResource FieldTextBlockStyle}" />
+                            <ComboBox ItemsSource="{Binding Source={StaticResource TimestepSpacingType}}" SelectedItem="{Binding Options.SchedulerOptions.TimestepSpacing}" />
+                        </StackPanel>
+                        <StackPanel Margin="2,0,0,0">
+                            <TextBlock Text="Prediction" Style="{StaticResource FieldTextBlockStyle}" />
+                            <ComboBox ItemsSource="{Binding Source={StaticResource PredictionType}}" SelectedItem="{Binding Options.SchedulerOptions.PredictionType}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Variance" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:NullableComboBox ItemsSource="{Binding Source={StaticResource VarianceType}}" SelectedItem="{Binding Options.SchedulerOptions.VarianceType}" NullPrefix="None" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,2,0">
+                            <TextBlock Text="Beta Schedule" Style="{StaticResource FieldTextBlockStyle}" />
+                            <ComboBox ItemsSource="{Binding Source={StaticResource BetaScheduleType}}" SelectedItem="{Binding Options.SchedulerOptions.BetaSchedule}" />
+                        </StackPanel>
+                        <StackPanel Margin="2,0,0,0">
+                            <TextBlock Text="Beta Start" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.BetaStart, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Beta End" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.BetaEnd, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </UniformGrid>
+
+
+                    <!--IsKarras-->
+                    <UniformGrid  Columns="4" Visibility="{Binding IsSchedulerKarras, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,4,0,0" >
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxKarras}" Margin="0,0,2,0">
+                            <TextBlock Text="Rho" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.Rho, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxKarras}" Margin="2,0,0,0">
+                            <TextBlock Text="Sigma Min" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.SigmaMin, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxKarras}" Margin="4,0,0,0">
+                            <TextBlock Text="Sigma Max" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.SigmaMax, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <CheckBox x:Name="CheckBoxKarras" Content="Karras" IsChecked="{Binding Options.SchedulerOptions.UseKarrasSigmas}" Margin="8,20,0,0"/>
+                    </UniformGrid>
+
+
+                    <!--IsSchedulerThresholding-->
+                    <UniformGrid Columns="3" Visibility="{Binding IsSchedulerThresholding, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,4,0,0" >
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxThresholding}" Margin="0,0,2,0">
+                            <TextBlock Text="Thresholding Ratio" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.DynamicThresholdingRatio, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <CheckBox x:Name="CheckBoxThresholding" Content="Thresholding" IsChecked="{Binding Options.SchedulerOptions.Thresholding}" Margin="8,20,0,0"/>
+                        </StackPanel>
+                    </UniformGrid>
+
+
+                    <!--IsSchedulerClipSample-->
+                    <UniformGrid Columns="3" Visibility="{Binding IsSchedulerClipSample, Converter={StaticResource BooleanToVisibilityConverter}}"  Margin="0,4,0,0">
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxClipSample}" Margin="0,0,2,0">
+                            <TextBlock Text="Clip Range" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.ClipSampleRange, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel IsEnabled="{Binding IsChecked, ElementName=CheckBoxClipSample}" Margin="2,0,0,0">
+                            <TextBlock Text="Sample Max" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.SampleMaxValue, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <CheckBox x:Name="CheckBoxClipSample" Content="Clip Sample" IsChecked="{Binding Options.SchedulerOptions.ClipSample}" Margin="8,20,0,0"/>
+                        </StackPanel>
+                    </UniformGrid>
+
+
+                    <!--IsSchedulerMultiStep-->
+                    <StackPanel Visibility="{Binding IsSchedulerMultiStep, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,4,0,0">
+                        <UniformGrid  Columns="3" >
+                            <StackPanel Margin="0,0,2,0">
+                                <TextBlock Text="Solver" Style="{StaticResource FieldTextBlockStyle}" />
+                                <ComboBox ItemsSource="{Binding Source={StaticResource SolverType}}" SelectedItem="{Binding Options.SchedulerOptions.SolverType}" />
+                            </StackPanel>
+                            <StackPanel Margin="2,0,0,0">
+                                <TextBlock Text="Algorithm" Style="{StaticResource FieldTextBlockStyle}" />
+                                <ComboBox ItemsSource="{Binding Source={StaticResource AlgorithmType}}" SelectedItem="{Binding Options.SchedulerOptions.AlgorithmType}" />
+                            </StackPanel>
+                            <StackPanel Margin="4,0,0,0">
+                                <TextBlock Text="Solver Order" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding Options.SchedulerOptions.SolverOrder, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <StackPanel Margin="0,6,0,0">
+                            <CheckBox Content="Lower Order Final" IsChecked="{Binding Options.SchedulerOptions.LowerOrderFinal}" />
+                        </StackPanel>
+                    </StackPanel>
+
+
+                    <!--IsSchedulerFlowMatch-->
+                    <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}}"  Margin="0,4,0,0">
+                        <UniformGrid  Columns="3" >
+                            <StackPanel Margin="0,0,2,0">
+                                <TextBlock Text="Shift" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.Shift, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Margin="2,0,0,0">
+                                <TextBlock Text="Base Shift" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.BaseShift, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Margin="4,0,0,0">
+                                <TextBlock Text="Max Shift" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.MaxShift, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </UniformGrid>
+                        <UniformGrid Columns="2" Margin="0,10,0,0">
+                            <Grid HorizontalAlignment="Left">
+                                <CheckBox Content="Dynamic Shifting" IsChecked="{Binding Options.SchedulerOptions.UseDynamicShifting}" />
+                            </Grid>
+                            <Grid HorizontalAlignment="Right">
+                                <CheckBox Content="Stochastic Sampling" IsChecked="{Binding Options.SchedulerOptions.StochasticSampling}" />
+                            </Grid>
+                        </UniformGrid>
+                    </StackPanel>
+
+
+
+                    <!--IsStochastic-->
+                    <UniformGrid  Columns="5" Visibility="{Binding IsSchedulerStochastic, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,4,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Eta" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.Eta, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Noise" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.SNoise, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Churn" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.SChurn, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Min" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.STmin, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <TextBlock Text="Max" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:FloatBox FloatValue="{Binding Options.SchedulerOptions.STmax, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </UniformGrid>
+
 
                 </StackPanel>
+
             </TabItem>
 
 
-            <!--Automate-->
-            <!--<TabItem>
+            <!--Models-->
+            <TabItem Visibility="{Binding IsModelOptionsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <CommonControls:FontAwesome Icon="f544" IconStyle="Solid" Color="{StaticResource AccentColour2}"/>
-                        <TextBlock Text="Automate" Margin="5,0,0,0"/>
+                        <CommonControls:FontAwesome Icon="e4e2" IconStyle="Solid" Color="{StaticResource AccentColour2}"/>
+                        <TextBlock Text="Models" Margin="5,0,0,0"/>
                     </StackPanel>
                 </TabItem.Header>
 
-                <StackPanel Margin="0,4,0,0" >
-                </StackPanel>
-            </TabItem>-->
+                <UniformGrid Columns="1" Margin="0,4,0,0" >
 
+                    <!--UpscaleOptions-->
+                    <GroupBox Header="Upscale Options" Margin="0,0,0,6" Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <Controls:UpscaleInputControl Options="{Binding UpscaleOptions}" />
+                    </GroupBox>
+
+                    <!--ExtractOptions-->
+                    <GroupBox Header="Extract Options" Margin="0,0,0,6" Visibility="{Binding Pipeline.ExtractModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <Controls:ExtractInputControl Options="{Binding ExtractOptions}" ExtractorType="{Binding Pipeline.ExtractModel.Type}" />
+                    </GroupBox>
+
+                </UniformGrid>
+            </TabItem>
 
             <TabControl.Template>
                 <ControlTemplate TargetType="TabControl">

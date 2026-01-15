@@ -15,18 +15,36 @@
 
         <!--Model Settings-->
         <StackPanel DockPanel.Dock="Top" Margin="10">
-            <StackPanel>
-                <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}"/>
-                <TextBox Text="{Binding ControlNetModel.Name, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-            <StackPanel>
-                <TextBlock Text="Huggingface Url  or  Local Folder" Style="{StaticResource FieldTextBlockStyle}"/>
-                <TextBox Text="{Binding ControlNetModel.Path, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-            <StackPanel>
+
+            <StackPanel Margin="0,0,2,0">
                 <TextBlock Text="Pipeline" Style="{StaticResource FieldTextBlockStyle}"/>
                 <ComboBox ItemsSource="{Binding Pipelines}" SelectedItem="{Binding ControlNetModel.Pipeline}" SelectedIndex="0" />
             </StackPanel>
+            <StackPanel Margin="2,0,0,0">
+                <TextBlock Text="Model Source" Style="{StaticResource FieldTextBlockStyle}"/>
+                <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding Source={StaticResource ModelSourceType}}" SelectedItem="{Binding ControlNetModel.Source}" />
+            </StackPanel>
+
+            <Grid Margin="0,4,0,0">
+                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Folder}">
+                    <TextBlock Text="Folder (diffusers)" Style="{StaticResource FieldTextBlockStyle}" />
+                    <CommonControls:FilePickerTextBox FileName="{Binding ControlNetModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" IsRequired="True" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
+                    <TextBlock Text="Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                    <CommonControls:FilePickerTextBox FileName="{Binding ControlNetModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                </StackPanel>
+                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
+                    <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />
+                    <TextBox Text="{Binding ControlNetModel.Path, UpdateSourceTrigger=PropertyChanged}"  />
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Margin="0,4,0,0">
+                <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}"/>
+                <TextBox Text="{Binding ControlNetModel.Name, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
         </StackPanel>
 
         <!--Save/Cancel/Errors-->

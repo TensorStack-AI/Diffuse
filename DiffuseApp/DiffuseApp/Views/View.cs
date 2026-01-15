@@ -5,7 +5,13 @@ namespace Diffuse.Views
     public enum View
     {
         Home = 0,
-        Settings = 1,
+        General = 50,
+        Environment = 51,
+        Diffusion = 52,
+        LoraAdapter = 53,
+        ControlNet = 54,
+        Extract = 55,
+        Upscale = 56,
 
         TextToImage = 100,
         ImageToImage = 101,
@@ -30,8 +36,9 @@ namespace Diffuse.Views
     public enum ViewCategory
     {
         Other = 0,
-        Image = 1,
-        Video = 2
+        Settings = 1,
+        Image = 10,
+        Video = 20
     }
 
     public static class ViewManager
@@ -39,7 +46,8 @@ namespace Diffuse.Views
 
         private static readonly Dictionary<ViewCategory, View> CurrentViewMap = new Dictionary<ViewCategory, View>
         {
-            {ViewCategory.Other, View.Settings },
+            {ViewCategory.Other, View.Gallery },
+            {ViewCategory.Settings, View.General },
           //  {ViewCategory.Text, View.TextSummary },
             {ViewCategory.Image, View.TextToImage },
             {ViewCategory.Video, View.TextToVideo },
@@ -50,8 +58,16 @@ namespace Diffuse.Views
         private static readonly Dictionary<View, ViewCategory> ViewCategoryMap = new Dictionary<View, ViewCategory>
         {
             // General
-            { View.Settings, ViewCategory.Other  },
             { View.Gallery, ViewCategory.Other  },
+
+            // Settings
+            { View.General, ViewCategory.Settings  },
+            { View.Environment, ViewCategory.Settings  },
+            { View.Diffusion, ViewCategory.Settings  },
+            { View.LoraAdapter , ViewCategory.Settings  },
+            { View.ControlNet, ViewCategory.Settings  },
+            { View.Extract , ViewCategory.Settings  },
+            { View.Upscale , ViewCategory.Settings  },
 
             // Image
             { View.TextToImage, ViewCategory.Image  },

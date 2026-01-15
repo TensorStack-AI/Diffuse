@@ -4,6 +4,7 @@ using Diffuse.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Common;
@@ -124,6 +125,15 @@ namespace Diffuse.Dialogs
         }
 
 
+        public Task<bool> ImportAsync(DiffusionModel diffusionModel)
+        {
+            diffusionModel.Id = GetNextModelId();
+            DiffusionModel = diffusionModel;
+            Populate();
+            return base.ShowDialogAsync();
+        }
+
+
         protected override Task SaveAsync()
         {
             var index = Settings.DiffusionModels.Count;
@@ -142,6 +152,10 @@ namespace Diffuse.Dialogs
             DiffusionModel.DefaultOptions.Height = defaultSize.Height;
             DiffusionModel.DefaultOptions.Schedulers = Schedulers.ToArray();
 
+            if (DiffusionModel.Source == ModelSourceType.HuggingFace && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
+                DiffusionModel.Path = huggingfacePath;
+
+            DiffusionModel.Initialize(Settings.DirectoryModel);
             Settings.DiffusionModels.Insert(index, DiffusionModel);
             return base.SaveAsync();
         }
@@ -255,7 +269,7 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.DiffusionModels.Max(x => x.Id)) + 1;
+            return Math.Max(Utils.FixedIdRange, Settings.DiffusionModels.Max(x => x.Id)) + 1;
         }
 
 
@@ -269,6 +283,19 @@ namespace Diffuse.Dialogs
                 yield return "Pipeline cannot be empty";
             if (!IsUpdateMode && Settings.DiffusionModels.Any(x => x.Name.Equals(DiffusionModel.Name, StringComparison.OrdinalIgnoreCase)))
                 yield return $"Model with name '{DiffusionModel.Name}' already exists";
+
+            if (string.IsNullOrWhiteSpace(DiffusionModel.Path))
+                yield return string.Empty;
+            if (!string.IsNullOrWhiteSpace(DiffusionModel.Path))
+            {
+                if (DiffusionModel.Source == ModelSourceType.Folder && !Directory.Exists(DiffusionModel.Path))
+                    yield return "Model folder not found";
+                else if (DiffusionModel.Source == ModelSourceType.SingleFile && !File.Exists(DiffusionModel.Path))
+                    yield return "Model file not found";
+                else if (DiffusionModel.Source == ModelSourceType.HuggingFace && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
+                    yield return "HuggingFace repository not found";
+            }
+
 
             if (DiffusionModel.DefaultOptions.Steps < 1)
                 yield return "Steps must be be > 0";
@@ -404,6 +431,7 @@ namespace Diffuse.Dialogs
                 MemoryModes = [.. diffusionModel.MemoryModes],
                 DataTypes = [.. diffusionModel.DataTypes],
                 ProcessTypes = [.. diffusionModel.ProcessTypes],
+                Source = diffusionModel.Source,
                 Resolutions = [.. diffusionModel.Resolutions.Select(x => new SizeOption
                 {
                     Height = x.Height,

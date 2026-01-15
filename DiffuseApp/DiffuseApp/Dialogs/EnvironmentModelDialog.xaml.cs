@@ -114,6 +114,15 @@ namespace Diffuse.Dialogs
         }
 
 
+        public Task<bool> ImportAsync(EnvironmentModel environmentModel)
+        {
+            environmentModel.Id = GetNextModelId();
+            EnvironmentModel = environmentModel;
+            Populate();
+            return base.ShowDialogAsync();
+        }
+
+
         private Task AddVariableAsync()
         {
             var existing = Variables.FirstOrDefault(x => x.Name == _currentVariable.Name);
@@ -210,7 +219,7 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.Environments.Max(x => x.Id)) + 1;
+            return Math.Max(Utils.FixedIdRange, Settings.Environments.Max(x => x.Id)) + 1;
         }
 
 

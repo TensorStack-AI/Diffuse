@@ -36,6 +36,7 @@ namespace Diffuse.Services
             {
                 Environment = environment,
                 ServerPath = App.DirectoryServer,
+                IsDebugMode = environment.IsDebug,
             };
 
             var diffusionPipeline = new PipelineClient(pipelineClientConfig, progressCallback, _logger);
@@ -45,9 +46,8 @@ namespace Diffuse.Services
                 await diffusionPipeline.LoadAsync(pipelineConfig, cancellationToken);
                 return diffusionPipeline;
             }
-            catch (OperationCanceledException)
+            catch (Exception)
             {
-                await diffusionPipeline.KillServerAsync();
                 diffusionPipeline?.Dispose();
                 throw;
             }
@@ -57,13 +57,13 @@ namespace Diffuse.Services
         public Task<EnvironmentConfig> GetAsync(PipelineModel pipeline)
         {
             var environment = GetEnvironment(pipeline);
-            return Task.FromResult(FromModel(environment));
+            return Task.FromResult(FromModel(environment, _settings.IsServerDebugEnabled));
         }
 
 
         public Task<EnvironmentConfig> GetAsync(EnvironmentModel environment)
         {
-            return Task.FromResult(FromModel(environment));
+            return Task.FromResult(FromModel(environment, _settings.IsServerDebugEnabled));
         }
 
 
@@ -118,7 +118,7 @@ namespace Diffuse.Services
             {
                 IsDebugMode = false,
                 IsRebuild = isRebuild,
-                Environment = FromModel(environment),
+                Environment = FromModel(environment, _settings.IsServerDebugEnabled),
                 ServerPath = App.DirectoryServer,
             }, progressCallback, _logger);
             await pipelineClient.StartAsync(cancellationToken);
@@ -152,10 +152,11 @@ namespace Diffuse.Services
         }
 
 
-        private static EnvironmentConfig FromModel(EnvironmentModel environment)
+        private static EnvironmentConfig FromModel(EnvironmentModel environment, bool isDebugEnabled)
         {
             return new EnvironmentConfig
             {
+                IsDebug = isDebugEnabled,
                 Directory = App.DirectoryPython,
                 Variables = environment.Variables,
                 Environment = environment.Environment,

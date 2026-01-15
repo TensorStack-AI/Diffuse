@@ -1,6 +1,5 @@
 ﻿using Diffuse.Common;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,7 +18,14 @@ namespace Diffuse.Controls
         private SizeOption _selectedResolution;
         private bool _isImageInputEnabled;
         private bool _isControlNetEnabled;
-        private SchedulerType[] _schedulers;
+        private bool _isModelOptionsVisible;
+        private bool _isSchedulerKarras;
+        private bool _isSchedulerFlowMatch;
+        private bool _isSchedulerMultiStep;
+        private bool _isSchedulerTimeStep;
+        private bool _isSchedulerStochastic;
+        private bool _isSchedulerClipSample;
+        private bool _isSchedulerThresholding;
 
         public DiffusionInputControl()
         {
@@ -61,12 +67,6 @@ namespace Diffuse.Controls
             set { SetValue(ExtractOptionsProperty, value); }
         }
 
-        public SchedulerType[] Schedulers
-        {
-            get { return _schedulers; }
-            set { SetProperty(ref _schedulers, value); }
-        }
-
         public bool IsImageInputEnabled
         {
             get { return _isImageInputEnabled; }
@@ -85,10 +85,9 @@ namespace Diffuse.Controls
             set
             {
                 SetProperty(ref _isResolutionEnabled, value);
-                if (Options != null && _isResolutionEnabled)
+                if (_isResolutionEnabled)
                 {
-                    SelectedResolution = Pipeline.DiffusionModel.Resolutions.FirstOrDefault(x => x.Width == Options.Width && x.Height == Options.Height)
-                                      ?? Pipeline.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
+                    SelectedResolution = Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
                 }
             }
         }
@@ -96,16 +95,55 @@ namespace Diffuse.Controls
         public SizeOption SelectedResolution
         {
             get { return _selectedResolution; }
-            set
-            {
-                _selectedResolution = value;
-                if (Options != null && _selectedResolution != null)
-                {
-                    Options.Width = _selectedResolution.Width;
-                    Options.Height = _selectedResolution.Height;
-                }
-                NotifyPropertyChanged();
-            }
+            set { SetProperty(ref _selectedResolution, value); }
+        }
+
+        public bool IsModelOptionsVisible
+        {
+            get { return _isModelOptionsVisible; }
+            set { SetProperty(ref _isModelOptionsVisible, value); }
+        }
+
+        public bool IsSchedulerKarras
+        {
+            get { return _isSchedulerKarras; }
+            set { SetProperty(ref _isSchedulerKarras, value); }
+        }
+
+        public bool IsSchedulerFlowMatch
+        {
+            get { return _isSchedulerFlowMatch; }
+            set { SetProperty(ref _isSchedulerFlowMatch, value); }
+        }
+
+        public bool IsSchedulerMultiStep
+        {
+            get { return _isSchedulerMultiStep; }
+            set { SetProperty(ref _isSchedulerMultiStep, value); }
+        }
+
+        public bool IsSchedulerTimeStep
+        {
+            get { return _isSchedulerTimeStep; }
+            set { SetProperty(ref _isSchedulerTimeStep, value); }
+        }
+
+        public bool IsSchedulerStochastic
+        {
+            get { return _isSchedulerStochastic; }
+            set { SetProperty(ref _isSchedulerStochastic, value); }
+        }
+
+        public bool IsSchedulerClipSample
+        {
+            get { return _isSchedulerClipSample; }
+            set { SetProperty(ref _isSchedulerClipSample, value); }
+        }
+
+        public bool IsSchedulerThresholding
+        {
+            get { return _isSchedulerThresholding; }
+            set { SetProperty(ref _isSchedulerThresholding, value); }
         }
 
 
@@ -120,17 +158,7 @@ namespace Diffuse.Controls
             if (oldModel is not null && oldModel.Pipeline == newModel.Pipeline)
                 return Task.CompletedTask;
 
-            Schedulers = Enum.GetValues<SchedulerType>().ToArray();
-            SelectedResolution = newModel.Resolutions.FirstOrDefault(x => x.IsDefault);
-
-            //var resolutions = new SortedSet<int>([.. Enumerable.Range(4, 24).Select(x => 64 * x)]);
-            //foreach (var preset in newModel.Resolutions)
-            //{
-            //    resolutions.Add(preset.Width);
-            //    resolutions.Add(preset.Height);
-            //}
-            //DefaultResolutions = [.. resolutions];
-
+            IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
             return Task.CompletedTask;
         }
 
@@ -145,18 +173,30 @@ namespace Diffuse.Controls
                 newOptions.Seed = oldOptions.Seed;
                 newOptions.Prompt = oldOptions.Prompt;
                 newOptions.NegativePrompt = oldOptions.NegativePrompt;
-            }
 
-            if (IsControlNetEnabled)
+                newOptions.Steps = oldOptions.Steps;
+                newOptions.Steps2 = oldOptions.Steps2;
+                newOptions.GuidanceScale = oldOptions.GuidanceScale;
+                newOptions.GuidanceScale2 = oldOptions.GuidanceScale2;
+                newOptions.InputImageCount = oldOptions.InputImageCount;
+
+                newOptions.Strength = oldOptions.Strength;
+                newOptions.LoraStrength = oldOptions.LoraStrength;
+                newOptions.ControlNetStrength = oldOptions.ControlNetStrength;
+
+                if (Pipeline.DiffusionModel.DefaultOptions.Schedulers.Contains(oldOptions.Scheduler))
+                {
+                    newOptions.Scheduler = oldOptions.Scheduler;
+                    newOptions.SchedulerOptions = oldOptions.SchedulerOptions;
+                }
+
+                SelectedResolution = Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.Width == _selectedResolution?.Width && x.Height == _selectedResolution?.Height)
+                                  ?? Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
+            }
+            else
             {
-                newOptions.Strength = 1f;
+                SelectedResolution = Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
             }
-
-            //if(_selectedResolution is not null)
-            //{
-            //    newOptions.Width = _selectedResolution.Width;
-            //    newOptions.Height = _selectedResolution.Height;
-            //}
 
             return Task.CompletedTask;
         }
@@ -179,6 +219,31 @@ namespace Diffuse.Controls
                 Options.Prompt += $", {triggerWord}";
             }
             return Task.CompletedTask;
+        }
+
+
+        private void ComboBoxScheduler_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (Options is null)
+                return;
+
+            IsSchedulerTimeStep = Options.Scheduler.IsTimestep();
+            IsSchedulerKarras = Options.Scheduler.IsKarras();
+            IsSchedulerFlowMatch = Options.Scheduler.IsFlowMatch();
+            IsSchedulerMultiStep = Options.Scheduler.IsMultiStep();
+            IsSchedulerStochastic = Options.Scheduler.IsStochastic();
+            IsSchedulerClipSample = Options.Scheduler.IsClipSample();
+            IsSchedulerThresholding = Options.Scheduler.IsThreshold();
+        }
+
+
+        private void ComboBoxResolution_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (Options is null || _selectedResolution is null)
+                return;
+
+            Options.Width = _selectedResolution.Width;
+            Options.Height = _selectedResolution.Height;
         }
     }
 }

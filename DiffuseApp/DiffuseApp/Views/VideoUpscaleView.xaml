@@ -31,6 +31,7 @@
                             <StackPanel DockPanel.Dock="Top" >
                                 <Grid IsEnabled="{Binding UpscaleService.IsExecuting, Converter={StaticResource InverseBoolConverter}}">
                                     <Controls:ModelControl
+                                        x:Name="ModelControl"
                                         IsUpscalerEnabled="True"
                                         Settings="{Binding Settings, Mode=OneWay}" 
                                         CurrentPipeline="{Binding CurrentPipeline, Mode=TwoWay}"
@@ -43,7 +44,9 @@
                         <!--Execute/Cancel-->
                         <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="30">
                             <Button Content="Cancel" Command="{Binding CancelCommand}" />
-                            <Button Content="Execute" Command="{Binding ExecuteCommand}" />
+                            <Grid IsEnabled="{Binding IsSelectionValid, ElementName=ModelControl}">
+                                <Button Content="Generate" Command="{Binding ExecuteCommand}" />
+                            </Grid>
                         </UniformGrid>
 
 

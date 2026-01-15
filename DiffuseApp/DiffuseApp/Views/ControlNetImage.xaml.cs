@@ -96,6 +96,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ControlNetImage] [LoadPipelineAsync] - Loading pipeline..");
                 await base.LoadPipelineAsync();
@@ -103,7 +104,7 @@ namespace Diffuse.Views
                 //DiffusionModel
                 if (CurrentPipeline.DiffusionModel is not null)
                 {
-                    if (!DiffusionService.IsLoaded || DiffusionService.Pipeline.DiffusionModel != CurrentPipeline.DiffusionModel)
+                    if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
                     {
                         await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                         SetDefaultOptions(DiffusionService.DefaultOptions);
@@ -144,6 +145,7 @@ namespace Diffuse.Views
 
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ControlNetImage] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -183,6 +185,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -203,11 +206,10 @@ namespace Diffuse.Views
                 var options = _options with { InputControlImage = _sourceImage };
                 var resultTensor = await DiffusionService.GenerateImageAsync(options);
 
-                Statistics.Stop();
-
                 // Run Upscaler
                 if (UpscaleService.IsLoaded)
                 {
+                    Progress.Indeterminate("Upscaling Image...");
                     resultTensor = await UpscaleService.ExecuteAsync(new UpscaleImageRequest
                     {
                         Image = resultTensor,
@@ -215,9 +217,11 @@ namespace Diffuse.Views
                     });
                 }
 
+                Statistics.Stop();
+
                 // Set Result
+                ResultImage = await resultTensor.ToImageInputAsync();
                 CompareImage = _sourceImage;
-                ResultImage = new ImageInput(resultTensor);
 
                 // History
                 await HistoryService.AddAsync(ResultImage, new DiffusionHistory
@@ -287,7 +291,11 @@ namespace Diffuse.Views
                 Height = options.Height,
                 Steps = options.Steps,
                 Scheduler = options.Scheduler,
-                GuidanceScale = options.GuidanceScale
+                GuidanceScale = options.GuidanceScale,
+                SchedulerOptions = new SchedulerInputOptions
+                {
+                    Shift = options.Shift
+                }
             };
         }
 
@@ -339,11 +347,12 @@ namespace Diffuse.Views
 
                     IsViewBusy = true;
                     Progress.Indeterminate("Extracting Image Features...");
-                    _extractImage = new ImageInput(await ExtractService.ExecuteAsync(new ExtractImageRequest
+                    var resultTensor = await ExtractService.ExecuteAsync(new ExtractImageRequest
                     {
                         Image = _sourceImage,
                         Options = _extractOptions
-                    }));
+                    });
+                    _extractImage = await resultTensor.ToImageInputAsync();
                     SourceImage = _extractImage;
                     Progress.Clear();
                 }

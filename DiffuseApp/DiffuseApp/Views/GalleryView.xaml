@@ -51,7 +51,6 @@
 
                 <!--Bottom Panel-->
                 <Border DockPanel.Dock="Bottom" BorderBrush="{StaticResource DefaultBorderColor}" BorderThickness="1" Padding="4,0,4,0" >
-
                     <DockPanel Height="30">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="Items: " />
@@ -59,20 +58,16 @@
                             <TextBlock Text=" / " />
                             <TextBlock Text="{Binding HistoryCollection.SourceCollection.Count}" />
                         </StackPanel>
-
                         <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
                             <CommonControls:IconButton  Icon="f2ed" IconSize="13" IconColor="{StaticResource DangerColour}" Text="{Binding HistoryCollection.Count, StringFormat={}Delete {0} Items}" Command="{Binding DeleteItemsCommand}" Width="150" Height="26" />
                         </StackPanel>
-
                         <TextBlock />
-
                     </DockPanel>
-
                 </Border>
 
                 <!--Middle-->
                 <Border BorderBrush="{StaticResource DefaultBorderColor}" BorderThickness="1" Margin="0,4">
-                    <ScrollViewer PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" >
+                    <ScrollViewer PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                         <Grid>
                             <ListBox x:Name="ListBoxControl" 
                                 Padding="0"
@@ -83,6 +78,7 @@
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 IsSynchronizedWithCurrentItem="True"
                                 ItemsSource="{Binding HistoryCollection}" 
+                                SelectionChanged="ListBoxControl_SelectionChanged"
                                 SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
 
                                 <!--ItemContainerStyle-->
@@ -160,7 +156,6 @@
                 </Border>
             </DockPanel>
 
-
         </Grid>
 
         <!--GridSplitter-->
@@ -204,7 +199,7 @@
                     </Grid>
 
                     <DockPanel Grid.Row="2">
-                        <CommonControls:IconButton  Icon="f2ed" Text="Delete Item" IconSize="13" IconColor="{StaticResource DangerColour}" Command="{Binding DeleteItemCommand}" Width="150" Height="26" HorizontalAlignment="Right" Margin="4,2"/>
+                        <CommonControls:IconButton  Icon="f2ed" Text="Delete Item" IconSize="13" IconColor="{StaticResource DangerColour}" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}" Width="150" Height="26" HorizontalAlignment="Right" Margin="4,2"/>
                     </DockPanel>
                 </Grid>
 

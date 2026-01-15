@@ -18,13 +18,15 @@ namespace DiffuseApp.Common
     public sealed class PipelineClient : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly NamedPipeClientStream _objectPipe;
-        private readonly NamedPipeClientStream _messagePipe;
         private readonly ClientConfig _config;
-        private readonly ProcessLifetimeHandler _processhandler;
+        private readonly NamedPipeClientStream _commandChannel;
+        private readonly NamedPipeClientStream _pipelineChannel;
+        private readonly NamedPipeClientStream _progressChannel;
+        private readonly ProcessLifetimeHandler _processHandler;
         private readonly IProgress<PipelineProgress> _progressCallback;
-        private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationTokenSource _progressCancellation;
         private Process _serverProcess;
+        private bool _isCanceled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PipelineClient"/> class.
@@ -37,10 +39,11 @@ namespace DiffuseApp.Common
             _logger = logger;
             _config = config;
             _progressCallback = progressCallback;
-            _processhandler = new ProcessLifetimeHandler();
-            _cancellationTokenSource = new CancellationTokenSource();
-            _objectPipe = new NamedPipeClientStream(".", ServerConfig.ObjectPipeName, PipeDirection.In, PipeOptions.Asynchronous);
-            _messagePipe = new NamedPipeClientStream(".", ServerConfig.MessagePipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+            _processHandler = new ProcessLifetimeHandler();
+            _progressCancellation = new CancellationTokenSource();
+            _commandChannel = new NamedPipeClientStream(".", ServerConfig.ChannelCommand, PipeDirection.InOut, PipeOptions.Asynchronous);
+            _pipelineChannel = new NamedPipeClientStream(".", ServerConfig.ChannelPipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+            _progressChannel = new NamedPipeClientStream(".", ServerConfig.ChannelProgress, PipeDirection.In, PipeOptions.Asynchronous);
             _ = ProcessProgressQueueAsync(_progressCallback);
         }
 
@@ -51,15 +54,41 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            _isCanceled = false;
+
             // Start Server
             await StartServerAsync();
 
-            // Connect Pipes
-            await Task.WhenAll(_objectPipe.ConnectAsync(cancellationToken), _messagePipe.ConnectAsync(cancellationToken));
+            try
+            {
+                // Connect Pipes
+                await Task.WhenAll
+                (
+                    _commandChannel.ConnectAsync(cancellationToken),
+                    _progressChannel.ConnectAsync(cancellationToken),
+                    _pipelineChannel.ConnectAsync(cancellationToken)
+                );
 
-            // Start Environment
-            await SendRequestAsync(new PipelineRequest(RequestType.Start), CancellationToken.None);
-            await SendRequestAsync(new PipelineRequest(_config.Environment, _config.IsRebuild, _config.IsReinstall), cancellationToken);
+                // Start Environment
+                await SendPipelineRequestAsync(new PipelineRequest(RequestType.Start), cancellationToken);
+                await SendPipelineRequestAsync(new PipelineRequest(_config.Environment, _config.IsRebuild, _config.IsReinstall), cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                await KillServerAsync();
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Stop client
+        /// </summary>
+        public async Task StopAsync()
+        {
+            _isCanceled = true;
+            await SendPipelineRequestAsync(new PipelineRequest(RequestType.Stop));
+            await StopServerAsync(_serverProcess);
         }
 
 
@@ -69,8 +98,17 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task LoadAsync(PipelineConfig pipeline, CancellationToken cancellationToken = default)
         {
-            await StartAsync(cancellationToken);
-            await SendRequestAsync(new PipelineRequest(pipeline), cancellationToken);
+            try
+            {
+                _isCanceled = false;
+                await StartAsync(cancellationToken);
+                await SendPipelineRequestAsync(new PipelineRequest(pipeline), cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                await KillServerAsync();
+                throw;
+            }
         }
 
 
@@ -79,8 +117,9 @@ namespace DiffuseApp.Common
         /// </summary>
         public async Task UnloadAsync()
         {
-            await SendRequestAsync(new PipelineRequest(RequestType.PipelineUnload), CancellationToken.None);
-            await StopClientAsync();
+            _isCanceled = true;
+            await SendPipelineRequestAsync(new PipelineRequest(RequestType.PipelineUnload));
+            await StopAsync();
         }
 
 
@@ -89,10 +128,21 @@ namespace DiffuseApp.Common
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public async Task<Tensor<float>> RunAsync(PipelineOptions options, CancellationToken cancellationToken = default)
+        public async Task<Tensor<float>> RunAsync(PipelineOptions options)
         {
-            var response = await SendRequestAsync(new PipelineRequest(options), cancellationToken);
+            _isCanceled = false;
+            var response = await SendPipelineRequestAsync(new PipelineRequest(options));
             return response.Tensors.FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// Cancel the PythonPipeline
+        /// </summary>
+        public async Task CancelAsync()
+        {
+            _isCanceled = true;
+            await SendObjectRequestAsync(new CommandRequest());
         }
 
 
@@ -110,28 +160,42 @@ namespace DiffuseApp.Common
 
 
         /// <summary>
-        /// Send as request to the Server
+        /// Send a Pipeline request to the Server
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<PipelineResponse> SendRequestAsync(PipelineRequest request, CancellationToken cancellationToken)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task<PipelineResponse> SendPipelineRequestAsync(PipelineRequest request, CancellationToken cancellationToken = default)
         {
-            await _messagePipe.SendMessage(request, cancellationToken);
-            var response = await _messagePipe.ReceiveMessage<PipelineResponse>(cancellationToken);
+            await _pipelineChannel.SendMessage(request, cancellationToken);
+            var response = await _pipelineChannel.ReceiveMessage<PipelineResponse>(cancellationToken);
             if (response.IsError)
-                throw new Exception(response.Error);
+            {
+                if (response.IsCanceled)
+                    throw new OperationCanceledException(response.Error);
 
+                throw new Exception(response.Error);
+            }
             return response;
         }
 
 
         /// <summary>
-        /// Stop client
+        /// Send a Object request to the Server
         /// </summary>
-        private async Task StopClientAsync()
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task<CommandResponse> SendObjectRequestAsync(CommandRequest request, CancellationToken cancellationToken = default)
         {
-            await _cancellationTokenSource.SafeCancelAsync();
-            await SendRequestAsync(new PipelineRequest(RequestType.Stop), CancellationToken.None);
-            await StopServerAsync(_serverProcess);
+            await _commandChannel.SendObject(request, cancellationToken);
+            var response = await _commandChannel.ReceiveObject<CommandResponse>(cancellationToken);
+            if (response.IsError)
+            {
+                if (response.IsCanceled)
+                    throw new OperationCanceledException(response.Error);
+
+                throw new Exception(response.Error);
+            }
+            return response;
         }
 
 
@@ -146,7 +210,7 @@ namespace DiffuseApp.Common
 
             var processInfo = new ProcessStartInfo
             {
-                CreateNoWindow = true,
+                CreateNoWindow = !_config.IsDebugMode,
                 UseShellExecute = false,
                 FileName = Path.Combine(_config.ServerPath, ServerConfig.Executable),
             };
@@ -158,7 +222,7 @@ namespace DiffuseApp.Common
                     processInfo.Environment.Add(variable);
             }
             _serverProcess = Process.Start(processInfo);
-            _processhandler.AddProcess(_serverProcess);
+            _processHandler.AddProcess(_serverProcess);
         }
 
 
@@ -185,27 +249,29 @@ namespace DiffuseApp.Common
         /// <summary>
         /// Process the progress queue
         /// </summary>
-        /// <param name="statusPipe">The status pipe.</param>
         /// <param name="progressCallback">The progress callback.</param>
         private async Task ProcessProgressQueueAsync(IProgress<PipelineProgress> progressCallback)
         {
-            while (!_cancellationTokenSource.IsCancellationRequested)
+            while (!_progressCancellation.IsCancellationRequested)
             {
                 try
                 {
-                    if (!_objectPipe.IsConnected)
+                    if (!_progressChannel.IsConnected)
                     {
                         await Task.Delay(100);
                         continue;
                     }
 
-                    if (!_cancellationTokenSource.IsCancellationRequested)
-                        progressCallback?.Report(await _objectPipe.ReceiveObject<PipelineProgress>(_cancellationTokenSource.Token));
+                    var progress = await _progressChannel.ReceiveObject<PipelineProgress>(_progressCancellation.Token);
+                    if (progress == null || _isCanceled)
+                        continue;
+
+                    progressCallback?.Report(progress);
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(ex, $"[PythonClient] [ProcessProgressQueueAsync] - An exception occurred processing progress");
+                    _logger?.LogError(ex, $"[PipelineClient] [ProcessProgressQueueAsync] - An exception occurred processing progress");
                 }
             }
         }
@@ -216,11 +282,12 @@ namespace DiffuseApp.Common
         /// </summary>
         public void Dispose()
         {
-            _cancellationTokenSource?.SafeCancel();
-            _objectPipe?.Dispose();
-            _messagePipe?.Dispose();
+            _progressCancellation?.SafeCancel();
+            _progressCancellation?.Dispose();
+            _progressChannel?.Dispose();
+            _commandChannel?.Dispose();
+            _pipelineChannel?.Dispose();
             _serverProcess?.Dispose();
-            _cancellationTokenSource?.Dispose();
         }
     }
 }

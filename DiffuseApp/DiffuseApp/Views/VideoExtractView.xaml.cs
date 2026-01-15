@@ -5,8 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using TensorStack.Common;
-using TensorStack.Extractors.Common;
 using TensorStack.Video;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -80,6 +78,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[VideoExtractView] [LoadPipelineAsync] - Loading pipeline...");
 
@@ -92,6 +91,7 @@ namespace Diffuse.Views
                 SetDefaultOptions(ExtractService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[VideoExtractView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -126,6 +126,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -152,7 +153,6 @@ namespace Diffuse.Views
                 Statistics.Stop();
 
                 // Set Result
-                CompareVideo = SourceVideo;
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new ExtractHistory
                 {
                     Options = _options,
@@ -160,6 +160,7 @@ namespace Diffuse.Views
                     ExtractorType = CurrentPipeline.ExtractModel.Type,
                     Source = View.VideoExtract,
                 });
+                CompareVideo = _sourceVideo;
 
                 _logger?.LogInformation($"[VideoExtractView] [ExecuteAsync] - Executing pipeline complete.");
             }

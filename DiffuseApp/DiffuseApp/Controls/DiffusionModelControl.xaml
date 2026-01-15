@@ -20,7 +20,7 @@
             <DockPanel DockPanel.Dock="Bottom">
 
                 <!--Load/Unload-->
-                <DockPanel DockPanel.Dock="Right" Width="80" Height="22" Margin="0,2,0,0">
+                <DockPanel DockPanel.Dock="Right" Width="90" Height="22" Margin="0,2,0,0">
                     <Button x:Name="UnloadButton" DockPanel.Dock="Right" Command="{Binding UnloadCommand}" Width="22">
                         <CommonControls:FontAwesome Icon="f00d" IconStyle="Solid" >
                             <CommonControls:FontAwesome.Style>
@@ -36,18 +36,30 @@
                             </CommonControls:FontAwesome.Style>
                         </CommonControls:FontAwesome>
                     </Button>
-                    <Button x:Name="LoadButton" Command="{Binding LoadCommand}" >
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Content" Value="Load" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsEnabled, ElementName=LoadButton}" Value="False">
-                                        <Setter Property="Content" Value="Ready" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+
+                    <Grid>
+                        <Button x:Name="LoadButton" Command="{Binding LoadCommand}" >
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                    <Setter Property="Content" Value="Load" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEnabled, ElementName=LoadButton}" Value="False">
+                                            <Setter Property="Content" Value="Loading" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Grid Visibility="{Binding IsEnabled, ElementName=LoadButton, Converter={StaticResource InverseBooleanToHiddenConverter}, FallbackValue=Hidden}">
+                            <Border Background="{StaticResource ButtonBackground}" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" Visibility="{Binding IsPipelineLoaded, RelativeSource={RelativeSource AncestorType={x:Type Views:ViewBase}}, Converter={StaticResource BooleanToHiddenConverter}, FallbackValue=Hidden}">
+                                <DockPanel Margin="4,0" HorizontalAlignment="Center" Opacity=".8">
+                                    <CommonControls:FontAwesome DockPanel.Dock="Left" Icon="f058" Size="12" Color="{StaticResource SuccessColour}" Margin="0,1,0,0"/>
+                                    <TextBlock Text="Ready" Margin="4,2,0,0" Foreground="{StaticResource SuccessColour}"/>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                 
                 </DockPanel>
 
                 <!--Options-->
@@ -151,11 +163,11 @@
                 <DockPanel>
                     <TextBox DockPanel.Dock="Left" Text="Memory" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <UniformGrid Columns="2">
-                        <ComboBox Margin="0,0,1,0"
+                        <ComboBox Margin="0,0,0,0"
                             SelectedItem="{Binding SelectedMemoryMode}" 
                             ItemsSource="{Binding Source={StaticResource MemoryMode}}" 
                             IsSynchronizedWithCurrentItem="False" />
-                        <ComboBox Margin="1,0,0,0"
+                        <ComboBox Margin="0,0,0,0"
                             SelectedItem="{Binding SelectedDataType}" 
                             ItemsSource="{Binding SelectedModel.DataTypes}" 
                             IsSynchronizedWithCurrentItem="False" />

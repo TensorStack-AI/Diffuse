@@ -15,9 +15,9 @@
     <DockPanel DataContext="{Binding ElementName=UI}" Margin="15, 15, 15, 10">
 
         <!--Save / Cancel-->
-        <Grid DockPanel.Dock="Bottom"  IsEnabled="{Binding IsExecuting, Converter={StaticResource InverseBoolConverter}}">
+        <Grid DockPanel.Dock="Bottom"  >
             <UniformGrid Columns="2" Height="30" HorizontalAlignment="Right">
-                <Grid>
+                <Grid IsEnabled="{Binding IsExecuting, Converter={StaticResource InverseBoolConverter}}">
                     <Button Content="Create" Command="{Binding CreateCommand}" Width="100" IsDefault="True" Visibility="{Binding IsCreate, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <Button Content="Update" Command="{Binding UpdateCommand}" Width="100" IsDefault="True" Visibility="{Binding IsUpdate, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <Button Content="Rebuild" Command="{Binding RebuildCommand}" Width="100" IsDefault="True" Visibility="{Binding IsRebuild, Converter={StaticResource BooleanToVisibilityConverter}}"/>

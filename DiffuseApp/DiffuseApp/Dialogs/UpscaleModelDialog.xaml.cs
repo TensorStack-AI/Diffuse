@@ -97,6 +97,18 @@ namespace Diffuse.Dialogs
         }
 
 
+        public Task<bool> ImportAsync(UpscaleModel upscaleModel)
+        {
+            upscaleModel.Id = GetNextModelId();
+            UpscaleModel = upscaleModel;
+            foreach (var path in UpscaleModel.UrlPaths)
+            {
+                Files.Add(path);
+            }
+            return base.ShowDialogAsync();
+        }
+
+
         private Task AddFileAsync()
         {
             Files.Add(SelectedFile);
@@ -163,7 +175,7 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.UpscaleModels.Max(x => x.Id)) + 1;
+            return Math.Max(Utils.FixedIdRange, Settings.UpscaleModels.Max(x => x.Id)) + 1;
         }
 
 

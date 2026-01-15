@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using TensorStack.Common.Pipeline;
 using TensorStack.Video;
 using TensorStack.WPF;
 using TensorStack.WPF.Services;
@@ -67,6 +66,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Loading pipeline...");
 
@@ -74,6 +74,7 @@ namespace Diffuse.Views
                 await InterpolationService.LoadAsync(CurrentPipeline.Device);
 
                 _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -108,6 +109,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -137,7 +139,6 @@ namespace Diffuse.Views
                 Statistics.Stop();
 
                 // Set Result
-                CompareVideo = _resultVideo;
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new InterpolateHistory
                 {
                     Multiplier = _multiplier,
@@ -145,6 +146,7 @@ namespace Diffuse.Views
                     FrameRate = resultVideo.FrameRate,
                     OriginalFrameRate = _sourceVideo.FrameRate
                 });
+                CompareVideo = _sourceVideo;
 
                 _logger?.LogInformation($"[VideoInterpolateView] [ExecuteAsync] - Executing pipeline complete.");
             }

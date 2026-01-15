@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using TensorStack.Common;
 
 using TensorStack.Image;
 using TensorStack.WPF;
@@ -96,6 +95,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline...");
 
@@ -108,6 +108,7 @@ namespace Diffuse.Views
                 SetDefaultOptions(ExtractService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -142,6 +143,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -168,8 +170,8 @@ namespace Diffuse.Views
                 Statistics.Stop();
 
                 // Set Result
-                CompareImage = _resultImage;
-                ResultImage = new ImageInput(resultTensor);
+                ResultImage = await resultTensor.ToImageInputAsync();
+                CompareImage = _sourceImage;
 
                 // History
                 await HistoryService.AddAsync(_resultImage, new ExtractHistory

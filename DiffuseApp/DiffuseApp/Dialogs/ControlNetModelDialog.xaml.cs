@@ -4,6 +4,7 @@ using Diffuse.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.WPF;
@@ -47,7 +48,8 @@ namespace Diffuse.Dialogs
             var modelId = GetNextModelId();
             ControlNetModel = new ControlNetModel
             {
-                Id = modelId
+                Id = modelId,
+                Source = ModelSourceType.HuggingFace
             };
             return base.ShowDialogAsync();
         }
@@ -66,6 +68,14 @@ namespace Diffuse.Dialogs
         {
             var modelId = GetNextModelId();
             ControlNetModel = DeepClone(controlNetModel, modelId);
+            return base.ShowDialogAsync();
+        }
+
+
+        internal Task<bool> ImportAsync(ControlNetModel controlNetModel)
+        {
+            controlNetModel.Id = GetNextModelId();
+            ControlNetModel = controlNetModel;
             return base.ShowDialogAsync();
         }
 
@@ -112,7 +122,7 @@ namespace Diffuse.Dialogs
 
         private int GetNextModelId()
         {
-            return Math.Max(100, Settings.ControlNetModels.Max(x => x.Id)) + 1;
+            return Math.Max(Utils.FixedIdRange, Settings.ControlNetModels.Max(x => x.Id)) + 1;
         }
 
 
@@ -126,6 +136,16 @@ namespace Diffuse.Dialogs
                 yield return "Pipeline cannot be empty";
             if (!IsUpdateMode && Settings.ControlNetModels.Any(x => x.Pipeline == ControlNetModel.Pipeline && x.Name.Equals(ControlNetModel.Name, StringComparison.OrdinalIgnoreCase)))
                 yield return $"Model with name '{ControlNetModel.Name}' already exists";
+
+            if (!string.IsNullOrWhiteSpace(ControlNetModel.Path))
+            {
+                if (ControlNetModel.Source == ModelSourceType.Folder && !Directory.Exists(ControlNetModel.Path))
+                    yield return "Model folder not found";
+                else if (ControlNetModel.Source == ModelSourceType.SingleFile && !File.Exists(ControlNetModel.Path))
+                    yield return "Model file not found";
+                else if (ControlNetModel.Source == ModelSourceType.HuggingFace && !Utils.TryParseHuggingFaceRepo(ControlNetModel.Path, out _))
+                    yield return "HuggingFace repository not found";
+            }
         }
 
 

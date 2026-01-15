@@ -14,6 +14,7 @@ namespace Diffuse.Common
     {
         private bool _isValid;
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsDefault { get; set; }

@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using TensorStack.Common;
-using TensorStack.Common.Tensor;
 using TensorStack.Python;
 using TensorStack.Python.Common;
 
@@ -18,13 +17,14 @@ namespace DiffuseApp.Common
     public sealed class PipelineServer : IDisposable
     {
         private readonly ILogger _logger;
-        private readonly NamedPipeServerStream _objectPipe;
-        private readonly NamedPipeServerStream _messagePipe;
+        private readonly string _directoryBase;
+        private readonly NamedPipeServerStream _commandChannel;
+        private readonly NamedPipeServerStream _pipelineChannel;
+        private readonly NamedPipeServerStream _progressChannel;
         private readonly Channel<PipelineProgress> _progressQueue;
         private readonly IProgress<PipelineProgress> _progressCallback;
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private RequestType _currentState;
-
+        private readonly CancellationTokenSource _serverCancellation;
+        private CancellationTokenSource _pipelineCancellation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PipelineServer"/> class.
@@ -32,15 +32,15 @@ namespace DiffuseApp.Common
         /// <param name="serverConfig">The server configuration.</param>
         /// <param name="pipelineConfig">The pipeline configuration.</param>
         /// <param name="logger">The logger.</param>
-        public PipelineServer(ILogger logger = default)
+        public PipelineServer(string directoryBase, ILogger logger)
         {
             _logger = logger;
-            _currentState = RequestType.Stop;
-            _cancellationTokenSource = new CancellationTokenSource();
-            _objectPipe = new NamedPipeServerStream(ServerConfig.ObjectPipeName, PipeDirection.Out, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
-            _messagePipe = new NamedPipeServerStream(ServerConfig.MessagePipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
+            _directoryBase = directoryBase;
+            _progressChannel = new NamedPipeServerStream(ServerConfig.ChannelProgress, PipeDirection.Out, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
+            _commandChannel = new NamedPipeServerStream(ServerConfig.ChannelCommand, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
+            _pipelineChannel = new NamedPipeServerStream(ServerConfig.ChannelPipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
             _progressQueue = Channel.CreateUnbounded<PipelineProgress>();
-            _progressCallback = new Progress<PipelineProgress>(p => _progressQueue.Writer.TryWrite(p));
+            _progressCallback = new Progress<PipelineProgress>(async (p) => await _progressQueue.Writer.WriteAsync(p));
         }
 
 
@@ -49,156 +49,16 @@ namespace DiffuseApp.Common
         /// </summary>
         /// <param name="isRebuild">if set to <c>true</c> [is rebuild].</param>
         /// <param name="isReinstall">if set to <c>true</c> [is reinstall].</param>
-        /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <param name="cancellationToken">The cancellation token.</param>
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             CallbackMessage("Starting Server...", "Initialize");
             await WaitForConnectionAsync(cancellationToken);
 
-            // Generate Loop
-            CallbackMessage("Initializing...", "Initialize");
-            _logger?.LogInformation($"[PythonServer] [StartAsync] Start generate loop.");
-            var pythonProxy = default(PythonPipeline);
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                try
-                {
-                    // Read Request
-                    var message = await _messagePipe.ReceiveMessage<PipelineRequest>();
-                    _logger?.LogInformation($"[PythonServer] [StartAsync] {message.Type} message received.");
-
-                    if (message.Type == RequestType.Stop)
-                    {
-                        _cancellationTokenSource?.SafeCancel();
-                        await _messagePipe.SendResponse(cancellationToken);
-                        _logger?.LogInformation($"[PythonServer] [StartAsync] Server stopped.");
-                        return;
-                    }
-                    else if (message.Type == RequestType.Start && _currentState == RequestType.Stop)
-                    {
-                        _currentState = message.Type;
-                        await _messagePipe.SendResponse(cancellationToken);
-                        _logger?.LogInformation($"[PythonServer] [StartAsync] Server started.");
-                        continue;
-                    }
-                    else if (message.Type == RequestType.Environment && _currentState == RequestType.Start)
-                    {
-                        try
-                        {
-                            _currentState = message.Type;
-                            CallbackMessage("Create Environment...", "Initialize");
-                            var environment = message.Environment;
-                            var pythonService = new PythonManager(environment.Config, _logger);
-                            if (pythonService.Exists() && !environment.IsRebuild)
-                                await pythonService.LoadAsync(_progressCallback);
-                            else
-                                await pythonService.CreateAsync(environment.IsRebuild, environment.IsReinstall, _progressCallback);
-
-                            await _messagePipe.SendResponse(cancellationToken);
-                            CallbackMessage(string.Empty, "Initialize");
-
-                        }
-                        catch (Exception ex)
-                        {
-                            await _messagePipe.SendMessage(new PipelineResponse
-                            {
-                                Error = ex.Message
-                            }, cancellationToken: cancellationToken);
-
-                            throw;
-                        }
-                    }
-
-                    // Environment Loaded
-                    if (_currentState == RequestType.Environment)
-                    {
-
-                        // Model Load
-                        if (message.Type == RequestType.PipelineLoad)
-                        {
-                            CallbackMessage("Loading Pipeline...", "Initialize");
-
-                            pythonProxy = new PythonPipeline(message.PipelineConfig, _progressCallback, _logger);
-                            await pythonProxy.LoadAsync();
-                            await _messagePipe.SendResponse(cancellationToken);
-
-                            CallbackMessage(string.Empty, "Initialize");
-                            continue;
-                        }
-                        else if (message.Type == RequestType.PipelineUnload)
-                        {
-                            CallbackMessage("Loading Pipeline...", "Initialize");
-
-                            await pythonProxy.UnloadAsync();
-                            await _messagePipe.SendResponse(cancellationToken);
-
-                            CallbackMessage(string.Empty, "Initialize");
-                            continue;
-                        }
-                        else if (message.Type == RequestType.PipelineRun)
-                        {
-                            // Generate Response
-                            CallbackMessage("Run Pipeline...");
-
-                            var response = default(Tensor<float>);
-
-                            try
-                            {
-                                if (message.ImageTensorCount > 0)
-                                {
-                                    message.PipelineOptions.InputImages = message.Tensors
-                                        .Take(message.ImageTensorCount)
-                                        .Select(x => x.AsImageTensor())
-                                        .ToList();
-                                }
-
-                                if (message.ControlNetTensorCount > 0)
-                                {
-                                    message.PipelineOptions.InputControlImages = message.Tensors
-                                        .Skip(message.ImageTensorCount)
-                                        .Take(message.ControlNetTensorCount)
-                                        .Select(x => x.AsImageTensor())
-                                        .ToList();
-                                }
-
-                                response = await pythonProxy.GenerateAsync(message.PipelineOptions, cancellationToken);
-
-                                _logger?.LogInformation($"[PythonServer] [StartAsync] Response generated.");
-
-                                await _messagePipe.SendMessage(new PipelineResponse
-                                {
-                                    Tensors = [response]
-                                }, cancellationToken: cancellationToken);
-
-                            }
-                            catch (Exception ex)
-                            {
-                                await _messagePipe.SendMessage(new PipelineResponse
-                                {
-                                    Error = ex.Message
-                                }, cancellationToken: cancellationToken);
-                            }
-
-                            CallbackMessage(string.Empty);
-                        }
-                    }
-
-                    _logger?.LogInformation($"[PythonServer] [StartAsync] Response sent.");
-                }
-                catch (EndOfStreamException)
-                {
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    _logger?.LogError(ex, "[PythonServer] [StartAsync] An exception occurred");
-                    throw;
-                }
-            }
-
-            pythonProxy?.Dispose();
-            _logger?.LogInformation($"[PythonServer] [StartAsync] Generate loop stopped.");
+            _ = StartProgressChannelAsync(cancellationToken);
+            _ = StartCommandChannelAsync(cancellationToken);
+            await StartPipelineChannelAsync(cancellationToken);
+            _logger.LogInformation($"[PipelineServer] [Start] Generate loop stopped.");
         }
 
 
@@ -208,13 +68,119 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         private async Task WaitForConnectionAsync(CancellationToken cancellationToken)
         {
-            _logger?.LogInformation($"[PythonServer][StartAsync] Waiting for connection");
-            await _objectPipe.WaitForConnectionAsync(cancellationToken);
-            await _messagePipe.WaitForConnectionAsync(cancellationToken);
+            _logger.LogInformation($"[PipelineServer] [WaitForConnection] Waiting for connection...");
+            await Task.WhenAll
+            (
+                _progressChannel.WaitForConnectionAsync(cancellationToken),
+                _commandChannel.WaitForConnectionAsync(cancellationToken),
+                _pipelineChannel.WaitForConnectionAsync(cancellationToken)
+            );
+            _logger.LogInformation($"[PipelineServer] [WaitForConnection] Client connected.");
+        }
 
-            // Progress Loop
-            _ = ProcessProgressQueueAsync();
-            _logger?.LogInformation($"[PythonServer] [StartAsync] Client connected.");
+
+        /// <summary>
+        /// Start pipeline channel
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task StartPipelineChannelAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"[PipelineServer] [PipelineChannel] Start pipeline channel.");
+
+            var pipeline = default(PythonPipeline);
+            var pipelineState = RequestType.Stop;
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    _logger.LogInformation($"[PipelineServer] [PipelineChannel] Waiting for request.");
+                    var request = await _pipelineChannel.ReceiveMessage<PipelineRequest>(cancellationToken);
+
+                    _logger.LogInformation($"[PipelineServer] [PipelineChannel] {request.Type} request received.");
+                    if (request.Type == RequestType.Stop)
+                    {
+                        await StopServerAsync(request, cancellationToken);
+                        pipelineState = RequestType.Stop;
+                    }
+                    else if (request.Type == RequestType.Start && pipelineState == RequestType.Stop)
+                    {
+                        await StartServerAsync(request, cancellationToken);
+                        pipelineState = RequestType.Start;
+                    }
+                    else if (request.Type == RequestType.Environment && pipelineState == RequestType.Start)
+                    {
+                        await CreateEnvironmentAsync(request, cancellationToken);
+                        pipelineState = RequestType.Environment;
+                    }
+                    else
+                    {
+                        if (pipelineState == RequestType.Environment)
+                        {
+                            if (request.Type == RequestType.PipelineLoad)
+                            {
+                                pipeline = await LoadPipelineAsync(request, cancellationToken);
+                            }
+                            else if (request.Type == RequestType.PipelineUnload)
+                            {
+                                await UnloadPipelineAsync(request, pipeline, cancellationToken);
+                            }
+                            else if (request.Type == RequestType.PipelineRun)
+                            {
+                                await RunPipelineAsync(request, pipeline, cancellationToken);
+                            }
+                        }
+                    }
+
+                    if (pipelineState == RequestType.Stop)
+                        break;
+                }
+                catch (EndOfStreamException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[PipelineServer] [PipelineChannel] An unexpected exception occurred");
+                    break;
+                }
+            }
+
+            pipeline?.Dispose();
+            _logger.LogInformation($"[PipelineServer] [PipelineChannel] Pipeline channel closed.");
+        }
+
+
+        /// <summary>
+        /// Start command channel
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task StartCommandChannelAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"[PipelineServer] [CommandChannel] Start command channel.");
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    _logger.LogInformation($"[PipelineServer] [CommandChannel] Waiting for command...");
+                    var commandMessage = await _commandChannel.ReceiveObject<CommandRequest>(cancellationToken);
+                    if (commandMessage == null)
+                        continue;
+
+                    _logger.LogInformation("[PipelineServer] [CommandChannel] Received {Type} command.", commandMessage.Type);
+                    if (commandMessage.Type == CommandRequestType.Cancel)
+                        await _pipelineCancellation.SafeCancelAsync();
+
+                    await _commandChannel.SendObject(new CommandResponse(), cancellationToken);
+                    _logger.LogInformation("[PipelineServer] [CommandChannel] Processed {Type} command.", commandMessage.Type);
+                }
+                catch (OperationCanceledException) { }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"[PipelineServer] [CommandChannel] - An exception occurred receiving command.");
+                    await _commandChannel.SendObject(new CommandResponse(ex), cancellationToken);
+                }
+            }
+            _logger.LogInformation($"[PipelineServer] [CommandChannel] Close command channel.");
         }
 
 
@@ -222,20 +188,22 @@ namespace DiffuseApp.Common
         /// Process the progress queue
         /// </summary>
         /// <param name="progressQueue">The progress queue.</param>
-        private async Task ProcessProgressQueueAsync()
+        private async Task StartProgressChannelAsync(CancellationToken cancellationToken)
         {
-            await foreach (var progress in _progressQueue.Reader.ReadAllAsync(_cancellationTokenSource.Token))
+            _logger.LogInformation($"[PipelineServer] [ProgressChannel] Start progress channel.");
+            await foreach (var progressMessage in _progressQueue.Reader.ReadAllAsync(cancellationToken))
             {
                 try
                 {
-                    await _objectPipe.SendObject(progress, _cancellationTokenSource.Token);
+                    await _progressChannel.SendObject(progressMessage, cancellationToken);
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(ex, $"[PythonServer] [ProcessProgressQueueAsync] - An exception occurred processing progress");
+                    _logger.LogError(ex, $"[PipelineServer] [ProgressChannel] - An exception occurred processing progress.");
                 }
             }
+            _logger.LogInformation($"[PipelineServer] [ProgressChannel] Close progress channel.");
         }
 
 
@@ -254,14 +222,189 @@ namespace DiffuseApp.Common
 
 
         /// <summary>
+        /// Start the server
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task StartServerAsync(PipelineRequest request, CancellationToken cancellationToken)
+        {
+
+            await _pipelineChannel.SendResponse(cancellationToken);
+            _logger.LogInformation($"[PipelineServer] [StartServer] Server started.");
+        }
+
+
+        /// <summary>
+        /// Stop the server
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task StopServerAsync(PipelineRequest request, CancellationToken cancellationToken)
+        {
+            _serverCancellation?.SafeCancel();
+            await _pipelineChannel.SendResponse(cancellationToken);
+            _logger.LogInformation($"[PipelineServer] [StopServer] Server stopped.");
+        }
+
+
+        /// <summary>
+        /// Create environment
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task CreateEnvironmentAsync(PipelineRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CallbackMessage("Create Environment...", "Initialize");
+
+                var environment = request.Environment;
+                var pythonService = new PythonManager(environment.Config, _directoryBase, _logger);
+                if (pythonService.Exists() && !environment.IsRebuild)
+                {
+                    await pythonService.LoadAsync(_progressCallback);
+                }
+                else
+                {
+                    await pythonService.CreateAsync(environment.IsRebuild, environment.IsReinstall, _progressCallback);
+                }
+
+                await _pipelineChannel.SendResponse(cancellationToken);
+
+                CallbackMessage(string.Empty, "Initialize");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [CreateEnvironment] An exception occurred creating environment.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+            }
+        }
+
+
+        /// <summary>
+        /// Loads the pipeline
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task<PythonPipeline> LoadPipelineAsync(PipelineRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CallbackMessage("Loading Pipeline...", "Initialize");
+                var pipeline = new PythonPipeline(request.PipelineConfig, _progressCallback, _logger);
+                await pipeline.LoadAsync();
+                await _pipelineChannel.SendResponse(cancellationToken);
+
+                CallbackMessage(string.Empty, "Initialize");
+                return pipeline;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [LoadPipeline] An exception occurred loading pipeline.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+                return default;
+            }
+        }
+
+
+        /// <summary>
+        /// Unloads the pipeline
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task UnloadPipelineAsync(PipelineRequest request, PythonPipeline pipeline, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CallbackMessage("Loading Pipeline...", "Initialize");
+
+                await pipeline.UnloadAsync();
+                await _pipelineChannel.SendResponse(cancellationToken);
+
+                CallbackMessage(string.Empty, "Initialize");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [UnloadPipeline] An exception occurred unloading pipeline.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+            }
+        }
+
+
+        /// <summary>
+        /// Runs the pipeline
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task RunPipelineAsync(PipelineRequest request, PythonPipeline pipeline, CancellationToken cancellationToken)
+        {
+            try
+            {
+                _pipelineCancellation = new CancellationTokenSource();
+
+                CallbackMessage("Run Pipeline...");
+                RehydratePipelineOptions(request);
+                var response = await pipeline.GenerateAsync(request.PipelineOptions, _pipelineCancellation.Token);
+                await _pipelineChannel.SendMessage(new PipelineResponse(response));
+                CallbackMessage(string.Empty);
+            }
+            catch (OperationCanceledException ex)
+            {
+                _logger.LogError("[PipelineServer] [RunPipeline] {Message}", ex.Message);
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [RunPipeline] An exception occurred running pipeline.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+            }
+            finally
+            {
+                _pipelineCancellation.Dispose();
+                _pipelineCancellation = null;
+            }
+        }
+
+
+        /// <summary>
+        /// Rehydrates the pipeline options.
+        /// </summary>
+        /// <param name="pipelineRequest">The pipeline request.</param>
+        private void RehydratePipelineOptions(PipelineRequest pipelineRequest)
+        {
+            if (pipelineRequest.ImageTensorCount > 0)
+            {
+                pipelineRequest.PipelineOptions.InputImages = pipelineRequest.Tensors
+                    .Take(pipelineRequest.ImageTensorCount)
+                    .Select(x => x.AsImageTensor())
+                    .ToList();
+            }
+
+            if (pipelineRequest.ControlNetTensorCount > 0)
+            {
+                pipelineRequest.PipelineOptions.InputControlImages = pipelineRequest.Tensors
+                    .Skip(pipelineRequest.ImageTensorCount)
+                    .Take(pipelineRequest.ControlNetTensorCount)
+                    .Select(x => x.AsImageTensor())
+                    .ToList();
+            }
+        }
+
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            _cancellationTokenSource?.SafeCancel();
-            _objectPipe?.Dispose();
-            _messagePipe?.Dispose();
-            _cancellationTokenSource?.Dispose();
+            _pipelineCancellation?.SafeCancel();
+            _pipelineCancellation?.Dispose();
+            _serverCancellation?.SafeCancel();
+            _serverCancellation?.Dispose();
+            _progressChannel?.Dispose();
+            _commandChannel?.Dispose();
+            _pipelineChannel?.Dispose();
         }
 
     }

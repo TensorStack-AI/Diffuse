@@ -7,13 +7,20 @@ namespace Diffuse.Common
     public class LoraAdapterModel : BaseModel
     {
         private bool _isValid;
+        private string _weights;
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Key { get; set; }
         public string Path { get; set; }
-        public string Weights { get; set; }
+        public string Weights
+        {
+            get { return _weights; }
+            set { SetProperty(ref _weights, value); }
+        }
         public string Pipeline { get; set; }
+        public ModelSourceType Source { get; set; }
         public string[] Triggers { get; set; }
         public bool IsDefault { get; set; }
 
@@ -27,9 +34,12 @@ namespace Diffuse.Common
 
         public void Initialize(string modelDirectory)
         {
-            var modelId = $"models--{Path.Replace("/", "--")}";
-            IsValid = Directory.Exists(System.IO.Path.Combine(Path, Weights)) 
-                   || Directory.Exists(System.IO.Path.Combine(modelDirectory, modelId));
+            if (Source == ModelSourceType.Folder)
+                IsValid = Directory.Exists(Path);
+            else if (Source == ModelSourceType.SingleFile)
+                IsValid = File.Exists(Path);
+            else if (Source == ModelSourceType.HuggingFace)
+                IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
         }
     }
 }

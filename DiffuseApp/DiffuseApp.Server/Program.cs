@@ -54,7 +54,7 @@ namespace DiffuseApp.Server
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => cancellationTokenSource.SafeCancel();
 
                     // Start Server
-                    using (var pipelineServer = new PipelineServer(_logger))
+                    using (var pipelineServer = new PipelineServer(_directoryData, _logger))
                     {
                         await pipelineServer.StartAsync(cancellationTokenSource.Token);
                     }

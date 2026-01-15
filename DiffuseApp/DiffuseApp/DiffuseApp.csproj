@@ -77,8 +77,8 @@
 
   <!--Settings-->
   <ItemGroup>
-    <None Update="Settings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="Settings.default.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

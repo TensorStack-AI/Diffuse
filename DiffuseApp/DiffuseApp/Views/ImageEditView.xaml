@@ -29,6 +29,7 @@
                         <StackPanel DockPanel.Dock="Top" IsEnabled="{Binding DiffusionService.IsLoading, Converter={StaticResource InverseBoolConverter}}">
                             <Grid IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}">
                                 <Controls:DiffusionModelControl
+                                    x:Name="ModelControl"
                                     ProcessType="ImageEdit"
                                     IsLoraSupported="True"
                                     IsUpscalerSupported="True"
@@ -43,7 +44,9 @@
                             <!--Execute/Cancel-->
                             <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="30" >
                                 <Button Content="Cancel" Command="{Binding CancelCommand}" />
-                                <Button Content="Generate" Command="{Binding ExecuteCommand}" />
+                                <Grid IsEnabled="{Binding IsSelectionValid, ElementName=ModelControl}">
+                                    <Button Content="Generate" Command="{Binding ExecuteCommand}" />
+                                </Grid>
                             </UniformGrid>
 
                             <!--InputControl-->

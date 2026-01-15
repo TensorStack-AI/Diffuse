@@ -516,9 +516,10 @@
       "Id": 101,
       "Name": "Z-Image Turbo",
       "Pipeline": "ZImagePipeline",
-      "Path": "TensorStack/Z-Image-Turbo-ts",
+      "Path": "Tongyi-MAI/Z-Image-Turbo",
+      "Source": "HuggingFace",
       "MemoryModes": [ 2, 2, 14, 24 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
 
       "DefaultOptions": {
@@ -576,11 +577,12 @@
     },
     {
       "Id": 102,
-      "Name": "Qwen Image",
+      "Name": "Qwen Image (2512)",
       "Pipeline": "QwenImagePipeline",
-      "Path": "TensorStack/Qwen-Image-ts",
+      "Path": "Qwen/Qwen-Image-2512",
+      "Source": "HuggingFace",
       "MemoryModes": [ 5, 5, 40, 60 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -636,11 +638,12 @@
     },
     {
       "Id": 104,
-      "Name": "Qwen Image Edit(2511)",
+      "Name": "Qwen Image Edit(2512)",
       "Pipeline": "QwenImagePipeline",
-      "Path": "Qwen/Qwen-Image-Edit-2511",
+      "Path": "Qwen/Qwen-Image-Edit-2512",
+      "Source": "HuggingFace",
       "MemoryModes": [ 5, 5, 40, 60 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageEdit" ],
       "IsDefault": true,
       "DefaultOptions": {
@@ -699,9 +702,10 @@
       "Id": 105,
       "Name": "Chroma HD",
       "Pipeline": "ChromaPipeline",
-      "Path": "TensorStack/Chroma1-HD-ts",
+      "Path": "lodestones/Chroma1-HD",
+      "Source": "HuggingFace",
       "MemoryModes": [ 2, 2, 19, 30 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -760,8 +764,9 @@
       "Name": "FLUX.1 Schnell",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-schnell-ts",
+      "Source": "HuggingFace",
       "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
       "DefaultOptions": {
         "Steps": 4,
@@ -820,8 +825,9 @@
       "Name": "FLUX.1 Dev",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-dev-ts",
+      "Source": "HuggingFace",
       "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -880,8 +886,9 @@
       "Name": "FLUX.1 Kontext",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-Kontext-dev-ts",
+      "Source": "HuggingFace",
       "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageEdit" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -939,9 +946,10 @@
       "Id": 110,
       "Name": "StableDiffusionXL",
       "Pipeline": "StableDiffusionXLPipeline",
-      "Path": "TensorStack/StableDiffusionXL-ts",
+      "Path": "stabilityai/stable-diffusion-xl-base-1.0",
+      "Source": "HuggingFace",
       "MemoryModes": [ 2, 2, 8, 16 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ControlNetImageToImage" ],
       "IsDefault": true,
       "DefaultOptions": {
@@ -949,8 +957,8 @@
         "Width": 1024,
         "Height": 1024,
         "GuidanceScale": 7.5,
-        "Scheduler": "DPMM",
-        "Schedulers": [ "LMS", "Euler", "EulerAncestral", "DDPM", "DDIM", "KDPM2", "KDPM2Ancestral", "PNDM", "Heun", "UniPC", "DPMM", "DPMS", "DPMSDE" ]
+        "Scheduler": "EulerAncestral",
+        "Schedulers": [ "LMS", "Euler", "EulerAncestral", "DDPM", "DDIM", "KDPM2", "KDPM2Ancestral", "PNDM", "Heun", "UniPC", "DPMM", "DPMS", "DPMSDE", "DEISM" ]
       },
       "Resolutions": [
         {
@@ -1000,9 +1008,10 @@
       "Id": 111,
       "Name": "Wan-T2V 2.1 1.3B",
       "Pipeline": "WanPipeline",
-      "Path": "TensorStack/Wan2.1-T2V-1.3B-ts",
+      "Path": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1026,8 +1035,9 @@
       "Name": "Wan-I2V 2.1 14B 480P",
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
       "IsDefault": true,
       "DefaultOptions": {
@@ -1052,8 +1062,9 @@
       "Name": "Kandinsky5 T2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1100,8 +1111,9 @@
       "Name": "Kandinsky5 I2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageEdit" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1148,8 +1160,9 @@
       "Name": "Kandinsky5 T2V Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 16, 32, 32, 64 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1174,8 +1187,9 @@
       "Name": "Kandinsky5 I2V Pro",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
+      "Source": "HuggingFace",
       "MemoryModes": [ 16, 32, 32, 64 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1200,8 +1214,9 @@
       "Name": "CogVideoX T2V 2B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-2b",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 54, 64 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1226,8 +1241,9 @@
       "Name": "CogVideoX T2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 54, 72 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1252,8 +1268,9 @@
       "Name": "CogVideoX I2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b-I2V",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 18, 54, 72 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1278,8 +1295,9 @@
       "Name": "CogVideoX 1.5 T2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 16, 54, 72 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1304,8 +1322,9 @@
       "Name": "CogVideoX 1.5 I2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B-I2V",
+      "Source": "HuggingFace",
       "MemoryModes": [ 8, 18, 54, 72 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1330,8 +1349,9 @@
       "Name": "LTX Video",
       "Pipeline": "LTXPipeline",
       "Path": "Lightricks/LTX-Video",
+      "Source": "HuggingFace",
       "MemoryModes": [ 16, 23, 32, 48 ],
-      "DataTypes": [ "BFloat16", "Float16" ],
+      "DataTypes": [ "bfloat16", "float16" ],
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1360,6 +1380,7 @@
       "Path": "godtoldmetodoit/zitloras",
       "Weights": "40sCyberpunkZ_000003000.safetensors",
       "Pipeline": "ZImagePipeline",
+      "Source": "HuggingFace",
       "IsDefault": true
     },
     {
@@ -1368,7 +1389,8 @@
       "Key": "80sFantasy",
       "Path": "godtoldmetodoit/zitloras",
       "Weights": "80sFantasyZ_000003000.safetensors",
-      "Pipeline": "ZImagePipeline"
+      "Pipeline": "ZImagePipeline",
+      "Source": "HuggingFace"
     },
     {
       "Id": 103,
@@ -1377,6 +1399,7 @@
       "Path": "renderartist/Coloring-Book-Z-Image-Turbo-LoRA",
       "Weights": "Coloring_Book_Z_Image_Turbo_v1_renderartist_2000.safetensors",
       "Pipeline": "ZImagePipeline",
+      "Source": "HuggingFace",
       "Triggers": [ "c0l0ringb00k" ]
     }
   ],

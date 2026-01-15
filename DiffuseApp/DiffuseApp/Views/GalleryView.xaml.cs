@@ -3,9 +3,12 @@ using Diffuse.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -35,11 +38,9 @@ namespace Diffuse.Views
             DeleteItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveItemAsync, (x) => SelectedItem is not null);
             DeleteItemsCommand = new AsyncRelayCommand(RemoveItemsAsync, () => HistoryCollection.Count > 0);
             FilterModelNames = new ObservableCollection<string>();
-            FilterProcessTypes = Enum.GetValues<View>().Except([View.Home, View.Settings, View.Gallery, View.History]).ToArray();
-            HistoryCollection = new ListCollectionView(HistoryService.HistoryCollection)
-            {
-                Filter = HistoryCollectionFilter()
-            };
+            FilterProcessTypes = GetProcessTypes();
+            HistoryCollection = new ListCollectionView(HistoryService.HistoryCollection) { Filter = HistoryCollectionFilter() };
+            HistoryCollection.SortDescriptions.Add(new SortDescription(nameof(IHistoryItem.Timestamp), ListSortDirection.Descending));
             Populate();
             InitializeComponent();
         }
@@ -55,13 +56,7 @@ namespace Diffuse.Views
         public IHistoryItem SelectedItem
         {
             get { return _selectedItem; }
-            set
-            {
-                if (SetProperty(ref _selectedItem, value))
-                {
-                    SetCurrentItem();
-                }
-            }
+            set { SetProperty(ref _selectedItem, value); }
         }
 
         public ImageInput CurrentImage
@@ -106,13 +101,13 @@ namespace Diffuse.Views
             return base.OpenAsync(args);
         }
 
-        private void SetCurrentItem()
+        private async Task SetCurrentItem()
         {
             if (_selectedItem == null)
                 return;
 
-            CurrentImage = _selectedItem.MediaType != MediaType.Image ? default : new ImageInput(_selectedItem.MediaPath);
-            CurrentVideoStream = _selectedItem.MediaType != MediaType.Video ? default : new VideoInputStream(_selectedItem.MediaPath);
+            CurrentImage = _selectedItem.MediaType != MediaType.Image ? default : await ImageInput.CreateAsync(_selectedItem.MediaPath);
+            CurrentVideoStream = _selectedItem.MediaType != MediaType.Video ? default : await VideoInputStream.CreateAsync(_selectedItem.MediaPath);
         }
 
 
@@ -217,6 +212,26 @@ namespace Diffuse.Views
                 || _filterModelName?.Equals(String_AllModels) == false
                 || _filterMediaType.HasValue
                 || _filterProcessType.HasValue;
+        }
+
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer)sender;
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+
+
+        private static View[] GetProcessTypes()
+        {
+            return Enum.GetValues<View>().Except([View.Home, View.Diffusion, View.ControlNet, View.LoraAdapter, View.Extract, View.Upscale, View.General, View.Environment, View.Gallery, View.History]).ToArray();
+        }
+
+
+        private async void ListBoxControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await SetCurrentItem();
         }
     }
 }

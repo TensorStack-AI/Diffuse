@@ -14,7 +14,6 @@ using System.Windows;
 using System.Windows.Threading;
 using TensorStack.WPF;
 using TensorStack.WPF.Services;
-using Logger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Diffuse
 {
@@ -50,7 +49,6 @@ namespace Diffuse
             _directoryBase = AppDomain.CurrentDomain.BaseDirectory;
             _directoryData = GetApplicationDataDirectory();
             _directoryPython = Path.Combine(_directoryData, "PythonRuntime");
-            _fileSettings = Path.Combine(_directoryData, "Settings.json");
 
             // Host
             var builder = Host.CreateApplicationBuilder();
@@ -84,7 +82,6 @@ namespace Diffuse
         public static string DirectoryBase => _directoryBase;
         public static string DirectoryData => _directoryData;
         public static string DirectoryPython => _directoryPython;
-        public static string FileSettings => _fileSettings;
         public static string DirectoryServer => _directoryBase;
 
 
@@ -114,11 +111,7 @@ namespace Diffuse
         /// </summary>
         private static Settings LoadSettingsFile()
         {
-            Directory.CreateDirectory(_directoryData);
-            if (!File.Exists(_fileSettings))
-                File.Copy(Path.Combine(_directoryBase, "Settings.json"), _fileSettings);
-
-            var configuration = Json.Load<Settings>(_fileSettings);
+            var configuration = SettingsManager.Load();
             configuration.Initialize(_directoryData);
             return configuration;
         }

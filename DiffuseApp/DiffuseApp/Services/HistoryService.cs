@@ -13,7 +13,7 @@ namespace Diffuse.Services
 {
     public class HistoryService : IHistoryService
     {
-        private const int HistoryVersion = 1;
+        private const int HistoryVersion = 2;
         private readonly Settings _settings;
         private readonly ObservableCollection<IHistoryItem> _historyCollection;
 

@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using TensorStack.Common;
 using TensorStack.Video;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -82,6 +81,7 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             try
             {
+                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
                 _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Loading pipeline...");
 
@@ -94,6 +94,7 @@ namespace Diffuse.Views
                 SetDefaultOptions(UpscaleService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Loading pipeline complete.");
+                IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
@@ -128,6 +129,7 @@ namespace Diffuse.Views
 
             Progress.Clear();
             Statistics.Clear();
+            IsPipelineLoaded = false;
         }
 
 
@@ -155,7 +157,6 @@ namespace Diffuse.Views
                 Statistics.Stop();
 
                 // Set Result
-                CompareVideo = _resultVideo;
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new UpscaleHistory
                 {
                     Options = _options,
@@ -165,6 +166,7 @@ namespace Diffuse.Views
                     OriginalHeight = _sourceVideo.Height,
                     ScaleFactor = CurrentPipeline.UpscaleModel.ScaleFactor
                 });
+                CompareVideo = _sourceVideo;
 
                 _logger?.LogInformation($"[VideoUpscaleView] [ExecuteAsync] - Executing pipeline complete.");
             }

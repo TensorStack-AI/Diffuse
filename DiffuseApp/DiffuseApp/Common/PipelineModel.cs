@@ -70,5 +70,15 @@ namespace Diffuse.Common
             set { SetProperty(ref _dataType, value); }
         }
 
+
+        public bool IsReloadRequired(PipelineModel pipeline)
+        {
+            return pipeline is null
+                || pipeline.DiffusionModel != _diffusionModel
+                || pipeline.LoraAdapterModel != _loraAdapterModel
+                || pipeline.ControlNetModel != _controlNetModel
+                || pipeline.MemoryMode != _memoryMode
+                || pipeline.DataType != _dataType;
+        }
     }
 }

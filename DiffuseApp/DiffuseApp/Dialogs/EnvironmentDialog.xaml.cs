@@ -3,6 +3,7 @@
 using Diffuse.Common;
 using Diffuse.Services;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
@@ -20,9 +21,11 @@ namespace Diffuse.Dialogs
         private bool _isExecuting;
         private PipelineModel _pipeline;
         private EnvironmentModel _environment;
+        private readonly CancellationTokenSource _cancellation;
 
         public EnvironmentDialog(IEnvironmentService environmentService)
         {
+            _cancellation = new CancellationTokenSource();
             _environmentService = environmentService;
             _progressCallback = new Progress<PipelineProgress>(OnProgressUpdate);
             CancelCommand = new AsyncRelayCommand(CloseAsync);
@@ -91,12 +94,15 @@ namespace Diffuse.Dialogs
         private async Task CreateEnvironment()
         {
             IsExecuting = true;
-            if (_pipeline != null)
-                await _environmentService.CreateAsync(_pipeline, _progressCallback);
-            if (_environment != null)
-                await _environmentService.CreateAsync(_environment, _progressCallback);
-
-            await base.SaveAsync();
+            try
+            {
+                if (_pipeline != null)
+                    await _environmentService.CreateAsync(_pipeline, _progressCallback, _cancellation.Token);
+                if (_environment != null)
+                    await _environmentService.CreateAsync(_environment, _progressCallback, _cancellation.Token);
+                await base.SaveAsync();
+            }
+            catch (OperationCanceledException) { }
         }
 
 
@@ -106,8 +112,13 @@ namespace Diffuse.Dialogs
         private async Task UpdateEnvironment()
         {
             IsExecuting = true;
-            await _environmentService.CreateAsync(_environment, _progressCallback);
-            await base.SaveAsync();
+            try
+            {
+                await _environmentService.CreateAsync(_environment, _progressCallback, _cancellation.Token);
+                await base.SaveAsync();
+            }
+            catch (OperationCanceledException) { }
+           
         }
 
 
@@ -117,13 +128,18 @@ namespace Diffuse.Dialogs
         private async Task RebuildEnvironment()
         {
             IsExecuting = true;
-            await _environmentService.RebuildAsync(_environment, _progressCallback);
-            await base.SaveAsync();
+            try
+            {
+                await _environmentService.RebuildAsync(_environment, _progressCallback, _cancellation.Token);
+                await base.SaveAsync();
+            }
+            catch (OperationCanceledException) { }
         }
 
 
         protected override async Task CloseAsync()
         {
+            await _cancellation.CancelAsync();
             await base.CloseAsync();
         }
 

@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using TensorStack.Common;
 
 namespace Diffuse.Common
 {
     public class EnvironmentModel
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
+
         public string Name { get; set; }
         public EnvironmentType Type { get; set; }
         public VendorType Vendor { get; set; }
