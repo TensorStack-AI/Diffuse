@@ -69,17 +69,21 @@ Proof of concept, Focus on core functionality.
 - ~~Portable Python installation and management~~
 - ~~Device-specific virtual environments~~
 - ~~Minimal but functional Windows UI~~
-- B~~asic Diffusers pipeline support~~
+- ~~Basic Diffusers pipeline support~~
 
 ### Beta
 Focus on usability, stability, and feature expansion.
 - ~~Fully isolated Python execution~~
 - ~~Multiple virtual environments~~
 - ~~Installer and deployment tooling~~
+- ~~Upscaling and interpolation support~~
+- ~~Extractor pipeline support~~
 - Advanced UI and workflow options
 - ControlNet support
-- Upscaling and interpolation support
-- Extractor pipeline support
+- GGUF model support
+- Weighted prompt support
+- Inpaint/Outpaint processes
+- Model Manager, download queuing, online templates
 - Stability, performance, and reliability improvements
 
 ---
