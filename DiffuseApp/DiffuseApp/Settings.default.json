@@ -1,12 +1,14 @@
 {
+  "DefaultDataType": "bfloat16",
+  "DefaultMemoryMode": "Auto",
   "Environments": [
     {
       "Id": 1,
-      "Name": "CUDA (Default)",
+      "Name": "CUDA (CU128)",
       "Type": "Vendor",
       "Vendor": "Nvidia",
       "Environment": "default-cuda",
-      "IsDefault": true,
+      "IsDefault": false,
       "Requirements": [
         "--extra-index-url https://download.pytorch.org/whl/cu128",
         "torch==2.9.1+cu128",
@@ -23,12 +25,13 @@
         "scipy==1.16.3",
         "peft==0.18.0",
         "hf-xet==1.2.0",
-        "torchsde==0.2.6"
+        "torchsde==0.2.6",
+        "optimum-quanto==0.2.7"
       ]
     },
     {
       "Id": 2,
-      "Name": "ROCM (Default)",
+      "Name": "ROCM (7.2.0)",
       "Type": "Vendor",
       "Vendor": "AMD",
       "Environment": "default-rocm",
@@ -39,12 +42,12 @@
         "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL": "1"
       },
       "Requirements": [
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/rocm_sdk_core-0.1.dev0-py3-none-win_amd64.whl",
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/rocm_sdk_devel-0.1.dev0-py3-none-win_amd64.whl",
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/rocm_sdk_libraries_custom-0.1.dev0-py3-none-win_amd64.whl",
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/rocm-0.1.dev0.tar.gz",
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/torch-2.9.0+rocmsdk20251116-cp312-cp312-win_amd64.whl",
-        "https://repo.radeon.com/rocm/windows/rocm-rel-7.1.1/torchvision-0.24.0+rocmsdk20251116-cp312-cp312-win_amd64.whl",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/rocm-7.2.0.dev0.tar.gz",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/rocm_sdk_core-7.2.0.dev0-py3-none-win_amd64.whl",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/rocm_sdk_devel-7.2.0.dev0-py3-none-win_amd64.whl",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/rocm_sdk_libraries_custom-7.2.0.dev0-py3-none-win_amd64.whl",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/torch-2.9.1%2Brocmsdk20260116-cp312-cp312-win_amd64.whl",
+        "https://repo.radeon.com/rocm/windows/rocm-rel-7.2/torchvision-0.24.1%2Brocmsdk20260116-cp312-cp312-win_amd64.whl",
         "typing==3.7.4.3",
         "wheel==0.45.1",
         "transformers==4.57.3",
@@ -56,7 +59,8 @@
         "scipy==1.16.3",
         "peft==0.18.0",
         "hf-xet==1.2.0",
-        "torchsde==0.2.6"
+        "torchsde==0.2.6",
+        "optimum-quanto==0.2.7"
       ]
     }
   ],
@@ -518,18 +522,30 @@
       "Pipeline": "ZImagePipeline",
       "Path": "Tongyi-MAI/Z-Image-Turbo",
       "Source": "HuggingFace",
-      "MemoryModes": [ 2, 2, 14, 24 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 8, 10, 14, 16 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 12, 14, 22, 24 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 12, 14, 22, 24 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
-
       "DefaultOptions": {
         "Steps": 9,
         "Width": 1024,
         "Height": 1024,
-        "Shift": 3,
         "GuidanceScale": 0,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3
       },
       "Resolutions": [
         {
@@ -581,16 +597,33 @@
       "Pipeline": "QwenImagePipeline",
       "Path": "Qwen/Qwen-Image-2512",
       "Source": "HuggingFace",
-      "MemoryModes": [ 5, 5, 40, 60 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
         "Height": 1024,
-        "GuidanceScale": 4.0,
+        "GuidanceScale": 1,
+        "GuidanceScale2": 1,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "MaxShift": 0.9,
+        "MaxImageSeqLen": 8192,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -638,21 +671,38 @@
     },
     {
       "Id": 104,
-      "Name": "Qwen Image Edit(2512)",
+      "Name": "Qwen Image Edit(2511)",
       "Pipeline": "QwenImagePipeline",
-      "Path": "Qwen/Qwen-Image-Edit-2512",
+      "Path": "Qwen/Qwen-Image-Edit-2511",
       "Source": "HuggingFace",
-      "MemoryModes": [ 5, 5, 40, 60 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
       "IsDefault": true,
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
         "Height": 1024,
-        "GuidanceScale": 4.0,
+        "GuidanceScale": 1,
+        "GuidanceScale2": 1,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "MaxShift": 0.9,
+        "MaxImageSeqLen": 8192,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -704,8 +754,21 @@
       "Pipeline": "ChromaPipeline",
       "Path": "lodestones/Chroma1-HD",
       "Source": "HuggingFace",
-      "MemoryModes": [ 2, 2, 19, 30 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 17, 16, 19, 21 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 17, 19, 28, 30 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 17, 19, 28, 30 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -713,7 +776,9 @@
         "Height": 1024,
         "GuidanceScale": 4.0,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": false
       },
       "Resolutions": [
         {
@@ -765,8 +830,21 @@
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-schnell-ts",
       "Source": "HuggingFace",
-      "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
       "DefaultOptions": {
         "Steps": 4,
@@ -774,7 +852,9 @@
         "Height": 1024,
         "GuidanceScale": 0,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -826,16 +906,32 @@
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-dev-ts",
       "Source": "HuggingFace",
-      "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
         "Height": 1024,
-        "GuidanceScale": 3.5,
+        "GuidanceScale": 0,
+        "GuidanceScale2": 3.5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -887,16 +983,32 @@
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-Kontext-dev-ts",
       "Source": "HuggingFace",
-      "MemoryModes": [ 4, 8, 23, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
         "Height": 1024,
-        "GuidanceScale": 3.5,
+        "GuidanceScale": 0,
+        "GuidanceScale2": 3.5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -948,8 +1060,21 @@
       "Pipeline": "StableDiffusionXLPipeline",
       "Path": "stabilityai/stable-diffusion-xl-base-1.0",
       "Source": "HuggingFace",
-      "MemoryModes": [ 2, 2, 8, 16 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ControlNetImageToImage" ],
       "IsDefault": true,
       "DefaultOptions": {
@@ -1010,8 +1135,21 @@
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 12, 17, 19, 31 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 12, 17, 19, 31 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1019,8 +1157,18 @@
         "Width": 832,
         "Height": 480,
         "GuidanceScale": 5,
-        "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Scheduler": "UniPC",
+        "Schedulers": [ "UniPC", "FlowMatchEulerDiscrete" ],
+        "BetaStart": 0.0001,
+        "BetaEnd": 0.02,
+        "BetaSchedule": "linear",
+        "TimestepSpacing": "linspace",
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "StepsOffset": 0,
+        "Shift": 3,
+        "BaseShift": 0.5,
+        "MaxShift": 1.15
       },
       "Resolutions": [
         {
@@ -1032,12 +1180,74 @@
     },
     {
       "Id": 112,
+      "Name": "Wan-T2V 2.1 14B",
+      "Pipeline": "WanPipeline",
+      "Path": "Wan-AI/Wan2.1-T2V-14B-Diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo" ],
+      "DefaultOptions": {
+        "Steps": 30,
+        "Frames": 81,
+        "Width": 832,
+        "Height": 480,
+        "GuidanceScale": 5,
+        "Scheduler": "UniPC",
+        "Schedulers": [ "UniPC", "FlowMatchEulerDiscrete" ],
+        "BetaStart": 0.0001,
+        "BetaEnd": 0.02,
+        "BetaSchedule": "linear",
+        "TimestepSpacing": "linspace",
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "StepsOffset": 0,
+        "Shift": 3,
+        "BaseShift": 0.5,
+        "MaxShift": 1.15
+      },
+      "Resolutions": [
+        {
+          "Width": 832,
+          "Height": 480,
+          "IsDefault": true
+        }
+      ]
+    },
+    {
+      "Id": 113,
       "Name": "Wan-I2V 2.1 14B 480P",
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
       "IsDefault": true,
       "DefaultOptions": {
@@ -1046,8 +1256,18 @@
         "Width": 832,
         "Height": 480,
         "GuidanceScale": 5,
-        "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Scheduler": "UniPC",
+        "Schedulers": [ "UniPC", "FlowMatchEulerDiscrete" ],
+        "BetaStart": 0.0001,
+        "BetaEnd": 0.02,
+        "BetaSchedule": "linear",
+        "TimestepSpacing": "linspace",
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "StepsOffset": 0,
+        "Shift": 3,
+        "BaseShift": 0.5,
+        "MaxShift": 1.15
       },
       "Resolutions": [
         {
@@ -1063,8 +1283,21 @@
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1072,7 +1305,8 @@
         "Height": 1024,
         "GuidanceScale": 3.5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 5
       },
       "Resolutions": [
         {
@@ -1112,8 +1346,21 @@
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 18, 32 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1121,7 +1368,8 @@
         "Height": 1024,
         "GuidanceScale": 3.5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 5
       },
       "Resolutions": [
         {
@@ -1161,18 +1409,32 @@
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 16, 32, 32, 64 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 10, 21, 32, 53, 58 ] 
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 10, 32, 36, 56, 68 ] 
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 10, 32, 36, 56, 68 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 768,
         "Height": 512,
-        "Frames": 241,
+        "Frames": 121,
         "FrameRate": 24,
         "GuidanceScale": 5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 5
       },
       "Resolutions": [
         {
@@ -1188,18 +1450,32 @@
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
       "Source": "HuggingFace",
-      "MemoryModes": [ 16, 32, 32, 64 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 10, 21, 32, 53, 64 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 10, 32, 36, 56, 68 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 10, 32, 36, 56, 68 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 768,
         "Height": 512,
-        "Frames": 241,
+        "Frames": 121,
         "FrameRate": 24,
         "GuidanceScale": 5,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 5
       },
       "Resolutions": [
         {
@@ -1215,8 +1491,21 @@
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-2b",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 54, 64 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 10, 16, 54, 23, 64 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 10, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 10, 16, 54, 29, 72 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1225,8 +1514,10 @@
         "Frames": 48,
         "FrameRate": 8,
         "GuidanceScale": 6,
-        "Scheduler": "DDIM",
-        "Schedulers": [ "DDIM", "DDPM" ]
+        "Scheduler": "CogVideoXDDIM",
+        "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
+        "TimestepSpacing": "trailing",
+        "PredictionType": "v_prediction"
       },
       "Resolutions": [
         {
@@ -1242,8 +1533,21 @@
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 54, 72 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1252,8 +1556,10 @@
         "Frames": 48,
         "FrameRate": 8,
         "GuidanceScale": 6,
-        "Scheduler": "DDIM",
-        "Schedulers": [ "DDIM", "DDPM" ]
+        "Scheduler": "CogVideoXDDIM",
+        "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
+        "TimestepSpacing": "trailing",
+        "PredictionType": "v_prediction"
       },
       "Resolutions": [
         {
@@ -1269,8 +1575,21 @@
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b-I2V",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 18, 54, 72 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1279,8 +1598,10 @@
         "Frames": 49,
         "FrameRate": 8,
         "GuidanceScale": 6,
-        "Scheduler": "DDIM",
-        "Schedulers": [ "DDIM", "DDPM" ]
+        "Scheduler": "CogVideoXDDIM",
+        "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
+        "TimestepSpacing": "trailing",
+        "PredictionType": "v_prediction"
       },
       "Resolutions": [
         {
@@ -1296,8 +1617,21 @@
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 16, 54, 72 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1306,8 +1640,10 @@
         "Frames": 81,
         "FrameRate": 16,
         "GuidanceScale": 6,
-        "Scheduler": "DDIM",
-        "Schedulers": [ "DDIM", "DDPM" ]
+        "Scheduler": "CogVideoXDDIM",
+        "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
+        "TimestepSpacing": "trailing",
+        "PredictionType": "v_prediction"
       },
       "Resolutions": [
         {
@@ -1323,8 +1659,21 @@
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B-I2V",
       "Source": "HuggingFace",
-      "MemoryModes": [ 8, 18, 54, 72 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
       "DefaultOptions": {
         "Steps": 30,
@@ -1333,8 +1682,10 @@
         "Frames": 81,
         "FrameRate": 16,
         "GuidanceScale": 6,
-        "Scheduler": "DDIM",
-        "Schedulers": [ "DDIM", "DDPM" ]
+        "Scheduler": "CogVideoXDDIM",
+        "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
+        "TimestepSpacing": "trailing",
+        "PredictionType": "v_prediction"
       },
       "Resolutions": [
         {
@@ -1350,18 +1701,37 @@
       "Pipeline": "LTXPipeline",
       "Path": "Lightricks/LTX-Video",
       "Source": "HuggingFace",
-      "MemoryModes": [ 16, 23, 32, 48 ],
-      "DataTypes": [ "bfloat16", "float16" ],
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 16, 23, 23, 32, 48 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 16, 23, 32, 36, 48 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 16, 23, 32, 36, 48 ]
+        }
+      ],
+      "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
       "DefaultOptions": {
-        "Steps": 30,
+        "Steps": 50,
         "Width": 704,
         "Height": 480,
         "Frames": 161,
         "FrameRate": 24,
         "GuidanceScale": 3,
         "Scheduler": "FlowMatchEulerDiscrete",
-        "Schedulers": [ "FlowMatchEulerDiscrete" ]
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 1,
+        "BaseShift": 0.95,
+        "MaxShift": 2.05,
+        "MaxImageSeqLen": 4096,
+        "BaseImageSeqLen": 1024,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {

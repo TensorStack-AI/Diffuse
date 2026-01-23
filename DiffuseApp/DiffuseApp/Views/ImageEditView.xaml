@@ -54,8 +54,8 @@
                                 <Controls:DiffusionInputControl 
                                     x:Name="InputControl"
                                     ProcessType="ImageEdit"
-                                    Options="{Binding Options}"
-                                    UpscaleOptions="{Binding UpscaleOptions}"
+                                    Options="{Binding Options, Mode=OneWayToSource}"
+                                    UpscaleOptions="{Binding UpscaleOptions, Mode=OneWayToSource}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="True"
                                     IsControlNetEnabled="False"

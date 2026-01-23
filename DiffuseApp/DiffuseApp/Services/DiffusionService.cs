@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Common;
@@ -105,19 +106,26 @@ namespace Diffuse.Services
 
                     var pipelineConfig = new PipelineConfig
                     {
-                        Path = model.Path,
+                        BaseModelPath = model.Path,
                         ControlNetPath = controlNet?.Path,
                         Pipeline = model.Pipeline,
                         ProcessType = _currentPipeline.ProcessType,
                         Device = device.Type == DeviceType.GPU ? "cuda" : "cpu",
                         DeviceId = device.DeviceId,
-                        DataType = _currentPipeline.DataType,
+                        DataType = model.BaseType,
+                        QuantDataType = _currentPipeline.DataType,
                         CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                         SecureToken = _settings.SecureToken,
-                        LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel)
+                        LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),
+                        MemoryMode = SetMemoryMode(_currentPipeline),
+                        CheckpointConfig = model.Checkpoint is null ? default : new CheckpointConfig
+                        {
+                            VaeCheckpoint = model.Checkpoint.VaeCheckpoint,
+                            ModelCheckpoint = model.Checkpoint.ModelCheckpoint,
+                            TextEncoderCheckpoint = model.Checkpoint.TextEncoderCheckpoint
+                        }
                     };
 
-                    SetMemoryMode(pipeline, pipelineConfig);
                     _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback, _cancellationTokenSource.Token);
                 }
                 IsLoaded = true;
@@ -172,6 +180,11 @@ namespace Diffuse.Services
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
                 return tensorResult.AsImageTensor();
             }
+            catch (IOException ex)
+            {
+                HandleServerError(ex);
+                throw new Exception("Pipeline Closed Unexpectedly");
+            }
             finally
             {
                 IsExecuting = false;
@@ -214,6 +227,11 @@ namespace Diffuse.Services
                 await videoTensor.SaveAync(videoFileName);
                 return new VideoInputStream(videoFileName);
             }
+            catch (IOException ex)
+            {
+                HandleServerError(ex);
+                throw new Exception("Pipeline Closed Unexpectedly");
+            }
             finally
             {
                 IsExecuting = false;
@@ -226,9 +244,14 @@ namespace Diffuse.Services
         /// </summary>
         public async Task CancelAsync()
         {
-            if (_pipelineClient is not null)
-                await _pipelineClient.CancelAsync();
-
+            try
+            {
+                if (_pipelineClient is not null)
+                    await _pipelineClient.CancelAsync();
+            }
+            catch (Exception)
+            {
+            }
             await _cancellationTokenSource.SafeCancelAsync();
         }
 
@@ -247,6 +270,22 @@ namespace Diffuse.Services
             IsExecuting = false;
         }
 
+
+        private void HandleServerError(Exception exception)
+        {
+            try
+            {
+                _pipelineClient?.Dispose();
+            }
+            catch (Exception) { }
+            finally
+            {
+                _pipelineClient = null;
+                _currentPipeline = null;
+                _defaultOptions = null;
+                IsLoaded = false;
+            }
+        }
 
 
         private static SchedulerOptions GetSchedulerOptions(SchedulerInputOptions schedulerOptions)
@@ -283,7 +322,9 @@ namespace Diffuse.Services
                 TimestepSpacing = schedulerOptions.TimestepSpacing,
                 UseDynamicShifting = schedulerOptions.UseDynamicShifting,
                 UseKarrasSigmas = schedulerOptions.UseKarrasSigmas,
-                VarianceType = schedulerOptions.VarianceType
+                VarianceType = schedulerOptions.VarianceType,
+                BaseImageSeqLen = schedulerOptions.BaseImageSeqLen,
+                MaxImageSeqLen = schedulerOptions.MaxImageSeqLen
             };
         }
 
@@ -316,57 +357,46 @@ namespace Diffuse.Services
         }
 
 
-        private static void SetMemoryMode(PipelineModel pipeline, PipelineConfig pipelineConfig)
+        private static MemoryModeType SetMemoryMode(PipelineModel pipeline)
         {
             var memoryMode = pipeline.MemoryMode;
             if (memoryMode == MemoryMode.Auto)
             {
-                int[] modes = pipeline.DiffusionModel.MemoryModes;
-                if (modes?.Length == 4)
+                var memoryProfile = pipeline.DiffusionModel.MemoryProfile.FirstOrDefault(x => x.DataType == pipeline.DataType);
+                if (memoryProfile != null)
                 {
                     var deviceMemory = pipeline.Device.MemoryGB;
-                    var modeIndex = Math.Max(0, Array.FindLastIndex(modes, m => m <= deviceMemory));
-                    memoryMode = Enum.GetValues<MemoryMode>()[modeIndex + 1];
+                    var modeIndex = memoryProfile.GetIndex(deviceMemory);
+                    memoryMode = Enum.GetValues<MemoryMode>()[modeIndex + 2];
                 }
             }
 
-            if (memoryMode == MemoryMode.Minimum)
+            return memoryMode switch
             {
-                pipelineConfig.IsVaeTilingEnabled = true;
-                pipelineConfig.IsVaeSlicingEnabled = true;
-                pipelineConfig.IsFullOffloadEnabled = true;
-                pipelineConfig.IsModelOffloadEnabled = false;
-            }
-            else if (memoryMode == MemoryMode.Medium)
-            {
-                pipelineConfig.IsVaeTilingEnabled = true;
-                pipelineConfig.IsVaeSlicingEnabled = true;
-                pipelineConfig.IsFullOffloadEnabled = false;
-                pipelineConfig.IsModelOffloadEnabled = true;
-            }
-            else if (memoryMode == MemoryMode.High)
-            {
-                pipelineConfig.IsVaeTilingEnabled = false;
-                pipelineConfig.IsVaeSlicingEnabled = false;
-                pipelineConfig.IsFullOffloadEnabled = false;
-                pipelineConfig.IsModelOffloadEnabled = true;
-            }
-            else if (memoryMode == MemoryMode.Maximum)
-            {
-                pipelineConfig.IsVaeTilingEnabled = false;
-                pipelineConfig.IsVaeSlicingEnabled = false;
-                pipelineConfig.IsFullOffloadEnabled = false;
-                pipelineConfig.IsModelOffloadEnabled = false;
-            }
+                MemoryMode.Balanced => MemoryModeType.MultiDevice,
+                MemoryMode.Lowest => MemoryModeType.OffloadCPU,
+                MemoryMode.Low => MemoryModeType.LowMemOffloadModel,
+                MemoryMode.Medium => MemoryModeType.OffloadModel,
+                MemoryMode.High => MemoryModeType.LowMemDevice,
+                MemoryMode.Highest => MemoryModeType.Device,
+                _ => MemoryModeType.OffloadCPU,
+            };
         }
 
 
         private async Task UnloadPythonPipeline()
         {
-            if (_pipelineClient != null)
+            try
             {
-                await _pipelineClient.UnloadAsync();
-                _pipelineClient.Dispose();
+                if (_pipelineClient != null)
+                    await _pipelineClient.UnloadAsync();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                _pipelineClient?.Dispose();
                 _pipelineClient = null;
             }
         }

@@ -55,8 +55,8 @@
                             <Grid  IsEnabled="{Binding DiffusionService.IsLoaded}" >
                                 <Controls:DiffusionInputControl
                                     ProcessType="TextToImage"
-                                    Options="{Binding Options}"
-                                    UpscaleOptions="{Binding UpscaleOptions}"
+                                    Options="{Binding Options, Mode=OneWayToSource}"
+                                    UpscaleOptions="{Binding UpscaleOptions, Mode=OneWayToSource}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="False"
                                     IsControlNetEnabled="False"

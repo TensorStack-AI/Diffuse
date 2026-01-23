@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TensorStack.Common;
 using TensorStack.Providers;
+using TensorStack.Python.Common;
 using TensorStack.WPF;
 
 namespace Diffuse
@@ -27,6 +28,9 @@ namespace Diffuse
         public bool IsLegacyDeviceDetection { get; set; }
         public int MaxHistory { get; set; } = 500;
         public bool IsServerDebugEnabled { get; set; } = false;
+        public DataType DefaultDataType { get; set; }
+        public MemoryMode DefaultMemoryMode { get; set; }
+
 
         [AppDefault]
         public ObservableCollection<EnvironmentModel> Environments { get; set; }
@@ -115,6 +119,8 @@ namespace Diffuse
                 pipeline.ExtractModel.IsDefault = true;
             }
 
+            DefaultDataType = pipeline.DataType;
+            DefaultMemoryMode = pipeline.MemoryMode;
             await SettingsManager.SaveAsync(this);
         }
 

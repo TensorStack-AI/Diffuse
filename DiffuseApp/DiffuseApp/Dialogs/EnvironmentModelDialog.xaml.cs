@@ -273,8 +273,8 @@ namespace Diffuse.Dialogs
                 yield return "Environment cannot be empty";
             if (!string.IsNullOrWhiteSpace(EnvironmentModel.Environment))
             {
-                if (!EnvironmentModel.Environment.All(c => char.IsLetter(c) || c == '_' || c == '-'))
-                    yield return "Environment can only contain letters, '_' or '-'";
+                if (!EnvironmentModel.Environment.All(c => char.IsLetterOrDigit(c) || c == '_' || c == '-'))
+                    yield return "Environment can only contain letters, numbers, '_' & '-'";
                 if (!IsUpdateMode && Settings.Environments.Any(x => x.Environment.Equals(EnvironmentModel.Environment, StringComparison.OrdinalIgnoreCase)))
                     yield return $"Environment with name '{EnvironmentModel.Environment}' already exists";
             }

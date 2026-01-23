@@ -24,10 +24,13 @@ namespace Diffuse.Dialogs
         private DiffusionModel _diffusionModel;
         private SchedulerType _selectedScheduler;
         private DiffusionModel _originalDiffusionModel;
+        private DiffusionCheckpointModel _checkpointModel;
 
         public DiffusionModelDialog(Settings settings)
         {
             Settings = settings;
+            DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Int8];
+            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.Checkpoint];
             Sizes = new ObservableCollection<SizeOption>();
             Schedulers = new ObservableCollection<SchedulerType>();
             Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
@@ -53,11 +56,19 @@ namespace Diffuse.Dialogs
         public ObservableCollection<SchedulerType> Schedulers { get; }
         public ObservableCollection<string> Pipelines { get; }
         public bool IsUpdateMode => _originalDiffusionModel is not null;
+        public DataType[] DataTypes { get; }
+        public ModelSourceType[] ModelSources { get; }
 
         public DiffusionModel DiffusionModel
         {
             get { return _diffusionModel; }
             set { SetProperty(ref _diffusionModel, value); }
+        }
+
+        public DiffusionCheckpointModel CheckpointModel
+        {
+            get { return _checkpointModel; }
+            set { SetProperty(ref _checkpointModel, value); }
         }
 
         public SizeOption SelectedSize
@@ -93,8 +104,15 @@ namespace Diffuse.Dialogs
             DiffusionModel = new DiffusionModel
             {
                 Id = modelId,
-                MemoryModes = [0, 0, 0, 0],
+                BaseType = DataType.Bfloat16,
+                MemoryProfile =
+                [
+                    new MemoryProfile(DataType.Int8, [2, 4, 8, 16, 16]),
+                    new MemoryProfile(DataType.Float16, [4, 8, 16, 24, 24]),
+                    new MemoryProfile(DataType.Bfloat16, [4, 8, 16, 24, 24])
+                ],
                 DefaultOptions = new DiffusionDefaultOptions { },
+
             };
             SelectedSize = new SizeOption
             {
@@ -102,6 +120,7 @@ namespace Diffuse.Dialogs
                 Width = 512,
                 IsDefault = true
             };
+            CheckpointModel = new DiffusionCheckpointModel();
             return base.ShowDialogAsync();
         }
 
@@ -143,7 +162,6 @@ namespace Diffuse.Dialogs
                 Settings.DiffusionModels.Remove(_originalDiffusionModel);
             }
 
-            DiffusionModel.DataTypes = GetDataTypes();
             DiffusionModel.Resolutions = [.. Sizes];
             DiffusionModel.ProcessTypes = GetProcessTypes();
 
@@ -152,8 +170,10 @@ namespace Diffuse.Dialogs
             DiffusionModel.DefaultOptions.Height = defaultSize.Height;
             DiffusionModel.DefaultOptions.Schedulers = Schedulers.ToArray();
 
-            if (DiffusionModel.Source == ModelSourceType.HuggingFace && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
+            if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
                 DiffusionModel.Path = huggingfacePath;
+
+            DiffusionModel.Checkpoint = DiffusionModel.Source == ModelSourceType.Checkpoint ? CheckpointModel : null;
 
             DiffusionModel.Initialize(Settings.DirectoryModel);
             Settings.DiffusionModels.Insert(index, DiffusionModel);
@@ -259,10 +279,10 @@ namespace Diffuse.Dialogs
             foreach (var scheduler in DiffusionModel.DefaultOptions.Schedulers)
                 Schedulers.Add(scheduler);
 
-            SetDataTypes();
             SetProcessTypes();
             SelectedScheduler = DiffusionModel.DefaultOptions.Scheduler;
             SelectedSize = Sizes.FirstOrDefault(x => x.IsDefault) ?? Sizes.FirstOrDefault();
+            CheckpointModel = DiffusionModel.Checkpoint ?? new DiffusionCheckpointModel();
             NotifyPropertyChanged(nameof(IsUpdateMode));
         }
 
@@ -292,15 +312,24 @@ namespace Diffuse.Dialogs
                     yield return "Model folder not found";
                 else if (DiffusionModel.Source == ModelSourceType.SingleFile && !File.Exists(DiffusionModel.Path))
                     yield return "Model file not found";
-                else if (DiffusionModel.Source == ModelSourceType.HuggingFace && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
+                else if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
                     yield return "HuggingFace repository not found";
-            }
 
+                if (DiffusionModel.Source == ModelSourceType.Checkpoint)
+                {
+                    if (string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint))
+                        yield return "At least one checkpoint model required";
+                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !File.Exists(CheckpointModel.ModelCheckpoint))
+                        yield return "Model checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !File.Exists(CheckpointModel.VaeCheckpoint))
+                        yield return "Vae checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !File.Exists(CheckpointModel.TextEncoderCheckpoint))
+                        yield return "TextEncoder checkpoint file not found";
+                }
+            }
 
             if (DiffusionModel.DefaultOptions.Steps < 1)
                 yield return "Steps must be be > 0";
-            //if (DiffusionModel.DefaultOptions.Steps2 < 1)
-            //    yield return "Steps2 must be be > 0";
             if (DiffusionModel.DefaultOptions.GuidanceScale < 0)
                 yield return "GuidanceScale must be be >= 0";
             if (DiffusionModel.DefaultOptions.GuidanceScale2 < 0)
@@ -311,21 +340,19 @@ namespace Diffuse.Dialogs
                 yield return "FrameRate must be be >= 0";
             if (DiffusionModel.DefaultOptions.Shift < 1)
                 yield return "Shift must be be > 0";
-
             if (Schedulers.IsNullOrEmpty())
                 yield return "Schedulers cannot be empty";
 
             if (!Sizes.Any())
                 yield return "Resolutions cannot be empty";
             if (!Sizes.Any(x => x.IsDefault))
-
                 yield return "Default resolutions is not set";
-            if (DiffusionModel.MemoryModes.Any(x => x < 0))
-                yield return "MemoryMode must be >= 0";
 
-            var dataTypes = GetDataTypes();
-            if (dataTypes.IsNullOrEmpty())
-                yield return "DataTypes cannot be empty";
+            foreach (var profile in DiffusionModel.MemoryProfile)
+            {
+                if (profile.MemoryModes.Any(x => x < 0))
+                    yield return "MemoryMode must be >= 0";
+            }
 
             var processTypes = GetProcessTypes();
             if (processTypes.IsNullOrEmpty())
@@ -382,43 +409,6 @@ namespace Diffuse.Dialogs
         }
 
 
-        private void SetDataTypes()
-        {
-            foreach (var dataTypes in DiffusionModel.DataTypes)
-            {
-                if (dataTypes == DataType.Float32)
-                    CheckBoxDataTypeFloat32.IsChecked = true;
-                if (dataTypes == DataType.Bfloat16)
-                    CheckBoxDataTypeBFloat16.IsChecked = true;
-                if (dataTypes == DataType.Float16)
-                    CheckBoxDataTypeFloat16.IsChecked = true;
-                if (dataTypes == DataType.Float8_e4m3fn)
-                    CheckBoxDataTypeFloat8E4.IsChecked = true;
-                if (dataTypes == DataType.Float8_e5m2)
-                    CheckBoxDataTypeFloat8E5.IsChecked = true;
-            }
-        }
-
-
-        private DataType[] GetDataTypes()
-        {
-            IEnumerable<DataType> DataTypes()
-            {
-                if (CheckBoxDataTypeFloat32.IsChecked == true)
-                    yield return DataType.Float32;
-                if (CheckBoxDataTypeBFloat16.IsChecked == true)
-                    yield return DataType.Bfloat16;
-                if (CheckBoxDataTypeFloat16.IsChecked == true)
-                    yield return DataType.Float16;
-                if (CheckBoxDataTypeFloat8E4.IsChecked == true)
-                    yield return DataType.Float8_e4m3fn;
-                if (CheckBoxDataTypeFloat8E5.IsChecked == true)
-                    yield return DataType.Float8_e5m2;
-            }
-            return [.. DataTypes()];
-        }
-
-
         private static DiffusionModel DeepClone(DiffusionModel diffusionModel, int modelId)
         {
             return new DiffusionModel
@@ -428,8 +418,12 @@ namespace Diffuse.Dialogs
                 Path = diffusionModel.Path,
                 Pipeline = diffusionModel.Pipeline,
                 IsDefault = diffusionModel.IsDefault,
-                MemoryModes = [.. diffusionModel.MemoryModes],
-                DataTypes = [.. diffusionModel.DataTypes],
+                BaseType = diffusionModel.BaseType,
+                MemoryProfile = diffusionModel.MemoryProfile.Select(x => new MemoryProfile
+                {
+                    DataType = x.DataType,
+                    MemoryModes = x.MemoryModes.ToArray(),
+                }).ToArray(),
                 ProcessTypes = [.. diffusionModel.ProcessTypes],
                 Source = diffusionModel.Source,
                 Resolutions = [.. diffusionModel.Resolutions.Select(x => new SizeOption
@@ -450,7 +444,25 @@ namespace Diffuse.Dialogs
                     Schedulers = [.. diffusionModel.DefaultOptions.Schedulers],
                     Shift = diffusionModel.DefaultOptions.Shift,
                     Steps = diffusionModel.DefaultOptions.Steps,
-                    Steps2 = diffusionModel.DefaultOptions.Steps2
+                    Steps2 = diffusionModel.DefaultOptions.Steps2,
+                    BaseImageSeqLen = diffusionModel.DefaultOptions.BaseImageSeqLen,
+                    BaseShift = diffusionModel.DefaultOptions.BaseShift,
+                    BetaEnd = diffusionModel.DefaultOptions.BetaEnd,
+                    BetaSchedule = diffusionModel.DefaultOptions.BetaSchedule,
+                    BetaStart = diffusionModel.DefaultOptions.BetaStart,
+                    MaxImageSeqLen = diffusionModel.DefaultOptions.MaxImageSeqLen,
+                    MaxShift = diffusionModel.DefaultOptions.MaxShift,
+                    PredictionType = diffusionModel.DefaultOptions.PredictionType,
+                    SolverType = diffusionModel.DefaultOptions.SolverType,
+                    StepsOffset = diffusionModel.DefaultOptions.StepsOffset,
+                    TimestepSpacing = diffusionModel.DefaultOptions.TimestepSpacing,
+                    UseDynamicShifting = diffusionModel.DefaultOptions.UseDynamicShifting,
+                },
+                Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
+                {
+                    ModelCheckpoint = diffusionModel.Checkpoint.ModelCheckpoint,
+                    VaeCheckpoint = diffusionModel.Checkpoint.VaeCheckpoint,
+                    TextEncoderCheckpoint = diffusionModel.Checkpoint.TextEncoderCheckpoint
                 }
             };
         }

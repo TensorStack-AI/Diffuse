@@ -32,7 +32,6 @@ namespace Diffuse
         private static string _directoryBase;
         private static string _directoryData;
         private static string _directoryPython;
-        private static string _fileSettings;
 
         public App()
         {

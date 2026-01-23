@@ -22,7 +22,7 @@
             </StackPanel>
             <StackPanel Margin="2,0,0,0">
                 <TextBlock Text="Model Source" Style="{StaticResource FieldTextBlockStyle}"/>
-                <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding Source={StaticResource ModelSourceType}}" SelectedItem="{Binding ControlNetModel.Source}" />
+                <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding ModelSources}" SelectedItem="{Binding ControlNetModel.Source}" />
             </StackPanel>
 
             <Grid Margin="0,4,0,0">

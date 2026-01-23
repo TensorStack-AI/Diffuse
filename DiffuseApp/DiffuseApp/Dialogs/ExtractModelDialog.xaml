@@ -58,7 +58,7 @@
 
         <!--Default Options-->
         <GroupBox DockPanel.Dock="Top" Header="Default Options" Margin="0,10,0,0">
-            <Controls:ExtractInputControl Options="{Binding ExtractModel.DefaultOptions}" ExtractorType="{Binding SelectedItem, ElementName=ComboBoxExtractorType}" />
+            <Controls:ExtractInputControl Options="{Binding ExtractModel.DefaultOptions, Mode=TwoWay}" ExtractorType="{Binding SelectedItem, ElementName=ComboBoxExtractorType}" />
         </GroupBox>
 
 

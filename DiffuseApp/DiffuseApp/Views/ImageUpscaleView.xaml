@@ -67,7 +67,7 @@
                             </Border>
 
                             <!--Options-->
-                            <Controls:UpscaleInputControl Options="{Binding Options}" />
+                            <Controls:UpscaleInputControl Pipeline="{Binding CurrentPipeline, Mode=OneWay}" Options="{Binding Options, Mode=OneWayToSource}" />
 
                         </StackPanel>
                     </DockPanel>

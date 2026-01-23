@@ -106,7 +106,6 @@ namespace Diffuse.Views
                     if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
                     {
                         await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
-                        SetDefaultOptions(DiffusionService.DefaultOptions);
                     }
                 }
                 else
@@ -120,7 +119,6 @@ namespace Diffuse.Views
                     if (!ExtractService.IsLoaded || ExtractService.Pipeline.ExtractModel != CurrentPipeline.ExtractModel)
                     {
                         await ExtractService.LoadAsync(CurrentPipeline);
-                        SetDefaultOptions(ExtractService.DefaultOptions);
                     }
                 }
                 else
@@ -134,7 +132,6 @@ namespace Diffuse.Views
                     if (!UpscaleService.IsLoaded || UpscaleService.Pipeline.UpscaleModel != CurrentPipeline.UpscaleModel)
                     {
                         await UpscaleService.LoadAsync(CurrentPipeline);
-                        SetDefaultOptions(UpscaleService.DefaultOptions);
                     }
                 }
                 else
@@ -142,7 +139,6 @@ namespace Diffuse.Views
                     await UpscaleService.UnloadAsync();
                 }
 
-                SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[VideoToVideoView] [LoadPipelineAsync] - Loading pipeline complete.");
                 IsPipelineLoaded = true;
@@ -196,7 +192,9 @@ namespace Diffuse.Views
             {
                 Progress.Clear();
                 Statistics.Clear();
+                ResultVideo = default;
                 CompareVideo = default;
+                await ResultControl.ClearAsync();
                 _logger?.LogInformation($"[VideoToVideoView] [ExecuteAsync] - Executing pipeline..");
 
                 Statistics.Start();
@@ -270,61 +268,6 @@ namespace Diffuse.Views
         private bool CanCancel()
         {
             return DiffusionService.CanCancel;
-        }
-
-
-        private void SetDefaultOptions(DiffusionDefaultOptions options)
-        {
-            Options = new DiffusionInputOptions
-            {
-                Prompt = Options?.Prompt,
-                NegativePrompt = Options?.NegativePrompt,
-                Seed = Options?.Seed ?? 0,
-                Strength = 1,
-                ControlNetStrength = 1,
-                Width = options.Width,
-                Height = options.Height,
-                Steps = options.Steps,
-                Scheduler = options.Scheduler,
-                GuidanceScale = options.GuidanceScale,
-                SchedulerOptions = new SchedulerInputOptions
-                {
-                    Shift = options.Shift
-                }
-            };
-        }
-
-
-        private void SetDefaultOptions(UpscaleInputOptions options)
-        {
-            UpscaleOptions = new UpscaleInputOptions
-            {
-                TileMode = options.TileMode,
-                TileSize = options.TileSize,
-                TileOverlap = options.TileOverlap,
-            };
-        }
-
-
-        private void SetDefaultOptions(ExtractInputOptions options)
-        {
-            ExtractOptions = new ExtractInputOptions
-            {
-                TileMode = options.TileMode,
-                TileSize = options.TileSize,
-                TileOverlap = options.TileOverlap,
-                IsInverted = options.IsInverted,
-                IsTransparent = options.IsTransparent,
-                MergeInput = options.MergeInput,
-                Mode = options.Mode,
-                Detections = options.Detections,
-                BodyConfidence = options.BodyConfidence,
-                JointConfidence = options.JointConfidence,
-                ColorAlpha = options.ColorAlpha,
-                JointRadius = options.JointRadius,
-                BoneRadius = options.BoneRadius,
-                BoneThickness = options.BoneThickness
-            };
         }
 
     }

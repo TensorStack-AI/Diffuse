@@ -105,7 +105,6 @@ namespace Diffuse.Views
                 if (CurrentPipeline.ExtractModel is not null)
                     await ExtractService.LoadAsync(CurrentPipeline);
 
-                SetDefaultOptions(ExtractService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline complete.");
                 IsPipelineLoaded = true;
@@ -219,27 +218,6 @@ namespace Diffuse.Views
         private bool CanCancel()
         {
             return ExtractService.CanCancel;
-        }
-
-        private void SetDefaultOptions(ExtractInputOptions options)
-        {
-            Options = new ExtractInputOptions
-            {
-                TileMode = options.TileMode,
-                TileSize = options.TileSize,
-                TileOverlap = options.TileOverlap,
-                IsInverted = options.IsInverted,
-                IsTransparent = options.IsTransparent,
-                MergeInput = options.MergeInput,
-                Mode = options.Mode,
-                Detections = options.Detections,
-                BodyConfidence = options.BodyConfidence,
-                JointConfidence = options.JointConfidence,
-                ColorAlpha = options.ColorAlpha,
-                JointRadius = options.JointRadius,
-                BoneRadius = options.BoneRadius,
-                BoneThickness = options.BoneThickness
-            };
         }
 
 

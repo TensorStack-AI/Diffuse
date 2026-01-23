@@ -54,9 +54,9 @@
                             <Grid IsEnabled="{Binding DiffusionService.IsLoaded}">
                                 <Controls:DiffusionInputControl 
                                     ProcessType="ImageToImage"
-                                    Options="{Binding Options}"
-                                    UpscaleOptions="{Binding UpscaleOptions}"
-                                    ExtractOptions="{Binding ExtractOptions}"
+                                    Options="{Binding Options, Mode=OneWayToSource}"
+                                    UpscaleOptions="{Binding UpscaleOptions, Mode=OneWayToSource}"
+                                    ExtractOptions="{Binding ExtractOptions, Mode=OneWayToSource}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="True"
                                     IsControlNetEnabled="False"

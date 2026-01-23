@@ -26,6 +26,8 @@ namespace Diffuse.Controls
         private bool _isSchedulerStochastic;
         private bool _isSchedulerClipSample;
         private bool _isSchedulerThresholding;
+        private bool _isSteps2Enabled;
+        private bool _isGuidance2Enabled;
 
         public DiffusionInputControl()
         {
@@ -35,7 +37,7 @@ namespace Diffuse.Controls
         }
 
         public static readonly DependencyProperty PipelineProperty = DependencyProperty.Register(nameof(Pipeline), typeof(PipelineModel), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, PipelineModel>((c, o, n) => c.OnPipelineChanged(o, n)));
-        public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(DiffusionInputOptions), typeof(DiffusionInputControl), new PropertyMetadata<DiffusionInputControl, DiffusionInputOptions>((c, o, n) => c.OnOptionsChanged(o, n)));
+        public static readonly DependencyProperty OptionsProperty = DependencyProperty.Register(nameof(Options), typeof(DiffusionInputOptions), typeof(DiffusionInputControl));
         public static readonly DependencyProperty UpscaleOptionsProperty = DependencyProperty.Register(nameof(UpscaleOptions), typeof(UpscaleInputOptions), typeof(DiffusionInputControl));
         public static readonly DependencyProperty ExtractOptionsProperty = DependencyProperty.Register(nameof(ExtractOptions), typeof(ExtractInputOptions), typeof(DiffusionInputControl));
 
@@ -146,6 +148,18 @@ namespace Diffuse.Controls
             set { SetProperty(ref _isSchedulerThresholding, value); }
         }
 
+        public bool IsSteps2Enabled
+        {
+            get { return _isSteps2Enabled; }
+            set { SetProperty(ref _isSteps2Enabled, value); }
+        }
+
+        public bool IsGuidance2Enabled
+        {
+            get { return _isGuidance2Enabled; }
+            set { SetProperty(ref _isGuidance2Enabled, value); }
+        }
+
 
         private Task OnPipelineChanged(PipelineModel oldPipeline, PipelineModel newPipeline)
         {
@@ -153,51 +167,58 @@ namespace Diffuse.Controls
                 return Task.CompletedTask;
 
             var oldModel = oldPipeline?.DiffusionModel;
+            var oldOptions = oldModel?.DefaultOptions;
             var newModel = newPipeline?.DiffusionModel;
+            var newOptions = newModel?.DefaultOptions;
 
-            if (oldModel is not null && oldModel.Pipeline == newModel.Pipeline)
+            if (oldModel == newModel)
                 return Task.CompletedTask;
 
-            IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
-            return Task.CompletedTask;
-        }
-
-
-        private Task OnOptionsChanged(DiffusionInputOptions oldOptions, DiffusionInputOptions newOptions)
-        {
-            if (newOptions is null)
-                return Task.CompletedTask;
-
-            if (oldOptions != null)
+            var previousOptions = Options;
+            Options = new DiffusionInputOptions
             {
-                newOptions.Seed = oldOptions.Seed;
-                newOptions.Prompt = oldOptions.Prompt;
-                newOptions.NegativePrompt = oldOptions.NegativePrompt;
+                // Keep
+                Prompt = previousOptions?.Prompt,
+                NegativePrompt = previousOptions?.NegativePrompt,
+                Seed = previousOptions?.Seed ?? 0,
+                LoraStrength = previousOptions?.LoraStrength ?? 1f,
+                InputImageCount = ProcessType == ProcessType.ImageEdit ? (previousOptions?.InputImageCount ?? 1) : 0,
 
-                newOptions.Steps = oldOptions.Steps;
-                newOptions.Steps2 = oldOptions.Steps2;
-                newOptions.GuidanceScale = oldOptions.GuidanceScale;
-                newOptions.GuidanceScale2 = oldOptions.GuidanceScale2;
-                newOptions.InputImageCount = oldOptions.InputImageCount;
+                // Update
+                Strength = ProcessType == ProcessType.ImageToImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.Strength ?? 0.7f) : 1f,
+                ControlNetStrength = ProcessType == ProcessType.ControlNetImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.ControlNetStrength ?? 0.7f) : 1f,
 
-                newOptions.Strength = oldOptions.Strength;
-                newOptions.LoraStrength = oldOptions.LoraStrength;
-                newOptions.ControlNetStrength = oldOptions.ControlNetStrength;
-
-                if (Pipeline.DiffusionModel.DefaultOptions.Schedulers.Contains(oldOptions.Scheduler))
+                Steps = newOptions.Steps,
+                Steps2 = newOptions.Steps2,
+                Scheduler = newOptions.Scheduler,
+                GuidanceScale = newOptions.GuidanceScale,
+                GuidanceScale2 = newOptions.GuidanceScale2,
+                SchedulerOptions = new SchedulerInputOptions
                 {
-                    newOptions.Scheduler = oldOptions.Scheduler;
-                    newOptions.SchedulerOptions = oldOptions.SchedulerOptions;
+                    Shift = newOptions.Shift,
+                    SolverType = newOptions.SolverType,
+                    PredictionType = newOptions.PredictionType,
+                    BaseShift = newOptions.BaseShift,
+                    BetaEnd = newOptions.BetaEnd,
+                    BetaSchedule = newOptions.BetaSchedule,
+                    BetaStart = newOptions.BetaStart,
+                    MaxShift = newOptions.MaxShift,
+                    StepsOffset = newOptions.StepsOffset,
+                    TimestepSpacing = newOptions.TimestepSpacing,
+                    BaseImageSeqLen = newOptions.BaseImageSeqLen,
+                    MaxImageSeqLen = newOptions.MaxImageSeqLen,
+                    UseDynamicShifting = newOptions.UseDynamicShifting,
                 }
+            };
 
-                SelectedResolution = Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.Width == _selectedResolution?.Width && x.Height == _selectedResolution?.Height)
-                                  ?? Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
-            }
-            else
-            {
-                SelectedResolution = Pipeline?.DiffusionModel.Resolutions.FirstOrDefault(x => x.IsDefault);
-            }
+            //Resolution
+            SelectedResolution = newModel?.Resolutions.FirstOrDefault(x => x.Width == _selectedResolution?.Width && x.Height == _selectedResolution?.Height)
+                              ?? newModel?.Resolutions.FirstOrDefault(x => x.IsDefault);
 
+            // UI Flags
+            IsSteps2Enabled = newPipeline.DiffusionModel.DefaultOptions.Steps2 > 0;
+            IsGuidance2Enabled = newPipeline.DiffusionModel.DefaultOptions.GuidanceScale2 > 0;
+            IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
             return Task.CompletedTask;
         }
 

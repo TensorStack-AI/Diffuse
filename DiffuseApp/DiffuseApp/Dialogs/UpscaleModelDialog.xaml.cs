@@ -210,7 +210,12 @@ namespace Diffuse.Dialogs
                 SampleSize = upscaleModel.SampleSize,
                 ScaleFactor = upscaleModel.ScaleFactor,
                 UrlPaths = upscaleModel.UrlPaths.ToArray(),
-                DefaultOptions = upscaleModel.DefaultOptions with { }
+                DefaultOptions = new UpscaleInputOptions
+                {
+                    TileMode = upscaleModel.DefaultOptions.TileMode,
+                    TileOverlap = upscaleModel.DefaultOptions.TileOverlap,
+                    TileSize = upscaleModel.DefaultOptions.TileSize,
+                }
             };
         }
     }

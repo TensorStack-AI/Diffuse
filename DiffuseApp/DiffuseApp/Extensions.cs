@@ -1,10 +1,31 @@
-﻿using System.Text.RegularExpressions;
+﻿using Diffuse.Common;
+using System.Text.RegularExpressions;
 
 namespace Diffuse
 {
     public static class Extensions
     {
 
+        public static int GetIndex(this MemoryProfile profile, int deviceMemory)
+        {
+            int bestIndex = -1;
+            int bestValue = int.MinValue;
+
+            for (int i = 0; i < profile.MemoryModes.Length; i++)
+            {
+                int value = profile.MemoryModes[i];
+                if (value <= deviceMemory && value > bestValue)
+                {
+                    bestValue = value;
+                    bestIndex = i;
+                }
+            }
+
+            if (bestIndex < 0)
+                bestIndex = 0;
+
+            return bestIndex;
+        }
 
     }
 

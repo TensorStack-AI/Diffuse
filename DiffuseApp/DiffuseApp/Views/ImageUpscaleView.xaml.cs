@@ -88,7 +88,6 @@ namespace Diffuse.Views
                 if (CurrentPipeline.UpscaleModel is not null)
                     await UpscaleService.LoadAsync(CurrentPipeline);
 
-                SetDefaultOptions(UpscaleService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageUpscaleView] [LoadPipelineAsync] - Loading pipeline complete.");
                 IsPipelineLoaded = true;
@@ -204,17 +203,6 @@ namespace Diffuse.Views
         private bool CanCancel()
         {
             return UpscaleService.CanCancel;
-        }
-
-
-        private void SetDefaultOptions(UpscaleInputOptions options)
-        {
-            Options = new UpscaleInputOptions
-            {
-                TileMode = options.TileMode,
-                TileSize = options.TileSize,
-                TileOverlap = options.TileOverlap,
-            };
         }
 
 

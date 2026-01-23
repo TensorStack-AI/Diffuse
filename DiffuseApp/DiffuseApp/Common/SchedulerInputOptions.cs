@@ -78,5 +78,9 @@ namespace Diffuse.Common
 
         [JsonIgnore]
         public float FlowShift => Shift;
+
+        public int BaseImageSeqLen { get; set; }
+        public int MaxImageSeqLen { get; set; }
+  
     }
 }

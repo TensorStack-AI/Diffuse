@@ -161,9 +161,27 @@
                         <CommonControls:SliderControl Text="Input Images" Value="{Binding Options.InputImageCount}" Minimum="1" Maximum="4" TickFrequency="1" ValueFormat="N0" />
                     </StackPanel>
 
-                    <StackPanel>
+                    <!--Steps-->
+                    <StackPanel Visibility="{Binding IsSteps2Enabled, Converter={StaticResource InverseBooleanToVisibilityConverter}, ConverterParameter=0}">
                         <CommonControls:SliderControl Text="Steps" Value="{Binding Options.Steps}" Minimum="1" Maximum="100" TickFrequency="1" />
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding IsSteps2Enabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <UniformGrid Columns="2">
+                            <CommonControls:SliderControl Text="Steps (Stage1)" Value="{Binding Options.Steps}" Minimum="1" Maximum="100" TickFrequency="1" Margin="0,0,3,0"/>
+                            <CommonControls:SliderControl Text="Steps (Stage2)" Value="{Binding Options.Steps2}" Minimum="1" Maximum="100" TickFrequency="1" Margin="3,0,0,0"/>
+                        </UniformGrid>
+                    </StackPanel>
+
+
+                    <!--GuidanceScale-->
+                    <StackPanel Visibility="{Binding IsGuidance2Enabled, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                         <CommonControls:SliderControl Text="Guidance" Value="{Binding Options.GuidanceScale}" Minimum="1" Maximum="20" TickFrequency="0.1" ValueFormat="F2"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding IsGuidance2Enabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <UniformGrid Columns="2">
+                            <CommonControls:SliderControl Text="Guidance (Model)" Value="{Binding Options.GuidanceScale2}" Minimum="1" Maximum="20" TickFrequency="0.1" ValueFormat="F2" Margin="0,0,3,0"/>
+                            <CommonControls:SliderControl Text="Guidance (CFG)" Value="{Binding Options.GuidanceScale}" Minimum="1" Maximum="20" TickFrequency="0.1" ValueFormat="F2" Margin="3,0,0,0"/>
+                        </UniformGrid>
                     </StackPanel>
 
                     <!--TextToImage-->
@@ -434,12 +452,12 @@
 
                     <!--UpscaleOptions-->
                     <GroupBox Header="Upscale Options" Margin="0,0,0,6" Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Controls:UpscaleInputControl Options="{Binding UpscaleOptions}" />
+                        <Controls:UpscaleInputControl Pipeline="{Binding Pipeline, Mode=OneWay}" Options="{Binding UpscaleOptions, Mode=OneWayToSource}" />
                     </GroupBox>
 
                     <!--ExtractOptions-->
                     <GroupBox Header="Extract Options" Margin="0,0,0,6" Visibility="{Binding Pipeline.ExtractModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Controls:ExtractInputControl Options="{Binding ExtractOptions}" ExtractorType="{Binding Pipeline.ExtractModel.Type}" />
+                        <Controls:ExtractInputControl Pipeline="{Binding Pipeline, Mode=OneWay}" Options="{Binding ExtractOptions, Mode=OneWayToSource}" />
                     </GroupBox>
 
                 </UniformGrid>

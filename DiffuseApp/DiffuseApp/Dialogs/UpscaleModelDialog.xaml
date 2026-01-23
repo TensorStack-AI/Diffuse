@@ -49,7 +49,7 @@
 
         <!--Default Options-->
         <GroupBox DockPanel.Dock="Top"  Header="Default Options" Margin="0,10,0,0">
-            <Controls:UpscaleInputControl Options="{Binding UpscaleModel.DefaultOptions}" />
+            <Controls:UpscaleInputControl Options="{Binding UpscaleModel.DefaultOptions, Mode=TwoWay}" />
         </GroupBox>
 
 

@@ -27,6 +27,7 @@ namespace Diffuse.Dialogs
         public LoraModelDialog(Settings settings)
         {
             Settings = settings;
+            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.SingleFile, ModelSourceType.Folder];
             Trigger = new ObservableCollection<string>();
             Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
@@ -46,6 +47,7 @@ namespace Diffuse.Dialogs
         public ObservableCollection<string> Trigger { get; }
         public ObservableCollection<string> Pipelines { get; }
         public bool IsUpdateMode => _originalLoraModel is not null;
+        public ModelSourceType[] ModelSources { get; }
 
         public LoraAdapterModel LoraModel
         {

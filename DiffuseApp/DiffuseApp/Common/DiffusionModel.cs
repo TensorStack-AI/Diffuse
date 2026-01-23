@@ -17,11 +17,14 @@ namespace Diffuse.Common
         public string Path { get; set; }
         public ModelSourceType Source { get; set; }
         public bool IsDefault { get; set; }
-        public int[] MemoryModes { get; set; }
-        public DataType[] DataTypes { get; set; }
+        public MemoryProfile[] MemoryProfile { get; set; }
+        public DataType BaseType { get; set; }
         public ProcessType[] ProcessTypes { get; set; }
         public List<SizeOption> Resolutions { get; set; }
         public DiffusionDefaultOptions DefaultOptions { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DiffusionCheckpointModel Checkpoint { get; set; }
 
 
         [JsonIgnore]
@@ -36,10 +39,55 @@ namespace Diffuse.Common
         {
             if (Source == ModelSourceType.Folder)
                 IsValid = Directory.Exists(Path);
-            else if (Source == ModelSourceType.SingleFile)
-                IsValid = File.Exists(Path);
             else if (Source == ModelSourceType.HuggingFace)
                 IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
+            else if (Source == ModelSourceType.Checkpoint)
+            {
+                IsValid = Checkpoint is not null
+                       && Utils.TryParseHuggingFaceRepo(Path, out _)
+                       && (string.IsNullOrEmpty(Checkpoint.VaeCheckpoint) || File.Exists(Checkpoint.VaeCheckpoint))
+                       && (string.IsNullOrEmpty(Checkpoint.ModelCheckpoint) || File.Exists(Checkpoint.ModelCheckpoint))
+                       && (string.IsNullOrEmpty(Checkpoint.TextEncoderCheckpoint) || File.Exists(Checkpoint.TextEncoderCheckpoint));
+            }
+        }
+    }
+
+    public sealed class MemoryProfile : BaseModel
+    {
+        public MemoryProfile() { }
+        public MemoryProfile(DataType dataType, int[] memoryModes)
+        {
+            DataType = dataType;
+            MemoryModes = memoryModes;
+        }
+
+        public DataType DataType { get; set; }
+        public int[] MemoryModes { get; set; }
+    }
+
+
+    public sealed class DiffusionCheckpointModel : BaseModel
+    {
+        private string _modelCheckpoint;
+        private string _vaeCheckpoint;
+        private string _textEncoderCheckpoint;
+
+        public string ModelCheckpoint
+        {
+            get { return _modelCheckpoint; }
+            set { SetProperty(ref _modelCheckpoint, value); }
+        }
+
+        public string VaeCheckpoint
+        {
+            get { return _vaeCheckpoint; }
+            set { SetProperty(ref _vaeCheckpoint, value); }
+        }
+
+        public string TextEncoderCheckpoint
+        {
+            get { return _textEncoderCheckpoint; }
+            set { SetProperty(ref _textEncoderCheckpoint, value); }
         }
     }
 }

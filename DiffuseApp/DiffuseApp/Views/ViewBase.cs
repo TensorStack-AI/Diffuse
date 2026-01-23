@@ -19,7 +19,6 @@ namespace Diffuse.Views
         private bool _isViewBusy;
         private PipelineModel _currentPipeline;
         private bool _isPipelineLoaded;
-        private readonly Dictionary<string, PipelineProgress> _downloadStatistics;
 
         public ViewBase(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
             : base(navigationService)
@@ -31,7 +30,6 @@ namespace Diffuse.Views
             Statistics = new StatisticsModel(Dispatcher);
             ProgressCallback = new Progress<RunProgress>(OnProgress);
             PythonProgressCallback = new Progress<PipelineProgress>(OnProgress);
-            _downloadStatistics = new Dictionary<string, PipelineProgress>();
         }
 
         public Settings Settings { get; }
@@ -75,7 +73,6 @@ namespace Diffuse.Views
 
         protected virtual Task LoadPipelineAsync()
         {
-            _downloadStatistics.Clear();
             return Task.CompletedTask;
         }
 
@@ -99,15 +96,11 @@ namespace Diffuse.Views
 
             if (progress.IsDownloading)
             {
-                _downloadStatistics[progress.Message] = progress;
-                var total = (int)_downloadStatistics.Values.Sum(x => x.DownloadTotal);
-                var download = (int)_downloadStatistics.Values.Sum(x => x.Downloaded);
-                Progress.Update(download, total, $"Downloading {_currentPipeline.DiffusionModel.Name}...");
-                return;
+                Progress.Update(progress.Iteration, progress.Iterations, $"Downloading {_currentPipeline.DiffusionModel.Name} files ({progress.DownloadModel})...");
             }
             else if (progress.IsLoading)
             {
-                Progress.Update(progress.Iteration, progress.Iterations, $"Loading {_currentPipeline.DiffusionModel.Name}...");
+                Progress.Indeterminate($"Loading {_currentPipeline.DiffusionModel.Name}...");
             }
             else if (progress.IsGenerating)
             {

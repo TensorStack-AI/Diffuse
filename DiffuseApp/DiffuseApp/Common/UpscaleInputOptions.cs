@@ -3,7 +3,7 @@ using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
-    public record UpscaleInputOptions : BaseRecord
+    public class UpscaleInputOptions : BaseModel
     {
         private TileMode _tileMode;
         private int _tileSize;

@@ -4,7 +4,7 @@ using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
-    public record ExtractInputOptions : BaseRecord
+    public class ExtractInputOptions : BaseModel
     {
         // Default
         public TileMode TileMode { get; set; }

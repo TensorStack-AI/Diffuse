@@ -63,7 +63,7 @@ namespace Diffuse.Dialogs
                 Id = modelId,
                 DefaultOptions = new ExtractInputOptions
                 {
-  
+
                 }
             };
             return base.ShowDialogAsync();
@@ -208,7 +208,23 @@ namespace Diffuse.Dialogs
                 IsDynamicOutput = extractModel.IsDynamicOutput,
                 Type = extractModel.Type,
                 UrlPaths = extractModel.UrlPaths.ToArray(),
-                DefaultOptions = extractModel.DefaultOptions with { }
+                DefaultOptions = new ExtractInputOptions
+                {
+                    BodyConfidence = extractModel.DefaultOptions.BodyConfidence,
+                    BoneRadius = extractModel.DefaultOptions.BoneRadius,
+                    BoneThickness = extractModel.DefaultOptions.BoneThickness,
+                    ColorAlpha = extractModel.DefaultOptions.ColorAlpha,
+                    Detections = extractModel.DefaultOptions.Detections,
+                    IsInverted = extractModel.DefaultOptions.IsInverted,
+                    IsTransparent = extractModel.DefaultOptions.IsTransparent,
+                    JointConfidence = extractModel.DefaultOptions.JointConfidence,
+                    JointRadius = extractModel.DefaultOptions.JointRadius,
+                    MergeInput = extractModel.DefaultOptions.MergeInput,
+                    Mode = extractModel.DefaultOptions.Mode,
+                    TileMode = extractModel.DefaultOptions.TileMode,
+                    TileOverlap = extractModel.DefaultOptions.TileOverlap,
+                    TileSize = extractModel.DefaultOptions.TileSize
+                }
             };
         }
     }

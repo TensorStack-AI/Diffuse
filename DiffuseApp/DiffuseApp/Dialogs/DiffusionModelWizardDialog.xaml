@@ -16,7 +16,7 @@
         <!--Settings-->
         <StackPanel DockPanel.Dock="Top" >
 
-            <UniformGrid Columns="4" >
+            <UniformGrid Columns="3" >
                 <StackPanel Margin="0,0,2,0">
                     <TextBlock Text="Pipeline" Style="{StaticResource FieldTextBlockStyle}"/>
                     <ComboBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="Name"  />
@@ -27,11 +27,7 @@
                 </StackPanel>
                 <StackPanel Margin="2,0,2,0">
                     <TextBlock Text="Source" Style="{StaticResource FieldTextBlockStyle}"/>
-                    <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding Source={StaticResource ModelSourceType}}" SelectedItem="{Binding SelectedSource}" />
-                </StackPanel>
-                <StackPanel Margin="2,0,0,0">
-                    <TextBlock Text="Data Type" Style="{StaticResource FieldTextBlockStyle}"/>
-                    <ComboBox ItemsSource="{Binding Source={StaticResource DataType}}" SelectedItem="{Binding SelectedDataType}"  />
+                    <ComboBox x:Name="ComboBoxSource" ItemsSource="{Binding ModelSources}" SelectedItem="{Binding SelectedSource}" />
                 </StackPanel>
             </UniformGrid>
 
@@ -47,6 +43,25 @@
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
                     <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />
                     <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}"  />
+                </StackPanel>
+                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Checkpoint}">
+                    <StackPanel>
+                        <TextBlock Text="HuggingFace Url (Base Repo)" Style="{StaticResource FieldTextBlockStyle}" />
+                        <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Base Model (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.ModelCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Vae (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.VaeCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Text Encoder (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.TextEncoderCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                    </StackPanel>
+                    <TextBlock Text="Any combination of checkpoint files is supported. Select at least one." FontSize="10" FontStyle="Italic" Opacity=".7" HorizontalAlignment="Center"  Margin="0,3,0,0"/>
                 </StackPanel>
             </Grid>
 

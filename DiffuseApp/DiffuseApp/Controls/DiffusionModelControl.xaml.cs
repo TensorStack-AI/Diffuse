@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,7 +31,7 @@ namespace Diffuse.Controls
         private ExtractModel _selectedExtractor;
         private LoraAdapterModel _selectedLora;
         private UpscaleModel _selectedUpscaler;
-        private MemoryMode _selectedMemoryMode;
+        private MemoryProfileModel _selectedMemoryMode;
         private DataType _selectedDataType;
 
         private bool _isControlNetSupported;
@@ -60,6 +61,17 @@ namespace Diffuse.Controls
         /// </summary>
         public DiffusionModelControl()
         {
+            MemoryModes =
+            [
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Auto },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Balanced },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Lowest },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Low },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Medium },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.High },
+                new MemoryProfileModel{ MemoryMode = MemoryMode.Highest }
+            ];
+            DataTypes = new ObservableCollection<DataType>();
             LoadCommand = new AsyncRelayCommand(LoadAsync, CanLoad);
             UnloadCommand = new AsyncRelayCommand(UnloadAsync, CanUnload);
             InitializeComponent();
@@ -72,6 +84,9 @@ namespace Diffuse.Controls
         public event EventHandler<PipelineModel> SelectionChanged;
         public AsyncRelayCommand LoadCommand { get; }
         public AsyncRelayCommand UnloadCommand { get; }
+        public MemoryProfileModel[] MemoryModes { get; }
+        public ObservableCollection<DataType> DataTypes { get; }
+
 
         public Settings Settings
         {
@@ -127,7 +142,7 @@ namespace Diffuse.Controls
             set { SetProperty(ref _selectedUpscaler, value); }
         }
 
-        public MemoryMode SelectedMemoryMode
+        public MemoryProfileModel SelectedMemoryMode
         {
             get { return _selectedMemoryMode; }
             set { SetProperty(ref _selectedMemoryMode, value); }
@@ -232,7 +247,7 @@ namespace Diffuse.Controls
             _currentExtractor = SelectedExtractor;
             _currentLora = SelectedLora;
             _currentUpscaler = SelectedUpscaler;
-            _currentMemoryMode = SelectedMemoryMode;
+            _currentMemoryMode = SelectedMemoryMode.MemoryMode;
             _currentDataType = SelectedDataType;
 
             _currentExtractorEnabled = _isExtractorEnabled;
@@ -300,7 +315,7 @@ namespace Diffuse.Controls
             CurrentPipeline = new PipelineModel
             {
                 Device = _selectedDevice,
-                MemoryMode = _selectedMemoryMode,
+                MemoryMode = _selectedMemoryMode.MemoryMode,
                 DataType = _selectedDataType,
             };
 
@@ -331,7 +346,7 @@ namespace Diffuse.Controls
                 || _currentLoraEnabled != _isLoraEnabled
                 || _currentUpscaler != SelectedUpscaler
                 || _currentUpscalerEnabled != _isUpscalerEnabled
-                || _currentMemoryMode != SelectedMemoryMode
+                || _currentMemoryMode != SelectedMemoryMode.MemoryMode
                 || _currentDataType != SelectedDataType;
         }
 
@@ -426,6 +441,7 @@ namespace Diffuse.Controls
             };
 
             SelectedDevice = Settings.DefaultDevice;
+            SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == Settings.DefaultMemoryMode);
             return Task.CompletedTask;
         }
 
@@ -465,6 +481,9 @@ namespace Diffuse.Controls
                                 ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault(x => x.IsDefault)
                                 ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault();
             }
+
+            SetDeviceDataTypes();
+            RefreshMemoryProfile();
         }
 
 
@@ -486,11 +505,65 @@ namespace Diffuse.Controls
                                   ?? ControlNetCollectionView.Cast<ControlNetModel>().FirstOrDefault();
             }
 
-            if(SelectedModel.DataTypes.Contains(_selectedDataType))
-            {
-                SelectedDataType = SelectedModel.DataTypes.FirstOrDefault();
-            }
+            RefreshMemoryProfile();
         }
 
+
+        private void Memory_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            RefreshMemoryProfile();
+        }
+
+
+        private void SetDeviceDataTypes()
+        {
+            if (_selectedDevice is null)
+                return;
+
+            DataTypes.Clear();
+            DataTypes.Add(DataType.Int8);
+            DataTypes.Add(DataType.Float16);
+            DataTypes.Add(DataType.Bfloat16);
+            SelectedDataType = DataTypes.Contains(Settings.DefaultDataType) ? Settings.DefaultDataType : DataTypes.First();
+        }
+
+
+        private void RefreshMemoryProfile()
+        {
+            if (_selectedDevice is null || _selectedModel is null || _selectedMemoryMode is null)
+                return;
+
+            var profile = _selectedModel.MemoryProfile?.FirstOrDefault(x => x.DataType == _selectedDataType);
+            if (profile is null)
+                return;
+
+            var deviceMemory = _selectedDevice.MemoryGB;
+            var modeIndex = profile.GetIndex(deviceMemory);
+            MemoryModes[0].MemoryGB = profile.MemoryModes.ElementAtOrDefault(modeIndex);
+            MemoryModes[2].MemoryGB = profile.MemoryModes.ElementAtOrDefault(0);
+            MemoryModes[3].MemoryGB = profile.MemoryModes.ElementAtOrDefault(1);
+            MemoryModes[4].MemoryGB = profile.MemoryModes.ElementAtOrDefault(2);
+            MemoryModes[5].MemoryGB = profile.MemoryModes.ElementAtOrDefault(3);
+            MemoryModes[6].MemoryGB = profile.MemoryModes.ElementAtOrDefault(4);
+        }
     }
+
+    public class MemoryProfileModel : BaseModel
+    {
+        private int _memoryGB;
+        private MemoryMode _memoryMode;
+
+        public MemoryMode MemoryMode
+        {
+            get { return _memoryMode; }
+            set { SetProperty(ref _memoryMode, value); }
+        }
+        public int MemoryGB
+        {
+            get { return _memoryGB; }
+            set { SetProperty(ref _memoryGB, value); }
+        }
+    }
+
+
 }

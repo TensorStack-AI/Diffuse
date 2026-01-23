@@ -67,9 +67,7 @@
                             </Border>
 
                             <!--Options-->
-                            <Controls:ExtractInputControl 
-                                Options="{Binding Options}" 
-                                ExtractorType="{Binding CurrentPipeline.ExtractModel.Type}" />
+                            <Controls:ExtractInputControl Pipeline="{Binding CurrentPipeline, Mode=OneWay}" Options="{Binding Options, Mode=OneWayToSource}" />
 
                         </StackPanel>
                     </DockPanel>

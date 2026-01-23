@@ -23,6 +23,7 @@ namespace Diffuse.Dialogs
         public ControlNetModelDialog(Settings settings)
         {
             Settings = settings;
+            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.SingleFile, ModelSourceType.Folder];
             Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
             CancelCommand = new AsyncRelayCommand(CancelAsync);
@@ -36,6 +37,7 @@ namespace Diffuse.Dialogs
         public ObservableCollection<string> Errors { get; }
         public ObservableCollection<string> Pipelines { get; }
         public bool IsUpdateMode => _originalControlNetModel is not null;
+        public ModelSourceType[] ModelSources { get; }
 
         public ControlNetModel ControlNetModel
         {

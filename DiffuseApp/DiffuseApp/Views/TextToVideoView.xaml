@@ -55,8 +55,8 @@
                             <Grid IsEnabled="{Binding DiffusionService.IsLoaded}" >
                                 <Controls:DiffusionInputControl 
                                     ProcessType="TextToVideo"
-                                    Options="{Binding Options}"
-                                    UpscaleOptions="{Binding UpscaleOptions}"
+                                    Options="{Binding Options, Mode=OneWayToSource}"
+                                    UpscaleOptions="{Binding UpscaleOptions, Mode=OneWayToSource}"
                                     Pipeline="{Binding CurrentPipeline}" 
                                     IsImageInputEnabled="False"
                                     IsControlNetEnabled="False"
@@ -89,6 +89,7 @@
                     <Border Margin="4" IsEnabled="{Binding IsViewBusy, Converter={StaticResource InverseBoolConverter}}">
                         <Grid Margin="10,10,10,2" >
                             <CommonControls:VideoStreamElement 
+                                x:Name="ResultControl"
                                 SplitterVisibility="Auto"
                                 SplitterPosition="Source"
                                 SplitterDirection="LeftToRight"

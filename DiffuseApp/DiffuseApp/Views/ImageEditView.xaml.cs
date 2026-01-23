@@ -121,7 +121,6 @@ namespace Diffuse.Views
                     if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
                     {
                         await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
-                        SetDefaultOptions(DiffusionService.DefaultOptions);
                     }
                 }
                 else
@@ -135,7 +134,6 @@ namespace Diffuse.Views
                     if (!UpscaleService.IsLoaded || UpscaleService.Pipeline.UpscaleModel != CurrentPipeline.UpscaleModel)
                     {
                         await UpscaleService.LoadAsync(CurrentPipeline);
-                        SetDefaultOptions(UpscaleService.DefaultOptions);
                     }
                 }
                 else
@@ -143,7 +141,6 @@ namespace Diffuse.Views
                     await UpscaleService.UnloadAsync();
                 }
 
-                SetDefaultOptions(DiffusionService.DefaultOptions);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
                 _logger?.LogInformation($"[ImageEditView] [LoadPipelineAsync] - Loading pipeline complete.");
                 IsPipelineLoaded = true;
@@ -276,40 +273,6 @@ namespace Diffuse.Views
         private bool CanCancel()
         {
             return DiffusionService.CanCancel;
-        }
-
-
-        private void SetDefaultOptions(DiffusionDefaultOptions options)
-        {
-            Options = new DiffusionInputOptions
-            {
-                Prompt = Options?.Prompt,
-                NegativePrompt = Options?.NegativePrompt,
-                Seed = Options?.Seed ?? 0,
-                Strength = 1,
-                ControlNetStrength = 1,
-                Width = options.Width,
-                Height = options.Height,
-                Steps = options.Steps,
-                Scheduler = options.Scheduler,
-                GuidanceScale = options.GuidanceScale,
-                InputImageCount = 1,
-                SchedulerOptions = new SchedulerInputOptions
-                {
-                    Shift = options.Shift
-                }
-            };
-        }
-
-
-        private void SetDefaultOptions(UpscaleInputOptions options)
-        {
-            UpscaleOptions = new UpscaleInputOptions
-            {
-                TileMode = options.TileMode,
-                TileSize = options.TileSize,
-                TileOverlap = options.TileOverlap,
-            };
         }
 
     }

@@ -32,7 +32,7 @@ namespace Diffuse
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "[Json] [LoadA] An exception occurred loading JSON file: {filePath}", filePath);
+                Log.Logger.Error(ex, "[Json] [Load] An exception occurred loading JSON file: {filePath}", filePath);
                 return default;
             }
         }
