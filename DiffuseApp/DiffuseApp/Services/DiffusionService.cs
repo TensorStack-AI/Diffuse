@@ -330,30 +330,30 @@ namespace Diffuse.Services
 
 
 
-        private static List<LoraConfig> GetLoraAdapters(LoraAdapterModel loraAdapterModel)
+        private static List<LoraConfig> GetLoraAdapters(LoraAdapterModel[] loraAdapterModel)
         {
-            if (loraAdapterModel is null)
+            if (loraAdapterModel.IsNullOrEmpty())
                 return default;
 
-            return [new LoraConfig
+            return [.. loraAdapterModel.Select(x => new LoraConfig
             {
-                Path = loraAdapterModel.Path,
-                Weights = loraAdapterModel.Weights,
-                Name = loraAdapterModel.Key
-            }];
+                Path = x.Path,
+                Weights = x.Weights,
+                Name = x.Key
+            })];
         }
 
 
-        private static List<LoraOptions> GetLoraOptions(LoraAdapterModel loraAdapterModel, Common.DiffusionInputOptions options)
+        private static List<LoraOptions> GetLoraOptions(LoraAdapterModel[] loraAdapterModel, DiffusionInputOptions options)
         {
-            if (loraAdapterModel is null)
+            if (loraAdapterModel.IsNullOrEmpty())
                 return default;
 
-            return [new LoraOptions
+            return [.. loraAdapterModel.Select((x, i) => new LoraOptions
             {
-                Name = loraAdapterModel.Key,
-                Strength = options.LoraStrength
-            }];
+                Name = x.Key,
+                Strength = options.LoraStrength[i]
+            })];
         }
 
 

@@ -357,9 +357,20 @@
                             <TextBlock DockPanel.Dock="Left"  Text="Model" Style="{StaticResource FieldTextBlockStyle}" />
                             <TextBox Text="{Binding Model}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
                         </StackPanel>
-                        <StackPanel Margin="0,4,0,0" Visibility="{Binding LoraModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                        <StackPanel Margin="0,4,0,0" Visibility="{Binding LoraModels, Converter={StaticResource NullVisibilityConverter}, Mode=OneWay}">
                             <TextBlock DockPanel.Dock="Left"  Text="Lora Model" Style="{StaticResource FieldTextBlockStyle}" />
-                            <TextBox Text="{Binding LoraModel}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" />
+                            <ItemsControl ItemsSource="{Binding LoraModels, Mode=OneWay}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding ., Mode=OneWay}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" Margin="0,0,4,0" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                         <StackPanel Margin="0,4,0,0" Visibility="{Binding ControlNetModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
                             <TextBlock DockPanel.Dock="Left"  Text="ControlNet Model" Style="{StaticResource FieldTextBlockStyle}" />
@@ -425,9 +436,20 @@
                                 <TextBlock Text="Strength" Style="{StaticResource FieldTextBlockStyle}" />
                                 <TextBlock Text="{Binding Options.Strength}" />
                             </StackPanel>
-                            <StackPanel Visibility="{Binding LoraModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
+                            <StackPanel Visibility="{Binding LoraModels, Converter={StaticResource NullVisibilityConverter}}">
                                 <TextBlock Text="Lora Strength" Style="{StaticResource FieldTextBlockStyle}" />
-                                <TextBlock Text="{Binding Options.LoraStrength}" />
+                                <ItemsControl ItemsSource="{Binding Options.LoraStrength}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ., Mode=OneWay}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" Margin="0,0,4,0" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
                             <StackPanel Visibility="{Binding ControlNetModel, Converter={StaticResource NullOrEmptyVisibilityConverter}}">
                                 <TextBlock Text="ControlNet Strength" Style="{StaticResource FieldTextBlockStyle}" />

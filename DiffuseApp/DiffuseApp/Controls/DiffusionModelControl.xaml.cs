@@ -29,7 +29,6 @@ namespace Diffuse.Controls
         private DiffusionModel _selectedModel;
         private ControlNetModel _selectedControlNet;
         private ExtractModel _selectedExtractor;
-        private LoraAdapterModel _selectedLora;
         private UpscaleModel _selectedUpscaler;
         private MemoryProfileModel _selectedMemoryMode;
         private DataType _selectedDataType;
@@ -46,7 +45,7 @@ namespace Diffuse.Controls
         private DiffusionModel _currentModel;
         private ControlNetModel _currentControlNet;
         private ExtractModel _currentExtractor;
-        private LoraAdapterModel _currentLora;
+        private LoraAdapterModel[] _currentLora;
         private UpscaleModel _currentUpscaler;
         private MemoryMode _currentMemoryMode;
         private DataType _currentDataType;
@@ -74,6 +73,7 @@ namespace Diffuse.Controls
             DataTypes = new ObservableCollection<DataType>();
             LoadCommand = new AsyncRelayCommand(LoadAsync, CanLoad);
             UnloadCommand = new AsyncRelayCommand(UnloadAsync, CanUnload);
+            LoraAdapters = new ObservableCollection<LoraAdapterModel>();
             InitializeComponent();
         }
 
@@ -86,7 +86,7 @@ namespace Diffuse.Controls
         public AsyncRelayCommand UnloadCommand { get; }
         public MemoryProfileModel[] MemoryModes { get; }
         public ObservableCollection<DataType> DataTypes { get; }
-
+        public ObservableCollection<LoraAdapterModel> LoraAdapters { get; set; }
 
         public Settings Settings
         {
@@ -152,12 +152,6 @@ namespace Diffuse.Controls
         {
             get { return _selectedDataType; }
             set { SetProperty(ref _selectedDataType, value); }
-        }
-
-        public LoraAdapterModel SelectedLora
-        {
-            get { return _selectedLora; }
-            set { SetProperty(ref _selectedLora, value); }
         }
 
         public ListCollectionView DeviceCollectionView
@@ -245,7 +239,7 @@ namespace Diffuse.Controls
             _currentModel = SelectedModel;
             _currentControlNet = SelectedControlNet;
             _currentExtractor = SelectedExtractor;
-            _currentLora = SelectedLora;
+            _currentLora = _isLoraEnabled ? [.. LoraAdapters] : default;
             _currentUpscaler = SelectedUpscaler;
             _currentMemoryMode = SelectedMemoryMode.MemoryMode;
             _currentDataType = SelectedDataType;
@@ -261,7 +255,7 @@ namespace Diffuse.Controls
                 ControlNetModel = _isControlNetSupported ? _currentControlNet : default,
                 ExtractModel = _currentExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _currentUpscalerEnabled ? _currentUpscaler : default,
-                LoraAdapterModel = _currentLoraEnabled ? _currentLora : default,
+                LoraAdapterModel = _currentLoraEnabled ? _currentLora : default, 
                 MemoryMode = _currentMemoryMode,
                 DataType = _currentDataType,
                 ProcessType = _processType
@@ -278,7 +272,7 @@ namespace Diffuse.Controls
                 && SelectedModel is not null
                 && (!IsControlNetSupported || SelectedControlNet is not null)
                 && (!IsExtractorEnabled || SelectedExtractor is not null)
-                && (!IsLoraEnabled || SelectedLora is not null)
+                && (!IsLoraEnabled || IsLoraValid())
                 && (!IsUpscalerEnabled || SelectedUpscaler is not null)
                 && HasCurrentChanged();
 
@@ -296,7 +290,7 @@ namespace Diffuse.Controls
 
             SelectedControlNet = default;
             SelectedExtractor = default;
-            SelectedLora = default;
+            LoraAdapters.Clear();
             SelectedUpscaler = default;
 
             IsExtractorEnabled = false;
@@ -342,7 +336,7 @@ namespace Diffuse.Controls
                 || _currentControlNet != SelectedControlNet
                 || _currentExtractor != SelectedExtractor
                 || _currentExtractorEnabled != _isExtractorEnabled
-                || _currentLora != SelectedLora
+                || HasLoraChanged()
                 || _currentLoraEnabled != _isLoraEnabled
                 || _currentUpscaler != SelectedUpscaler
                 || _currentUpscalerEnabled != _isUpscalerEnabled
@@ -411,7 +405,6 @@ namespace Diffuse.Controls
                 return true;
             };
 
-            // Lora Models
             LoraCollectionView = new ListCollectionView(Settings.LoraAdapterModels);
             LoraCollectionView.Filter = (obj) =>
             {
@@ -462,24 +455,21 @@ namespace Diffuse.Controls
             {
                 ModelCollectionView.Refresh();
                 SelectedModel = ModelCollectionView.Cast<DiffusionModel>().FirstOrDefault(x => x == _currentModel)
-                             ?? ModelCollectionView.Cast<DiffusionModel>().FirstOrDefault(x => x.IsDefault)
-                             ?? ModelCollectionView.Cast<DiffusionModel>().FirstOrDefault();
+                             ?? ModelCollectionView.Cast<DiffusionModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
             if (ExtractCollectionView is not null)
             {
                 ExtractCollectionView.Refresh();
                 SelectedExtractor = ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x == _currentExtractor)
-                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x.IsDefault)
-                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault();
+                                 ?? ExtractCollectionView.Cast<ExtractModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
             if (UpscaleCollectionView is not null)
             {
                 UpscaleCollectionView.Refresh();
                 SelectedUpscaler = UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault(x => x == _currentUpscaler)
-                                ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault(x => x.IsDefault)
-                                ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault();
+                                ?? UpscaleCollectionView.Cast<UpscaleModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
             SetDeviceDataTypes();
@@ -491,18 +481,31 @@ namespace Diffuse.Controls
         {
             if (LoraCollectionView is not null)
             {
+                LoraAdapters.Clear();
                 LoraCollectionView.Refresh();
-                SelectedLora = LoraCollectionView.Cast<LoraAdapterModel>().FirstOrDefault(x => x == _currentLora)
-                            ?? LoraCollectionView.Cast<LoraAdapterModel>().FirstOrDefault(x => x.IsDefault)
-                            ?? LoraCollectionView.Cast<LoraAdapterModel>().FirstOrDefault();
+                var filteredLora = LoraCollectionView.Cast<LoraAdapterModel>();
+                if (!_currentLora.IsNullOrEmpty() && _currentLora.Any(x => filteredLora.Contains(x)))
+                {
+                    foreach (var lora in _currentLora)
+                    {
+                        LoraAdapters.Add(lora);
+                    }
+                }
+                else
+                {
+                    var defaultLora = filteredLora
+                        .OrderByDescending(x => x.IsDefault)
+                        .FirstOrDefault();
+                    if (defaultLora is not null)
+                        LoraAdapters.Add(defaultLora);
+                }
             }
 
             if (ControlNetCollectionView is not null)
             {
                 ControlNetCollectionView.Refresh();
                 SelectedControlNet = ControlNetCollectionView.Cast<ControlNetModel>().FirstOrDefault(x => x == _currentControlNet)
-                                  ?? ControlNetCollectionView.Cast<ControlNetModel>().FirstOrDefault(x => x.IsDefault)
-                                  ?? ControlNetCollectionView.Cast<ControlNetModel>().FirstOrDefault();
+                                  ?? ControlNetCollectionView.Cast<ControlNetModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
             RefreshMemoryProfile();
@@ -545,6 +548,30 @@ namespace Diffuse.Controls
             MemoryModes[4].MemoryGB = profile.MemoryModes.ElementAtOrDefault(2);
             MemoryModes[5].MemoryGB = profile.MemoryModes.ElementAtOrDefault(3);
             MemoryModes[6].MemoryGB = profile.MemoryModes.ElementAtOrDefault(4);
+        }
+
+
+
+
+        private bool IsLoraValid()
+        {
+            return LoraAdapters.Count > 0 && LoraAdapters.All(x => !string.IsNullOrEmpty(x.Name));
+        }
+
+        public bool HasLoraChanged()
+        {
+            if (_currentLora == null && LoraAdapters == null)
+                return false;
+            if (_currentLora == null || LoraAdapters == null)
+                return true;
+            if (_currentLora.Length != LoraAdapters.Count)
+                return true;
+            for (int i = 0; i < _currentLora.Length; i++)
+            {
+                if (!string.Equals(_currentLora[i]?.Name, LoraAdapters[i]?.Name, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
         }
     }
 

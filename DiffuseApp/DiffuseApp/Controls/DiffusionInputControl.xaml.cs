@@ -181,7 +181,7 @@ namespace Diffuse.Controls
                 Prompt = previousOptions?.Prompt,
                 NegativePrompt = previousOptions?.NegativePrompt,
                 Seed = previousOptions?.Seed ?? 0,
-                LoraStrength = previousOptions?.LoraStrength ?? 1f,
+                LoraStrength = previousOptions?.LoraStrength ?? [1f, 1f, 1f, 1f, 1f, 1f],
                 InputImageCount = ProcessType == ProcessType.ImageEdit ? (previousOptions?.InputImageCount ?? 1) : 0,
 
                 // Update

@@ -230,7 +230,7 @@ namespace Diffuse.Views
                 {
                     Options = options,
                     Model = CurrentPipeline.DiffusionModel.Name,
-                    LoraModel = CurrentPipeline.LoraAdapterModel?.Name,
+                    LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
                     UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
                     UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
                     Source = View.ImageEdit,

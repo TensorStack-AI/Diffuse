@@ -3,6 +3,7 @@ using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -221,7 +222,7 @@ namespace Diffuse.Views
                 {
                     Options = options,
                     Model = CurrentPipeline.DiffusionModel.Name,
-                    LoraModel = CurrentPipeline.LoraAdapterModel?.Name,
+                    LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
                     UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
                     UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
                     ExtractModel = CurrentPipeline.ExtractModel?.Name,

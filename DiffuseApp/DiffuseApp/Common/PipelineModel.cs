@@ -10,7 +10,7 @@ namespace Diffuse.Common
         private DiffusionModel _diffusionModel;
         private ControlNetModel _controlNetModel;
         private ExtractModel _extractModel;
-        private LoraAdapterModel _loraAdapterModel;
+        private LoraAdapterModel[] _loraAdapterModel;
         private UpscaleModel _upscaleModel;
         private MemoryMode _memoryMode;
         private ProcessType _processType;
@@ -40,7 +40,7 @@ namespace Diffuse.Common
             set { SetProperty(ref _extractModel, value); }
         }
 
-        public LoraAdapterModel LoraAdapterModel
+        public LoraAdapterModel[] LoraAdapterModel
         {
             get { return _loraAdapterModel; }
             set { SetProperty(ref _loraAdapterModel, value); }

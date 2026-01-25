@@ -18,7 +18,7 @@ namespace Diffuse.Common
         public string Model { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string LoraModel { get; init; }
+        public string[] LoraModels { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string ControlNetModel { get; init; }

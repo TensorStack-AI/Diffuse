@@ -220,9 +220,41 @@
 
                     <!--LoraStrength-->
                     <UniformGrid Visibility="{Binding Pipeline.LoraAdapterModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <CommonControls:SliderControl Text="Lora Strength" Value="{Binding Options.LoraStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=1}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[0].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[0]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=2}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[1].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[1]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=3}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[2].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[2]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=4}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[3].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[3]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=5}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[4].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[4]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=6}">
+                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[5].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[5]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                        </Grid>
+                        <UniformGrid.Style>
+                            <Style TargetType="{x:Type UniformGrid}">
+                                <Setter Property="Columns" Value="2"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Pipeline.LoraAdapterModel.Length}" Value="1">
+                                        <Setter Property="Columns" Value="1"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </UniformGrid.Style>
                     </UniformGrid>
-
 
 
                     <!--FlowMatch-->
@@ -480,31 +512,36 @@
         <DockPanel Margin="0,4,0,10">
 
             <!--LoRA Triggers-->
-            <DockPanel DockPanel.Dock="Bottom" Visibility="{Binding Pipeline.LoraAdapterModel.Triggers, FallbackValue=Collapsed, Converter={StaticResource NullVisibilityConverter}}">
-                <TextBlock DockPanel.Dock="Top" Text="LoRA Triggers" Style="{StaticResource FieldTextBlockStyle}"/>
-                <ListBox ItemsSource="{Binding Pipeline.LoraAdapterModel.Triggers}" ItemContainerStyle="{StaticResource TransparentListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel IsItemsHost="True" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
+            <DockPanel DockPanel.Dock="Bottom" >
+                <ItemsControl ItemsSource="{Binding Pipeline.LoraAdapterModel}">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding}" Command="{Binding AddTriggerWordCommand, RelativeSource={RelativeSource AncestorType={x:Type local:DiffusionInputControl}}}" CommandParameter="{Binding}" Background="{StaticResource ButtonBackgroundDisabled}" FontSize="10" Margin="0,2,3,0" Padding="6,0"/>
+                            <ListBox ItemsSource="{Binding Triggers}" ItemContainerStyle="{StaticResource TransparentListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding}" Command="{Binding AddTriggerWordCommand, RelativeSource={RelativeSource AncestorType={x:Type local:DiffusionInputControl}}}" CommandParameter="{Binding}" Background="{StaticResource ButtonBackgroundDisabled}" FontSize="9" Margin="0,2,3,0" Padding="3,0" ToolTip="Add LoRA Trigger word"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </DockPanel>
 
             <!--Prompts-->
             <UniformGrid Columns="1" >
                 <DockPanel>
                     <TextBlock  DockPanel.Dock="Top" Text="Prompt" Style="{StaticResource FieldTextBlockStyle}" />
-                    <TextBox  Text="{Binding Options.Prompt}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="80"/>
+                    <TextBox  Text="{Binding Options.Prompt}" TextWrapping="Wrap" AcceptsReturn="True" />
                 </DockPanel>
                 <DockPanel x:Name="PanelNegativePrompt" Visibility="{Binding Options.GuidanceScale, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=1, FallbackValue=Collapsed}">
                     <TextBlock DockPanel.Dock="Top" Text="Negative Prompt" Style="{StaticResource FieldTextBlockStyle}" />
-                    <TextBox Text="{Binding Options.NegativePrompt, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="80"/>
+                    <TextBox Text="{Binding Options.NegativePrompt, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" />
                 </DockPanel>
                 <UniformGrid.Style>
                     <Style TargetType="{x:Type UniformGrid}">

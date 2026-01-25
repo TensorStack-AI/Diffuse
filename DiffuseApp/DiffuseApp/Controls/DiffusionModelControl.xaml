@@ -71,7 +71,7 @@
 
             </DockPanel>
 
-            <UniformGrid Columns="1">
+            <StackPanel>
 
                 <!--Device-->
                 <DockPanel>
@@ -134,13 +134,9 @@
                 <DockPanel Visibility="{Binding IsLoraEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBox DockPanel.Dock="Left" Text="LoRA" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
-                        <ComboBox 
-                            SelectedItem="{Binding SelectedLora}"
-                            ItemsSource="{Binding LoraCollectionView}"
-                            ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                            HorizontalContentAlignment="Stretch"
-                            IsSynchronizedWithCurrentItem="False"/>
-                        <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding LoraCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Controls:LoraAdapterControl 
+                            LoraCollectionView="{Binding LoraCollectionView}"
+                            LoraAdapters="{Binding LoraAdapters, Mode=TwoWay}"/>
                     </Grid>
                 </DockPanel>
 
@@ -184,8 +180,9 @@
                 </DockPanel>
 
 
+              
 
-            </UniformGrid>
+            </StackPanel>
         </DockPanel>
 
     </Grid>
