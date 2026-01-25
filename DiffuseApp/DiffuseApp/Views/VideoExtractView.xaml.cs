@@ -204,14 +204,21 @@ namespace Diffuse.Views
 
         protected async void SelectedExtractorChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+            if (pipeline?.ExtractModel == null)
             {
-                if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
-                    CurrentPipeline = default;
+                await UnloadPipelineAsync();
             }
+            else
+            {
+                if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+                {
+                    if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
+                        CurrentPipeline = default;
+                }
 
-            if (CurrentPipeline is not null)
-                await LoadPipelineAsync();
+                if (CurrentPipeline is not null)
+                    await LoadPipelineAsync();
+            }
         }
     }
 }

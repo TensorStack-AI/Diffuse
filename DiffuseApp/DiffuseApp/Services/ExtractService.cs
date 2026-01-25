@@ -117,7 +117,7 @@ namespace Diffuse.Services
                         SampleSize = model.SampleSize
                     };
 
-                    _currentConfig.SetProvider(device.GetProvider());
+                    _currentConfig.SetProvider(device.GetProvider(Microsoft.ML.OnnxRuntime.GraphOptimizationLevel.ORT_DISABLE_ALL));
                     _extractPipeline = model.Type switch
                     {
                         ExtractorType.Pose => PosePipeline.Create(_currentConfig),

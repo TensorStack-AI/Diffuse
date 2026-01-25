@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-
 using TensorStack.Image;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -31,22 +30,6 @@ namespace Diffuse.Views
             ExtractService = extractService;
             ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
             CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
-            Options = new ExtractInputOptions
-            {
-                TileSize = 512,
-                TileOverlap = 16,
-                IsInverted = false,
-                MergeInput = false,
-                Mode = TensorStack.Extractors.Common.BackgroundMode.RemoveBackground,
-                Detections = 0,
-                BodyConfidence = 0.4f,
-                JointConfidence = 0.1f,
-                ColorAlpha = 0.8f,
-                JointRadius = 7f,
-                BoneRadius = 8f,
-                BoneThickness = 1f,
-                IsTransparent = false
-            };
             InitializeComponent();
         }
 
@@ -223,14 +206,21 @@ namespace Diffuse.Views
 
         protected async void SelectedExtractorChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+            if (pipeline?.ExtractModel == null)
             {
-                if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
-                    CurrentPipeline = default;
+                await UnloadPipelineAsync();
             }
+            else
+            {
+                if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+                {
+                    if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
+                        CurrentPipeline = default;
+                }
 
-            if (CurrentPipeline is not null)
-                await LoadPipelineAsync();
+                if (CurrentPipeline is not null)
+                    await LoadPipelineAsync();
+            }
         }
 
     }

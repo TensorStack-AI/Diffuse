@@ -96,7 +96,7 @@
                         <Grid Margin="10,10,10,2" >
                             <CommonControls:ImageElement 
                                 SplitterVisibility="Auto"
-                                SplitterPosition="Center"
+                                SplitterPosition="Source"
                                 SplitterDirection="LeftToRight"
                                 Source="{Binding ResultImage, Mode=TwoWay}" 
                                 OverlaySource="{Binding CompareImage, Mode=TwoWay}" 

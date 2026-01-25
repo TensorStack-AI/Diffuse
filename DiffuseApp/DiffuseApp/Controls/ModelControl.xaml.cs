@@ -153,18 +153,9 @@ namespace Diffuse.Controls
 
         private Task UnloadAsync()
         {
-            SelectedExtractor = default;
             _currentExtractor = default;
-
-            SelectedUpscaler = default;
             _currentUpscaler = default;
-
-            CurrentPipeline = new PipelineModel
-            {
-                Device = _selectedDevice
-            };
-
-            SelectionChanged?.Invoke(this, CurrentPipeline);
+            SelectionChanged?.Invoke(this, default);
             return Task.CompletedTask;
         }
 

@@ -208,14 +208,21 @@ namespace Diffuse.Views
 
         protected async void SelectedUpscalerChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
+            if (pipeline?.UpscaleModel == null)
             {
-                if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
-                    CurrentPipeline = default;
+                await UnloadPipelineAsync();
             }
+            else
+            {
+                if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
+                {
+                    if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
+                        CurrentPipeline = default;
+                }
 
-            if (CurrentPipeline is not null)
-                await LoadPipelineAsync();
+                if (CurrentPipeline is not null)
+                    await LoadPipelineAsync();
+            }
         }
     }
 }

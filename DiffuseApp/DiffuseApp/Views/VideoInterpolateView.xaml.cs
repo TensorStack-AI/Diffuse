@@ -190,7 +190,14 @@ namespace Diffuse.Views
 
         protected async void SelectedInterpolationChanged(object sender, PipelineModel pipeline)
         {
-            await LoadPipelineAsync();
+            if (pipeline == null)
+            {
+                await UnloadPipelineAsync();
+            }
+            else
+            {
+                await LoadPipelineAsync();
+            }
         }
     }
 }

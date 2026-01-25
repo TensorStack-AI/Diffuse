@@ -152,7 +152,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-GRL-GAN-4x/model.onnx" ]
@@ -204,7 +204,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-4x/model.onnx" ]
@@ -217,7 +217,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 1024,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESR-General-4x/model.onnx" ]
@@ -230,7 +230,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 256,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealWebPhoto-RGT-4x/model.onnx" ]
@@ -243,7 +243,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-2x/model.onnx" ]
@@ -256,7 +256,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-4x/model.onnx" ]
@@ -269,7 +269,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 256,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
@@ -282,7 +282,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/SwinIR-BSRGAN-4x/model.onnx" ]
@@ -294,7 +294,7 @@
       "SampleSize": 0,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "ScaleFactor": 4,
@@ -308,7 +308,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 384,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraSharp-4x/model.onnx" ]

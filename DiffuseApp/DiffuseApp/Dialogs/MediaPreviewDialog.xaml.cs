@@ -60,23 +60,21 @@ namespace Diffuse.Dialogs
         }
 
 
-        public Task<bool> ShowDialogAsync(IHistoryItem selectedItem)
+        public async Task<bool> ShowDialogAsync(IHistoryItem selectedItem)
         {
             HistoryCollection.MoveCurrentTo(selectedItem);
-            SetCurrentImage();
-            return base.ShowDialogAsync();
+            await SetCurrentImage();
+            return await base.ShowDialogAsync();
         }
 
 
-        private Task PrevAsync()
+        private async Task PrevAsync()
         {
             if (CanMovePrev())
             {
                 HistoryCollection.MoveCurrentToPrevious();
-                SetCurrentImage();
+                await SetCurrentImage();
             }
-
-            return Task.CompletedTask;
         }
 
 
