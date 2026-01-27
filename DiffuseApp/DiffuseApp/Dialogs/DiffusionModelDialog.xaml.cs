@@ -370,6 +370,8 @@ namespace Diffuse.Dialogs
                     CheckBoxImageToImage.IsChecked = true;
                 if (processType == ProcessType.ImageEdit)
                     CheckBoxImageEdit.IsChecked = true;
+                if (processType == ProcessType.ImageInpaint)
+                    CheckBoxImageInpaint.IsChecked = true;
                 if (processType == ProcessType.ControlNetImage)
                     CheckBoxControlNetImage.IsChecked = true;
                 if (processType == ProcessType.ControlNetImageToImage)
@@ -394,6 +396,8 @@ namespace Diffuse.Dialogs
                     yield return ProcessType.ImageToImage;
                 if (CheckBoxImageEdit.IsChecked == true)
                     yield return ProcessType.ImageEdit;
+                if (CheckBoxImageInpaint.IsChecked == true)
+                    yield return ProcessType.ImageInpaint;
                 if (CheckBoxControlNetImage.IsChecked == true)
                     yield return ProcessType.ControlNetImage;
                 if (CheckBoxControlNetImageToImage.IsChecked == true)

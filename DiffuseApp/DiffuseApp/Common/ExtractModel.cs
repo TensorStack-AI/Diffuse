@@ -18,11 +18,11 @@ namespace Diffuse.Common
         public string Name { get; set; }
         public bool IsDefault { get; set; }
         public ExtractorType Type { get; set; }
-        public int Channels { get; set; }
+        public int Channels { get; set; } = 3;
         public int SampleSize { get; set; }
         public Normalization Normalization { get; set; } = Normalization.ZeroToOne;
         public Normalization OutputNormalization { get; set; } = Normalization.OneToOne;
-        public int OutputChannels { get; set; }
+        public int OutputChannels { get; set; } = 1;
         public bool IsDynamicOutput { get; set; }
         public ExtractInputOptions DefaultOptions { get; set; }
         public string[] UrlPaths { get; set; }

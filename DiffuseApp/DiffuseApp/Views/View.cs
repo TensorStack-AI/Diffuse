@@ -16,6 +16,7 @@ namespace Diffuse.Views
         TextToImage = 100,
         ImageToImage = 101,
         ImageEdit = 102,
+        ImageInpaint = 103,
 
         ControlNetImage = 110,
         ControlNetImageToImage = 111,
@@ -31,6 +32,7 @@ namespace Diffuse.Views
 
         History = 1000,
         Gallery = 1001,
+   
     }
 
     public enum ViewCategory
@@ -73,6 +75,7 @@ namespace Diffuse.Views
             { View.TextToImage, ViewCategory.Image  },
             { View.ImageToImage, ViewCategory.Image  },
             { View.ImageEdit, ViewCategory.Image  },
+            { View.ImageInpaint, ViewCategory.Image  },
             { View.ControlNetImage, ViewCategory.Image  },
             { View.ControlNetImageToImage, ViewCategory.Image  },
             { View.ImageExtract, ViewCategory.Image  },

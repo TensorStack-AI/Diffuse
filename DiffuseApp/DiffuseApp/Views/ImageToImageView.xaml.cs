@@ -215,7 +215,7 @@ namespace Diffuse.Views
                     {
                         Image = resultTensor,
                         Options = _upscaleOptions
-                    });
+                    }, ProgressCallback);
                 }
 
                 Statistics.Stop();

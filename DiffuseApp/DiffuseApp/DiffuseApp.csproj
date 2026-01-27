@@ -63,7 +63,6 @@
   <!--Fonts-->
   <ItemGroup Condition="Exists('Fonts\Brands-Regular-400.otf')">
     <Resource Include="Fonts\Brands-Regular-400.otf" />
-    <Resource Include="Fonts\Duotone-Solid-900.otf" />
     <Resource Include="Fonts\Light-300.otf" />
     <Resource Include="Fonts\Regular-400.otf" />
     <Resource Include="Fonts\Sharp-Light-300.otf" />
@@ -73,7 +72,6 @@
     <Resource Include="Fonts\Solid-900.otf" />
     <Resource Include="Fonts\Thin-100.otf" />
   </ItemGroup>
-
 
   <!--Settings-->
   <ItemGroup>

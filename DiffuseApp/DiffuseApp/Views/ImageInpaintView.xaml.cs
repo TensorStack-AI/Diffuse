@@ -13,20 +13,25 @@ using TensorStack.WPF.Services;
 namespace Diffuse.Views
 {
     /// <summary>
-    /// Interaction logic for ControlNetImageToImageView.xaml
+    /// Interaction logic for ImageInpaintView.xaml
     /// </summary>
-    public partial class ControlNetImageToImageView : ViewBase
+    public partial class ImageInpaintView : ViewBase
     {
         private readonly ILogger _logger;
         private ImageInput _resultImage;
         private ImageInput _compareImage;
-        private ImageInput _sourceImage1;
-        private ImageInput _sourceImage2;
+
+        private ImageInput _outputImage;
+        private ImageInput _outputImageMask;
+        private ImageInput _sourceImage;
+        private ImageInput _sourceImageMask;
+
+        private ImageInput _extractImage;
         private DiffusionInputOptions _options;
         private UpscaleInputOptions _upscaleOptions;
         private ExtractInputOptions _extractOptions;
 
-        public ControlNetImageToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ControlNetImageToImageView> logger)
+        public ImageInpaintView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageInpaintView> logger)
             : base(settings, navigationService, environmentService, historyService)
         {
             _logger = logger;
@@ -38,7 +43,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.ControlNetImageToImage;
+        public override int Id => (int)View.ImageInpaint;
         public IDiffusionService DiffusionService { get; }
         public IUpscaleService UpscaleService { get; }
         public IExtractService ExtractService { get; }
@@ -57,16 +62,28 @@ namespace Diffuse.Views
             set { SetProperty(ref _compareImage, value); }
         }
 
-        public ImageInput SourceImage1
+        public ImageInput OutputImage
         {
-            get { return _sourceImage1; }
-            set { SetProperty(ref _sourceImage1, value); }
+            get { return _outputImage; }
+            set { SetProperty(ref _outputImage, value); }
         }
 
-        public ImageInput SourceImage2
+        public ImageInput OutputImageMask
         {
-            get { return _sourceImage2; }
-            set { SetProperty(ref _sourceImage2, value); }
+            get { return _outputImageMask; }
+            set { SetProperty(ref _outputImageMask, value); }
+        }
+     
+        public ImageInput SourceImage
+        {
+            get { return _sourceImage; }
+            set { SetProperty(ref _sourceImage, value); }
+        }
+
+        public ImageInput SourceImageMask
+        {
+            get { return _sourceImageMask; }
+            set { SetProperty(ref _sourceImageMask, value); }
         }
 
         public DiffusionInputOptions Options
@@ -105,7 +122,7 @@ namespace Diffuse.Views
             {
                 IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[ControlNetImageToImageView] [LoadPipelineAsync] - Loading pipeline..");
+                _logger?.LogInformation($"[ImageInpaintView] [LoadPipelineAsync] - Loading pipeline..");
                 await base.LoadPipelineAsync();
 
                 //DiffusionModel
@@ -148,22 +165,22 @@ namespace Diffuse.Views
                 }
 
                 await Settings.SetDefaultsAsync(CurrentPipeline);
-                _logger?.LogInformation($"[TextToImageView] [LoadPipelineAsync] - Loading pipeline complete.");
+                _logger?.LogInformation($"[ImageInpaintView] [LoadPipelineAsync] - Loading pipeline complete.");
                 IsPipelineLoaded = true;
             }
             catch (OperationCanceledException)
             {
-                _logger?.LogInformation($"[ControlNetImageToImageView] [LoadPipelineAsync] - Loading pipeline cancelled.");
+                _logger?.LogInformation($"[ImageInpaintView] [LoadPipelineAsync] - Loading pipeline cancelled.");
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[ControlNetImageToImageView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
+                _logger?.LogError(ex, $"[ImageInpaintView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
                 await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
             }
 
             Progress.Clear();
             Statistics.Clear();
-            _logger?.LogInformation($"[ControlNetImageToImageView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            _logger?.LogInformation($"[ImageInpaintView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
         }
 
 
@@ -171,7 +188,7 @@ namespace Diffuse.Views
         {
             try
             {
-                _logger?.LogInformation($"[ControlNetImageToImageView] [UnloadPipelineAsync] - Unloading pipeline...");
+                _logger?.LogInformation($"[ImageInpaintView] [UnloadPipelineAsync] - Unloading pipeline...");
                 await base.UnloadPipelineAsync();
                 if (DiffusionService.IsLoaded)
                     await DiffusionService.UnloadAsync();
@@ -179,11 +196,11 @@ namespace Diffuse.Views
                     await ExtractService.UnloadAsync();
                 if (UpscaleService.IsLoaded)
                     await UpscaleService.UnloadAsync();
-                _logger?.LogInformation($"[ControlNetImageToImageView] [UnloadPipelineAsync] -  Pipeline unloaded.");
+                _logger?.LogInformation($"[ImageInpaintView] [UnloadPipelineAsync] -  Pipeline unloaded.");
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[ControlNetImageToImageView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
+                _logger?.LogError(ex, $"[ImageInpaintView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
                 await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
             }
 
@@ -202,16 +219,14 @@ namespace Diffuse.Views
                 Statistics.Clear();
                 ResultImage = default;
                 CompareImage = default;
-                _logger?.LogInformation($"[ControlNetImageToImageView] [ExecuteAsync] - Executing pipeline..");
-
+                _logger?.LogInformation($"[ImageInpaintView] [ExecuteAsync] - Executing pipeline..");
 
                 Statistics.Start();
 
                 // Run Diffusion
                 var options = _options with
                 {
-                    InputImage = _sourceImage1,
-                    InputControlImage = _sourceImage2
+                    InputImages = [_outputImage, _outputImageMask]
                 };
                 var resultTensor = await DiffusionService.GenerateImageAsync(options);
 
@@ -230,7 +245,7 @@ namespace Diffuse.Views
 
                 // Set Result
                 ResultImage = await resultTensor.ToImageInputAsync();
-                CompareImage = _sourceImage1;
+                CompareImage = _outputImage;
 
                 // History
                 await HistoryService.AddAsync(ResultImage, new DiffusionHistory
@@ -238,44 +253,46 @@ namespace Diffuse.Views
                     Options = options,
                     Model = CurrentPipeline.DiffusionModel.Name,
                     LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
-                    ControlNetModel = CurrentPipeline.ControlNetModel.Name,
                     UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
                     UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
                     ExtractModel = CurrentPipeline.ExtractModel?.Name,
                     ExtractorType = CurrentPipeline.ExtractModel?.Type,
                     ExtractOptions = CurrentPipeline.ExtractModel is not null ? _extractOptions : null,
-                    Source = View.ControlNetImageToImage,
+                    Source = View.ImageInpaint,
                 });
 
-                _logger?.LogInformation($"[ControlNetImageToImageView] [ExecuteAsync] - Executing pipeline complete.");
+                _logger?.LogInformation($"[ImageInpaintView] [ExecuteAsync] - Executing pipeline complete.");
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[ControlNetImageToImageView] [ExecuteAsync] - Executing pipeline cancelled.");
+                _logger?.LogInformation($"[ImageInpaintView] [ExecuteAsync] - Executing pipeline cancelled.");
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[ControlNetImageToImageView] [ExecuteAsync] - An exception occurred executing pipeline.");
+                _logger?.LogError(ex, $"[ImageInpaintView] [ExecuteAsync] - An exception occurred executing pipeline.");
                 await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
             }
 
             Progress.Clear();
-            _logger?.LogInformation($"[ControlNetImageToImageView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            _logger?.LogInformation($"[ImageInpaintView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
         }
 
 
         private bool CanExecute()
         {
-            return DiffusionService.IsLoaded && !DiffusionService.IsExecuting;
+            return DiffusionService.IsLoaded
+                && !DiffusionService.IsExecuting
+                && _outputImage is not null
+                && _outputImageMask is not null;
         }
 
 
         private async Task CancelAsync()
         {
-            if (DiffusionService.IsLoading)
-                CurrentPipeline = null;
+            //if (DiffusionService.IsLoading)
+            //    CurrentPipeline = null;
 
             await DiffusionService.CancelAsync();
         }
@@ -287,29 +304,25 @@ namespace Diffuse.Views
         }
 
 
-        protected async void SourceImage1_SourceChanged(object sender, ImageInput image)
+        protected async void SourceImage_SourceChanged(object sender, ImageInput image)
         {
             if (ExtractService.IsLoaded)
             {
                 try
                 {
                     if (image == null)
-                    {
-                        SourceImage2 = image;
-                        return;
-                    }
-
-                    if (_sourceImage1 == null)
                         return;
 
                     IsViewBusy = true;
                     Progress.Indeterminate("Extracting Image Features...");
                     var resultTensor = await ExtractService.ExecuteAsync(new ExtractImageRequest
                     {
-                        Image = _sourceImage1,
+                        Image = image,
                         Options = _extractOptions
                     });
-                    SourceImage2 = await resultTensor.ToImageInputAsync();
+
+                    _extractImage = await resultTensor.ToImageInputAsync();
+                    SourceImageMask = _extractImage;
                     Progress.Clear();
                 }
                 finally

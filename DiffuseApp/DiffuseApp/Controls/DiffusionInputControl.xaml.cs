@@ -164,7 +164,10 @@ namespace Diffuse.Controls
         private Task OnPipelineChanged(PipelineModel oldPipeline, PipelineModel newPipeline)
         {
             if (newPipeline is null || newPipeline.DiffusionModel is null)
+            {
+                IsModelOptionsVisible = false;
                 return Task.CompletedTask;
+            }
 
             var oldModel = oldPipeline?.DiffusionModel;
             var oldOptions = oldModel?.DefaultOptions;

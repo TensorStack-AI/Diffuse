@@ -78,7 +78,8 @@ namespace Diffuse.Common
                 || pipeline.LoraAdapterModel != _loraAdapterModel
                 || pipeline.ControlNetModel != _controlNetModel
                 || pipeline.MemoryMode != _memoryMode
-                || pipeline.DataType != _dataType;
+                || pipeline.DataType != _dataType
+                || pipeline.ProcessType != _processType;
         }
     }
 }

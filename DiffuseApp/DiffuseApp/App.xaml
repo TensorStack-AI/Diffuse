@@ -23,16 +23,15 @@
             <BitmapImage x:Key="ImageIcon" UriSource="pack://application:,,,/Diffuse;component/Images/Icon.png" />
 
             <!--Fonts-->
-            <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Diffuse;component/Fonts/Brands-Regular-400.otf#Font Awesome 6 Brands Regular</FontFamily>
-            <FontFamily x:Key="FontAwesomeDuotone">pack://application:,,,/Diffuse;component/Fonts/Duotone-Solid-900.otf#Font Awesome 6 Duotone Solid</FontFamily>
-            <FontFamily x:Key="FontAwesomeLight">pack://application:,,,/Diffuse;component/Fonts/Light-300.otf#Font Awesome 6 Pro Light</FontFamily>
-            <FontFamily x:Key="FontAwesomeRegular">pack://application:,,,/Diffuse;component/Fonts/Regular-400.otf#Font Awesome 6 Pro Regular</FontFamily>
-            <FontFamily x:Key="FontAwesomeSolid">pack://application:,,,/Diffuse;component/Fonts/Solid-900.otf#Font Awesome 6 Pro Solid</FontFamily>
-            <FontFamily x:Key="FontAwesomeThin">pack://application:,,,/Diffuse;component/Fonts/Thin-100.otf#Font Awesome 6 Pro Thin</FontFamily>
-            <FontFamily x:Key="FontAwesomeSharpLight">pack://application:,,,/Diffuse;component/Fonts/Sharp-Light-300.otf#Font Awesome 6 Sharp Light</FontFamily>
-            <FontFamily x:Key="FontAwesomeSharpRegular">pack://application:,,,/Diffuse;component/Fonts/Sharp-Regular-400.otf#Font Awesome 6 Sharp Regular</FontFamily>
-            <FontFamily x:Key="FontAwesomeSharpSolid">pack://application:,,,/Diffuse;component/Fonts/Sharp-Solid-900.otf#Font Awesome 6 Sharp Solid</FontFamily>
-            <FontFamily x:Key="FontAwesomeSharpThin">pack://application:,,,/Diffuse;component/Fonts/Sharp-Thin-100.otf#Font Awesome 6 Sharp Thin</FontFamily>
+            <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Diffuse;component/Fonts/Brands-Regular-400.otf#Font Awesome 7 Brands</FontFamily>
+            <FontFamily x:Key="FontAwesomeLight">pack://application:,,,/Diffuse;component/Fonts/Light-300.otf#Font Awesome 7 Pro Light</FontFamily>
+            <FontFamily x:Key="FontAwesomeRegular">pack://application:,,,/Diffuse;component/Fonts/Regular-400.otf#Font Awesome 7 Pro</FontFamily>
+            <FontFamily x:Key="FontAwesomeSolid">pack://application:,,,/Diffuse;component/Fonts/Solid-900.otf#Font Awesome 7 Pro Solid</FontFamily>
+            <FontFamily x:Key="FontAwesomeThin">pack://application:,,,/Diffuse;component/Fonts/Thin-100.otf#Font Awesome 7 Pro Thin</FontFamily>
+            <FontFamily x:Key="FontAwesomeSharpLight">pack://application:,,,/Diffuse;component/Fonts/Sharp-Light-300.otf#Font Awesome 7 Sharp Light</FontFamily>
+            <FontFamily x:Key="FontAwesomeSharpRegular">pack://application:,,,/Diffuse;component/Fonts/Sharp-Regular-400.otf#Font Awesome 7 Sharp</FontFamily>
+            <FontFamily x:Key="FontAwesomeSharpSolid">pack://application:,,,/Diffuse;component/Fonts/Sharp-Solid-900.otf#Font Awesome 7 Sharp Solid</FontFamily>
+            <FontFamily x:Key="FontAwesomeSharpThin">pack://application:,,,/Diffuse;component/Fonts/Sharp-Thin-100.otf#Font Awesome 7 Sharp Thin</FontFamily>
 
 
             <Color x:Key="Accent1">#ff5a7fa7</Color>
@@ -182,6 +181,7 @@
 
             <Style x:Key="ImageDropZoneStyle" TargetType="{x:Type Border}">
                 <Setter Property="AllowDrop" Value="False"/>
+                <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Style.Triggers>
@@ -193,7 +193,27 @@
                         </MultiDataTrigger.Conditions>
                         <MultiDataTrigger.Setters>
                             <Setter Property="AllowDrop" Value="True"/>
+                            <Setter Property="Background" Value="#20000000"/>
                             <Setter Property="BorderBrush" Value="{StaticResource AccentColour2}"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ImageDropTextStyle" TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="Foreground" Value="{StaticResource AccentColour2}"/>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="True" />
+                            <Condition Binding="{Binding IsDragDrop, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="True" />
+                            <Condition Binding="{Binding DragDropType, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="Image" />
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="Visibility" Value="Visible"/>
                         </MultiDataTrigger.Setters>
                     </MultiDataTrigger>
                 </Style.Triggers>
@@ -293,7 +313,7 @@
                 <Setter Property="Placement" Value="Bottom"/>
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="IconSize" Value="17"/>
-                <Setter Property="IconStyle" Value="Solid"/>
+                <Setter Property="IconStyle" Value="SharpLight"/>
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="TextOpacity" Value=".8"/>
                 <Setter Property="TextMargin" Value="1,-3,0,0"/>
@@ -310,7 +330,7 @@
                 <Setter Property="FontWeight" Value="Bold"/>
                 <Setter Property="TextOpacity" Value=".8"/>
                 <Setter Property="IconSize" Value="20"/>
-                <Setter Property="IconStyle" Value="Solid"/>
+                <Setter Property="IconStyle" Value="SharpLight"/>
                 <Setter Property="IconColor" Value="{StaticResource AccentColour2}"/>
             </Style>
 

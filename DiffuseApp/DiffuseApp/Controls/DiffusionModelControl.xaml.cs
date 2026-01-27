@@ -100,6 +100,7 @@ namespace Diffuse.Controls
             set { SetValue(CurrentPipelineProperty, value); }
         }
 
+
         public bool IsSelectionValid
         {
             get { return (bool)GetValue(IsSelectionValidProperty); }
@@ -288,10 +289,8 @@ namespace Diffuse.Controls
         {
             _currentModel = default;
 
-            SelectedControlNet = default;
-            SelectedExtractor = default;
+            IsSelectionValid = false;
             LoraAdapters.Clear();
-            SelectedUpscaler = default;
 
             IsExtractorEnabled = false;
             IsLoraEnabled = false;
@@ -336,8 +335,8 @@ namespace Diffuse.Controls
                 || _currentControlNet != SelectedControlNet
                 || _currentExtractor != SelectedExtractor
                 || _currentExtractorEnabled != _isExtractorEnabled
-                || HasLoraChanged()
                 || _currentLoraEnabled != _isLoraEnabled
+                || HasLoraChanged()
                 || _currentUpscaler != SelectedUpscaler
                 || _currentUpscalerEnabled != _isUpscalerEnabled
                 || _currentMemoryMode != SelectedMemoryMode.MemoryMode
@@ -558,8 +557,12 @@ namespace Diffuse.Controls
             return LoraAdapters.Count > 0 && LoraAdapters.All(x => !string.IsNullOrEmpty(x.Name));
         }
 
+
         public bool HasLoraChanged()
         {
+            if (!_isLoraSupported || !_isLoraEnabled)
+                return false;
+
             if (_currentLora == null && LoraAdapters == null)
                 return false;
             if (_currentLora == null || LoraAdapters == null)

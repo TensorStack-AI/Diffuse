@@ -193,7 +193,10 @@
                         <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
                     </StackPanel>
 
-
+                    <!--ImageInpaint-->
+                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageInpaint}">
+                        <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
+                    </StackPanel>
 
                     <!--ControlNetImage-->
                     <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ControlNetImage}">

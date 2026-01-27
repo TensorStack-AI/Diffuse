@@ -95,6 +95,7 @@
                             <CheckBox x:Name="CheckBoxImageToImage" Content="ImageToImage" />
                             <CheckBox x:Name="CheckBoxImageToVideo" Content="ImageToVideo" />
                             <CheckBox x:Name="CheckBoxImageEdit" Content="ImageEdit" />
+                            <CheckBox x:Name="CheckBoxImageInpaint" Content="ImageInpaint" />
                             <CheckBox x:Name="CheckBoxVideoToVideo" Content="VideoToVideo" />
                             <CheckBox x:Name="CheckBoxControlNetImage" Content="Image (ControlNet)" />
                         </UniformGrid>

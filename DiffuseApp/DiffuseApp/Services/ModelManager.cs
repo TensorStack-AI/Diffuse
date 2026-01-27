@@ -222,7 +222,7 @@ namespace DiffuseApp.Services
                         new MemoryProfile(DataType.Float16, [ 4, 21, 23, 30, 32 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 14, 16, 20, 22 ])
                     ],
-                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ControlNetImage ],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage ],
                     DefaultOptions = new DiffusionDefaultOptions
                     {
                         Steps = 30,
@@ -258,7 +258,7 @@ namespace DiffuseApp.Services
                         new MemoryProfile(DataType.Float16, [ 4, 21, 23, 30, 32 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 14, 16, 20, 22 ])
                     ],
-                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint],
                     DefaultOptions = new DiffusionDefaultOptions
                     {
                         Steps = 4,
@@ -840,7 +840,7 @@ namespace DiffuseApp.Services
                         new MemoryProfile(DataType.Float16, [ 5, 38, 40, 58, 60  ]),
                         new MemoryProfile(DataType.Int8, [ 5, 22, 25, 30, 32 ])
                     ],
-                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ControlNetImage],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage],
                     DefaultOptions = new DiffusionDefaultOptions
                     {
                         Steps = 30,
@@ -916,7 +916,7 @@ namespace DiffuseApp.Services
                         new MemoryProfile(DataType.Float16, [2, 6, 8, 14, 16 ]),
                         new MemoryProfile(DataType.Int8, [2, 4, 6, 8, 10])
                     ],
-                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ControlNetImage, ProcessType.ControlNetImageToImage],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage, ProcessType.ControlNetImageToImage],
                     DefaultOptions = new DiffusionDefaultOptions
                     {
                         Steps = 30,

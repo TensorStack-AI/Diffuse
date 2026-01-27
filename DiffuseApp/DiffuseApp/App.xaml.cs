@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Services;
 
@@ -143,6 +144,7 @@ namespace Diffuse
                 _appMutex.WaitOne();
                 _appMutex.ReleaseMutex();
                 _appMutex.Dispose();
+                FileQueue.Shutdown();
             }
         }
 

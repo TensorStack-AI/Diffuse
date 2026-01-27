@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using TensorStack.Common.Pipeline;
 using TensorStack.Image;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -147,7 +148,7 @@ namespace Diffuse.Views
                 {
                     Image = _sourceImage,
                     Options = _options
-                });
+                }, ProgressCallback);
 
                 Statistics.Stop();
 
@@ -203,6 +204,15 @@ namespace Diffuse.Views
         private bool CanCancel()
         {
             return UpscaleService.CanCancel;
+        }
+
+
+        protected override void OnProgress(RunProgress progress)
+        {
+            if (progress.Maximum > 1)
+                Progress.Update(progress.Value, progress.Maximum, $"Tile {progress.Value}/{progress.Maximum}");
+            else
+                Progress.Indeterminate("Rendering Image...");
         }
 
 

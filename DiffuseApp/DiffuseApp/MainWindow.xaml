@@ -71,6 +71,7 @@
                     <CommonControls:IconButton 
                         Text="Image" 
                         Icon="f03e" 
+                        IconMargin="0,-3,0,0"
                         Style="{StaticResource MenuIconButton}"
                         Command="{Binding NavigateCategoryCommand}" 
                         CommandParameter="{x:Static Views:ViewCategory.Image}" 
@@ -79,7 +80,7 @@
                     <CommonControls:IconButton 
                         Text="Video" 
                         Icon="f008" 
-                        IconMargin="0,-2,0,0"
+                        IconMargin="0,-3,0,0"
                         Style="{StaticResource MenuIconButton}"
                         Command="{Binding NavigateCategoryCommand}" 
                         CommandParameter="{x:Static Views:ViewCategory.Video}" 
@@ -88,7 +89,7 @@
                     <CommonControls:IconButton 
                         Text="Gallery" 
                         Icon="e228" 
-                        IconMargin="0,1,0,0"
+                          IconMargin="0,-2,0,0"
                         Style="{StaticResource MenuIconButton}"
                         Command="{Binding NavigateCommand}" 
                         CommandParameter="{x:Static Views:View.Gallery}" 
@@ -276,15 +277,23 @@
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
                                 Text="Image Edit" 
-                                Icon="f044"
+                                Icon="f4a4"
                                 Style="{StaticResource SubmenuIconButton}"
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.ImageEdit}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageEdit}">
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
+                                Text="Image Inpaint" 
+                                Icon="f044"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.ImageInpaint}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageInpaint}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
                                 Text="ControlNet" 
-                                Icon="f03e"
+                                Icon="e76d"
                                 Style="{StaticResource SubmenuIconButton}"
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.ControlNetImage}" 
@@ -292,7 +301,7 @@
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
                                 Text="ControlNet Image" 
-                                Icon="f03e"
+                                Icon="e76e"
                                 Style="{StaticResource SubmenuIconButton}"
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.ControlNetImageToImage}" 

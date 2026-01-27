@@ -73,7 +73,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-ESRGAN-Soft-2x/model.onnx" ]
@@ -86,7 +86,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Sharp-2x/model.onnx" ]
@@ -99,7 +99,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Soft-2x/model.onnx" ]
@@ -113,7 +113,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Sharp-2x/model.onnx" ]
@@ -126,7 +126,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Soft-2x/model.onnx" ]
@@ -139,7 +139,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV3-2x/model.onnx" ]
@@ -165,7 +165,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-RRDB-GAN-2x/model.onnx" ]
@@ -178,7 +178,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/BSRGAN-2x/model.onnx" ]
@@ -191,7 +191,7 @@
       "ScaleFactor": 2,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 512,
+        "TileSize": 528,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-2x/model.onnx" ]
@@ -217,7 +217,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 1024,
+        "TileSize": 1040,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESR-General-4x/model.onnx" ]
@@ -269,7 +269,7 @@
       "ScaleFactor": 4,
       "DefaultOptions": {
         "TileMode": "ClipBlend",
-        "TileSize": 256,
+        "TileSize": 272,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
@@ -462,6 +462,7 @@
       "IsDefault": true,
       "Channels": 3,
       "SampleSize": 1024,
+      "OutputChannels": 1,
       "DefaultOptions": {
         "Mode": "RemoveBackground"
       },
@@ -612,7 +613,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -845,7 +846,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint" ],
       "DefaultOptions": {
         "Steps": 4,
         "Width": 1024,
@@ -921,7 +922,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ImageInpaint" ],
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1075,7 +1076,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ControlNetImageToImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage", "ControlNetImageToImage" ],
       "IsDefault": true,
       "DefaultOptions": {
         "Steps": 30,

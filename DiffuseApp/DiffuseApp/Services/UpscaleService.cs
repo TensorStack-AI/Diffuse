@@ -138,7 +138,7 @@ namespace Diffuse.Services
         /// Execute the upscaler
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> ExecuteAsync(UpscaleImageRequest request)
+        public async Task<ImageTensor> ExecuteAsync(UpscaleImageRequest request, IProgress<RunProgress> progressCallback)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace Diffuse.Services
                         TileOverlap = request.Options.TileOverlap
                     };
 
-                    return await Task.Run(() => _upscalePipeline.RunAsync(imageOptions, cancellationToken: _cancellationTokenSource.Token));
+                    return await Task.Run(() => _upscalePipeline.RunAsync(imageOptions, progressCallback, cancellationToken: _cancellationTokenSource.Token));
                 }
             }
             finally
@@ -246,7 +246,7 @@ namespace Diffuse.Services
         Task LoadAsync(PipelineModel pipeline);
         Task UnloadAsync();
         Task CancelAsync();
-        Task<ImageTensor> ExecuteAsync(UpscaleImageRequest options);
+        Task<ImageTensor> ExecuteAsync(UpscaleImageRequest options, IProgress<RunProgress> progressCallback);
         Task<VideoInputStream> ExecuteAsync(UpscaleVideoRequest options, IProgress<RunProgress> progressCallback);
     }
 
