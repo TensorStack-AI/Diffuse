@@ -53,7 +53,7 @@ namespace Diffuse.Controls
             {
                 Options = new UpscaleInputOptions
                 {
-                    TileMode = newOptions.TileMode,
+                    IsTileEnabled = newOptions.IsTileEnabled,
                     TileSize = newOptions.TileSize,
                     TileOverlap = newOptions.TileOverlap,
                 };

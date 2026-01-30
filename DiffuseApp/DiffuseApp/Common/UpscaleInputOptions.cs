@@ -1,18 +1,17 @@
-﻿using TensorStack.Common;
-using TensorStack.WPF;
+﻿using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
     public class UpscaleInputOptions : BaseModel
     {
-        private TileMode _tileMode;
+        private bool _isTileEnabled;
         private int _tileSize;
         private int _tileOverlap;
 
-        public TileMode TileMode
+        public bool IsTileEnabled
         {
-            get { return _tileMode; }
-            set { SetProperty(ref _tileMode, value); }
+            get { return _isTileEnabled; }
+            set { SetProperty(ref _isTileEnabled, value); }
         }
 
         public int TileSize

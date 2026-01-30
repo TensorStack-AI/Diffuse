@@ -420,6 +420,7 @@ namespace Diffuse.Dialogs
                 Id = modelId,
                 Name = diffusionModel.Name,
                 Path = diffusionModel.Path,
+                Variant = diffusionModel.Variant,
                 Pipeline = diffusionModel.Pipeline,
                 IsDefault = diffusionModel.IsDefault,
                 BaseType = diffusionModel.BaseType,

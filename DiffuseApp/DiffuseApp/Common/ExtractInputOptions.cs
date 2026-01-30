@@ -6,8 +6,14 @@ namespace Diffuse.Common
 {
     public class ExtractInputOptions : BaseModel
     {
+        private bool _isTileEnabled;
+
         // Default
-        public TileMode TileMode { get; set; }
+        public bool IsTileEnabled
+        {
+            get { return _isTileEnabled; }
+            set { SetProperty(ref _isTileEnabled, value); }
+        }
         public int TileSize { get; set; }
         public int TileOverlap { get; set; }
         public bool IsInverted { get; set; }
@@ -26,5 +32,7 @@ namespace Diffuse.Common
         public float JointRadius { get; set; }
         public float BoneRadius { get; set; }
         public float BoneThickness { get; set; }
+
+        public bool IsTileSupported { get; set; }
     }
 }

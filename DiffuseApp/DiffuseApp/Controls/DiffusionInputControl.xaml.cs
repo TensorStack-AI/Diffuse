@@ -175,7 +175,11 @@ namespace Diffuse.Controls
             var newOptions = newModel?.DefaultOptions;
 
             if (oldModel == newModel)
+            {
+                // TODO if has lora changed
+                Options.LoraOptions = newPipeline.LoraAdapterModel?.Select(x => new LoraOptionModel { Name = x.Name, Key = x.Key, Strength = 1f }).ToList();
                 return Task.CompletedTask;
+            }
 
             var previousOptions = Options;
             Options = new DiffusionInputOptions
@@ -184,7 +188,7 @@ namespace Diffuse.Controls
                 Prompt = previousOptions?.Prompt,
                 NegativePrompt = previousOptions?.NegativePrompt,
                 Seed = previousOptions?.Seed ?? 0,
-                LoraStrength = previousOptions?.LoraStrength ?? [1f, 1f, 1f, 1f, 1f, 1f],
+                LoraOptions = newPipeline.LoraAdapterModel?.Select(x => new LoraOptionModel { Name = x.Name, Key = x.Key, Strength = 1f }).ToList(),
                 InputImageCount = ProcessType == ProcessType.ImageEdit ? (previousOptions?.InputImageCount ?? 1) : 0,
 
                 // Update

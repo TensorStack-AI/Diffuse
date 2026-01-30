@@ -149,7 +149,7 @@ namespace Diffuse.Services
                     {
                         Image = request.Image,
                         MaxTileSize = request.Options.TileSize,
-                        TileMode = request.Options.TileMode,
+                        IsTileEnabled = request.Options.IsTileEnabled,
                         TileOverlap = request.Options.TileOverlap
                     };
 
@@ -186,7 +186,7 @@ namespace Diffuse.Services
                         {
                             Image = frame.Frame,
                             MaxTileSize = request.Options.TileSize,
-                            TileMode = request.Options.TileMode,
+                            IsTileEnabled = request.Options.IsTileEnabled,
                             TileOverlap = request.Options.TileOverlap
                         }, cancellationToken: cancellationToken);
 

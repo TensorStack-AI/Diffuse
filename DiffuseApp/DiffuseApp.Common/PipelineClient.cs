@@ -269,9 +269,9 @@ namespace DiffuseApp.Common
                     progressCallback?.Report(progress);
                 }
                 catch (OperationCanceledException) { }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    _logger?.LogError(ex, $"[PipelineClient] [ProcessProgressQueueAsync] - An exception occurred processing progress");
+                   // _logger?.LogError(ex, $"[PipelineClient] [ProcessProgressQueueAsync] - An exception occurred processing progress");
                 }
             }
         }

@@ -2,6 +2,8 @@
 // Licensed under the Apache 2.0 License.
 using Diffuse.Common;
 using Diffuse.Services;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using TensorStack.Image;
@@ -27,6 +29,7 @@ namespace Diffuse.Dialogs
             CancelCommand = new AsyncRelayCommand(CancelAsync);
             PrevCommand = new AsyncRelayCommand(PrevAsync, CanMovePrev);
             NextCommand = new AsyncRelayCommand(NextAsync, CanMoveNext);
+            Progress = new ProgressInfo();
             HistoryCollection = new ListCollectionView(HistoryService.HistoryCollection)
             {
                 Filter = (obj) =>
@@ -46,6 +49,7 @@ namespace Diffuse.Dialogs
         public AsyncRelayCommand PrevCommand { get; }
         public AsyncRelayCommand NextCommand { get; }
         public ListCollectionView HistoryCollection { get; }
+        public ProgressInfo Progress { get; }
 
         public ImageInput CurrentImage
         {
@@ -108,8 +112,21 @@ namespace Diffuse.Dialogs
             if (currentItem == null)
                 return;
 
-            CurrentImage = currentItem.MediaType != MediaType.Image ? default : await ImageInput.CreateAsync(currentItem.MediaPath);
-            CurrentVideoStream = currentItem.MediaType != MediaType.Video ? default : await VideoInputStream.CreateAsync(currentItem.MediaPath);
+            try
+            {
+                Progress.Indeterminate();
+
+                CurrentImage = default;
+                CurrentVideoStream = default;
+                if (currentItem.MediaType == MediaType.Image)
+                    CurrentImage = await ImageInput.CreateAsync(currentItem.MediaPath);
+                if (currentItem.MediaType == MediaType.Video)
+                    CurrentVideoStream = await VideoInputStream.CreateAsync(currentItem.MediaPath);
+            }
+            finally
+            {
+                Progress.Clear();
+            }
         }
     }
 }

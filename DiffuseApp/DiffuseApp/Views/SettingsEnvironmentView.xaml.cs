@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +20,8 @@ namespace Diffuse.Views
         private EnvironmentModel _selectedEnvironment;
         private string _filterText;
 
-        public SettingsEnvironmentView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsEnvironmentView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsEnvironmentView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddEnvironmentCommand = new AsyncRelayCommand(AddEnvironmentAsync);
@@ -40,7 +41,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.Environment;
+        public override View View => View.Environment;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddEnvironmentCommand { get; }
         public AsyncRelayCommand AddEnvironmentWizardCommand { get; }

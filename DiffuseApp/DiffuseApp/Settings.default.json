@@ -71,8 +71,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -84,8 +85,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -97,8 +99,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -111,8 +114,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -124,8 +128,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -137,8 +142,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -150,9 +156,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 272,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-GRL-GAN-4x/model.onnx" ]
@@ -163,8 +170,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -176,8 +184,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -189,8 +198,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 528,
         "TileOverlap": 16
       },
@@ -202,9 +212,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 272,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-4x/model.onnx" ]
@@ -215,8 +226,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 1040,
         "TileOverlap": 16
       },
@@ -228,8 +240,9 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
+        "IsTileEnabled": true,
         "TileSize": 256,
         "TileOverlap": 16
       },
@@ -241,9 +254,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 2,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 208,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-2x/model.onnx" ]
@@ -254,9 +268,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 272,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-4x/model.onnx" ]
@@ -267,9 +282,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 272,
+        "IsTileEnabled": true,
+        "TileSize": 208,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
@@ -280,9 +296,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 240,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/SwinIR-BSRGAN-4x/model.onnx" ]
@@ -292,12 +309,13 @@
       "Name": "UltraMix Smooth 4x",
       "Channels": 3,
       "SampleSize": 0,
+      "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 272,
         "TileOverlap": 16
       },
-      "ScaleFactor": 4,
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraMix-Smooth-4x/model.onnx" ]
     },
     {
@@ -306,9 +324,10 @@
       "Channels": 3,
       "SampleSize": 0,
       "ScaleFactor": 4,
+      "MemorySize": 2,
       "DefaultOptions": {
-        "TileMode": "ClipBlend",
-        "TileSize": 384,
+        "IsTileEnabled": true,
+        "TileSize": 272,
         "TileOverlap": 16
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraSharp-4x/model.onnx" ]
@@ -320,15 +339,16 @@
       "Name": "Canny",
       "Type": "Default",
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 1024,
       "OutputChannels": 1,
       "DefaultOptions": {
-        "TileMode": "None",
+        "IsTileEnabled": false,
         "TileSize": 512,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Canny/model.onnx" ]
     },
@@ -338,70 +358,74 @@
       "Type": "Default",
       "IsDefault": true,
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 1024,
       "OutputChannels": 1,
       "DefaultOptions": {
-        "TileMode": "None",
+        "IsTileEnabled": false,
         "TileSize": 512,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/SoftEdge/model.onnx" ]
     },
     {
       "Id": 103,
+      "Name": "LineDrawing",
+      "Type": "Default",
+      "Channels": 3,
+      "SampleSize": 1024,
+      "OutputChannels": 1,
+      "DefaultOptions": {
+        "IsTileEnabled": false,
+        "TileSize": 512,
+        "TileOverlap": 16,
+        "IsInverted": false,
+        "MergeInput": false,
+        "IsTransparent": false,
+        "IsTileSupported": false
+      },
+      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/LineDrawing/model.onnx" ]
+    },
+    {
+      "Id": 104,
       "Name": "Depth",
       "Type": "Default",
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 768,
       "OutputChannels": 1,
       "OutputNormalization": "MinMaxOneToOne",
       "IsDynamicOutput": true,
       "DefaultOptions": {
-        "TileMode": "None",
-        "TileSize": 512,
+        "IsTileEnabled": false,
+        "TileSize": 1024,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Depth/model.onnx" ]
-    },
-    {
-      "Id": 104,
-      "Name": "LineDrawing",
-      "Type": "Default",
-      "Channels": 3,
-      "SampleSize": 0,
-      "OutputChannels": 1,
-      "DefaultOptions": {
-        "TileMode": "None",
-        "TileSize": 512,
-        "TileOverlap": 16,
-        "IsInverted": false,
-        "MergeInput": false,
-        "IsTransparent": false
-      },
-      "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/LineDrawing/model.onnx" ]
     },
     {
       "Id": 105,
       "Name": "DepthAnything-Small",
       "Type": "Default",
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 1024,
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
       "DefaultOptions": {
-        "TileMode": "None",
+        "IsTileEnabled": false,
         "TileSize": 512,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Small/model.onnx" ]
     },
@@ -410,17 +434,18 @@
       "Name": "DepthAnything-Base",
       "Type": "Default",
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 1024,
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
       "DefaultOptions": {
-        "TileMode": "None",
+        "IsTileEnabled": false,
         "TileSize": 512,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Base/model.onnx" ]
     },
@@ -429,17 +454,18 @@
       "Name": "DepthAnything-Large",
       "Type": "Default",
       "Channels": 3,
-      "SampleSize": 0,
+      "SampleSize": 1024,
       "OutputChannels": 1,
       "IsDynamicOutput": true,
       "OutputNormalization": "MinMaxOneToOne",
       "DefaultOptions": {
-        "TileMode": "None",
+        "IsTileEnabled": false,
         "TileSize": 512,
         "TileOverlap": 16,
         "IsInverted": false,
         "MergeInput": false,
-        "IsTransparent": false
+        "IsTransparent": false,
+        "IsTileSupported": false
       },
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Large/model.onnx" ]
     },

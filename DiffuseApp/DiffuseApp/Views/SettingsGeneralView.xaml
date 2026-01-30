@@ -24,11 +24,11 @@
                 <UniformGrid Columns="1">
                     <StackPanel>
                         <TextBlock Text="Model Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox  FileName="{Binding Settings.DirectoryModel}" IsFolderPicker="True" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="HuggingFace Model Cache" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox  FileName="{Binding Settings.DirectoryCache, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryCache, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="HuggingFace Access Token" Style="{StaticResource FieldTextBlockStyle}"/>
@@ -36,16 +36,16 @@
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Temp Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox  FileName="{Binding Settings.DirectoryTemp}" IsFolderPicker="True" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
                     </StackPanel>
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Right" Margin="8,0,0,0" Width="120">
                             <TextBlock Text="Max History" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <TextBox  Text="{Binding Settings.MaxHistory}"  />
+                            <TextBox  Text="{Binding Settings.MaxHistory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
                         </StackPanel>
                         <StackPanel >
                             <TextBlock Text="History Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FilePickerTextBox  FileName="{Binding Settings.DirectoryHistory}" IsFolderPicker="True" />
+                            <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryHistory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
                         </StackPanel>
                     </DockPanel>
                 </UniformGrid>

@@ -28,6 +28,7 @@ namespace Diffuse.Dialogs
         private WizardItemModel _selectedItem;
         private DiffusionCheckpointModel _checkpointModel;
         private DiffusionModel _selectedTemplate;
+        private string _selectedVariant;
 
         public DiffusionModelWizardDialog(Settings settings)
         {
@@ -80,6 +81,12 @@ namespace Diffuse.Dialogs
             set { SetProperty(ref _selectedName, value); }
         }
 
+        public string SelectedVariant
+        {
+            get { return _selectedVariant; }
+            set { SetProperty(ref _selectedVariant, value); }
+        }
+
         public ModelSourceType SelectedSource
         {
             get { return _selectedSource; }
@@ -117,6 +124,7 @@ namespace Diffuse.Dialogs
             _selectedTemplate.Name = SelectedName;
             _selectedTemplate.Source = _selectedSource;
             _selectedTemplate.Path = _selectedModelPath;
+            _selectedTemplate.Variant = SelectedVariant;
             if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && Utils.TryParseHuggingFaceRepo(_selectedModelPath, out var huggingfacePath))
                 _selectedTemplate.Path = huggingfacePath;
 

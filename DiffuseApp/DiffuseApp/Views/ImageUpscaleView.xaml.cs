@@ -3,11 +3,9 @@ using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using TensorStack.Common.Pipeline;
 using TensorStack.Image;
-using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
@@ -16,47 +14,63 @@ namespace Diffuse.Views
     /// <summary>
     /// Interaction logic for ImageUpscaleView.xaml
     /// </summary>
-    public partial class ImageUpscaleView : ViewBase
+    public partial class ImageUpscaleView : ViewBaseModel
     {
-        private readonly ILogger _logger;
         private ImageInput _sourceImage;
         private ImageInput _resultImage;
         private ImageInput _compareImage;
         private UpscaleInputOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageUpscaleView"/> class.
+        /// </summary>
         public ImageUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IUpscaleService upscaleService, ILogger<ImageUpscaleView> logger)
-            : base(settings, navigationService, environmentService, historyService)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
-            _logger = logger;
             UpscaleService = upscaleService;
-            ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
-            CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             InitializeComponent();
         }
 
-        public override int Id => (int)View.ImageUpscale;
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        public override View View => View.ImageUpscale;
+
+        /// <summary>
+        /// Gets the upscale service.
+        /// </summary>
         public IUpscaleService UpscaleService { get; }
-        public AsyncRelayCommand ExecuteCommand { get; set; }
-        public AsyncRelayCommand CancelCommand { get; set; }
 
-        public ImageInput SourceImage
-        {
-            get { return _sourceImage; }
-            set { SetProperty(ref _sourceImage, value); }
-        }
-
+        /// <summary>
+        /// Gets or sets the result image.
+        /// </summary>
         public ImageInput ResultImage
         {
             get { return _resultImage; }
             set { SetProperty(ref _resultImage, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the compare image.
+        /// </summary>
         public ImageInput CompareImage
         {
             get { return _compareImage; }
             set { SetProperty(ref _compareImage, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the source image.
+        /// </summary>
+        public ImageInput SourceImage
+        {
+            get { return _sourceImage; }
+            set { SetProperty(ref _sourceImage, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the options.
+        /// </summary>
         public UpscaleInputOptions Options
         {
             get { return _options; }
@@ -64,83 +78,90 @@ namespace Diffuse.Views
         }
 
 
+        /// <summary>
+        /// On view opened
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         public override Task OpenAsync(OpenViewArgs args = null)
         {
-            if (UpscaleService.IsLoaded)
-            {
-                // SelectedModel = UpscaleService.Model;
-            }
+            IsPipelineLoaded = UpscaleService.IsLoaded && UpscaleService.Pipeline.UpscaleModel == CurrentPipeline?.UpscaleModel;
             return base.OpenAsync(args);
         }
 
 
-        protected override async Task LoadPipelineAsync()
+        /// <summary>
+        /// Load pipeline
+        /// </summary>
+        protected override async Task<bool> LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageUpscale] [LoadPipeline] Loading pipeline...");
+
             try
             {
-                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[ImageUpscaleView] [LoadPipelineAsync] - Loading pipeline...");
 
-                await base.LoadPipelineAsync();
-                await UpscaleService.UnloadAsync();
-
-                if (CurrentPipeline.UpscaleModel is not null)
-                    await UpscaleService.LoadAsync(CurrentPipeline);
-
+                await UpscaleService.LoadAsync(CurrentPipeline);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
-                _logger?.LogInformation($"[ImageUpscaleView] [LoadPipelineAsync] - Loading pipeline complete.");
-                IsPipelineLoaded = true;
+
+                Logger.LogInformation("[ImageUpscale] [LoadPipeline] Pipeline successfully loaded, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
             }
             catch (OperationCanceledException)
             {
-                _logger?.LogInformation($"[ImageUpscaleView] [LoadPipelineAsync] - Loading pipeline cancelled.");
+                Logger.LogInformation("[ImageUpscale] [LoadPipeline] Loading canceled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return false;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[ImageUpscaleView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
-                await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
+                Logger.LogError(ex, "[ImageUpscale] [LoadPipeline] An exception occurred loading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Load Pipeline", ex.Message);
+                return false;
             }
-
-            Progress.Clear();
-            Statistics.Clear();
-            _logger?.LogInformation($"[ImageUpscaleView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        protected override async Task UnloadPipelineAsync()
-        {
-            try
-            {
-                _logger?.LogInformation($"[ImageUpscaleView] [UnloadPipelineAsync] - Unloading pipeline...");
-                await base.UnloadPipelineAsync();
-                await UpscaleService.UnloadAsync();
-                _logger?.LogInformation($"[ImageUpscaleView] [UnloadPipelineAsync] -  Pipeline unloaded.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[ImageUpscaleView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
-                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            IsPipelineLoaded = false;
-        }
-
-
-        private async Task ExecuteAsync()
+        /// <summary>
+        /// Unload pipeline
+        /// </summary>
+        protected override async Task<bool> UnloadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageUpscale] [UnloadPipeline] Unloading pipeline...");
+
+            try
+            {
+                await UpscaleService.UnloadAsync();
+                Logger.LogInformation("[ImageUpscale] [UnloadPipeline] Pipeline unloaded successfully, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "[ImageUpscale] [UnloadPipeline] An exception occurred unloading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Unload Pipeline", ex.Message);
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the pipeline.
+        /// </summary>
+        protected override async Task ExecuteAsync()
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageUpscale] [Execute] Executing pipeline...");
+
             try
             {
                 Progress.Clear();
                 Statistics.Clear();
                 ResultImage = default;
                 CompareImage = default;
-                _logger?.LogInformation($"[ImageUpscaleView] [ExecuteAsync] - Executing pipeline..");
-
                 Statistics.Start();
 
                 // Run Upscaler
@@ -167,32 +188,39 @@ namespace Diffuse.Views
                     ScaleFactor = CurrentPipeline.UpscaleModel.ScaleFactor
                 });
 
-                _logger?.LogInformation($"[ImageUpscaleView] [ExecuteAsync] - Executing pipeline complete.");
+                Logger.LogInformation("[ImageUpscale] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[ImageUpscaleView] [ExecuteAsync] - Executing pipeline cancelled.");
+                Logger.LogInformation("[ImageUpscale] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[ImageUpscaleView] [ExecuteAsync] - An exception occurred executing pipeline.");
-                await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
+                Logger.LogError(ex, "[ImageUpscale] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
-
-            Progress.Clear();
-            _logger?.LogInformation($"[ImageUpscaleView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        private bool CanExecute()
+        /// <summary>
+        /// Determines whether this instance can execute.
+        /// </summary>
+        protected override bool CanExecute()
         {
             return _sourceImage is not null && UpscaleService.IsLoaded && !UpscaleService.IsExecuting;
         }
 
 
-        private async Task CancelAsync()
+        /// <summary>
+        /// Cancel the process.
+        /// </summary>
+        protected override async Task CancelAsync()
         {
             if (UpscaleService.IsLoading)
                 CurrentPipeline = null;
@@ -201,37 +229,48 @@ namespace Diffuse.Views
         }
 
 
-        private bool CanCancel()
+        /// <summary>
+        /// Determines whether this instance can cancel.
+        /// </summary>
+        protected override bool CanCancel()
         {
             return UpscaleService.CanCancel;
         }
 
 
-        protected override void OnProgress(RunProgress progress)
-        {
-            if (progress.Maximum > 1)
-                Progress.Update(progress.Value, progress.Maximum, $"Tile {progress.Value}/{progress.Maximum}");
-            else
-                Progress.Indeterminate("Rendering Image...");
-        }
-
-
+        /// <summary>
+        /// Called when Upscale model changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="pipeline">The pipeline.</param>
         protected async void SelectedUpscalerChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline?.UpscaleModel == null)
+            try
             {
-                await UnloadPipelineAsync();
-            }
-            else
-            {
-                if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
-                {
-                    if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
-                        CurrentPipeline = default;
-                }
+                IsPipelineLoaded = false;
+                CurrentPipeline = pipeline;
 
-                if (CurrentPipeline is not null)
-                    await LoadPipelineAsync();
+                if (pipeline?.UpscaleModel == null)
+                {
+                    await UnloadPipelineAsync();
+                }
+                else
+                {
+                    Progress.Indeterminate($"Loading {pipeline.UpscaleModel.Name}...");
+
+                    if (!await DownloadModels(pipeline))
+                        return; // Canceled/Failed to download models
+
+                    if (!await LoadPipelineAsync())
+                        return; // Canceled/Failed to load pipeline
+
+                    IsPipelineLoaded = true;
+                }
+            }
+            finally
+            {
+                Progress.Clear();
+                Statistics.Clear();
             }
         }
     }

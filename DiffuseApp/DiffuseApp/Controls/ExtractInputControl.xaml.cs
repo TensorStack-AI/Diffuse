@@ -72,7 +72,7 @@ namespace Diffuse.Controls
             {
                 Options = new ExtractInputOptions
                 {
-                    TileMode = newOptions.TileMode,
+                    IsTileEnabled = newOptions.IsTileEnabled,
                     TileSize = newOptions.TileSize,
                     TileOverlap = newOptions.TileOverlap,
                     IsInverted = newOptions.IsInverted,

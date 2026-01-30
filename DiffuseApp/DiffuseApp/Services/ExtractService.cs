@@ -148,16 +148,16 @@ namespace Diffuse.Services
         /// Execute the image ExtractorPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        public async Task<ImageTensor> ExecuteAsync(ExtractImageRequest request)
+        public async Task<ImageTensor> ExecuteAsync(ExtractImageRequest request, IProgress<RunProgress> progressCallback)
         {
             try
             {
                 IsExecuting = true;
                 var imageTensor = _currentPipeline.ExtractModel.Type switch
                 {
-                    ExtractorType.Default => await ExecuteDefaultAsync(request),
-                    ExtractorType.Background => await ExecuteBackgroundAsync(request),
-                    ExtractorType.Pose => await ExecutePoseAsync(request),
+                    ExtractorType.Default => await ExecuteDefaultAsync(request, progressCallback),
+                    ExtractorType.Background => await ExecuteBackgroundAsync(request, progressCallback),
+                    ExtractorType.Pose => await ExecutePoseAsync(request, progressCallback),
                     _ => throw new NotImplementedException()
                 };
 
@@ -198,7 +198,7 @@ namespace Diffuse.Services
         /// Execute the image ExtractorPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecuteDefaultAsync(ExtractImageRequest request)
+        private async Task<ImageTensor> ExecuteDefaultAsync(ExtractImageRequest request, IProgress<RunProgress> progressCallback)
         {
             var pipeline = _extractPipeline as ExtractorPipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
@@ -208,10 +208,10 @@ namespace Diffuse.Services
                     Image = request.Image,
                     IsInverted = request.Options.IsInverted,
                     MaxTileSize = request.Options.TileSize,
-                    TileMode = request.Options.TileMode,
+                    IsTileEnabled = request.Options.IsTileEnabled,
                     TileOverlap = request.Options.TileOverlap,
                     MergeInput = request.Options.MergeInput
-                }, cancellationToken: _cancellationTokenSource.Token));
+                }, progressCallback, _cancellationTokenSource.Token));
             }
         }
 
@@ -220,7 +220,7 @@ namespace Diffuse.Services
         /// Execute the image BackgroundPipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecuteBackgroundAsync(ExtractImageRequest request)
+        private async Task<ImageTensor> ExecuteBackgroundAsync(ExtractImageRequest request, IProgress<RunProgress> progressCallback)
         {
             var pipeline = _extractPipeline as BackgroundPipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
@@ -229,7 +229,7 @@ namespace Diffuse.Services
                 {
                     Image = request.Image,
                     Mode = request.Options.Mode
-                }, cancellationToken: _cancellationTokenSource.Token));
+                }, progressCallback, _cancellationTokenSource.Token));
             }
         }
 
@@ -238,7 +238,7 @@ namespace Diffuse.Services
         /// Execute the image PosePipeline
         /// </summary>
         /// <param name="request">The request.</param>
-        private async Task<ImageTensor> ExecutePoseAsync(ExtractImageRequest request)
+        private async Task<ImageTensor> ExecutePoseAsync(ExtractImageRequest request, IProgress<RunProgress> progressCallback)
         {
             var pipeline = _extractPipeline as PosePipeline;
             using (_cancellationTokenSource = new CancellationTokenSource())
@@ -254,7 +254,7 @@ namespace Diffuse.Services
                     IsTransparent = request.Options.IsTransparent,
                     JointConfidence = request.Options.JointConfidence,
                     JointRadius = request.Options.JointRadius,
-                }, cancellationToken: _cancellationTokenSource.Token));
+                }, progressCallback, _cancellationTokenSource.Token));
             }
         }
 
@@ -281,7 +281,7 @@ namespace Diffuse.Services
                         Image = frame.Frame,
                         IsInverted = request.Options.IsInverted,
                         MaxTileSize = request.Options.TileSize,
-                        TileMode = request.Options.TileMode,
+                        IsTileEnabled = request.Options.IsTileEnabled,
                         TileOverlap = request.Options.TileOverlap,
                         MergeInput = request.Options.MergeInput
                     }, cancellationToken: cancellationToken);
@@ -409,7 +409,7 @@ namespace Diffuse.Services
         Task LoadAsync(PipelineModel pipeline);
         Task UnloadAsync();
         Task CancelAsync();
-        Task<ImageTensor> ExecuteAsync(ExtractImageRequest options);
+        Task<ImageTensor> ExecuteAsync(ExtractImageRequest options, IProgress<RunProgress> progressCallback);
         Task<VideoInputStream> ExecuteAsync(ExtractVideoRequest options, IProgress<RunProgress> progressCallback);
     }
 

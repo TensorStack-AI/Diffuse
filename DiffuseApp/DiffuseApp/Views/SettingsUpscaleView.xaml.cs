@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Diffuse.Views
         private UpscaleModel _selectedUpscaleModel;
         private string _filterText;
 
-        public SettingsUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsUpscaleView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddUpscaleModelCommand = new AsyncRelayCommand(AddUpscaleModel);
@@ -39,7 +40,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.Upscale;
+        public override View View => View.Upscale;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddUpscaleModelCommand { get; }
         public AsyncRelayCommand AddUpscaleModelWizardCommand { get; }

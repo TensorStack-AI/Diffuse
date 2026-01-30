@@ -1,4 +1,4 @@
-﻿<Views:ViewBase x:Class="Diffuse.Views.VideoToVideoView"
+﻿<Views:ViewBaseDiffusion x:Class="Diffuse.Views.VideoToVideoView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -34,8 +34,8 @@
                                     IsLoraSupported="True"
                                     IsUpscalerSupported="True"
                                     IsExtractorSupported="True"
-                                    Settings="{Binding Settings, Mode=OneWay}" 
-                                    CurrentPipeline="{Binding CurrentPipeline, Mode=TwoWay}"
+                                    Settings="{Binding Settings, Mode=OneWay}"
+                                    IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
                                     SelectionChanged="SelectedPipelineChanged"/>
                             </Grid>
                         </StackPanel>
@@ -118,4 +118,4 @@
         </Grid>
 
     </Grid>
-</Views:ViewBase>
+</Views:ViewBaseDiffusion>

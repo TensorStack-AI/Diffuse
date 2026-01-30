@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Diffuse.Views
         private ExtractModel _selectedExtractModel;
         private string _filterText;
 
-        public SettingsExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsExtractView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddExtractModelCommand = new AsyncRelayCommand(AddExtractModelAsync);
@@ -39,7 +40,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.Extract;
+        public override View View => View.Extract;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddExtractModelCommand { get; }
         public AsyncRelayCommand AddExtractModelWizardCommand { get; }

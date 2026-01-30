@@ -252,7 +252,7 @@ namespace Diffuse
         /// <param name="ex">The ex.</param>
         private static async Task ShowExceptionMessage(Exception ex)
         {
-            await DialogService.ShowErrorAsync("Error", $"An unexpected error occurred:\n{ex.Message}");
+            await DialogService.ShowErrorAsync("Unexpected Error", $"An unexpected error occurred:\n{ex.Message}");
         }
 
 

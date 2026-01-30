@@ -21,6 +21,7 @@ namespace Diffuse.Common
         public int Channels { get; set; } = 3;
         public int SampleSize { get; set; }
         public int ScaleFactor { get; set; } = 1;
+        public int MemorySize { get; set; } = 2;
         public Normalization Normalization { get; set; } = Normalization.ZeroToOne;
         public Normalization OutputNormalization { get; set; } = Normalization.OneToOne;
         public UpscaleInputOptions DefaultOptions { get; set; }

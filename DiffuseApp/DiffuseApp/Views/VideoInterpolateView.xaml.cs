@@ -4,8 +4,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using TensorStack.Common.Pipeline;
 using TensorStack.Video;
-using TensorStack.WPF;
+using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
 namespace Diffuse.Views
@@ -13,47 +14,63 @@ namespace Diffuse.Views
     /// <summary>
     /// Interaction logic for VideoInterpolateView.xaml
     /// </summary>
-    public partial class VideoInterpolateView : ViewBase
+    public partial class VideoInterpolateView : ViewBaseModel
     {
-        private readonly ILogger _logger;
         private VideoInputStream _sourceVideo;
         private VideoInputStream _resultVideo;
         private VideoInputStream _compareVideo;
         private int _multiplier = 2;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VideoInterpolateView"/> class.
+        /// </summary>
         public VideoInterpolateView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IInterpolationService interpolationService, ILogger<VideoInterpolateView> logger)
-            : base(settings, navigationService, environmentService, historyService)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
-            _logger = logger;
             InterpolationService = interpolationService;
-            ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
-            CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             InitializeComponent();
         }
 
-        public override int Id => (int)View.VideoInterpolate;
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        public override View View => View.VideoInterpolate;
+
+        /// <summary>
+        /// Gets the interpolation service.
+        /// </summary>
         public IInterpolationService InterpolationService { get; }
-        public AsyncRelayCommand ExecuteCommand { get; set; }
-        public AsyncRelayCommand CancelCommand { get; set; }
 
-        public VideoInputStream SourceVideo
-        {
-            get { return _sourceVideo; }
-            set { SetProperty(ref _sourceVideo, value); }
-        }
-
+        /// <summary>
+        /// Gets or sets the result video.
+        /// </summary>
         public VideoInputStream ResultVideo
         {
             get { return _resultVideo; }
             set { SetProperty(ref _resultVideo, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the compare video.
+        /// </summary>
         public VideoInputStream CompareVideo
         {
             get { return _compareVideo; }
             set { SetProperty(ref _compareVideo, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the source video.
+        /// </summary>
+        public VideoInputStream SourceVideo
+        {
+            get { return _sourceVideo; }
+            set { SetProperty(ref _sourceVideo, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the multiplier.
+        /// </summary>
         public int Multiplier
         {
             get { return _multiplier; }
@@ -61,73 +78,93 @@ namespace Diffuse.Views
         }
 
 
-        protected override async Task LoadPipelineAsync()
+        /// <summary>
+        /// On view opened
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        public override Task OpenAsync(OpenViewArgs args = null)
+        {
+            IsPipelineLoaded = InterpolationService.IsLoaded;
+            return base.OpenAsync(args);
+        }
+
+
+        /// <summary>
+        /// Load pipeline
+        /// </summary>
+        protected override async Task<bool> LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoInterpolate] [LoadPipeline] Loading pipeline...");
+
             try
             {
-                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Loading pipeline...");
 
-                await base.LoadPipelineAsync();
                 await InterpolationService.LoadAsync(CurrentPipeline.Device);
 
-                _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Loading pipeline complete.");
-                IsPipelineLoaded = true;
+                Logger.LogInformation("[VideoInterpolate] [LoadPipeline] Pipeline successfully loaded, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
             }
             catch (OperationCanceledException)
             {
-                _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Loading pipeline cancelled.");
+                Logger.LogInformation("[VideoInterpolate] [LoadPipeline] Loading canceled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return false;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[VideoInterpolateView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
-                await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
+                Logger.LogError(ex, "[VideoInterpolate] [LoadPipeline] An exception occurred loading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Load Pipeline", ex.Message);
+                return false;
             }
-
-            Progress.Clear();
-            Statistics.Clear();
-            _logger?.LogInformation($"[VideoInterpolateView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        protected override async Task UnloadPipelineAsync()
-        {
-            try
-            {
-                _logger?.LogInformation($"[VideoInterpolateView] [UnloadPipelineAsync] - Unloading pipeline...");
-                await base.UnloadPipelineAsync();
-                await InterpolationService.UnloadAsync();
-                _logger?.LogInformation($"[VideoInterpolateView] [UnloadPipelineAsync] -  Pipeline unloaded.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[VideoInterpolateView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
-                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            IsPipelineLoaded = false;
-        }
-
-
-        private async Task ExecuteAsync()
+        /// <summary>
+        /// Unload pipeline
+        /// </summary>
+        protected override async Task<bool> UnloadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoInterpolate] [UnloadPipeline] Unloading pipeline...");
+
             try
             {
+                await InterpolationService.UnloadAsync();
+                Logger.LogInformation("[VideoInterpolate] [UnloadPipeline] Pipeline unloaded successfully, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "[VideoInterpolate] [UnloadPipeline] An exception occurred unloading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Unload Pipeline", ex.Message);
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the pipeline.
+        /// </summary>
+        protected override async Task ExecuteAsync()
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoInterpolate] [Execute] Executing pipeline...");
+
+            try
+            {
+                await ResultControl.ClearAsync();
                 Progress.Clear();
                 Statistics.Clear();
                 ResultVideo = default;
                 CompareVideo = default;
-                await ResultControl.ClearAsync();
-                _logger?.LogInformation($"[VideoInterpolateView] [ExecuteAsync] - Executing pipeline..");
-
                 Statistics.Start();
 
-                // Run Interpolation
+                // Interpolation
                 var resultVideo = await InterpolationService.ExecuteAsync(new InterpolationRequest
                 {
                     VideoStream = _sourceVideo,
@@ -138,7 +175,7 @@ namespace Diffuse.Views
 
                 Statistics.Stop();
 
-                // Set Result
+                // Result
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new InterpolateHistory
                 {
                     Multiplier = _multiplier,
@@ -148,32 +185,39 @@ namespace Diffuse.Views
                 });
                 CompareVideo = _sourceVideo;
 
-                _logger?.LogInformation($"[VideoInterpolateView] [ExecuteAsync] - Executing pipeline complete.");
+                Logger.LogInformation("[VideoInterpolate] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[VideoInterpolateView] [ExecuteAsync] - Executing pipeline cancelled.");
+                Logger.LogInformation("[VideoInterpolate] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[VideoInterpolateView] [ExecuteAsync] - An exception occurred executing pipeline.");
-                await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
+                Logger.LogError(ex, "[VideoInterpolate] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
-
-            Progress.Clear();
-            _logger?.LogInformation($"[VideoInterpolateView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        private bool CanExecute()
+        /// <summary>
+        /// Determines whether this instance can execute.
+        /// </summary>
+        protected override bool CanExecute()
         {
             return _sourceVideo is not null && InterpolationService.IsLoaded && !InterpolationService.IsExecuting;
         }
 
 
-        private async Task CancelAsync()
+        /// <summary>
+        /// Cancel the process.
+        /// </summary>
+        protected override async Task CancelAsync()
         {
             if (InterpolationService.IsLoading)
                 CurrentPipeline = null;
@@ -182,22 +226,47 @@ namespace Diffuse.Views
         }
 
 
-        private bool CanCancel()
+        /// <summary>
+        /// Determines whether this instance can cancel.
+        /// </summary>
+        protected override bool CanCancel()
         {
             return InterpolationService.CanCancel;
         }
 
 
+        /// <summary>
+        /// Called when interpolation model changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="pipeline">The pipeline.</param>
         protected async void SelectedInterpolationChanged(object sender, PipelineModel pipeline)
         {
+            IsPipelineLoaded = false;
+            CurrentPipeline = pipeline;
             if (pipeline == null)
             {
                 await UnloadPipelineAsync();
             }
             else
             {
-                await LoadPipelineAsync();
+                IsPipelineLoaded = await LoadPipelineAsync();
             }
+        }
+
+
+        /// <summary>
+        /// Called when progress is received from a C# pipeline
+        /// </summary>
+        /// <param name="progress">The progress.</param>
+        protected override void OnProgress(RunProgress progress)
+        {
+            if (progress.Maximum > 1)
+                Progress.Update(progress.Value, progress.Maximum, $"Frame {progress.Value}/{progress.Maximum}");
+            else
+                Progress.Indeterminate("Rendering Video...");
+
+            Logger.LogDebug("[{View}] [OnProgress] Step: {Value}/{Max}, Elapsed: {Elapsed:c}", ViewName, progress.Value, progress.Maximum, progress.Elapsed);
         }
     }
 }

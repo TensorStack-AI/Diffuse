@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Diffuse.Views
         private DiffusionModel _selectedDiffusionModel;
         private string _filterText;
 
-        public SettingsDiffusionView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsDiffusionView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsDiffusionView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddDiffusionModelCommand = new AsyncRelayCommand(AddDiffusionModelAsync);
@@ -39,7 +40,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.Diffusion;
+        public override View View => View.Diffusion;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddDiffusionModelCommand { get; }
         public AsyncRelayCommand AddDiffusionModelWizardCommand { get; }

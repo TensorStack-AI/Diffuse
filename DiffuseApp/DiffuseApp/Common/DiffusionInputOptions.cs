@@ -21,9 +21,9 @@ namespace Diffuse.Common
         private int _steps2;
         private float _strength = 1;
         private float _controlNetStrength = 1;
-        private float[] _loraStrength = [1,1,1,1,1,1];
         private int _inputImageCount = 0;
         private SchedulerInputOptions _schedulerOptions = new SchedulerInputOptions();
+        private List<LoraOptionModel> _loraOptions;
 
         public int Width
         {
@@ -91,10 +91,10 @@ namespace Diffuse.Common
             set { SetProperty(ref _strength, value); }
         }
 
-        public float[] LoraStrength
+        public List<LoraOptionModel> LoraOptions
         {
-            get { return _loraStrength; }
-            set { SetProperty(ref _loraStrength, value); }
+            get { return _loraOptions; }
+            set { SetProperty(ref _loraOptions, value); }
         }
 
         public float ControlNetStrength

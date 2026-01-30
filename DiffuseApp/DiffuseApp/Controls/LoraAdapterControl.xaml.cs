@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using TensorStack.Common;
 using TensorStack.WPF;
@@ -16,9 +17,6 @@ namespace Diffuse.Controls
     /// </summary>
     public partial class LoraAdapterControl : BaseControl
     {
-        private ListCollectionView _loraCollectionView;
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="LoraAdapterControl"/> class.
         /// </summary>
@@ -31,7 +29,6 @@ namespace Diffuse.Controls
 
         public static readonly DependencyProperty LoraCollectionViewProperty = DependencyProperty.Register(nameof(LoraCollectionView), typeof(ListCollectionView), typeof(LoraAdapterControl));
         public static readonly DependencyProperty LoraAdaptersProperty = DependencyProperty.Register(nameof(LoraAdapters), typeof(ObservableCollection<LoraAdapterModel>), typeof(LoraAdapterControl), new PropertyMetadata(new ObservableCollection<LoraAdapterModel>()));
-
 
         public ListCollectionView LoraCollectionView
         {
@@ -78,5 +75,17 @@ namespace Diffuse.Controls
         {
             return !LoraAdapters.IsNullOrEmpty() && LoraAdapters.Count > 1;
         }
+
+
+        private void ComboBoxLora_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox comboBox && int.TryParse(comboBox.Tag.ToString(), out var index))
+            {
+                var lora = (e.AddedItems[0] as LoraAdapterModel);
+                if (LoraAdapters.ElementAtOrDefault(index) != lora)
+                    LoraAdapters[index] = lora;
+            }
+        }
+
     }
 }

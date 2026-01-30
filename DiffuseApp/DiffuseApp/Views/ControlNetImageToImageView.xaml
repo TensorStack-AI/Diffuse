@@ -1,4 +1,4 @@
-﻿<Views:ViewBase x:Class="Diffuse.Views.ControlNetImageToImageView"
+﻿<Views:ViewBaseDiffusion x:Class="Diffuse.Views.ControlNetImageToImageView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -36,7 +36,7 @@
                                     IsExtractorSupported="True"
                                     IsControlNetSupported="True"
                                     Settings="{Binding Settings, Mode=OneWay}" 
-                                    CurrentPipeline="{Binding CurrentPipeline, Mode=TwoWay}"
+                                    IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
                                     SelectionChanged="SelectedPipelineChanged"/>
                             </Grid>
                         </StackPanel>
@@ -97,11 +97,11 @@
                                         SplitterVisibility="Auto"
                                         SplitterPosition="Source"
                                         SplitterDirection="LeftToRight"
-                                        Source="{Binding SourceImage1, Mode=TwoWay}" 
+                                        Source="{Binding SourceImage, Mode=TwoWay}" 
                                         IsLoadEnabled="True" 
                                         IsSaveEnabled="False"
                                         IsLoadOverlayEnabled="False"
-                                        SourceChanged="SourceImage1_SourceChanged"
+                                        SourceChanged="OnSourceImageChanged"
                                         IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
                                 </Border>
                                 <Border Style="{StaticResource ImageDropZoneStyle}" IsEnabled="{Binding ExtractService.IsLoaded, Converter={StaticResource InverseBoolConverter}}" Margin="0,4,0,0">
@@ -111,7 +111,7 @@
                                         SplitterVisibility="Auto"
                                         SplitterPosition="Source"
                                         SplitterDirection="LeftToRight"
-                                        Source="{Binding SourceImage2, Mode=TwoWay}" 
+                                        Source="{Binding ControlImage, Mode=TwoWay}" 
                                         IsLoadEnabled="True" 
                                         IsSaveEnabled="False"
                                         IsLoadOverlayEnabled="False"
@@ -137,4 +137,4 @@
         </Grid>
 
     </Grid>
-</Views:ViewBase>
+</Views:ViewBaseDiffusion>

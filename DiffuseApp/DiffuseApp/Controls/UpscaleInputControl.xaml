@@ -9,14 +9,13 @@
     <StackPanel DataContext="{Binding ElementName=UpscaleInputUI}">
         <UniformGrid Columns="3">
             <StackPanel>
-                <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                <ComboBox SelectedItem="{Binding Options.TileMode}" ItemsSource="{Binding Source={StaticResource TileMode}}" />
+                <CheckBox Content="Enable Tiling" IsChecked="{Binding Options.IsTileEnabled}" Margin="0,19,0,0"/>
             </StackPanel>
-            <StackPanel>
+            <StackPanel IsEnabled="{Binding Options.IsTileEnabled}" Margin="0,0,2,0">
                 <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
                 <TextBox Text="{Binding Options.TileSize}" />
             </StackPanel>
-            <StackPanel>
+            <StackPanel IsEnabled="{Binding Options.IsTileEnabled}" Margin="2,0,0,0">
                 <TextBlock Text="Tile Overlap" Style="{StaticResource FieldTextBlockStyle}" />
                 <TextBox Text="{Binding Options.TileOverlap}" />
             </StackPanel>

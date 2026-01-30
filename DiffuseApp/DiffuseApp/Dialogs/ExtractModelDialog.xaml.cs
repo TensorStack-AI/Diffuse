@@ -221,7 +221,7 @@ namespace Diffuse.Dialogs
                     JointRadius = extractModel.DefaultOptions.JointRadius,
                     MergeInput = extractModel.DefaultOptions.MergeInput,
                     Mode = extractModel.DefaultOptions.Mode,
-                    TileMode = extractModel.DefaultOptions.TileMode,
+                    IsTileEnabled = extractModel.DefaultOptions.IsTileEnabled,
                     TileOverlap = extractModel.DefaultOptions.TileOverlap,
                     TileSize = extractModel.DefaultOptions.TileSize
                 }

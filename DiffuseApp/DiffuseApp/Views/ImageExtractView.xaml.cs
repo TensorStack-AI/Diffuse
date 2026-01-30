@@ -3,10 +3,9 @@ using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
+using TensorStack.Common.Pipeline;
 using TensorStack.Image;
-using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
@@ -15,47 +14,63 @@ namespace Diffuse.Views
     /// <summary>
     /// Interaction logic for ImageExtractView.xaml
     /// </summary>
-    public partial class ImageExtractView : ViewBase
+    public partial class ImageExtractView : ViewBaseModel
     {
-        private readonly ILogger _logger;
         private ImageInput _sourceImage;
         private ImageInput _resultImage;
         private ImageInput _compareImage;
         private ExtractInputOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageExtractView"/> class.
+        /// </summary>
         public ImageExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IExtractService extractService, ILogger<ImageExtractView> logger)
-            : base(settings, navigationService, environmentService, historyService)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
-            _logger = logger;
             ExtractService = extractService;
-            ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
-            CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             InitializeComponent();
         }
 
-        public override int Id => (int)View.ImageExtract;
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        public override View View => View.ImageExtract;
+
+        /// <summary>
+        /// Gets the extract service.
+        /// </summary>
         public IExtractService ExtractService { get; }
-        public AsyncRelayCommand ExecuteCommand { get; set; }
-        public AsyncRelayCommand CancelCommand { get; set; }
 
-        public ImageInput SourceImage
-        {
-            get { return _sourceImage; }
-            set { SetProperty(ref _sourceImage, value); }
-        }
-
+        /// <summary>
+        /// Gets or sets the result image.
+        /// </summary>
         public ImageInput ResultImage
         {
             get { return _resultImage; }
             set { SetProperty(ref _resultImage, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the compare image.
+        /// </summary>
         public ImageInput CompareImage
         {
             get { return _compareImage; }
             set { SetProperty(ref _compareImage, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the source image.
+        /// </summary>
+        public ImageInput SourceImage
+        {
+            get { return _sourceImage; }
+            set { SetProperty(ref _sourceImage, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the options.
+        /// </summary>
         public ExtractInputOptions Options
         {
             get { return _options; }
@@ -63,83 +78,90 @@ namespace Diffuse.Views
         }
 
 
+        /// <summary>
+        /// On view opened
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         public override Task OpenAsync(OpenViewArgs args = null)
         {
-            if (ExtractService.IsLoaded)
-            {
-                //SelectedModel = ExtractService.Model;
-            }
+            IsPipelineLoaded = ExtractService.IsLoaded && ExtractService.Pipeline.ExtractModel == CurrentPipeline?.ExtractModel;
             return base.OpenAsync(args);
         }
 
 
-        protected override async Task LoadPipelineAsync()
+        /// <summary>
+        /// Load pipeline
+        /// </summary>
+        protected override async Task<bool> LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageExtract] [LoadPipeline] Loading pipeline...");
+
             try
             {
-                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline...");
 
-                await base.LoadPipelineAsync();
-                await ExtractService.UnloadAsync();
-
-                if (CurrentPipeline.ExtractModel is not null)
-                    await ExtractService.LoadAsync(CurrentPipeline);
-
+                await ExtractService.LoadAsync(CurrentPipeline);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
-                _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline complete.");
-                IsPipelineLoaded = true;
+
+                Logger.LogInformation("[ImageExtract] [LoadPipeline] Pipeline successfully loaded, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
             }
             catch (OperationCanceledException)
             {
-                _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Loading pipeline cancelled.");
+                Logger.LogInformation("[ImageExtract] [LoadPipeline] Loading canceled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return false;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[ImageExtractView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
-                await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
+                Logger.LogError(ex, "[ImageExtract] [LoadPipeline] An exception occurred loading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Load Pipeline", ex.Message);
+                return false;
             }
-
-            Progress.Clear();
-            Statistics.Clear();
-            _logger?.LogInformation($"[ImageExtractView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        protected override async Task UnloadPipelineAsync()
-        {
-            try
-            {
-                _logger?.LogInformation($"[ImageExtractView] [UnloadPipelineAsync] - Unloading pipeline...");
-                await base.UnloadPipelineAsync();
-                await ExtractService.UnloadAsync();
-                _logger?.LogInformation($"[ImageExtractView] [UnloadPipelineAsync] -  Pipeline unloaded.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[ImageExtractView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
-                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            IsPipelineLoaded = false;
-        }
-
-
-        private async Task ExecuteAsync()
+        /// <summary>
+        /// Unload pipeline
+        /// </summary>
+        protected override async Task<bool> UnloadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageExtract] [UnloadPipeline] Unloading pipeline...");
+
+            try
+            {
+                await ExtractService.UnloadAsync();
+                Logger.LogInformation("[ImageExtract] [UnloadPipeline] Pipeline unloaded successfully, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "[ImageExtract] [UnloadPipeline] An exception occurred unloading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Unload Pipeline", ex.Message);
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the pipeline.
+        /// </summary>
+        protected override async Task ExecuteAsync()
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[ImageExtract] [Execute] Executing pipeline...");
+
             try
             {
                 Progress.Clear();
                 Statistics.Clear();
                 ResultImage = default;
                 CompareImage = default;
-                _logger?.LogInformation($"[ImageExtractView] [ExecuteAsync] - Executing pipeline..");
-
                 Statistics.Start();
 
                 // Run Extractor
@@ -147,7 +169,7 @@ namespace Diffuse.Views
                 {
                     Image = _sourceImage,
                     Options = _options,
-                });
+                }, ProgressCallback);
 
                 Statistics.Stop();
 
@@ -164,62 +186,86 @@ namespace Diffuse.Views
                     Source = View.ImageExtract,
                 });
 
-                _logger?.LogInformation($"[ImageExtractView] [ExecuteAsync] - Executing pipeline complete.");
+                Logger.LogInformation("[ImageExtract] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[ImageExtractView] [ExecuteAsync] - Executing pipeline cancelled.");
+                Logger.LogInformation("[ImageExtract] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[ImageExtractView] [ExecuteAsync] - An exception occurred executing pipeline.");
-                await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
+                Logger.LogError(ex, "[ImageExtract] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
-
-            Progress.Clear();
-            _logger?.LogInformation($"[ImageExtractView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        private bool CanExecute()
+        /// <summary>
+        /// Determines whether this instance can execute.
+        /// </summary>
+        protected override bool CanExecute()
         {
             return _sourceImage is not null && ExtractService.IsLoaded && !ExtractService.IsExecuting;
         }
 
 
-        private async Task CancelAsync()
+        /// <summary>
+        /// Cancel the process.
+        /// </summary>
+        protected override async Task CancelAsync()
         {
-            if (ExtractService.IsLoading)
-                CurrentPipeline = null;
-
             await ExtractService.CancelAsync();
         }
 
 
-        private bool CanCancel()
+        /// <summary>
+        /// Determines whether this instance can cancel.
+        /// </summary>
+        protected override bool CanCancel()
         {
             return ExtractService.CanCancel;
         }
 
 
+        /// <summary>
+        /// Called when Extract model changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="pipeline">The pipeline.</param>
         protected async void SelectedExtractorChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline?.ExtractModel == null)
+            try
             {
-                await UnloadPipelineAsync();
-            }
-            else
-            {
-                if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
-                {
-                    if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
-                        CurrentPipeline = default;
-                }
+                IsPipelineLoaded = false;
+                CurrentPipeline = pipeline;
 
-                if (CurrentPipeline is not null)
-                    await LoadPipelineAsync();
+                if (pipeline?.ExtractModel == null)
+                {
+                    await UnloadPipelineAsync();
+                }
+                else
+                {
+                    Progress.Indeterminate($"Loading {pipeline.ExtractModel.Name}...");
+
+                    if (!await DownloadModels(pipeline))
+                        return;  // Canceled/Failed to download models
+
+                    if (!await LoadPipelineAsync())
+                        return;   // Canceled/Failed to load pipeline
+
+                    IsPipelineLoaded = true;
+                }
+            }
+            finally
+            {
+                Progress.Clear();
+                Statistics.Clear();
             }
         }
 

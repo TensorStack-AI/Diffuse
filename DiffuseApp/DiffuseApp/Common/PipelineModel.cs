@@ -75,11 +75,12 @@ namespace Diffuse.Common
         {
             return pipeline is null
                 || pipeline.DiffusionModel != _diffusionModel
-                || pipeline.LoraAdapterModel != _loraAdapterModel
+                || pipeline.LoraAdapterModel.HasChanged(_loraAdapterModel)
                 || pipeline.ControlNetModel != _controlNetModel
                 || pipeline.MemoryMode != _memoryMode
                 || pipeline.DataType != _dataType
                 || pipeline.ProcessType != _processType;
         }
+
     }
 }

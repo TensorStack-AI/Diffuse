@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Diffuse.Views
         private LoraAdapterModel _selectedLoraModel;
         private string _filterText;
 
-        public SettingsLoraView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsLoraView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsLoraView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddLoraModelCommand = new AsyncRelayCommand(AddLoraModelAsync);
@@ -40,7 +41,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.LoraAdapter;
+        public override View View => View.LoraAdapter;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddLoraModelCommand { get; }
         public AsyncRelayCommand AddLoraModelWizardCommand { get; }

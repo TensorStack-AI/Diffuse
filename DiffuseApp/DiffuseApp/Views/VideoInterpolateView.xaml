@@ -1,4 +1,4 @@
-﻿<Views:ViewBase x:Class="Diffuse.Views.VideoInterpolateView"
+﻿<Views:ViewBaseModel x:Class="Diffuse.Views.VideoInterpolateView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -33,7 +33,7 @@
                                     <Controls:ModelControl
                                         x:Name="ModelControl"
                                         Settings="{Binding Settings, Mode=OneWay}" 
-                                        CurrentPipeline="{Binding CurrentPipeline, Mode=TwoWay}"
+                                        IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
                                         SelectionChanged="SelectedInterpolationChanged"/>
                                 </Grid>
                             </StackPanel>
@@ -67,12 +67,9 @@
 
 
                             <!--Options-->
-                            <UniformGrid Columns="2">
-                                <StackPanel>
-                                    <TextBlock Text="FrameRate Multiplier" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBox Text="{Binding Multiplier, UpdateSourceTrigger=PropertyChanged}" />
-                                </StackPanel>
-                            </UniformGrid>
+                            <StackPanel>
+                                <CommonControls:SliderControl Text="Frame Multiplier" Value="{Binding Multiplier, UpdateSourceTrigger=PropertyChanged}" Minimum="2" Maximum="8" TickFrequency="1" ValuePostFix="x" />
+                            </StackPanel>
 
                         </StackPanel>
                     </DockPanel>
@@ -116,4 +113,4 @@
         </Grid>
 
     </Grid>
-</Views:ViewBase>
+</Views:ViewBaseModel>

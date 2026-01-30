@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,8 +32,8 @@ namespace Diffuse.Views
         private MediaType? _filterMediaType;
         private View? _filterProcessType;
 
-        public GalleryView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public GalleryView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<GalleryView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             RemoveFiltersCommand = new AsyncRelayCommand(RemoveFilters, CanRemoveFilters);
             DeleteItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveItemAsync, (x) => SelectedItem is not null);
@@ -43,15 +44,18 @@ namespace Diffuse.Views
             HistoryCollection.SortDescriptions.Add(new SortDescription(nameof(IHistoryItem.Timestamp), ListSortDirection.Descending));
             Populate();
             InitializeComponent();
+            HistoryCollection.MoveCurrentToFirst();
+            SelectedItem = HistoryCollection.CurrentItem as IHistoryItem;
         }
 
-        public override int Id => (int)View.Gallery;
+        public override View View => View.Gallery;
         public ListCollectionView HistoryCollection { get; }
         public View[] FilterProcessTypes { get; }
         public AsyncRelayCommand RemoveFiltersCommand { get; }
         public AsyncRelayCommand<IHistoryItem> DeleteItemCommand { get; }
         public AsyncRelayCommand DeleteItemsCommand { get; }
         public ObservableCollection<string> FilterModelNames { get; }
+
 
         public IHistoryItem SelectedItem
         {
@@ -106,8 +110,21 @@ namespace Diffuse.Views
             if (_selectedItem == null)
                 return;
 
-            CurrentImage = _selectedItem.MediaType != MediaType.Image ? default : await ImageInput.CreateAsync(_selectedItem.MediaPath);
-            CurrentVideoStream = _selectedItem.MediaType != MediaType.Video ? default : await VideoInputStream.CreateAsync(_selectedItem.MediaPath);
+            try
+            {
+                Progress.Indeterminate();
+
+                CurrentImage = default;
+                CurrentVideoStream = default;
+                if (_selectedItem.MediaType == MediaType.Image)
+                    CurrentImage = await ImageInput.CreateAsync(_selectedItem.MediaPath);
+                if (_selectedItem.MediaType == MediaType.Video)
+                    CurrentVideoStream = await VideoInputStream.CreateAsync(_selectedItem.MediaPath);
+            }
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 

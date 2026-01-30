@@ -1,4 +1,8 @@
 ﻿using Diffuse.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Diffuse
@@ -27,6 +31,26 @@ namespace Diffuse
             return bestIndex;
         }
 
+
+
+        public static bool HasChanged(this IReadOnlyList<LoraAdapterModel> existingAdapters, IReadOnlyList<LoraAdapterModel> newAdapters)
+        {
+            if (ReferenceEquals(existingAdapters, newAdapters))
+                return false;
+
+            if (existingAdapters == null || newAdapters == null)
+                return true;
+
+            if (existingAdapters.Count != newAdapters.Count)
+                return true;
+
+            for (int i = 0; i < existingAdapters.Count; i++)
+            {
+                if (!string.Equals(existingAdapters[i]?.Key, newAdapters[i]?.Key, StringComparison.Ordinal))
+                    return true;
+            }
+            return false;
+        }
     }
 
     public static class Utils

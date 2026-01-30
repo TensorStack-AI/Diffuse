@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Diffuse.Views
         private ControlNetModel _selectedControlNetModel;
         private string _filterText;
 
-        public SettingsControlNetView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService)
-            : base(settings, navigationService, environmentService, historyService)
+        public SettingsControlNetView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsControlNetView> logger)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddControlNetModelCommand = new AsyncRelayCommand(AddControlNetModelAsync);
@@ -40,7 +41,7 @@ namespace Diffuse.Views
             InitializeComponent();
         }
 
-        public override int Id => (int)View.ControlNet;
+        public override View View => View.ControlNet;
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand AddControlNetModelCommand { get; }
         public AsyncRelayCommand AddControlNetModelWizardCommand { get; }

@@ -106,6 +106,7 @@ namespace Diffuse.Services
 
                     var pipelineConfig = new PipelineConfig
                     {
+                        Variant = model.Variant,
                         BaseModelPath = model.Path,
                         ControlNetPath = controlNet?.Path,
                         Pipeline = model.Pipeline,
@@ -174,7 +175,7 @@ namespace Diffuse.Services
                     InputImages = options.InputImages,
                     InputControlImages = options.InputControlImages,
                     SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
-                    LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
+                    LoraOptions = GetLoraOptions(options),
                 };
 
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
@@ -218,7 +219,7 @@ namespace Diffuse.Services
                     InputImages = options.InputImages,
                     InputControlImages = options.InputControlImages,
                     SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
-                    LoraOptions = GetLoraOptions(_currentPipeline.LoraAdapterModel, options),
+                    LoraOptions = GetLoraOptions(options),
                 };
 
                 var videoFileName = _mediaService.GetTempVideoFile();
@@ -344,15 +345,15 @@ namespace Diffuse.Services
         }
 
 
-        private static List<LoraOptions> GetLoraOptions(LoraAdapterModel[] loraAdapterModel, DiffusionInputOptions options)
+        private static List<LoraOptions> GetLoraOptions(DiffusionInputOptions options)
         {
-            if (loraAdapterModel.IsNullOrEmpty())
+            if (options.LoraOptions.IsNullOrEmpty())
                 return default;
 
-            return [.. loraAdapterModel.Select((x, i) => new LoraOptions
+            return [.. options.LoraOptions.Select(x => new LoraOptions
             {
                 Name = x.Key,
-                Strength = options.LoraStrength[i]
+                Strength = x.Strength
             })];
         }
 

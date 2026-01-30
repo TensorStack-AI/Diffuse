@@ -74,11 +74,12 @@ namespace Diffuse.Controls
             LoadCommand = new AsyncRelayCommand(LoadAsync, CanLoad);
             UnloadCommand = new AsyncRelayCommand(UnloadAsync, CanUnload);
             LoraAdapters = new ObservableCollection<LoraAdapterModel>();
+            LoraAdapters.CollectionChanged += (s, e) => ValidateSelection();
             InitializeComponent();
         }
 
         public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register(nameof(Settings), typeof(Settings), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnSettingsChanged()));
-        public static readonly DependencyProperty CurrentPipelineProperty = DependencyProperty.Register(nameof(CurrentPipeline), typeof(PipelineModel), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnCurrentPipelineChanged()));
+        public static readonly DependencyProperty IsPipelineLoadedProperty = DependencyProperty.Register(nameof(IsPipelineLoaded), typeof(bool), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnIsPipelineLoadedChanged()));
         public static readonly DependencyProperty IsSelectionValidProperty = DependencyProperty.Register(nameof(IsSelectionValid), typeof(bool), typeof(DiffusionModelControl));
 
         public event EventHandler<PipelineModel> SelectionChanged;
@@ -94,12 +95,11 @@ namespace Diffuse.Controls
             set { SetValue(SettingsProperty, value); }
         }
 
-        public PipelineModel CurrentPipeline
+        public bool IsPipelineLoaded
         {
-            get { return (PipelineModel)GetValue(CurrentPipelineProperty); }
-            set { SetValue(CurrentPipelineProperty, value); }
+            get { return (bool)GetValue(IsPipelineLoadedProperty); }
+            set { SetValue(IsPipelineLoadedProperty, value); }
         }
-
 
         public bool IsSelectionValid
         {
@@ -116,43 +116,43 @@ namespace Diffuse.Controls
         public Device SelectedDevice
         {
             get { return _selectedDevice; }
-            set { SetProperty(ref _selectedDevice, value); }
+            set { SetProperty(ref _selectedDevice, value); ValidateSelection(); }
         }
 
         public DiffusionModel SelectedModel
         {
             get { return _selectedModel; }
-            set { SetProperty(ref _selectedModel, value); }
+            set { SetProperty(ref _selectedModel, value); ValidateSelection(); }
         }
 
         public ControlNetModel SelectedControlNet
         {
             get { return _selectedControlNet; }
-            set { SetProperty(ref _selectedControlNet, value); }
+            set { SetProperty(ref _selectedControlNet, value); ValidateSelection(); }
         }
 
         public ExtractModel SelectedExtractor
         {
             get { return _selectedExtractor; }
-            set { SetProperty(ref _selectedExtractor, value); }
+            set { SetProperty(ref _selectedExtractor, value); ValidateSelection(); }
         }
 
         public UpscaleModel SelectedUpscaler
         {
             get { return _selectedUpscaler; }
-            set { SetProperty(ref _selectedUpscaler, value); }
+            set { SetProperty(ref _selectedUpscaler, value); ValidateSelection(); }
         }
 
         public MemoryProfileModel SelectedMemoryMode
         {
             get { return _selectedMemoryMode; }
-            set { SetProperty(ref _selectedMemoryMode, value); }
+            set { SetProperty(ref _selectedMemoryMode, value); ValidateSelection(); }
         }
 
         public DataType SelectedDataType
         {
             get { return _selectedDataType; }
-            set { SetProperty(ref _selectedDataType, value); }
+            set { SetProperty(ref _selectedDataType, value); ValidateSelection(); }
         }
 
         public ListCollectionView DeviceCollectionView
@@ -206,7 +206,7 @@ namespace Diffuse.Controls
         public bool IsExtractorEnabled
         {
             get { return _isExtractorEnabled; }
-            set { SetProperty(ref _isExtractorEnabled, value); }
+            set { SetProperty(ref _isExtractorEnabled, value); ValidateSelection(); }
         }
 
         public bool IsUpscalerSupported
@@ -218,7 +218,7 @@ namespace Diffuse.Controls
         public bool IsUpscalerEnabled
         {
             get { return _isUpscalerEnabled; }
-            set { SetProperty(ref _isUpscalerEnabled, value); }
+            set { SetProperty(ref _isUpscalerEnabled, value); ValidateSelection(); }
         }
 
         public bool IsLoraSupported
@@ -230,7 +230,7 @@ namespace Diffuse.Controls
         public bool IsLoraEnabled
         {
             get { return _isLoraEnabled; }
-            set { SetProperty(ref _isLoraEnabled, value); }
+            set { SetProperty(ref _isLoraEnabled, value); SetDefaultLora(); ValidateSelection(); }
         }
 
 
@@ -249,39 +249,28 @@ namespace Diffuse.Controls
             _currentUpscalerEnabled = _isUpscalerEnabled;
             _currentLoraEnabled = _isLoraEnabled;
 
-            CurrentPipeline = new PipelineModel
+            var pipeline = new PipelineModel
             {
                 Device = _currentDevice,
                 DiffusionModel = _currentModel,
                 ControlNetModel = _isControlNetSupported ? _currentControlNet : default,
                 ExtractModel = _currentExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _currentUpscalerEnabled ? _currentUpscaler : default,
-                LoraAdapterModel = _currentLoraEnabled ? _currentLora : default, 
+                LoraAdapterModel = _currentLoraEnabled ? _currentLora : default,
                 MemoryMode = _currentMemoryMode,
                 DataType = _currentDataType,
                 ProcessType = _processType
             };
 
-            SelectionChanged?.Invoke(this, CurrentPipeline);
+            SelectionChanged?.Invoke(this, pipeline);
+            ValidateSelection();
             return Task.CompletedTask;
         }
 
 
         private bool CanLoad()
         {
-            var isReloadRequired = SelectedDevice is not null
-                && SelectedModel is not null
-                && (!IsControlNetSupported || SelectedControlNet is not null)
-                && (!IsExtractorEnabled || SelectedExtractor is not null)
-                && (!IsLoraEnabled || IsLoraValid())
-                && (!IsUpscalerEnabled || SelectedUpscaler is not null)
-                && HasCurrentChanged();
-
-            var isSelectionValid = !isReloadRequired;
-            if (IsSelectionValid != isSelectionValid)
-                IsSelectionValid = isSelectionValid;
-
-            return isReloadRequired;
+            return !IsSelectionValid;
         }
 
 
@@ -305,15 +294,18 @@ namespace Diffuse.Controls
             _currentLoraEnabled = false;
             _currentUpscalerEnabled = false;
 
-            CurrentPipeline = new PipelineModel
+            var pipeline = new PipelineModel
             {
                 Device = _selectedDevice,
                 MemoryMode = _selectedMemoryMode.MemoryMode,
                 DataType = _selectedDataType,
+                ProcessType = _processType
             };
 
-            SelectionChanged?.Invoke(this, CurrentPipeline);
+            SelectionChanged?.Invoke(this, pipeline);
             Model_SelectionChanged(default, default);
+
+            ValidateSelection();
             return Task.CompletedTask;
         }
 
@@ -325,6 +317,26 @@ namespace Diffuse.Controls
                 || _currentExtractor is not null
                 || _currentLora is not null
                 || _currentUpscaler is not null;
+        }
+
+
+        private Task OnIsPipelineLoadedChanged()
+        {
+            ValidateSelection();
+            return Task.CompletedTask;
+        }
+
+
+        private void ValidateSelection()
+        {
+            var isLoraValid = !IsLoraEnabled || LoraCollectionView?.IsEmpty == false;
+            var isExtractValid = !IsExtractorEnabled || ExtractCollectionView?.IsEmpty == false;
+            var isUpscaleValid = !IsUpscalerEnabled || UpscaleCollectionView?.IsEmpty == false;
+            var isControlNetValid = !IsControlNetSupported || ControlNetCollectionView?.IsEmpty == false;
+            var isModelValid = ModelCollectionView?.IsEmpty == false;
+            var isCurrentValid = !HasCurrentChanged();
+            IsSelectionValid = isCurrentValid && isLoraValid && isExtractValid && isUpscaleValid && isControlNetValid && isModelValid && IsPipelineLoaded;
+            LoadCommand.RaiseCanExecuteChanged();
         }
 
 
@@ -438,16 +450,6 @@ namespace Diffuse.Controls
         }
 
 
-        private Task OnCurrentPipelineChanged()
-        {
-            if (CurrentPipeline is null)
-            {
-                _currentModel = default;
-            }
-            return Task.CompletedTask;
-        }
-
-
         private void Device_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (ModelCollectionView is not null)
@@ -480,24 +482,7 @@ namespace Diffuse.Controls
         {
             if (LoraCollectionView is not null)
             {
-                LoraAdapters.Clear();
-                LoraCollectionView.Refresh();
-                var filteredLora = LoraCollectionView.Cast<LoraAdapterModel>();
-                if (!_currentLora.IsNullOrEmpty() && _currentLora.Any(x => filteredLora.Contains(x)))
-                {
-                    foreach (var lora in _currentLora)
-                    {
-                        LoraAdapters.Add(lora);
-                    }
-                }
-                else
-                {
-                    var defaultLora = filteredLora
-                        .OrderByDescending(x => x.IsDefault)
-                        .FirstOrDefault();
-                    if (defaultLora is not null)
-                        LoraAdapters.Add(defaultLora);
-                }
+                SetDefaultLora();
             }
 
             if (ControlNetCollectionView is not null)
@@ -508,6 +493,29 @@ namespace Diffuse.Controls
             }
 
             RefreshMemoryProfile();
+        }
+
+
+        private void SetDefaultLora()
+        {
+            LoraAdapters.Clear();
+            LoraCollectionView.Refresh();
+            var filteredLora = LoraCollectionView.Cast<LoraAdapterModel>();
+            if (!_currentLora.IsNullOrEmpty() && _currentLora.Any(x => filteredLora.Contains(x)))
+            {
+                foreach (var lora in _currentLora)
+                {
+                    LoraAdapters.Add(lora);
+                }
+            }
+            else
+            {
+                var defaultLora = filteredLora
+                    .OrderByDescending(x => x.IsDefault)
+                    .FirstOrDefault();
+                if (defaultLora is not null)
+                    LoraAdapters.Add(defaultLora);
+            }
         }
 
 
@@ -550,32 +558,14 @@ namespace Diffuse.Controls
         }
 
 
-
-
-        private bool IsLoraValid()
-        {
-            return LoraAdapters.Count > 0 && LoraAdapters.All(x => !string.IsNullOrEmpty(x.Name));
-        }
-
-
         public bool HasLoraChanged()
         {
             if (!_isLoraSupported || !_isLoraEnabled)
                 return false;
 
-            if (_currentLora == null && LoraAdapters == null)
-                return false;
-            if (_currentLora == null || LoraAdapters == null)
-                return true;
-            if (_currentLora.Length != LoraAdapters.Count)
-                return true;
-            for (int i = 0; i < _currentLora.Length; i++)
-            {
-                if (!string.Equals(_currentLora[i]?.Name, LoraAdapters[i]?.Name, StringComparison.Ordinal))
-                    return true;
-            }
-            return false;
+            return _currentLora.HasChanged(LoraAdapters);
         }
+
     }
 
     public class MemoryProfileModel : BaseModel

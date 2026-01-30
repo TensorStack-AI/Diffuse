@@ -13,123 +13,74 @@
              xmlns:Controls="clr-namespace:Diffuse.Controls"
              xmlns:Common="clr-namespace:Diffuse.Common"
              xmlns:Views="clr-namespace:Diffuse.Views">
-    <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LoraAdapterControl}}}">
+    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:LoraAdapterControl}}}">
 
-        <UniformGrid Columns="1">
-
-            <!--LoraAdapter1-->
-            <DockPanel>
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20">
-                    <Button Command="{Binding AddCommand}">
-                        <CommonControls:FontAwesome Icon="2b" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora0"
-                        SelectedItem="{Binding LoraAdapters[0]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding LoraCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <!--Dummy View-->
+        <DockPanel Visibility="{Binding LoraCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid DockPanel.Dock="Right" Width="20" IsEnabled="False">
+                <Button>
+                    <CommonControls:FontAwesome Icon="2b" Size="9" Margin="0,1,0,0"/>
+                </Button>
+            </Grid>
+            <Grid>
+                <ComboBox ItemTemplate="{StaticResource ComboBoxDataTemplateModel}" HorizontalContentAlignment="Stretch"/>
+                <Grid IsHitTestVisible="False">
+                    <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" />
                 </Grid>
-            </DockPanel>
+            </Grid>
+        </DockPanel>
 
+        <!--LoraAdapters-->
+        <ItemsControl ItemsSource="{Binding LoraAdapters}" Visibility="{Binding LoraCollectionView.IsEmpty, Converter={StaticResource InverseBooleanToVisibilityConverter}}" AlternationCount="1000000">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Right" Width="20">
 
-            <!--LoraAdapter2-->
-            <DockPanel Visibility="{Binding LoraAdapters.Count, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=1, FallbackValue=Collapsed}">
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20">
-                    <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding LoraAdapters[1]}">
-                        <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora1"
-                        SelectedItem="{Binding LoraAdapters[1]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="Please Select Lora..." FontStyle="Italic" Opacity=".4" Margin="5,3,0,0" IsHitTestVisible="False" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora1, Converter={StaticResource InverseNullVisibilityConverter}}"/>
-                </Grid>
-            </DockPanel>
+                            <!--Add Button-->
+                            <Button x:Name="ButtonAdd" Command="{Binding AddCommand, RelativeSource={RelativeSource AncestorType={x:Type local:LoraAdapterControl}}}" >
+                                <CommonControls:FontAwesome Icon="2b" Size="9" Margin="0,1,0,0"/>
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex)}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
 
+                            <!--Remove Button-->
+                            <Button 
+                                CommandParameter="{Binding}" 
+                                Command="{Binding RemoveCommand, RelativeSource={RelativeSource AncestorType={x:Type local:LoraAdapterControl}}}" 
+                                Visibility="{Binding IsVisible, ElementName=ButtonAdd, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
+                            </Button>
+                        </Grid>
 
-            <!--LoraAdapter3-->
-            <DockPanel Visibility="{Binding LoraAdapters.Count, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=2, FallbackValue=Collapsed}">
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20" >
-                    <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding LoraAdapters[2]}">
-                        <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora2"
-                        SelectedItem="{Binding LoraAdapters[2]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="Please Select Lora..." FontStyle="Italic" Opacity=".4" Margin="5,3,0,0" IsHitTestVisible="False" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora2, Converter={StaticResource InverseNullVisibilityConverter}}"/>
-                </Grid>
-            </DockPanel>
+                        <!--Lora Collection-->
+                        <Grid>
+                            <ComboBox x:Name="ComboBoxLora"
+                                Tag="{Binding RelativeSource={RelativeSource AncestorType=ContentPresenter}, Path=(ItemsControl.AlternationIndex)}"
+                                SelectedItem="{Binding ., Mode=TwoWay}"
+                                ItemsSource="{Binding LoraCollectionView, RelativeSource={RelativeSource AncestorType={x:Type local:LoraAdapterControl}}}"
+                                ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
+                                HorizontalContentAlignment="Stretch"
+                                IsSynchronizedWithCurrentItem="False"
+                                SelectionChanged="ComboBoxLora_SelectionChanged"/>
+                            <Grid IsHitTestVisible="False" Margin="5,2,0,0" Opacity=".4" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora, Converter={StaticResource InverseNullVisibilityConverter}}">
+                                <TextBlock Text="No models found." FontStyle="Italic" Visibility="{Binding IsVisible, ElementName=ButtonAdd, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <TextBlock Text="Please Select Lora..." FontStyle="Italic" Visibility="{Binding IsVisible, ElementName=ButtonAdd, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                            </Grid>
+                        </Grid>
 
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
-            <!--LoraAdapter4-->
-            <DockPanel Visibility="{Binding LoraAdapters.Count, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=3, FallbackValue=Collapsed}">
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20" >
-                    <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding LoraAdapters[3]}">
-                        <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora3"
-                        SelectedItem="{Binding LoraAdapters[3]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="Please Select Lora..." FontStyle="Italic" Opacity=".4" Margin="5,3,0,0" IsHitTestVisible="False" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora3, Converter={StaticResource InverseNullVisibilityConverter}}"/>
-                </Grid>
-            </DockPanel>
-
-
-            <!--LoraAdapter5-->
-            <DockPanel Visibility="{Binding LoraAdapters.Count, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=4, FallbackValue=Collapsed}">
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20" >
-                    <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding LoraAdapters[4]}">
-                        <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora4"
-                        SelectedItem="{Binding LoraAdapters[4]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="Please Select Lora..." FontStyle="Italic" Opacity=".4" Margin="5,3,0,0" IsHitTestVisible="False" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora4, Converter={StaticResource InverseNullVisibilityConverter}}"/>
-                </Grid>
-            </DockPanel>
-
-
-            <!--LoraAdapter6-->
-            <DockPanel Visibility="{Binding LoraAdapters.Count, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=5, FallbackValue=Collapsed}">
-                <UniformGrid Columns="1" DockPanel.Dock="Right" Width="20" >
-                    <Button Command="{Binding RemoveCommand}" CommandParameter="{Binding LoraAdapters[5]}">
-                        <CommonControls:FontAwesome Icon="f00d" Size="9" Margin="0,1,0,0"/>
-                    </Button>
-                </UniformGrid>
-                <Grid>
-                    <ComboBox x:Name="ComboBoxLora5"
-                        SelectedItem="{Binding LoraAdapters[5]}"
-                        ItemsSource="{Binding LoraCollectionView}"
-                        ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                        HorizontalContentAlignment="Stretch"
-                        IsSynchronizedWithCurrentItem="False"/>
-                    <TextBlock Text="Please Select Lora..." FontStyle="Italic" Opacity=".4" Margin="5,3,0,0" IsHitTestVisible="False" Visibility="{Binding SelectedItem, ElementName=ComboBoxLora5, Converter={StaticResource InverseNullVisibilityConverter}}"/>
-                </Grid>
-            </DockPanel>
-        </UniformGrid>
-
-    </DockPanel>
+    </Grid>
 </CommonControls:BaseControl>

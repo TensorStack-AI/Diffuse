@@ -180,6 +180,7 @@
                                 IsSaveOverlayEnabled="False" 
                                 IsRemoveEnabled="False"
                                 Source="{Binding CurrentImage}"
+                                Progress="{Binding Progress}"
                                 Visibility="{Binding SelectedItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Image}"/>
                             <CommonControls:VideoStreamElement
                                 IsReplayEnabled="True"
@@ -189,6 +190,7 @@
                                 IsSaveEnabled="False" 
                                 IsRemoveEnabled="False"
                                 Source="{Binding CurrentVideoStream}" 
+                                Progress="{Binding Progress}"
                                 Visibility="{Binding SelectedItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}"/>
                         </Grid>
                     </Grid>

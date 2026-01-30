@@ -458,7 +458,7 @@
                             </StackPanel>
                             <StackPanel Visibility="{Binding LoraModels, Converter={StaticResource NullVisibilityConverter}}">
                                 <TextBlock Text="Lora Strength" Style="{StaticResource FieldTextBlockStyle}" />
-                                <ItemsControl ItemsSource="{Binding Options.LoraStrength}">
+                                <ItemsControl ItemsSource="{Binding Options.LoraOptions}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel IsItemsHost="True" Orientation="Horizontal" />
@@ -466,7 +466,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding ., Mode=OneWay}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" Margin="0,0,4,0" />
+                                            <TextBox Text="{Binding Strength, Mode=OneWay}" Style="{StaticResource TextBlockStyle}" IsReadOnly="True" Margin="0,0,4,0" />
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -487,8 +487,8 @@
                             </StackPanel>
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Default}">
                                 <StackPanel>
-                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding ExtractOptions.TileMode}" />
+                                    <TextBlock Text="Tiled" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding ExtractOptions.IsTileEnabled}" />
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
@@ -543,8 +543,8 @@
                             </StackPanel>
                             <UniformGrid Columns="3" Margin="0,0,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding UpscaleOptions.TileMode}" />
+                                    <TextBlock Text="Tiled" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding UpscaleOptions.IsTileEnabled}" />
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
@@ -615,8 +615,8 @@
                             <Separator Opacity=".7"/>
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Default}">
                                 <StackPanel>
-                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding Options.TileMode}" />
+                                    <TextBlock Text="Tiled" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.IsTileEnabled}" />
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />
@@ -731,8 +731,8 @@
                             <Separator Opacity=".7"/>
                             <UniformGrid Columns="3" Margin="0,0,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="Tile Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding Options.TileMode}" />
+                                    <TextBlock Text="Tiled" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBlock Text="{Binding Options.IsTileEnabled}" />
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Tile Size" Style="{StaticResource FieldTextBlockStyle}" />

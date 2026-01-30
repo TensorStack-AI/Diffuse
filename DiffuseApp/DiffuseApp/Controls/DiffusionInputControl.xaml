@@ -222,43 +222,32 @@
                     </StackPanel>
 
                     <!--LoraStrength-->
-                    <UniformGrid Visibility="{Binding Pipeline.LoraAdapterModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=1}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[0].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[0]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=2}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[1].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[1]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=3}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[2].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[2]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=4}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[3].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[3]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=5}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[4].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[4]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <Grid Visibility="{Binding Pipeline.LoraAdapterModel.Length, Converter={StaticResource GreaterOrEqualThanToVisibilityConverter}, ConverterParameter=6}">
-                            <TextBlock Text="{Binding Pipeline.LoraAdapterModel[5].Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                            <CommonControls:SliderControl Text="Lora" Value="{Binding Options.LoraStrength[5]}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
-                        </Grid>
-                        <UniformGrid.Style>
-                            <Style TargetType="{x:Type UniformGrid}">
-                                <Setter Property="Columns" Value="2"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Pipeline.LoraAdapterModel.Length}" Value="1">
-                                        <Setter Property="Columns" Value="1"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </UniformGrid.Style>
-                    </UniformGrid>
-
+                    <ItemsControl ItemsSource="{Binding Options.LoraOptions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
+                                    <CommonControls:SliderControl Text="Lora" Value="{Binding Strength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid IsItemsHost="True">
+                                    <UniformGrid.Style>
+                                        <Style TargetType="{x:Type UniformGrid}">
+                                            <Setter Property="Columns" Value="2"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Options.LoraOptions.Count}" Value="1">
+                                                    <Setter Property="Columns" Value="1"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </UniformGrid.Style>
+                                </UniformGrid>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
 
                     <!--FlowMatch-->
                     <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">

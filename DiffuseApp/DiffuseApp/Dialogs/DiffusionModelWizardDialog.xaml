@@ -32,23 +32,58 @@
             </UniformGrid>
 
             <Grid Margin="0,4,0,0">
-                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Folder}">
-                    <TextBlock Text="Model Folder (diffusers)" Style="{StaticResource FieldTextBlockStyle}" />
-                    <CommonControls:FilePickerTextBox FileName="{Binding SelectedModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" IsRequired="True" />
-                </StackPanel>
+
+                <!--Folder-->
+                <DockPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Folder}">
+                    <DockPanel DockPanel.Dock="Right" Margin="4,0,0,0" Width="90">
+                        <UniformGrid Columns="2" DockPanel.Dock="Top">
+                            <TextBlock Text="Variant" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBlock Text="(optional)" Style="{StaticResource FieldTextBlockStyle}" HorizontalAlignment="Right" FontSize="8" VerticalAlignment="Center"/>
+                        </UniformGrid>
+                        <TextBox Text="{Binding SelectedVariant, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
+                    <StackPanel>
+                        <TextBlock Text="Model Folder (diffusers)" Style="{StaticResource FieldTextBlockStyle}" />
+                        <CommonControls:FilePickerTextBox FileName="{Binding SelectedModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" IsRequired="True" />
+                    </StackPanel>
+                </DockPanel>
+
+                <!--SingleFile-->
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
                     <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
                     <CommonControls:FilePickerTextBox FileName="{Binding SelectedModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
                 </StackPanel>
-                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
-                    <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />
-                    <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}"  />
-                </StackPanel>
-                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Checkpoint}">
+
+                <!--HuggingFace-->
+                <DockPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
+                    <DockPanel DockPanel.Dock="Right" Margin="4,0,0,0" Width="90">
+                        <UniformGrid Columns="2" DockPanel.Dock="Top">
+                            <TextBlock Text="Variant" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBlock Text="(optional)" Style="{StaticResource FieldTextBlockStyle}" HorizontalAlignment="Right" FontSize="8" VerticalAlignment="Center"/>
+                        </UniformGrid>
+                        <TextBox Text="{Binding SelectedVariant, UpdateSourceTrigger=PropertyChanged}" />
+                    </DockPanel>
                     <StackPanel>
-                        <TextBlock Text="HuggingFace Url (Base Repo)" Style="{StaticResource FieldTextBlockStyle}" />
-                        <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />
+                        <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}"  />
                     </StackPanel>
+                </DockPanel>
+
+                <!--Checkpoint-->
+                <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Checkpoint}">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Right" Margin="4,0,0,0" Width="90">
+                            <UniformGrid Columns="2" DockPanel.Dock="Top">
+                                <TextBlock Text="Variant" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <TextBlock Text="(optional)" Style="{StaticResource FieldTextBlockStyle}" HorizontalAlignment="Right" FontSize="8" VerticalAlignment="Center"/>
+                            </UniformGrid>
+                            <TextBox Text="{Binding SelectedVariant, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                        <StackPanel>
+                            <TextBlock Text="HuggingFace Url (Base Repo)" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </DockPanel>
                     <StackPanel>
                         <TextBlock Text="Base Model (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
                         <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.ModelCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
@@ -65,9 +100,9 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel Margin="0,4,0,0">
+            <StackPanel>
                 <TextBlock Text="Model Name" Style="{StaticResource FieldTextBlockStyle}"/>
-                <TextBox Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged}"  />
+                <TextBox Text="{Binding SelectedName, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
         </StackPanel>

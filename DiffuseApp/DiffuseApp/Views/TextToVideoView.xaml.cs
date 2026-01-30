@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Video;
-using TensorStack.WPF;
-using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
 namespace Diffuse.Views
@@ -15,227 +13,92 @@ namespace Diffuse.Views
     /// <summary>
     /// Interaction logic for TextToVideoView.xaml
     /// </summary>
-    public partial class TextToVideoView : ViewBase
+    public partial class TextToVideoView : ViewBaseDiffusion
     {
-        private readonly ILogger _logger;
-        private VideoInputStream _resultVideo;
-        private VideoInputStream _compareVideo;
-        private DiffusionInputOptions _options;
-        private UpscaleInputOptions _upscaleOptions;
-
-        public TextToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<TextToVideoView> logger)
-            : base(settings, navigationService, environmentService, historyService)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextToVideoView"/> class.
+        /// </summary>
+        public TextToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<TextToVideoView> logger)
+            : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)
         {
-            _logger = logger;
-            DiffusionService = diffusionService;
-            UpscaleService = upscaleService;
-            ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
-            CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             InitializeComponent();
         }
 
-        public override int Id => (int)View.TextToVideo;
-        public IDiffusionService DiffusionService { get; }
-        public IUpscaleService UpscaleService { get; }
-        public AsyncRelayCommand ExecuteCommand { get; set; }
-        public AsyncRelayCommand CancelCommand { get; set; }
-
-        public VideoInputStream ResultVideo
-        {
-            get { return _resultVideo; }
-            set { SetProperty(ref _resultVideo, value); }
-        }
-
-        public VideoInputStream CompareVideo
-        {
-            get { return _compareVideo; }
-            set { SetProperty(ref _compareVideo, value); }
-        }
-
-        public DiffusionInputOptions Options
-        {
-            get { return _options; }
-            set { SetProperty(ref _options, value); }
-        }
-
-        public UpscaleInputOptions UpscaleOptions
-        {
-            get { return _upscaleOptions; }
-            set { SetProperty(ref _upscaleOptions, value); }
-        }
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        public override View View => View.TextToVideo;
 
 
-        public override Task OpenAsync(OpenViewArgs args = null)
-        {
-            if (CurrentPipeline is not null && CurrentPipeline != DiffusionService.Pipeline)
-            {
-                CurrentPipeline = null;
-            }
-            return base.OpenAsync(args);
-        }
-
-
-        protected override async Task LoadPipelineAsync()
+        /// <summary>
+        /// Execute thge pipeline.
+        /// </summary>
+        protected override async Task ExecuteAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[TextToVideo] [Execute] Executing pipeline...");
+
             try
             {
-                IsPipelineLoaded = false;
-                Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Loading pipeline..");
-                await base.LoadPipelineAsync();
-
-                //DiffusionModel
-                if (CurrentPipeline.DiffusionModel is not null)
-                {
-                    if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
-                    {
-                        await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
-                    }
-                }
-                else
-                {
-                    await DiffusionService.UnloadAsync();
-                }
-
-                //UpscaleService
-                if (CurrentPipeline.UpscaleModel is not null)
-                {
-                    if (!UpscaleService.IsLoaded || UpscaleService.Pipeline.UpscaleModel != CurrentPipeline.UpscaleModel)
-                    {
-                        await UpscaleService.LoadAsync(CurrentPipeline);
-                    }
-                }
-                else
-                {
-                    await UpscaleService.UnloadAsync();
-                }
-
-                await Settings.SetDefaultsAsync(CurrentPipeline);
-                _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Loading pipeline complete.");
-                IsPipelineLoaded = true;
-            }
-            catch (OperationCanceledException)
-            {
-                _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Loading pipeline cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[TextToVideoView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
-                await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            _logger?.LogInformation($"[TextToVideoView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
-        }
-
-
-        protected override async Task UnloadPipelineAsync()
-        {
-            try
-            {
-                _logger?.LogInformation($"[TextToVideoView] [UnloadPipelineAsync] - Unloading pipeline...");
-                await base.UnloadPipelineAsync();
-                if (DiffusionService.IsLoaded)
-                    await DiffusionService.UnloadAsync();
-                if (UpscaleService.IsLoaded)
-                    await UpscaleService.UnloadAsync();
-                _logger?.LogInformation($"[TextToVideoView] [UnloadPipelineAsync] -  Pipeline unloaded.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[TextToVideoView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
-                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            IsPipelineLoaded = false;
-        }
-
-
-        private async Task ExecuteAsync()
-        {
-            var timestamp = Stopwatch.GetTimestamp();
-            try
-            {
-                var previousVideo = _resultVideo;
+                var previousVideo = ResultVideo;
+                await ResultControl.ClearAsync();
                 Progress.Clear();
                 Statistics.Clear();
                 ResultVideo = default;
                 CompareVideo = default;
-                await ResultControl.ClearAsync();
-                _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline..");
-
                 Statistics.Start();
 
-                // Run Diffusion
-                var options = _options with { Strength = 1 };
-                var resultVideo = await DiffusionService.GenerateVideoAsync(options);
+                // Diffusion
+                var options = Options with { Strength = 1 };
+                var resultTensor = await ExecuteVideoDiffusionAsync(options);
 
-                // Run Upscaler
-                if (UpscaleService.IsLoaded)
-                {
-                    Progress.Indeterminate("Upscaling Video...");
-                    resultVideo = await UpscaleService.ExecuteAsync(new UpscaleVideoRequest
-                    {
-                        VideoStream = resultVideo,
-                        Options = _upscaleOptions
-                    }, ProgressCallback);
-                }
+                // Upscale
+                resultTensor = await ExecuteVideoUpscaleAsync(resultTensor);
 
+                // Result
                 Statistics.Stop();
-
-                // Set Result
-                ResultVideo = await HistoryService.AddAsync(resultVideo, new DiffusionHistory
-                {
-                    Options = options,
-                    Model = CurrentPipeline.DiffusionModel.Name,
-                    LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
-                    UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
-                    UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? _upscaleOptions : null,
-                    Source = View.TextToVideo,
-                });
+                ResultVideo = await SaveHistoryAsync(options, resultTensor);
                 CompareVideo = previousVideo;
 
-                _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline complete.");
+                Logger.LogInformation("[TextToVideo] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Executing pipeline cancelled.");
+                Logger.LogInformation("[TextToVideo] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[TextToVideoView] [ExecuteAsync] - An exception occurred executing pipeline.");
-                await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
+                Logger.LogError(ex, "[TextToVideo] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
-
-            Progress.Clear();
-            _logger?.LogInformation($"[TextToVideoView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        private bool CanExecute()
+        /// <summary>
+        /// Save history
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="videoInput">The video input.</param>
+        private async Task<VideoInputStream> SaveHistoryAsync(DiffusionInputOptions options, VideoInputStream videoInput)
         {
-            return DiffusionService.IsLoaded && !DiffusionService.IsExecuting;
-        }
-
-
-        private async Task CancelAsync()
-        {
-            if (DiffusionService.IsLoading)
-                CurrentPipeline = null;
-
-            await DiffusionService.CancelAsync();
-        }
-
-
-        private bool CanCancel()
-        {
-            return DiffusionService.CanCancel;
+            Logger.LogInformation("[TextToVideo] [SaveHistory] Saving history...");
+            var result = await HistoryService.AddAsync(videoInput, new DiffusionHistory
+            {
+                Options = options,
+                Model = CurrentPipeline.DiffusionModel.Name,
+                LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
+                UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
+                UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? UpscaleOptions : null,
+                Source = View.TextToVideo,
+            });
+            Logger.LogInformation("[TextToVideo] [SaveHistory] History saved.");
+            return result;
         }
 
     }

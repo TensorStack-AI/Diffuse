@@ -36,18 +36,30 @@
                             </CommonControls:FontAwesome.Style>
                         </CommonControls:FontAwesome>
                     </Button>
-                    <Button x:Name="LoadButton" Command="{Binding LoadCommand}" >
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Content" Value="Load" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsEnabled, ElementName=LoadButton}" Value="False">
-                                        <Setter Property="Content" Value="Ready" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                    <Grid>
+                        <Button x:Name="LoadButton" Command="{Binding LoadCommand}" >
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                    <Setter Property="Content" Value="Load" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEnabled, ElementName=LoadButton}" Value="False">
+                                            <Setter Property="Content" Value="Loading" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Grid Visibility="{Binding IsEnabled, ElementName=LoadButton, Converter={StaticResource InverseBooleanToHiddenConverter}, FallbackValue=Hidden}">
+                            <Border Background="{StaticResource ButtonBackground}" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" Visibility="{Binding IsPipelineLoaded, Converter={StaticResource BooleanToHiddenConverter}, FallbackValue=Hidden}">
+                                <DockPanel Margin="4,0" HorizontalAlignment="Center" Opacity=".8">
+                                    <CommonControls:FontAwesome DockPanel.Dock="Left" Icon="f058" Size="12" Color="{StaticResource SuccessColour}" Margin="0,1,0,0"/>
+                                    <TextBlock Text="Ready" Margin="4,2,0,0" Foreground="{StaticResource SuccessColour}"/>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                   
                 </DockPanel>
 
                 <!--Options-->

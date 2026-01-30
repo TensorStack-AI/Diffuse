@@ -63,7 +63,7 @@ namespace Diffuse.Dialogs
                 Id = modelId,
                 DefaultOptions = new UpscaleInputOptions
                 {
-                    TileMode = TileMode.ClipBlend,
+                    IsTileEnabled = true,
                     TileOverlap = 16,
                     TileSize = 512
                 }
@@ -212,7 +212,7 @@ namespace Diffuse.Dialogs
                 UrlPaths = upscaleModel.UrlPaths.ToArray(),
                 DefaultOptions = new UpscaleInputOptions
                 {
-                    TileMode = upscaleModel.DefaultOptions.TileMode,
+                    IsTileEnabled = upscaleModel.DefaultOptions.IsTileEnabled,
                     TileOverlap = upscaleModel.DefaultOptions.TileOverlap,
                     TileSize = upscaleModel.DefaultOptions.TileSize,
                 }

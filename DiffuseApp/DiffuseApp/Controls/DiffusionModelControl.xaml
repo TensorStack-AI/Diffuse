@@ -51,7 +51,7 @@
                             </Button.Style>
                         </Button>
                         <Grid Visibility="{Binding IsEnabled, ElementName=LoadButton, Converter={StaticResource InverseBooleanToHiddenConverter}, FallbackValue=Hidden}">
-                            <Border Background="{StaticResource ButtonBackground}" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" Visibility="{Binding IsPipelineLoaded, RelativeSource={RelativeSource AncestorType={x:Type Views:ViewBase}}, Converter={StaticResource BooleanToHiddenConverter}, FallbackValue=Hidden}">
+                            <Border Background="{StaticResource ButtonBackground}" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" Visibility="{Binding IsPipelineLoaded, Converter={StaticResource BooleanToHiddenConverter}, FallbackValue=Hidden}">
                                 <DockPanel Margin="4,0" HorizontalAlignment="Center" Opacity=".8">
                                     <CommonControls:FontAwesome DockPanel.Dock="Left" Icon="f058" Size="12" Color="{StaticResource SuccessColour}" Margin="0,1,0,0"/>
                                     <TextBlock Text="Ready" Margin="4,2,0,0" Foreground="{StaticResource SuccessColour}"/>
@@ -59,7 +59,7 @@
                             </Border>
                         </Grid>
                     </Grid>
-                 
+
                 </DockPanel>
 
                 <!--Options-->
@@ -79,7 +79,6 @@
                     <Grid>
                         <ComboBox 
                             DisplayMemberPath="Name"
-                            IsSynchronizedWithCurrentItem="False"
                             SelectedItem="{Binding SelectedDevice}" 
                             ItemsSource="{Binding DeviceCollectionView}" 
                             SelectionChanged="Device_SelectionChanged" />
@@ -92,11 +91,10 @@
                     <TextBox DockPanel.Dock="Left" Text="Model" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <Grid>
                         <ComboBox 
-                            SelectedItem="{Binding SelectedModel}"
+                            SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
                             ItemsSource="{Binding ModelCollectionView}"
                             ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
                             HorizontalContentAlignment="Stretch"
-                            IsSynchronizedWithCurrentItem="False"
                             SelectionChanged="Model_SelectionChanged"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ModelCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
@@ -110,8 +108,7 @@
                             SelectedItem="{Binding SelectedControlNet}"
                             ItemsSource="{Binding ControlNetCollectionView}"
                             ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                            HorizontalContentAlignment="Stretch"
-                            IsSynchronizedWithCurrentItem="False"/>
+                            HorizontalContentAlignment="Stretch"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ControlNetCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
                 </DockPanel>
@@ -124,8 +121,7 @@
                             SelectedItem="{Binding SelectedExtractor}"
                             ItemsSource="{Binding ExtractCollectionView}"
                             ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                            HorizontalContentAlignment="Stretch"
-                            IsSynchronizedWithCurrentItem="False"/>
+                            HorizontalContentAlignment="Stretch"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding ExtractCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
                 </DockPanel>
@@ -148,8 +144,7 @@
                             SelectedItem="{Binding SelectedUpscaler}" 
                             ItemsSource="{Binding UpscaleCollectionView}" 
                             ItemTemplate="{StaticResource ComboBoxDataTemplateModel}"
-                            HorizontalContentAlignment="Stretch"
-                            IsSynchronizedWithCurrentItem="False" />
+                            HorizontalContentAlignment="Stretch"/>
                         <TextBlock Text="No models found." FontStyle="Italic" Opacity=".4" Margin="5,2,0,0" IsHitTestVisible="False" Visibility="{Binding UpscaleCollectionView.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </Grid>
                 </DockPanel>
@@ -178,10 +173,6 @@
                         </ComboBox>
                     </DockPanel>
                 </DockPanel>
-
-
-              
-
             </StackPanel>
         </DockPanel>
 

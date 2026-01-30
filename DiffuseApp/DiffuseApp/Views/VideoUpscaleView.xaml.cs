@@ -3,10 +3,9 @@ using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
+using TensorStack.Common.Pipeline;
 using TensorStack.Video;
-using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
@@ -15,138 +14,158 @@ namespace Diffuse.Views
     /// <summary>
     /// Interaction logic for VideoUpscaleView.xaml
     /// </summary>
-    public partial class VideoUpscaleView : ViewBase
+    public partial class VideoUpscaleView : ViewBaseModel
     {
-        private readonly ILogger _logger;
         private VideoInputStream _sourceVideo;
         private VideoInputStream _resultVideo;
         private VideoInputStream _compareVideo;
         private UpscaleInputOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VideoUpscaleView"/> class.
+        /// </summary>
         public VideoUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IUpscaleService upscaleService, ILogger<VideoUpscaleView> logger)
-            : base(settings, navigationService, environmentService, historyService)
+            : base(settings, navigationService, environmentService, historyService, logger)
         {
-            _logger = logger;
             UpscaleService = upscaleService;
-            ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
-            CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        public override View View => View.VideoUpscale;
 
-        public override int Id => (int)View.VideoUpscale;
+        /// <summary>
+        /// Gets the upscale service.
+        /// </summary>
         public IUpscaleService UpscaleService { get; }
-        public AsyncRelayCommand LoadCommand { get; set; }
-        public AsyncRelayCommand UnloadCommand { get; set; }
-        public AsyncRelayCommand ExecuteCommand { get; set; }
-        public AsyncRelayCommand CancelCommand { get; set; }
 
-        public VideoInputStream SourceVideo
-        {
-            get { return _sourceVideo; }
-            set { SetProperty(ref _sourceVideo, value); }
-        }
-
+        /// <summary>
+        /// Gets or sets the result video.
+        /// </summary>
         public VideoInputStream ResultVideo
         {
             get { return _resultVideo; }
             set { SetProperty(ref _resultVideo, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the compare video.
+        /// </summary>
         public VideoInputStream CompareVideo
         {
             get { return _compareVideo; }
             set { SetProperty(ref _compareVideo, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the options.
+        /// </summary>
         public UpscaleInputOptions Options
         {
             get { return _options; }
             set { SetProperty(ref _options, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the source video.
+        /// </summary>
+        public VideoInputStream SourceVideo
+        {
+            get { return _sourceVideo; }
+            set { SetProperty(ref _sourceVideo, value); }
+        }
 
+
+        /// <summary>
+        /// On view opened
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         public override Task OpenAsync(OpenViewArgs args = null)
         {
-            if (UpscaleService.IsLoaded)
-            {
-                //  SelectedModel = UpscaleService.Model;
-            }
+            IsPipelineLoaded = UpscaleService.IsLoaded && UpscaleService.Pipeline.UpscaleModel == CurrentPipeline?.UpscaleModel;
             return base.OpenAsync(args);
         }
 
 
-        protected override async Task LoadPipelineAsync()
+        /// <summary>
+        /// Load pipeline
+        /// </summary>
+        protected override async Task<bool> LoadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoUpscale] [LoadPipeline] Loading pipeline...");
+
             try
             {
-                IsPipelineLoaded = false;
                 Progress.Indeterminate("Loading Pipeline...");
-                _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Loading pipeline...");
 
-                await base.LoadPipelineAsync();
-                await UpscaleService.UnloadAsync();
-
-                if (CurrentPipeline.UpscaleModel is not null)
-                    await UpscaleService.LoadAsync(CurrentPipeline);
-
+                await UpscaleService.LoadAsync(CurrentPipeline);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
-                _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Loading pipeline complete.");
-                IsPipelineLoaded = true;
+
+                Logger.LogInformation("[VideoUpscale] [LoadPipeline] Pipeline successfully loaded, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
             }
             catch (OperationCanceledException)
             {
-                _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Loading pipeline cancelled.");
+                Logger.LogInformation("[VideoUpscale] [LoadPipeline] Loading canceled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return false;
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"[VideoUpscaleView] [LoadPipelineAsync] - An exception occurred loading pipeline.");
-                await DialogService.ShowErrorAsync("LoadPipelineAsync", ex.Message);
+                Logger.LogError(ex, "[VideoUpscale] [LoadPipeline] An exception occurred loading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Load Pipeline", ex.Message);
+                return false;
             }
-
-            Progress.Clear();
-            Statistics.Clear();
-            _logger?.LogInformation($"[VideoUpscaleView] [LoadPipelineAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        protected override async Task UnloadPipelineAsync()
-        {
-            try
-            {
-                _logger?.LogInformation($"[VideoUpscaleView] [UnloadPipelineAsync] - Unloading pipeline...");
-                await base.UnloadPipelineAsync();
-                await UpscaleService.UnloadAsync();
-                _logger?.LogInformation($"[VideoUpscaleView] [UnloadPipelineAsync] -  Pipeline unloaded.");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"[VideoUpscaleView] [UnloadPipelineAsync] - An exception occurred unloading pipeline.");
-                await DialogService.ShowErrorAsync("UnloadPipelineAsync", ex.Message);
-            }
-
-            Progress.Clear();
-            Statistics.Clear();
-            IsPipelineLoaded = false;
-        }
-
-
-        private async Task ExecuteAsync()
+        /// <summary>
+        /// Unload pipeline
+        /// </summary>
+        protected override async Task<bool> UnloadPipelineAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoUpscale] [UnloadPipeline] Unloading pipeline...");
+
             try
             {
+                await UpscaleService.UnloadAsync();
+                Logger.LogInformation("[VideoUpscale] [UnloadPipeline] Pipeline unloaded successfully, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "[VideoUpscale] [UnloadPipeline] An exception occurred unloading pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Unload Pipeline", ex.Message);
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Execute the pipeline.
+        /// </summary>
+        protected override async Task ExecuteAsync()
+        {
+            var timestamp = Stopwatch.GetTimestamp();
+            Logger.LogInformation("[VideoUpscale] [Execute] Executing pipeline...");
+
+            try
+            {
+                await ResultControl.ClearAsync();
                 Progress.Clear();
                 Statistics.Clear();
                 ResultVideo = default;
                 CompareVideo = default;
-                await ResultControl.ClearAsync();
-                _logger?.LogInformation($"[VideoUpscaleView] [ExecuteAsync] - Executing pipeline..");
-
                 Statistics.Start();
 
-                // Run Upscaler
+                // Upscaler
                 var resultVideo = await UpscaleService.ExecuteAsync(new UpscaleVideoRequest
                 {
                     VideoStream = _sourceVideo,
@@ -155,7 +174,7 @@ namespace Diffuse.Views
 
                 Statistics.Stop();
 
-                // Set Result
+                // Result
                 ResultVideo = await HistoryService.AddAsync(resultVideo, new UpscaleHistory
                 {
                     Options = _options,
@@ -167,63 +186,101 @@ namespace Diffuse.Views
                 });
                 CompareVideo = _sourceVideo;
 
-                _logger?.LogInformation($"[VideoUpscaleView] [ExecuteAsync] - Executing pipeline complete.");
+                Logger.LogInformation("[VideoUpscale] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                _logger?.LogInformation($"[VideoUpscaleView] [ExecuteAsync] - Executing pipeline cancelled.");
+                Logger.LogInformation("[VideoUpscale] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                _logger?.LogError(ex, $"[VideoUpscaleView] [ExecuteAsync] - An exception occurred executing pipeline.");
-                await DialogService.ShowErrorAsync("ExecuteAsync", ex.Message);
+                Logger.LogError(ex, "[VideoUpscale] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
-
-            Progress.Clear();
-            _logger?.LogInformation($"[VideoUpscaleView] [ExecuteAsync] - Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
+            finally
+            {
+                Progress.Clear();
+            }
         }
 
 
-        private bool CanExecute()
+        /// <summary>
+        /// Determines whether this instance can execute.
+        /// </summary>
+        protected override bool CanExecute()
         {
             return _sourceVideo is not null && UpscaleService.IsLoaded && !UpscaleService.IsExecuting;
         }
 
 
-        private async Task CancelAsync()
+        /// <summary>
+        /// Cancel the process.
+        /// </summary>
+        protected override async Task CancelAsync()
         {
-            if (UpscaleService.IsLoading)
-                CurrentPipeline = null;
-
             await UpscaleService.CancelAsync();
         }
 
 
-        private bool CanCancel()
+        /// <summary>
+        /// Determines whether this instance can cancel.
+        /// </summary>
+        protected override bool CanCancel()
         {
             return UpscaleService.CanCancel;
         }
 
 
+        /// <summary>
+        /// Called when Upscale model changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="pipeline">The pipeline.</param>
         protected async void SelectedUpscalerChanged(object sender, PipelineModel pipeline)
         {
-            if (pipeline?.UpscaleModel == null)
+            try
             {
-                await UnloadPipelineAsync();
-            }
-            else
-            {
-                if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
+                IsPipelineLoaded = false;
+                CurrentPipeline = pipeline;
+                if (pipeline?.UpscaleModel == null)
                 {
-                    if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
-                        CurrentPipeline = default;
+                    await UnloadPipelineAsync();
                 }
+                else
+                {
+                    Progress.Indeterminate($"Loading {pipeline.UpscaleModel.Name}...");
 
-                if (CurrentPipeline is not null)
-                    await LoadPipelineAsync();
+                    if (!await DownloadModels(pipeline))
+                        return; // Canceled/Failed to download models
+
+                    if (!await LoadPipelineAsync())
+                        return; // Canceled/Failed to load pipeline
+
+                    IsPipelineLoaded = true;
+                }
             }
+            finally
+            {
+                Progress.Clear();
+                Statistics.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Called when progress is received from a C# pipeline
+        /// </summary>
+        /// <param name="progress">The progress.</param>
+        protected override void OnProgress(RunProgress progress)
+        {
+            if (progress.Maximum > 1)
+                Progress.Update(progress.Value, progress.Maximum, $"Frame {progress.Value}/{progress.Maximum}");
+            else
+                Progress.Indeterminate("Rendering Video...");
+
+            Logger.LogDebug("[{View}] [OnProgress] Step: {Value}/{Max}, Elapsed: {Elapsed:c}", ViewName, progress.Value, progress.Maximum, progress.Elapsed);
         }
     }
 }

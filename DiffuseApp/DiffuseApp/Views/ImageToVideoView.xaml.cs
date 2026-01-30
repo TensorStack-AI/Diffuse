@@ -5,22 +5,24 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF.Services;
 
 namespace Diffuse.Views
 {
     /// <summary>
-    /// Interaction logic for VideoToVideoView.xaml
+    /// Interaction logic for ImageToVideoView.xaml
     /// </summary>
-    public partial class VideoToVideoView : ViewBaseDiffusion
+    public partial class ImageToVideoView : ViewBaseDiffusion
     {
-        private VideoInputStream _sourceVideo;
+        private ImageInput _sourceImage;
+        private ImageInput _extractImage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VideoToVideoView"/> class.
+        /// Initializes a new instance of the <see cref="ImageToVideoView"/> class.
         /// </summary>
-        public VideoToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<VideoToVideoView> logger)
+        public ImageToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageToVideoView> logger)
             : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)
         {
             InitializeComponent();
@@ -29,15 +31,15 @@ namespace Diffuse.Views
         /// <summary>
         /// Gets the view.
         /// </summary>
-        public override View View => View.VideoToVideo;
+        public override View View => View.ImageToVideo;
 
         /// <summary>
-        /// Gets or sets the source video.
+        /// Gets or sets the source image.
         /// </summary>
-        public VideoInputStream SourceVideo
+        public ImageInput SourceImage
         {
-            get { return _sourceVideo; }
-            set { SetProperty(ref _sourceVideo, value); }
+            get { return _sourceImage; }
+            set { SetProperty(ref _sourceImage, value); }
         }
 
 
@@ -47,10 +49,11 @@ namespace Diffuse.Views
         protected override async Task ExecuteAsync()
         {
             var timestamp = Stopwatch.GetTimestamp();
-            Logger.LogInformation("[VideoToVideo] [Execute] Executing pipeline...");
+            Logger.LogInformation("[ImageToVideo] [Execute] Executing pipeline...");
 
             try
             {
+                var previousVideo = ResultVideo;
                 await ResultControl.ClearAsync();
                 Progress.Clear();
                 Statistics.Clear();
@@ -59,7 +62,10 @@ namespace Diffuse.Views
                 Statistics.Start();
 
                 // Diffusion
-                var options = Options with { };
+                var options = Options with
+                {
+                    InputImage = _sourceImage
+                };
                 var resultTensor = await ExecuteVideoDiffusionAsync(options);
 
                 // Upscale
@@ -68,24 +74,58 @@ namespace Diffuse.Views
                 // Result
                 Statistics.Stop();
                 ResultVideo = await SaveHistoryAsync(options, resultTensor);
-                CompareVideo = _sourceVideo;
+                CompareVideo = previousVideo;
 
-                Logger.LogInformation("[VideoToVideo] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                Logger.LogInformation("[ImageToVideo] [Execute] Executing pipeline complete, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (OperationCanceledException)
             {
                 Statistics.Clear();
-                Logger.LogInformation("[VideoToVideo] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                Logger.LogInformation("[ImageToVideo] [Execute] Executing pipeline cancelled, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
             }
             catch (Exception ex)
             {
                 Statistics.Clear();
-                Logger.LogError(ex, "[VideoToVideo] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
+                Logger.LogError(ex, "[ImageToVideo] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
                 await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }
             finally
             {
                 Progress.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Unloads the pipeline
+        /// </summary>
+        protected override Task<bool> UnloadPipelineAsync()
+        {
+            _extractImage = null;
+            return base.UnloadPipelineAsync();
+        }
+
+
+        /// <summary>
+        /// Called when SourceImage changed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="image">The image.</param>
+        protected async void OnSourceImageChanged(object sender, ImageInput image)
+        {
+            try
+            {
+                IsViewBusy = true;
+                if (_sourceImage == null || _extractImage == _sourceImage)
+                    return;
+
+                _extractImage = await ExecuteImageExtractAsync(_sourceImage);
+                SourceImage = _extractImage;
+            }
+            finally
+            {
+                Progress.Clear();
+                IsViewBusy = false;
             }
         }
 
@@ -97,7 +137,7 @@ namespace Diffuse.Views
         /// <param name="videoInput">The video input.</param>
         private async Task<VideoInputStream> SaveHistoryAsync(DiffusionInputOptions options, VideoInputStream videoInput)
         {
-            Logger.LogInformation("[VideoToVideo] [SaveHistory] Saving history...");
+            Logger.LogInformation("[ImageToVideo] [SaveHistory] Saving history...");
             var result = await HistoryService.AddAsync(videoInput, new DiffusionHistory
             {
                 Options = options,
@@ -108,9 +148,9 @@ namespace Diffuse.Views
                 ExtractModel = CurrentPipeline.ExtractModel?.Name,
                 ExtractorType = CurrentPipeline.ExtractModel?.Type,
                 ExtractOptions = CurrentPipeline.ExtractModel is not null ? ExtractOptions : null,
-                Source = View.VideoToVideo
+                Source = View.ImageToVideo,
             });
-            Logger.LogInformation("[VideoToVideo] [SaveHistory] History saved.");
+            Logger.LogInformation("[ImageToVideo] [SaveHistory] History saved.");
             return result;
         }
     }

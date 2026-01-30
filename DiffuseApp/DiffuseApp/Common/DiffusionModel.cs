@@ -15,6 +15,7 @@ namespace Diffuse.Common
         public string Name { get; set; }
         public string Pipeline { get; set; }
         public string Path { get; set; }
+        public string Variant { get; set; }
         public ModelSourceType Source { get; set; }
         public bool IsDefault { get; set; }
         public MemoryProfile[] MemoryProfile { get; set; }

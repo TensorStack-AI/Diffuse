@@ -31,8 +31,6 @@ namespace Diffuse.Controls
         private UpscaleModel _currentUpscaler;
 
 
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelControl"/> class.
         /// </summary>
@@ -44,7 +42,7 @@ namespace Diffuse.Controls
         }
 
         public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register(nameof(Settings), typeof(Settings), typeof(ModelControl), new PropertyMetadata<ModelControl>((c) => c.OnSettingsChanged()));
-        public static readonly DependencyProperty CurrentPipelineProperty = DependencyProperty.Register(nameof(CurrentPipeline), typeof(PipelineModel), typeof(ModelControl), new PropertyMetadata<ModelControl>((c) => c.OnCurrentPipelineChanged()));
+        public static readonly DependencyProperty IsPipelineLoadedProperty = DependencyProperty.Register(nameof(IsPipelineLoaded), typeof(bool), typeof(ModelControl), new PropertyMetadata<ModelControl>((c) => c.OnIsPipelineLoadedChanged()));
         public static readonly DependencyProperty IsSelectionValidProperty = DependencyProperty.Register(nameof(IsSelectionValid), typeof(bool), typeof(ModelControl));
 
         public event EventHandler<PipelineModel> SelectionChanged;
@@ -57,10 +55,10 @@ namespace Diffuse.Controls
             set { SetValue(SettingsProperty, value); }
         }
 
-        public PipelineModel CurrentPipeline
+        public bool IsPipelineLoaded
         {
-            get { return (PipelineModel)GetValue(CurrentPipelineProperty); }
-            set { SetValue(CurrentPipelineProperty, value); }
+            get { return (bool)GetValue(IsPipelineLoadedProperty); }
+            set { SetValue(IsPipelineLoadedProperty, value); }
         }
 
         public bool IsSelectionValid
@@ -72,19 +70,19 @@ namespace Diffuse.Controls
         public Device SelectedDevice
         {
             get { return _selectedDevice; }
-            set { SetProperty(ref _selectedDevice, value); }
+            set { SetProperty(ref _selectedDevice, value); ValidateSelection(); }
         }
 
         public ExtractModel SelectedExtractor
         {
             get { return _selectedExtractor; }
-            set { SetProperty(ref _selectedExtractor, value); }
+            set { SetProperty(ref _selectedExtractor, value); ValidateSelection(); }
         }
 
         public UpscaleModel SelectedUpscaler
         {
             get { return _selectedUpscaler; }
-            set { SetProperty(ref _selectedUpscaler, value); }
+            set { SetProperty(ref _selectedUpscaler, value); ValidateSelection(); }
         }
 
         public ListCollectionView DeviceCollectionView
@@ -124,30 +122,22 @@ namespace Diffuse.Controls
             _currentExtractor = SelectedExtractor;
             _currentUpscaler = SelectedUpscaler;
 
-            CurrentPipeline = new PipelineModel
+            var pipeline = new PipelineModel
             {
                 Device = _currentDevice,
                 ExtractModel = _isExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _isUpscalerEnabled ? _currentUpscaler : default,
             };
 
-            SelectionChanged?.Invoke(this, CurrentPipeline);
+            ValidateSelection();
+            SelectionChanged?.Invoke(this, pipeline);
             return Task.CompletedTask;
         }
 
 
         private bool CanLoad()
         {
-            var isReloadRequired = SelectedDevice is not null
-                && (!IsExtractorEnabled || SelectedExtractor is not null)
-                && (!IsUpscalerEnabled || SelectedUpscaler is not null)
-                && HasCurrentChanged();
-
-            var isSelectionValid = !isReloadRequired;
-            if (IsSelectionValid != isSelectionValid)
-                IsSelectionValid = isSelectionValid;
-
-            return isReloadRequired;
+            return !IsSelectionValid;
         }
 
 
@@ -156,6 +146,7 @@ namespace Diffuse.Controls
             _currentExtractor = default;
             _currentUpscaler = default;
             SelectionChanged?.Invoke(this, default);
+            ValidateSelection();
             return Task.CompletedTask;
         }
 
@@ -220,16 +211,6 @@ namespace Diffuse.Controls
         }
 
 
-        private Task OnCurrentPipelineChanged()
-        {
-            if (CurrentPipeline is null)
-            {
-
-            }
-            return Task.CompletedTask;
-        }
-
-
         private void Device_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (ExtractCollectionView is not null)
@@ -249,5 +230,22 @@ namespace Diffuse.Controls
             }
         }
 
+
+        private Task OnIsPipelineLoadedChanged()
+        {
+            ValidateSelection();
+            return Task.CompletedTask;
+        }
+
+
+        private void ValidateSelection()
+        {
+
+            var isExtractValid = !IsExtractorEnabled || ExtractCollectionView?.IsEmpty == false;
+            var isUpscaleValid = !IsUpscalerEnabled || UpscaleCollectionView?.IsEmpty == false;
+            var isCurrentValid = !HasCurrentChanged();
+            IsSelectionValid = isCurrentValid && isExtractValid && isUpscaleValid && IsPipelineLoaded;
+            LoadCommand.RaiseCanExecuteChanged();
+        }
     }
 }
