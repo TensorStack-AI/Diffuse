@@ -113,6 +113,26 @@ namespace DiffuseApp.Common
 
 
         /// <summary>
+        /// Reload as an asynchronous operation.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public async Task ReloadAsync(PipelineReloadOptions options, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                _isCanceled = false;
+                await SendPipelineRequestAsync(new PipelineRequest(options), cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                await KillServerAsync();
+                throw;
+            }
+        }
+
+
+        /// <summary>
         /// Unload the PythonPipeline
         /// </summary>
         public async Task UnloadAsync()

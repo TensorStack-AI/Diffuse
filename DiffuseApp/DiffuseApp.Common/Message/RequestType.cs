@@ -7,6 +7,7 @@
         Environment = 2,
         PipelineLoad = 3,
         PipelineUnload = 4,
-        PipelineRun = 5
+        PipelineRun = 5,
+        PipelineReload = 6
     }
 }

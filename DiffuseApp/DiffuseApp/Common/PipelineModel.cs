@@ -71,16 +71,24 @@ namespace Diffuse.Common
         }
 
 
-        public bool IsReloadRequired(PipelineModel pipeline)
+        public bool IsLoadRequired(PipelineModel pipeline)
         {
             return pipeline is null
                 || pipeline.DiffusionModel != _diffusionModel
-                || pipeline.LoraAdapterModel.HasChanged(_loraAdapterModel)
-                || pipeline.ControlNetModel != _controlNetModel
                 || pipeline.MemoryMode != _memoryMode
-                || pipeline.DataType != _dataType
-                || pipeline.ProcessType != _processType;
+                || pipeline.DataType != _dataType;
         }
 
+
+        public bool IsReloadRequired(PipelineModel pipeline)
+        {
+            if (pipeline is null || pipeline.DiffusionModel != _diffusionModel)
+                return false;
+
+            // ProcessType, LoraAdapters and ControlNet are the only options that can be modified
+            return pipeline.ProcessType != _processType
+                || pipeline.ControlNetModel != _controlNetModel
+                || pipeline.LoraAdapterModel.HasChanged(_loraAdapterModel);
+        }
     }
 }

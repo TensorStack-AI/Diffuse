@@ -39,7 +39,7 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 1. Download and run **Diffuse_vX.X.X.exe**  
 2. Follow the on-screen instructions
 
-### 2. Portable Version
+### 2. Standalone Version
 1. Download and extract **Diffuse_vX.X.X.zip**  
    *A fast SSD with plenty of free space is recommended, as model downloads can be large.*
 
@@ -78,11 +78,11 @@ Focus on usability, stability, and feature expansion.
 - ~~Installer and deployment tooling~~
 - ~~Upscaling and interpolation support~~
 - ~~Extractor pipeline support~~
+- ~~ControlNet support~~
+- ~~Inpaint/Outpaint processes~~
 - Advanced UI and workflow options
-- ControlNet support
 - GGUF model support
 - Weighted prompt support
-- Inpaint/Outpaint processes
 - Model Manager, download queuing, online templates
 - Stability, performance, and reliability improvements
 

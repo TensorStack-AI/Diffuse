@@ -1,4 +1,5 @@
 ﻿using Diffuse.Common;
+using DiffuseApp.Common;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -566,24 +567,56 @@ namespace Diffuse.Controls
             return _currentLora.HasChanged(LoraAdapters);
         }
 
-    }
 
-    public class MemoryProfileModel : BaseModel
-    {
-        private int _memoryGB;
-        private MemoryMode _memoryMode;
-
-        public MemoryMode MemoryMode
+        public void SetPipeline(PipelineModel pipeline)
         {
-            get { return _memoryMode; }
-            set { SetProperty(ref _memoryMode, value); }
-        }
-        public int MemoryGB
-        {
-            get { return _memoryGB; }
-            set { SetProperty(ref _memoryGB, value); }
+            if (pipeline == null)
+                return;
+
+            if (!ModelCollectionView.Contains(pipeline.DiffusionModel))
+                return;
+
+            SelectedDevice = pipeline.Device;
+            SelectedModel = pipeline.DiffusionModel;
+
+            SelectedDataType = pipeline.DataType;
+            SelectedMemoryMode = SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == pipeline.MemoryMode);
+
+            if (IsUpscalerSupported)
+            {
+                IsUpscalerEnabled = pipeline.UpscaleModel is not null;
+                if (pipeline.UpscaleModel is not null)
+                    SelectedUpscaler = pipeline.UpscaleModel;
+            }
+
+            if (IsExtractorSupported)
+            {
+                IsExtractorEnabled = pipeline.ExtractModel is not null;
+                if (pipeline.ExtractModel is not null)
+                    SelectedExtractor = pipeline.ExtractModel;
+            }
+
+            if (IsControlNetSupported)
+            {
+                if (pipeline.ControlNetModel is not null)
+                    SelectedControlNet = pipeline.ControlNetModel;
+            }
+
+            if (IsLoraSupported)
+            {
+                IsLoraEnabled = !pipeline.LoraAdapterModel.IsNullOrEmpty();
+                if (IsLoraEnabled)
+                {
+                    LoraAdapters.Clear();
+                    foreach (var loraAdapter in pipeline.LoraAdapterModel)
+                    {
+                        LoraAdapters.Add(loraAdapter);
+                    }
+                }
+            }
+
+            ValidateSelection();
         }
     }
-
 
 }

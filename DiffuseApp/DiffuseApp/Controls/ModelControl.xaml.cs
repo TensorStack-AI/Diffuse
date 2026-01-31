@@ -161,8 +161,8 @@ namespace Diffuse.Controls
         private bool HasCurrentChanged()
         {
             return _currentDevice != SelectedDevice
-                || _currentExtractor != SelectedExtractor
-                || _currentUpscaler != SelectedUpscaler;
+                || (IsExtractorEnabled && _currentExtractor != SelectedExtractor)
+                || (IsUpscalerEnabled && _currentUpscaler != SelectedUpscaler);
         }
 
 
@@ -240,12 +240,27 @@ namespace Diffuse.Controls
 
         private void ValidateSelection()
         {
-
             var isExtractValid = !IsExtractorEnabled || ExtractCollectionView?.IsEmpty == false;
             var isUpscaleValid = !IsUpscalerEnabled || UpscaleCollectionView?.IsEmpty == false;
             var isCurrentValid = !HasCurrentChanged();
             IsSelectionValid = isCurrentValid && isExtractValid && isUpscaleValid && IsPipelineLoaded;
             LoadCommand.RaiseCanExecuteChanged();
+        }
+
+
+        public void SetPipeline(PipelineModel pipeline)
+        {
+            if (pipeline == null)
+                return;
+
+            SelectedDevice = pipeline.Device;
+            if (IsUpscalerEnabled && pipeline.UpscaleModel is not null)
+                SelectedUpscaler = pipeline.UpscaleModel;
+
+            if (IsExtractorEnabled && pipeline.ExtractModel is not null)
+                SelectedExtractor = pipeline.ExtractModel;
+
+            ValidateSelection();
         }
     }
 }

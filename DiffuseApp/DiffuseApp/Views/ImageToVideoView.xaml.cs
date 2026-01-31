@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Image;
 using TensorStack.Video;
+using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
 namespace Diffuse.Views
@@ -40,6 +41,17 @@ namespace Diffuse.Views
         {
             get { return _sourceImage; }
             set { SetProperty(ref _sourceImage, value); }
+        }
+
+
+        /// <summary>
+        /// On View Open
+        /// </summary>
+        public override async Task OpenAsync(OpenViewArgs args = null)
+        {
+            await base.OpenAsync(args);
+            if (!IsPipelineLoaded)
+                ModelControl.SetPipeline(DiffusionService.Pipeline);
         }
 
 
@@ -86,6 +98,7 @@ namespace Diffuse.Views
             catch (Exception ex)
             {
                 Statistics.Clear();
+                IsPipelineLoaded = DiffusionService.IsLoaded;
                 Logger.LogError(ex, "[ImageToVideo] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
                 await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }

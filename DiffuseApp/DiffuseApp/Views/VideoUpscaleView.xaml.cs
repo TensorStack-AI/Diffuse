@@ -84,6 +84,7 @@ namespace Diffuse.Views
         /// <param name="args">The arguments.</param>
         public override Task OpenAsync(OpenViewArgs args = null)
         {
+            ModelControl.SetPipeline(UpscaleService.Pipeline);
             IsPipelineLoaded = UpscaleService.IsLoaded && UpscaleService.Pipeline.UpscaleModel == CurrentPipeline?.UpscaleModel;
             return base.OpenAsync(args);
         }
@@ -99,7 +100,7 @@ namespace Diffuse.Views
 
             try
             {
-                Progress.Indeterminate("Loading Pipeline...");
+                Progress.Indeterminate($"Loading {CurrentPipeline.UpscaleModel.Name}...");
 
                 await UpscaleService.LoadAsync(CurrentPipeline);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
@@ -196,6 +197,7 @@ namespace Diffuse.Views
             catch (Exception ex)
             {
                 Statistics.Clear();
+                IsPipelineLoaded = UpscaleService.IsLoaded;
                 Logger.LogError(ex, "[VideoUpscale] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
                 await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }

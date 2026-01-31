@@ -120,6 +120,10 @@ namespace DiffuseApp.Common
                             {
                                 pipeline = await LoadPipelineAsync(request, cancellationToken);
                             }
+                            else if (request.Type == RequestType.PipelineReload)
+                            {
+                                await ReloadPipelineAsync(request, pipeline, cancellationToken);
+                            }
                             else if (request.Type == RequestType.PipelineUnload)
                             {
                                 await UnloadPipelineAsync(request, pipeline, cancellationToken);
@@ -301,6 +305,32 @@ namespace DiffuseApp.Common
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[PipelineServer] [LoadPipeline] An exception occurred loading pipeline.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+                return default;
+            }
+        }
+
+
+        /// <summary>
+        /// Reload the pipeline
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task<PythonPipeline> ReloadPipelineAsync(PipelineRequest request, PythonPipeline pipeline, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CallbackMessage("Reloading Pipeline...", "Initialize");
+                await pipeline.ReloadAsync(request.PipelineReloadOptions);
+                await _pipelineChannel.SendResponse(cancellationToken);
+
+                CallbackMessage(string.Empty, "Initialize");
+                return pipeline;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [ReloadPipeline] An exception occurred reloading pipeline.");
                 await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
                 return default;
             }

@@ -336,12 +336,23 @@ namespace Diffuse.Views
             var timestamp = Stopwatch.GetTimestamp();
             if (CurrentPipeline.DiffusionModel is not null)
             {
-                if (!DiffusionService.IsLoaded || CurrentPipeline.IsReloadRequired(DiffusionService.Pipeline))
+                if (DiffusionService.IsLoaded)
                 {
-                    Logger.LogInformation("[{View}] [LoadDiffusionModel] Loading diffusion model {Name}...", ViewName, CurrentPipeline.DiffusionModel.Name);
-                    await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
+                    if (DiffusionService.Pipeline.IsLoadRequired(CurrentPipeline))
+                    {
+                        Logger.LogInformation("[{View}] [LoadDiffusionModel] Loading diffusion model {Name}...", ViewName, CurrentPipeline.DiffusionModel.Name);
+                        await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
+                    }
+                    else if (DiffusionService.Pipeline.IsReloadRequired(CurrentPipeline))
+                    {
+                        Logger.LogInformation("[{View}] [LoadDiffusionModel] Reloading diffusion model {Name}...", ViewName, CurrentPipeline.DiffusionModel.Name);
+                        await DiffusionService.ReloadAsync(CurrentPipeline, PythonProgressCallback);
+                    }
+                    return true;
                 }
 
+                Logger.LogInformation("[{View}] [LoadDiffusionModel] Loading diffusion model {Name}...", ViewName, CurrentPipeline.DiffusionModel.Name);
+                await DiffusionService.LoadAsync(CurrentPipeline, PythonProgressCallback);
                 Logger.LogInformation("[{View}] [LoadDiffusionModel] Successfully loaded diffusion model, Elapsed: {Elapsed:c}", ViewName, Stopwatch.GetElapsedTime(timestamp));
                 return true;
             }
@@ -556,7 +567,7 @@ namespace Diffuse.Views
                         return; // Canceled/Failed to download models
 
 
-                    Progress.Indeterminate("Loading Pipeline...");
+                    Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
                     if (!await LoadPipelineAsync())
                         return;// Canceled/Failed to load pipeline
 
@@ -601,7 +612,7 @@ namespace Diffuse.Views
             }
             else if (progress.IsLoading)
             {
-                Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
+               // Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
             }
             else if (progress.IsGenerating && DiffusionService.IsExecuting)
             {

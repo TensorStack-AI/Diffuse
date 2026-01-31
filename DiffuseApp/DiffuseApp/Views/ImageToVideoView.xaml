@@ -44,7 +44,25 @@
 
                             <!--Execute/Cancel-->
                             <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="30" >
-                                <Button Content="Cancel" Command="{Binding CancelCommand}" />
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Left" Width="30" Command="{Binding CancelCommand}" Visibility="{Binding DiffusionService.IsCanceling, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Immediately stops generation by closing the backend process." ToolTipService.InitialShowDelay="200">
+                                        <CommonControls:FontAwesome Icon="f00d" Color="{StaticResource DangerColour}" />
+                                    </Button>
+                                    <Grid IsEnabled="{Binding DiffusionService.IsCanceling, Converter={StaticResource InverseBoolConverter}}">
+                                        <Button Command="{Binding CancelCommand}" >
+                                            <Button.Style>
+                                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                                    <Setter Property="Content" Value="Cancel" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DiffusionService.IsCanceling}" Value="True">
+                                                            <Setter Property="Content" Value="Canceling" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </Grid>
+                                </DockPanel>
                                 <Grid IsEnabled="{Binding IsSelectionValid, ElementName=ModelControl}">
                                     <Button Content="Generate" Command="{Binding ExecuteCommand}" />
                                 </Grid>

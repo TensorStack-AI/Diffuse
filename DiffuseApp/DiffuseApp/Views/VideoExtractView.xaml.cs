@@ -84,6 +84,7 @@ namespace Diffuse.Views
         /// <param name="args">The arguments.</param>
         public override Task OpenAsync(OpenViewArgs args = null)
         {
+            ModelControl.SetPipeline(ExtractService.Pipeline);
             IsPipelineLoaded = ExtractService.IsLoaded && ExtractService.Pipeline.ExtractModel == CurrentPipeline?.ExtractModel;
             return base.OpenAsync(args);
         }
@@ -99,7 +100,7 @@ namespace Diffuse.Views
 
             try
             {
-                Progress.Indeterminate("Loading Pipeline...");
+                Progress.Indeterminate($"Loading {CurrentPipeline.ExtractModel.Name}...");
 
                 await ExtractService.LoadAsync(CurrentPipeline);
                 await Settings.SetDefaultsAsync(CurrentPipeline);
@@ -194,6 +195,7 @@ namespace Diffuse.Views
             catch (Exception ex)
             {
                 Statistics.Clear();
+                IsPipelineLoaded = ExtractService.IsLoaded;
                 Logger.LogError(ex, "[VideoExtract] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
                 await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }

@@ -195,6 +195,7 @@ namespace Diffuse.Views
             catch (Exception ex)
             {
                 Statistics.Clear();
+                IsPipelineLoaded = InterpolationService.IsLoaded;
                 Logger.LogError(ex, "[VideoInterpolate] [Execute] An exception occurred executing pipeline, Elapsed: {Elapsed:c}", Stopwatch.GetElapsedTime(timestamp));
                 await DialogService.ShowErrorAsync("Execute Pipeline", ex.Message);
             }

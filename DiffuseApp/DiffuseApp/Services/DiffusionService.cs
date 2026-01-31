@@ -27,7 +27,9 @@ namespace Diffuse.Services
         private bool _isLoaded;
         private bool _isLoading;
         private bool _isExecuting;
+        private bool _isCanceling;
         private DiffusionDefaultOptions _defaultOptions;
+        private IProgress<PipelineProgress> _progressCallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiffusionService"/> class.
@@ -78,6 +80,12 @@ namespace Diffuse.Services
             private set { SetProperty(ref _isExecuting, value); NotifyPropertyChanged(nameof(CanCancel)); }
         }
 
+        public bool IsCanceling
+        {
+            get { return _isCanceling; }
+            private set { SetProperty(ref _isCanceling, value); NotifyPropertyChanged(nameof(CanCancel)); }
+        }
+
         /// <summary>
         /// Gets a value indicating whether this instance can cancel.
         /// </summary>
@@ -85,7 +93,7 @@ namespace Diffuse.Services
 
 
         /// <summary>
-        /// Load the upscale pipeline
+        /// Load the pipeline
         /// </summary>
         /// <param name="config">The configuration.</param>
         public async Task LoadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback)
@@ -99,6 +107,7 @@ namespace Diffuse.Services
                     await UnloadPythonPipeline();
 
                     _currentPipeline = pipeline;
+                    _progressCallback = progressCallback;
                     var device = _currentPipeline.Device;
                     var model = _currentPipeline.DiffusionModel;
                     var controlNet = _currentPipeline.ControlNetModel;
@@ -127,7 +136,8 @@ namespace Diffuse.Services
                         }
                     };
 
-                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, progressCallback, _cancellationTokenSource.Token);
+                    var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
+                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, relayedProgressCallback, _cancellationTokenSource.Token);
                 }
                 IsLoaded = true;
             }
@@ -142,6 +152,49 @@ namespace Diffuse.Services
             finally
             {
                 IsLoading = false;
+                IsCanceling = false;
+                _cancellationTokenSource = null;
+            }
+        }
+
+
+        /// <summary>
+        /// Reload the pipeline
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        public async Task ReloadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback)
+        {
+            IsLoaded = false;
+            IsLoading = true;
+            try
+            {
+                using (_cancellationTokenSource = new CancellationTokenSource())
+                {
+                    _currentPipeline = pipeline;
+                    _progressCallback = progressCallback;
+                    var reloadOptions = new PipelineReloadOptions
+                    {
+                        ControlNetPath = pipeline.ControlNetModel?.Path,
+                        LoraAdapters = GetLoraAdapters(pipeline.LoraAdapterModel),
+                        ProcessType = pipeline.ProcessType,
+                    };
+
+                    await _pipelineClient.ReloadAsync(reloadOptions, _cancellationTokenSource.Token);
+                }
+                IsLoaded = true;
+            }
+            catch (OperationCanceledException)
+            {
+                _pipelineClient?.Dispose();
+                _pipelineClient = null;
+                _defaultOptions = null;
+                _currentPipeline = null;
+                throw;
+            }
+            finally
+            {
+                IsLoading = false;
+                IsCanceling = false;
                 _cancellationTokenSource = null;
             }
         }
@@ -189,6 +242,7 @@ namespace Diffuse.Services
             finally
             {
                 IsExecuting = false;
+                IsCanceling = false;
             }
         }
 
@@ -236,6 +290,7 @@ namespace Diffuse.Services
             finally
             {
                 IsExecuting = false;
+                IsCanceling = false;
             }
         }
 
@@ -247,13 +302,42 @@ namespace Diffuse.Services
         {
             try
             {
+                if (_isCanceling)
+                {
+                    await StopServerAsync();
+                    return;
+                }
+
+                IsCanceling = true;
                 if (_pipelineClient is not null)
                     await _pipelineClient.CancelAsync();
             }
-            catch (Exception)
+            catch (Exception) { }
+            finally
             {
+                await _cancellationTokenSource.SafeCancelAsync();
             }
-            await _cancellationTokenSource.SafeCancelAsync();
+        }
+
+
+        /// <summary>
+        /// Stop/Kill server
+        /// </summary>
+        private async Task StopServerAsync()
+        {
+            try
+            {
+                await _pipelineClient.KillServerAsync();
+            }
+            catch (Exception) { }
+            finally
+            {
+                IsLoaded = false;
+                IsLoading = false;
+                IsExecuting = false;
+                IsCanceling = false;
+                _pipelineClient = null;
+            }
         }
 
 
@@ -411,8 +495,10 @@ namespace Diffuse.Services
         bool IsLoaded { get; }
         bool IsLoading { get; }
         bool IsExecuting { get; }
+        bool IsCanceling { get; }
         bool CanCancel { get; }
         Task LoadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
+        Task ReloadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
         Task UnloadAsync();
         Task CancelAsync();
         Task<ImageTensor> GenerateImageAsync(DiffusionInputOptions options);

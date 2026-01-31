@@ -21,6 +21,12 @@ namespace DiffuseApp.Common.Message
             Type = RequestType.PipelineLoad;
         }
 
+        public PipelineRequest(PipelineReloadOptions options)
+        {
+            PipelineReloadOptions = options;
+            Type = RequestType.PipelineReload;
+        }
+
         public PipelineRequest(EnvironmentConfig config, bool isRebuild, bool isReinstall)
         {
             Environment = new EnvironmentRequest
@@ -45,6 +51,7 @@ namespace DiffuseApp.Common.Message
         public RequestType Type { get; init; }
         public EnvironmentRequest Environment { get; set; }
         public PipelineConfig PipelineConfig { get; set; }
+        public PipelineReloadOptions PipelineReloadOptions { get; set; }
         public PipelineOptions PipelineOptions { get; set; }
         public int ImageTensorCount { get; set; }
         public int ControlNetTensorCount { get; set; }
