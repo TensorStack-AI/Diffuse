@@ -43,7 +43,7 @@ namespace Diffuse.Dialogs
             SelectedSource = ModelSourceType.HuggingFace;
             CheckpointModel = new DiffusionCheckpointModel();
             CheckpointModel.PropertyChanged += (s, e) => GenerateName();
-            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.Checkpoint];
+            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.SingleFile, ModelSourceType.Checkpoint];
             InitializeComponent();
         }
 
@@ -93,7 +93,7 @@ namespace Diffuse.Dialogs
             set
             {
                 SetProperty(ref _selectedSource, value);
-                if (_selectedSource == ModelSourceType.Checkpoint)
+                if (_selectedSource == ModelSourceType.Checkpoint || _selectedSource == ModelSourceType.SingleFile)
                     SelectedModelPath = _selectedTemplate?.Path;
 
                 GenerateName();
@@ -128,7 +128,19 @@ namespace Diffuse.Dialogs
             if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && Utils.TryParseHuggingFaceRepo(_selectedModelPath, out var huggingfacePath))
                 _selectedTemplate.Path = huggingfacePath;
 
-            _selectedTemplate.Checkpoint = _selectedSource == ModelSourceType.Checkpoint ? _checkpointModel : null;
+            if (_selectedSource == ModelSourceType.SingleFile)
+            {
+                _checkpointModel.VaeCheckpoint = null;
+                _checkpointModel.ModelCheckpoint = null;
+                _checkpointModel.TextEncoderCheckpoint = null;
+                _selectedTemplate.Checkpoint = _checkpointModel;
+            }
+            if (_selectedSource == ModelSourceType.Checkpoint)
+            {
+                _checkpointModel.Checkpoint = null;
+                _selectedTemplate.Checkpoint = _checkpointModel;
+            }
+
             _selectedTemplate.Initialize(Settings.DirectoryModel);
             Settings.DiffusionModels.Add(_selectedTemplate);
             return base.SaveAsync();
@@ -169,7 +181,7 @@ namespace Diffuse.Dialogs
             {
                 if (_selectedSource == ModelSourceType.Folder && !Directory.Exists(_selectedModelPath))
                     yield return "Model folder not found";
-                else if (_selectedSource == ModelSourceType.SingleFile && !File.Exists(_selectedModelPath))
+                else if (_selectedSource == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !File.Exists(CheckpointModel.Checkpoint)))
                     yield return "Model file not found";
                 else if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(_selectedModelPath, out _))
                     yield return "HuggingFace repository not found";

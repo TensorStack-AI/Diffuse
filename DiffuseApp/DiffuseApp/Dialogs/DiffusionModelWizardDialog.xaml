@@ -51,7 +51,7 @@
                 <!--SingleFile-->
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
                     <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
-                    <CommonControls:FilePickerTextBox FileName="{Binding SelectedModelPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                    <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.Checkpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
                 </StackPanel>
 
                 <!--HuggingFace-->
@@ -71,7 +71,7 @@
 
                 <!--Checkpoint-->
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Checkpoint}">
-                    <DockPanel>
+                    <!--<DockPanel>
                         <DockPanel DockPanel.Dock="Right" Margin="4,0,0,0" Width="90">
                             <UniformGrid Columns="2" DockPanel.Dock="Top">
                                 <TextBlock Text="Variant" Style="{StaticResource FieldTextBlockStyle}"/>
@@ -83,7 +83,7 @@
                             <TextBlock Text="HuggingFace Url (Base Repo)" Style="{StaticResource FieldTextBlockStyle}" />
                             <TextBox Text="{Binding SelectedModelPath, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
-                    </DockPanel>
+                    </DockPanel>-->
                     <StackPanel>
                         <TextBlock Text="Base Model (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
                         <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.ModelCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>

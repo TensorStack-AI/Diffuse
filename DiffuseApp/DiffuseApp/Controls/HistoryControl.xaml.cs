@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Diffuse.Common;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using System.Windows.Input;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Utils;
-using Diffuse.Common;
 
 namespace Diffuse.Controls
 {
@@ -20,36 +20,21 @@ namespace Diffuse.Controls
     {
         private ICollectionView _collectionView;
         private Point _dragStartPoint;
+        private ScrollBarVisibility _horizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+        private ScrollBarVisibility _verticalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
         public HistoryControl()
         {
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty ItemSourceProperty =
-            DependencyProperty.Register(nameof(ItemSource), typeof(ObservableCollection<IHistoryItem>), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnItemSourceChanged()));
-
-        public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register(nameof(SelectedItem), typeof(IHistoryItem), typeof(HistoryControl));
-   
-        public static readonly DependencyProperty ItemTemplateProperty =
-            DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(HistoryControl));
-
-        public static readonly DependencyProperty ItemsPanelTemplateProperty =
-            DependencyProperty.Register(nameof(ItemsPanelTemplate), typeof(ItemsPanelTemplate), typeof(HistoryControl));
-
-        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty =
-            DependencyProperty.Register(nameof(HorizontalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(HistoryControl), new PropertyMetadata(ScrollBarVisibility.Disabled));
-
-        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
-            DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(HistoryControl), new PropertyMetadata(ScrollBarVisibility.Visible));
-
-        public static readonly DependencyProperty SortPropertyProperty =
-            DependencyProperty.Register(nameof(SortProperty), typeof(string), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = nameof(IHistoryItem.Timestamp) });
-
-        public static readonly DependencyProperty SortDirectionProperty =
-            DependencyProperty.Register(nameof(SortDirection), typeof(ListSortDirection), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = ListSortDirection.Descending });
-
+        public static readonly DependencyProperty ItemSourceProperty = DependencyProperty.Register(nameof(ItemSource), typeof(ObservableCollection<IHistoryItem>), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnItemSourceChanged()));
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(IHistoryItem), typeof(HistoryControl));
+        public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(HistoryControl));
+        public static readonly DependencyProperty ItemsPanelTemplateProperty = DependencyProperty.Register(nameof(ItemsPanelTemplate), typeof(ItemsPanelTemplate), typeof(HistoryControl));
+        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnOrientationChanged()) { DefaultValue = Orientation.Horizontal });
+        public static readonly DependencyProperty SortPropertyProperty = DependencyProperty.Register(nameof(SortProperty), typeof(string), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = nameof(IHistoryItem.Timestamp) });
+        public static readonly DependencyProperty SortDirectionProperty = DependencyProperty.Register(nameof(SortDirection), typeof(ListSortDirection), typeof(HistoryControl), new PropertyMetadata<HistoryControl>(x => x.OnSortChanged()) { DefaultValue = ListSortDirection.Descending });
         public static readonly DependencyProperty PreviewItemCommandProperty = DependencyProperty.Register(nameof(PreviewItemCommand), typeof(AsyncRelayCommand<IHistoryItem>), typeof(HistoryControl));
         public static readonly DependencyProperty RemoveItemCommandProperty = DependencyProperty.Register(nameof(RemoveItemCommand), typeof(AsyncRelayCommand<IHistoryItem>), typeof(HistoryControl));
 
@@ -77,16 +62,10 @@ namespace Diffuse.Controls
             set { SetValue(ItemsPanelTemplateProperty, value); }
         }
 
-        public ScrollBarVisibility HorizontalScrollBarVisibility
+        public Orientation Orientation
         {
-            get { return (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty); }
-            set { SetValue(HorizontalScrollBarVisibilityProperty, value); }
-        }
-
-        public ScrollBarVisibility VerticalScrollBarVisibility
-        {
-            get { return (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty); }
-            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
         }
 
         public string SortProperty
@@ -105,6 +84,18 @@ namespace Diffuse.Controls
         {
             get { return _collectionView; }
             set { SetProperty(ref _collectionView, value); }
+        }
+
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get { return _horizontalScrollBarVisibility; }
+            set { SetProperty(ref _horizontalScrollBarVisibility, value); }
+        }
+
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return _verticalScrollBarVisibility; }
+            set { SetProperty(ref _verticalScrollBarVisibility, value); }
         }
 
         public AsyncRelayCommand<IHistoryItem> PreviewItemCommand
@@ -131,6 +122,14 @@ namespace Diffuse.Controls
                 return true;
             };
             OnSortChanged();
+            return Task.CompletedTask;
+        }
+
+
+        private Task OnOrientationChanged()
+        {
+            VerticalScrollBarVisibility = Orientation == Orientation.Vertical ? ScrollBarVisibility.Visible : ScrollBarVisibility.Hidden;
+            HorizontalScrollBarVisibility = Orientation == Orientation.Horizontal ? ScrollBarVisibility.Visible : ScrollBarVisibility.Hidden;
             return Task.CompletedTask;
         }
 
@@ -184,7 +183,14 @@ namespace Diffuse.Controls
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             var scrollViewer = (ScrollViewer)sender;
-            scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
+            if (Orientation == Orientation.Horizontal)
+            {
+                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
+            }
+            else
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+            }
             e.Handled = true;
         }
 
@@ -195,34 +201,22 @@ namespace Diffuse.Controls
         }
 
 
-        //protected override async void OnPreviewMouseDoubleClick(MouseButtonEventArgs e)
-        //{
-        //    if (SelectedItem == null)
-        //        return;
-
-        //    if (SelectedItem.MediaType == MediaType.Image)
-        //    {
-        //        //var previewImageDialog = DialogService.GetDialog<PreviewImageDialog>();
-        //        //await previewImageDialog.ShowDialogAsync(SelectedItem);
-        //    }
-
-        //    base.OnPreviewMouseDoubleClick(e);
-        //}
-
-
         static HistoryControl()
         {
             // Create a default ItemsPanelTemplate with a VirtualizingStackPanel
             var factory = new FrameworkElementFactory(typeof(VirtualizingStackPanel));
-            factory.SetValue(VirtualizingStackPanel.OrientationProperty, Orientation.Horizontal);
             factory.SetValue(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling);
+            factory.SetBinding(VirtualizingStackPanel.OrientationProperty, new Binding(nameof(Orientation))
+            {
+                RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(HistoryControl), 1)
+            });
 
             var template = new ItemsPanelTemplate(factory);
             template.Seal();
             ItemsPanelTemplateProperty.OverrideMetadata(typeof(HistoryControl), new FrameworkPropertyMetadata(template));
         }
-
     }
+
 
     public class MediaTemplateSelector : DataTemplateSelector
     {

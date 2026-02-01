@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using TensorStack.Common;
+using TensorStack.Python.Config;
 
 namespace Diffuse
 {
@@ -51,6 +53,32 @@ namespace Diffuse
             }
             return false;
         }
+
+
+
+        public static CheckpointConfig ToConfig(this DiffusionCheckpointModel diffusionCheckpoint)
+        {
+            if (diffusionCheckpoint is null)
+                return null;
+
+            if (!string.IsNullOrEmpty(diffusionCheckpoint.Checkpoint))
+            {
+                return new CheckpointConfig
+                {
+                    ModelCheckpoint = diffusionCheckpoint.Checkpoint,
+                    TextEncoderCheckpoint = diffusionCheckpoint.Checkpoint,
+                    VaeCheckpoint = diffusionCheckpoint.Checkpoint
+                };
+            }
+
+            return new CheckpointConfig
+            {
+                ModelCheckpoint = diffusionCheckpoint.ModelCheckpoint,
+                TextEncoderCheckpoint = diffusionCheckpoint.TextEncoderCheckpoint,
+                VaeCheckpoint = diffusionCheckpoint.VaeCheckpoint
+            };
+        }
+
     }
 
     public static class Utils

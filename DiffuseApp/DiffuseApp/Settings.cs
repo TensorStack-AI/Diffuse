@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using TensorStack.Common;
 using TensorStack.Providers;
 using TensorStack.Python.Common;
@@ -13,8 +14,11 @@ using TensorStack.WPF;
 
 namespace Diffuse
 {
-    public class Settings : IUIConfiguration
+    public class Settings : BaseModel, IUIConfiguration
     {
+        private Orientation _historyOrientation;
+        private int _historyItems = 500;
+
         [AppDefault]
         public string FileVersion { get; set; } = "2";
         public string DirectoryTemp { get; set; }
@@ -26,8 +30,17 @@ namespace Diffuse
         public int WriteBuffer { get; set; } = 32;
         public string VideoCodec { get; set; } = "mp4v";
         public bool IsLegacyDeviceDetection { get; set; }
-        public int MaxHistory { get; set; } = 500;
-        public bool IsServerDebugEnabled { get; set; } = false;
+        public int HistoryItems
+        {
+            get { return _historyItems; }
+            set { SetProperty(ref _historyItems, value); }
+        }
+        public Orientation HistoryOrientation
+        {
+            get { return _historyOrientation; }
+            set { SetProperty(ref _historyOrientation, value); }
+        }
+        public bool IsServerDebugEnabled { get; set; } = true;
         public DataType DefaultDataType { get; set; }
         public MemoryMode DefaultMemoryMode { get; set; }
 

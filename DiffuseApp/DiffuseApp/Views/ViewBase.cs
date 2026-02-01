@@ -92,17 +92,17 @@ namespace Diffuse.Views
                     Logger.LogError("[{View}] [DownloadModels] Failed to download upscale model...", View);
                     return false;
                 }
-                Logger.LogError("[{View}] [DownloadModels] Successfully downloaded upscale model.", View);
+                Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded upscale model.", View);
             }
             if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
             {
-                Logger.LogInformation("[{View}] [DownloadModels] Download extract model '{Name}'...", View, pipeline.UpscaleModel.Name);
+                Logger.LogInformation("[{View}] [DownloadModels] Download extract model '{Name}'...", View, pipeline.ExtractModel.Name);
                 if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
                 {
                     Logger.LogError("[{View}] [DownloadModels] Failed to download extract model...", View);
                     return false;
                 }
-                Logger.LogError("[{View}] [DownloadModels] Successfully downloaded extract model.", View);
+                Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded extract model.", View);
             }
             return true;
         }

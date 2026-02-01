@@ -17,6 +17,40 @@
     <CommonControls:BaseControl.Resources>
 
 
+        <Style x:Key="HistoryPopup" TargetType="{x:Type Popup}">
+            <Setter Property="StaysOpen" Value="True"/>
+            <Setter Property="PopupAnimation" Value="Fade"/>
+            <Setter Property="AllowsTransparency" Value="True"/>
+            <Setter Property="Width" Value="230"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Placement" Value="Top"/>
+            <Setter Property="VerticalOffset" Value="16"/>
+            <Setter Property="HorizontalOffset" Value="-2"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType={x:Type local:HistoryControl}}}" Value="Vertical">
+                    <Setter Property="Placement" Value="Left"/>
+                    <Setter Property="VerticalOffset" Value="-2"/>
+                    <Setter Property="HorizontalOffset" Value="0"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="HistoryContainer" TargetType="{x:Type Border}">
+            <Setter Property="Margin" Value="0,0,0,18"/>
+            <Setter Property="CornerRadius" Value="6,6,0,0"/>
+            <Setter Property="BorderThickness" Value="1,1,1,0"/>
+            <Setter Property="Background" Value="#80000000"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ContainerBorder}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Orientation, RelativeSource={RelativeSource AncestorType={x:Type local:HistoryControl}}}" Value="Vertical">
+                    <Setter Property="Margin" Value="0,0,0,0"/>
+                    <Setter Property="CornerRadius" Value="6,0,0,6"/>
+                    <Setter Property="BorderThickness" Value="1,1,0,1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
         <!--DiffusionHistory-->
         <DataTemplate  DataType="{x:Type Common:DiffusionHistory}">
             <Grid x:Name="Root" Background="Transparent" >
@@ -56,17 +90,9 @@
 
 
                 <!-- Popup card -->
-                <Popup x:Name="CardPopup"
-                    Height="100"
-                    Width="230"
-                    VerticalOffset="16"
-                    HorizontalOffset="-2"
-                    Placement="Top"
-                    StaysOpen="True"
-                    PopupAnimation="Slide"
-                    AllowsTransparency="True" >
+                <Popup x:Name="CardPopup" Style="{StaticResource HistoryPopup}">
                     <Border Background="#01000000">
-                        <Border Margin="0,0,0,18" Background="#80000000" BorderBrush="{StaticResource ContainerBorder}" BorderThickness="1,1,1,0"  CornerRadius="6,6,0,0">
+                        <Border Style="{StaticResource HistoryContainer}" >
                             <StackPanel Margin="6,4,6,6">
                                 <TextBlock Text="{Binding Source}" />
                                 <TextBlock Text="{Binding Width, StringFormat={}Width: {0}}" />
@@ -101,7 +127,7 @@
                     </EventTrigger>
                 </Grid.Triggers>
 
-       
+
             </Grid>
         </DataTemplate>
 
@@ -145,17 +171,9 @@
 
 
                 <!-- Popup card -->
-                <Popup x:Name="CardPopup"
-                    Height="100"
-                    Width="230"
-                    VerticalOffset="16"
-                    HorizontalOffset="-2"
-                    Placement="Top"
-                    StaysOpen="True"
-                    PopupAnimation="Slide"
-                    AllowsTransparency="True" >
+                <Popup x:Name="CardPopup" Style="{StaticResource HistoryPopup}">
                     <Border Background="#01000000">
-                        <Border Margin="0,0,0,18" Background="#80000000" BorderBrush="{StaticResource ContainerBorder}" BorderThickness="1,1,1,0"  CornerRadius="6,6,0,0">
+                        <Border Style="{StaticResource HistoryContainer}" >
                             <StackPanel Margin="6,4,6,6">
                                 <TextBlock Text="{Binding Source}" />
                                 <TextBlock Text="{Binding Width, StringFormat={}Width: {0}}" />
@@ -233,17 +251,9 @@
 
 
                 <!-- Popup card -->
-                <Popup x:Name="CardPopup"
-                    Height="100"
-                    Width="230"
-                    VerticalOffset="16"
-                    HorizontalOffset="-2"
-                    Placement="Top"
-                    StaysOpen="True"
-                    PopupAnimation="Slide"
-                    AllowsTransparency="True" >
+                <Popup x:Name="CardPopup" Style="{StaticResource HistoryPopup}">
                     <Border Background="#01000000">
-                        <Border Margin="0,0,0,18" Background="#80000000" BorderBrush="{StaticResource ContainerBorder}" BorderThickness="1,1,1,0"  CornerRadius="6,6,0,0">
+                        <Border Style="{StaticResource HistoryContainer}" >
                             <StackPanel Margin="6,4,6,6">
                                 <TextBlock Text="{Binding Source}" />
                                 <TextBlock Text="{Binding Width, StringFormat={}Width: {0}}" />
@@ -321,17 +331,9 @@
 
 
                 <!-- Popup card -->
-                <Popup x:Name="CardPopup"
-                    Height="100"
-                    Width="230"
-                    VerticalOffset="16"
-                    HorizontalOffset="-2"
-                    Placement="Top"
-                    StaysOpen="True"
-                    PopupAnimation="Slide"
-                    AllowsTransparency="True" >
+                <Popup x:Name="CardPopup" Style="{StaticResource HistoryPopup}">
                     <Border Background="#01000000">
-                        <Border Margin="0,0,0,18" Background="#80000000" BorderBrush="{StaticResource ContainerBorder}" BorderThickness="1,1,1,0"  CornerRadius="6,6,0,0">
+                        <Border Style="{StaticResource HistoryContainer}" >
                             <StackPanel Margin="6,4,6,6">
                                 <TextBlock Text="{Binding Source}" />
                                 <TextBlock Text="{Binding Width, StringFormat={}Width: {0}}" />
@@ -416,7 +418,6 @@
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
-               
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>

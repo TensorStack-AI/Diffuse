@@ -42,6 +42,10 @@ namespace Diffuse.Common
                 IsValid = Directory.Exists(Path);
             else if (Source == ModelSourceType.HuggingFace)
                 IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
+            else if (Source == ModelSourceType.SingleFile)
+            {
+                IsValid = Checkpoint is not null && File.Exists(Checkpoint.Checkpoint);
+            }
             else if (Source == ModelSourceType.Checkpoint)
             {
                 IsValid = Checkpoint is not null
@@ -64,31 +68,5 @@ namespace Diffuse.Common
 
         public DataType DataType { get; set; }
         public int[] MemoryModes { get; set; }
-    }
-
-
-    public sealed class DiffusionCheckpointModel : BaseModel
-    {
-        private string _modelCheckpoint;
-        private string _vaeCheckpoint;
-        private string _textEncoderCheckpoint;
-
-        public string ModelCheckpoint
-        {
-            get { return _modelCheckpoint; }
-            set { SetProperty(ref _modelCheckpoint, value); }
-        }
-
-        public string VaeCheckpoint
-        {
-            get { return _vaeCheckpoint; }
-            set { SetProperty(ref _vaeCheckpoint, value); }
-        }
-
-        public string TextEncoderCheckpoint
-        {
-            get { return _textEncoderCheckpoint; }
-            set { SetProperty(ref _textEncoderCheckpoint, value); }
-        }
     }
 }

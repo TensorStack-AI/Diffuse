@@ -30,7 +30,7 @@ namespace Diffuse.Dialogs
         {
             Settings = settings;
             DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Int8];
-            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.Checkpoint];
+            ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.SingleFile, ModelSourceType.Checkpoint];
             Sizes = new ObservableCollection<SizeOption>();
             Schedulers = new ObservableCollection<SchedulerType>();
             Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
@@ -170,10 +170,21 @@ namespace Diffuse.Dialogs
             DiffusionModel.DefaultOptions.Height = defaultSize.Height;
             DiffusionModel.DefaultOptions.Schedulers = Schedulers.ToArray();
 
-            if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
+            if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint || DiffusionModel.Source == ModelSourceType.SingleFile) && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
                 DiffusionModel.Path = huggingfacePath;
 
-            DiffusionModel.Checkpoint = DiffusionModel.Source == ModelSourceType.Checkpoint ? CheckpointModel : null;
+            if (DiffusionModel.Source == ModelSourceType.SingleFile)
+            {
+                _checkpointModel.VaeCheckpoint = null;
+                _checkpointModel.ModelCheckpoint = null;
+                _checkpointModel.TextEncoderCheckpoint = null;
+                DiffusionModel.Checkpoint = _checkpointModel;
+            }
+            if (DiffusionModel.Source == ModelSourceType.Checkpoint)
+            {
+                _checkpointModel.Checkpoint = null;
+                DiffusionModel.Checkpoint = _checkpointModel;
+            }
 
             DiffusionModel.Initialize(Settings.DirectoryModel);
             Settings.DiffusionModels.Insert(index, DiffusionModel);
@@ -310,7 +321,7 @@ namespace Diffuse.Dialogs
             {
                 if (DiffusionModel.Source == ModelSourceType.Folder && !Directory.Exists(DiffusionModel.Path))
                     yield return "Model folder not found";
-                else if (DiffusionModel.Source == ModelSourceType.SingleFile && !File.Exists(DiffusionModel.Path))
+                else if (DiffusionModel.Source == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !File.Exists(CheckpointModel.Checkpoint)))
                     yield return "Model file not found";
                 else if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
                     yield return "HuggingFace repository not found";
@@ -465,6 +476,7 @@ namespace Diffuse.Dialogs
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {
+                    Checkpoint = diffusionModel.Checkpoint.Checkpoint,
                     ModelCheckpoint = diffusionModel.Checkpoint.ModelCheckpoint,
                     VaeCheckpoint = diffusionModel.Checkpoint.VaeCheckpoint,
                     TextEncoderCheckpoint = diffusionModel.Checkpoint.TextEncoderCheckpoint

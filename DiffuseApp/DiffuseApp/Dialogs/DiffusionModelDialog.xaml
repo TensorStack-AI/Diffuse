@@ -64,8 +64,23 @@
 
                         <!--SingleFile-->
                         <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
-                            <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
-                            <CommonControls:FilePickerTextBox FileName="{Binding DiffusionModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Right" Margin="4,0,0,0" Width="90">
+                                    <UniformGrid Columns="2" DockPanel.Dock="Top">
+                                        <TextBlock Text="Variant" Style="{StaticResource FieldTextBlockStyle}"/>
+                                        <TextBlock Text="(optional)" Style="{StaticResource FieldTextBlockStyle}" HorizontalAlignment="Right" FontSize="8" VerticalAlignment="Center"/>
+                                    </UniformGrid>
+                                    <TextBox Text="{Binding DiffusionModel.Variant, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                                <StackPanel>
+                                    <TextBlock Text="HuggingFace Url (Base Repo)" Style="{StaticResource FieldTextBlockStyle}" />
+                                    <TextBox Text="{Binding DiffusionModel.Path, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <StackPanel>
+                                <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.Checkpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                            </StackPanel>
                         </StackPanel>
 
                         <!--HuggingFace-->

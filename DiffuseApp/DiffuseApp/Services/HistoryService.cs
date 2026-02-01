@@ -38,7 +38,7 @@ namespace Diffuse.Services
             var historyFiles = Directory.EnumerateFiles(_settings.DirectoryHistory, "*.json", SearchOption.TopDirectoryOnly)
                 .Select(x => new FileInfo(x))
                 .OrderByDescending(x => x.CreationTimeUtc)
-                .Take(_settings.MaxHistory)
+                .Take(_settings.HistoryItems)
                 .ToList();
             foreach (var historyFile in historyFiles)
             {
@@ -69,7 +69,7 @@ namespace Diffuse.Services
                     continue; // Delete?
 
                 _historyCollection.Add(historyItem);
-                if (_historyCollection.Count == _settings.MaxHistory)
+                if (_historyCollection.Count == _settings.HistoryItems)
                     break;
             }
         }
@@ -85,7 +85,7 @@ namespace Diffuse.Services
 
         public async Task AddAsync(ImageInput image)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return;
 
             var key = GetRandomName();
@@ -110,7 +110,7 @@ namespace Diffuse.Services
 
         public async Task<ImageInput> AddAsync(ImageInput image, DiffusionHistory diffusionHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return image;
 
             var key = GetRandomName();
@@ -133,7 +133,7 @@ namespace Diffuse.Services
 
         public async Task<ImageInput> AddAsync(ImageInput image, ExtractHistory extractHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return image;
 
             var key = GetRandomName();
@@ -157,7 +157,7 @@ namespace Diffuse.Services
 
         public async Task<ImageInput> AddAsync(ImageInput image, UpscaleHistory upscaleHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return image;
 
             var key = GetRandomName();
@@ -181,7 +181,7 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return videoStream;
 
             var key = GetRandomName();
@@ -208,7 +208,7 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, DiffusionHistory diffusionHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return videoStream;
 
             var key = GetRandomName();
@@ -234,7 +234,7 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, ExtractHistory extractHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return videoStream;
 
             var key = GetRandomName();
@@ -260,7 +260,7 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, UpscaleHistory upscaleHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return videoStream;
 
             var key = GetRandomName();
@@ -286,7 +286,7 @@ namespace Diffuse.Services
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, InterpolateHistory interpolateHistory)
         {
-            if (_settings.MaxHistory <= 0)
+            if (_settings.HistoryItems <= 0)
                 return videoStream;
 
             var key = GetRandomName();
@@ -337,7 +337,7 @@ namespace Diffuse.Services
 
         private void AddHistoryItem(IHistoryItem historyItem)
         {
-            while (_historyCollection.Count > Math.Max(0, _settings.MaxHistory))
+            while (_historyCollection.Count > Math.Max(0, _settings.HistoryItems))
             {
                 _historyCollection.RemoveAt(_historyCollection.Count - 1);
             }

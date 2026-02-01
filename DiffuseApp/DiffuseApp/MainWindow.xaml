@@ -397,13 +397,12 @@
 
 
         <!--History-->
-        <Border Panel.ZIndex="0" DockPanel.Dock="Bottom" BorderThickness="0,2,0,0" BorderBrush="{StaticResource DefaultBorderColor}" Opacity=".8" Margin="7,0,0,0">
+        <!--<Border Panel.ZIndex="0" DockPanel.Dock="Bottom" BorderThickness="0,2,0,0" BorderBrush="{StaticResource DefaultBorderColor}" Opacity=".8" Margin="7,0,0,0">
             <Controls:HistoryControl 
-              ItemSource="{Binding HistoryService.HistoryCollection}"
-              RemoveItemCommand="{Binding RemoveHistoryItemCommand}" 
-              PreviewItemCommand="{Binding PreviewHistoryItemCommand}"
-              HorizontalScrollBarVisibility="Visible" 
-              VerticalScrollBarVisibility="Hidden" />
+                Orientation="Horizontal"
+                ItemSource="{Binding HistoryService.HistoryCollection}"
+                RemoveItemCommand="{Binding RemoveHistoryItemCommand}" 
+                PreviewItemCommand="{Binding PreviewHistoryItemCommand}"/>
             <Border.Style>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="Visibility" Value="Visible"/>
@@ -417,7 +416,40 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
+        </Border>-->
+
+
+        <Border Panel.ZIndex="0" BorderBrush="{StaticResource DefaultBorderColor}" Opacity=".8" >
+            <Controls:HistoryControl 
+            
+                Orientation="{Binding Settings.HistoryOrientation}"
+                ItemSource="{Binding HistoryService.HistoryCollection}"
+                RemoveItemCommand="{Binding RemoveHistoryItemCommand}" 
+                PreviewItemCommand="{Binding PreviewHistoryItemCommand}"/>
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Margin" Value="7,0,0,0"/>
+                    <Setter Property="BorderThickness" Value="0,2,0,0"/>
+                    <Setter Property="DockPanel.Dock" Value="Bottom"/>
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Settings.HistoryOrientation, ElementName=UI}" Value="Vertical">
+                            <Setter Property="Width" Value="122"/>
+                            <Setter Property="Margin" Value="0,12,0,0"/>
+                            <Setter Property="DockPanel.Dock" Value="Right"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,0"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ViewCategory, ElementName=UI}" Value="Settings">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ViewCategory, ElementName=UI}" Value="Other">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
         </Border>
+
 
 
         <!--View Container-->

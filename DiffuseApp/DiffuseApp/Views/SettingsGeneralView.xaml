@@ -7,11 +7,11 @@
     xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
     xmlns:Controls="clr-namespace:Diffuse.Controls"
     xmlns:Views="clr-namespace:Diffuse.Views">
-    <GroupBox DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SettingsGeneralView}}}" Margin="10, 20, 20, 20" Header="General Settings" Padding="4">
+    <Grid DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:SettingsGeneralView}}}" Margin="10, 20, 20, 20"  >
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
             <DockPanel Grid.Column="0" VerticalAlignment="Top">
@@ -21,35 +21,68 @@
                         <TextBlock Text="Save Changes" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Button>
-                <UniformGrid Columns="1">
-                    <StackPanel>
-                        <TextBlock Text="Model Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="HuggingFace Model Cache" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryCache, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="HuggingFace Access Token" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox  Text="{Binding Settings.SecureToken}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Temp Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
-                    </StackPanel>
-                    <DockPanel>
-                        <StackPanel DockPanel.Dock="Right" Margin="8,0,0,0" Width="120">
-                            <TextBlock Text="Max History" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <TextBox  Text="{Binding Settings.MaxHistory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+
+                <StackPanel >
+
+                
+
+                    <!--Model Settings-->
+                    <GroupBox Header="Model Settings">
+                        <StackPanel Margin="6">
+
+                            <StackPanel>
+                                <TextBlock Text="Model Directory" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="HuggingFace Model Cache" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryCache, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="HuggingFace Access Token" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <TextBox  Text="{Binding Settings.SecureToken}" />
+                            </StackPanel>
+
                         </StackPanel>
-                        <StackPanel >
-                            <TextBlock Text="History Directory" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryHistory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                    </GroupBox>
+
+                    <!--History Settings-->
+                    <GroupBox Header="History Settings" Margin="0,20,0,0">
+                        <StackPanel Margin="6">
+
+                            <StackPanel >
+                                <TextBlock Text="Directory" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryHistory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                            </StackPanel>
+                            <UniformGrid Columns="2">
+                                <StackPanel Margin="0,0,4,0" >
+                                    <TextBlock Text="Orientation" Style="{StaticResource FieldTextBlockStyle}"/>
+                                    <ComboBox  SelectedItem="{Binding Settings.HistoryOrientation, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource Orientation}}"  />
+                                </StackPanel>
+                                <StackPanel Margin="4,0,0,0" >
+                                    <TextBlock Text="Max Items" Style="{StaticResource FieldTextBlockStyle}"/>
+                                    <TextBox  Text="{Binding Settings.HistoryItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                                </StackPanel>
+                            </UniformGrid>
+
                         </StackPanel>
-                    </DockPanel>
-                </UniformGrid>
+                    </GroupBox>
+
+                    <!--Other Settings-->
+                    <GroupBox Header="Other Settings" Margin="0,20,0,0">
+                        <StackPanel Margin="6">
+
+                            <StackPanel>
+                                <TextBlock Text="Temp Directory" Style="{StaticResource FieldTextBlockStyle}"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
+                            </StackPanel>
+
+                        </StackPanel>
+                    </GroupBox>
+
+                </StackPanel>
             </DockPanel>
+      
         </Grid>
-    </GroupBox>
+    </Grid>
 </Views:ViewBase>

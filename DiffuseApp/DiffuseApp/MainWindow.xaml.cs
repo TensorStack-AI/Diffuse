@@ -18,8 +18,9 @@ namespace Diffuse
         private ViewCategory _viewCategory;
         private View _defaultView = View.TextToImage;
 
-        public MainWindow(Settings configuration, NavigationService navigation, IHistoryService historyService)
+        public MainWindow(Settings settings, NavigationService navigation, IHistoryService historyService)
         {
+            Settings = settings;
             Navigation = navigation;
             HistoryService = historyService;
             NavigateCommand = new AsyncRelayCommand<View>(NavigateAsync, CanNavigate);
@@ -31,7 +32,7 @@ namespace Diffuse
         }
 
 
-
+        public Settings Settings { get; }
         public NavigationService Navigation { get; }
         public AsyncRelayCommand<View> NavigateCommand { get; }
         public AsyncRelayCommand<ViewCategory> NavigateCategoryCommand { get; }

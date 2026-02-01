@@ -128,12 +128,7 @@ namespace Diffuse.Services
                         SecureToken = _settings.SecureToken,
                         LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),
                         MemoryMode = SetMemoryMode(_currentPipeline),
-                        CheckpointConfig = model.Checkpoint is null ? default : new CheckpointConfig
-                        {
-                            VaeCheckpoint = model.Checkpoint.VaeCheckpoint,
-                            ModelCheckpoint = model.Checkpoint.ModelCheckpoint,
-                            TextEncoderCheckpoint = model.Checkpoint.TextEncoderCheckpoint
-                        }
+                        CheckpointConfig = model.Checkpoint.ToConfig()
                     };
 
                     var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
