@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    
     xmlns:local="clr-namespace:Diffuse.Views"
     xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
     xmlns:Controls="clr-namespace:Diffuse.Controls"
@@ -67,7 +68,7 @@
 
                 <!--Middle-->
                 <Border BorderBrush="{StaticResource DefaultBorderColor}" BorderThickness="1" Margin="0,4">
-                    <ScrollViewer PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                    <ScrollViewer PanningMode="VerticalOnly" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"  >
                         <Grid>
                             <ListBox x:Name="ListBoxControl" 
                                 Padding="0"
@@ -78,8 +79,129 @@
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 IsSynchronizedWithCurrentItem="True"
                                 ItemsSource="{Binding HistoryCollection}" 
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.VirtualizationMode="Recycling"
                                 SelectionChanged="ListBoxControl_SelectionChanged"
                                 SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+
+                                <!--DataTemplates-->
+                                <ListBox.Resources>
+
+                                    <DataTemplate DataType="{x:Type Common:DiffusionHistory}">
+                                        <DockPanel Margin="3">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:TransparentImageElement 
+                                                    Height="120" 
+                                                    Stretch="Uniform" 
+                                                    DecodePixelHeight="80"
+                                                    UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                     <Run Text="{Binding Width}" />
+                                                     <Run Text="x" />
+                                                     <Run Text="{Binding Height}" />
+                                                     <LineBreak/>
+                                                     <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type Common:ExtractHistory}">
+                                        <DockPanel Margin="3">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:TransparentImageElement 
+                                                    Height="120" 
+                                                    Stretch="Uniform" 
+                                                    DecodePixelHeight="80"
+                                                    UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Height}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type Common:UpscaleHistory}">
+                                        <DockPanel Margin="3">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:TransparentImageElement 
+                                                    Height="120" 
+                                                    Stretch="Uniform" 
+                                                    DecodePixelHeight="80"
+                                                    UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Height}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type Common:InterpolateHistory}">
+                                        <DockPanel Margin="3">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:TransparentImageElement 
+                                                    Height="120" 
+                                                    Stretch="Uniform" 
+                                                    DecodePixelHeight="80"
+                                                    UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Height}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type Common:AudioHistory}">
+                                        <DockPanel Margin="3" Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Audio}">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:FontAwesome Icon="f001" IconStyle="Solid" Size="96" Color="{StaticResource DefaultForeground}" Opacity=".2" Width="120" Height="120" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding Duration, FallbackValue=00:00:00, StringFormat={}mm\\:ss\\.ff}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type Common:TextHistory}">
+                                        <DockPanel Margin="3" Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Text}">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:FontAwesome Icon="f894" IconStyle="Solid" Size="96" Color="{StaticResource DefaultForeground}" Opacity=".2" Width="120" Height="120" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding InputLength}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
+                                </ListBox.Resources>
 
                                 <!--ItemContainerStyle-->
                                 <ListBox.ItemContainerStyle>
@@ -99,7 +221,6 @@
                                                 </ControlTemplate>
                                             </Setter.Value>
                                         </Setter>
-
                                     </Style>
                                 </ListBox.ItemContainerStyle>
 
@@ -116,32 +237,6 @@
                                         </CommonControls:UniformWrapPanel>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-
-                                <!--ItemTemplate-->
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Background="Transparent" >
-                                            <DockPanel Margin="3">
-                                                <Grid DockPanel.Dock="Top">
-                                                    <CommonControls:TransparentImageElement 
-                                                Height="120" 
-                                                Stretch="Uniform" 
-                                                DecodePixelHeight="120"
-                                                UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
-                                                </Grid>
-                                                <StackPanel Margin="0,3,0,0">
-                                                    <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
-                                                <Run Text="{Binding Width}" />
-                                                <Run Text="x" />
-                                                <Run Text="{Binding Height}" />
-                                                <LineBreak/>
-                                                <Run Text="{Binding Source}" />
-                                                    </TextBlock>
-                                                </StackPanel>
-                                            </DockPanel>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
 
                             </ListBox>
 
@@ -192,6 +287,18 @@
                                 Source="{Binding CurrentVideoStream}" 
                                 Progress="{Binding Progress}"
                                 Visibility="{Binding SelectedItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}"/>
+                            <CommonControls:AudioElement
+                                IsReplayEnabled="True"
+                                IsAutoPlayEnabled="True"
+                                IsLoadEnabled="False"
+                                IsSaveEnabled="True" 
+                                Source="{Binding CurrentAudio}"
+                                Visibility="{Binding SelectedItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Audio}"/>
+
+                            <CommonControls:TextElement 
+                                IsReadOnly="True"
+                                Text="{Binding CurrentText.Text, Mode=OneWay}"
+                                Visibility="{Binding SelectedItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Text}"/>
                         </Grid>
                     </Grid>
 

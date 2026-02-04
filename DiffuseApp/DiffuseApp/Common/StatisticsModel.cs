@@ -4,7 +4,7 @@ using System.Windows.Threading;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
 
-namespace DiffuseApp.Common
+namespace Diffuse.Common
 {
     public class StatisticsModel : BaseModel
     {

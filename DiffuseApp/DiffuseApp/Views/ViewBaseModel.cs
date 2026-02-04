@@ -1,6 +1,5 @@
 ﻿using Diffuse.Common;
 using Diffuse.Services;
-using DiffuseApp.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;

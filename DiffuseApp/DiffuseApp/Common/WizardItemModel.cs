@@ -1,6 +1,6 @@
 ﻿// Copyright (c) TensorStack. All rights reserved.
 // Licensed under the Apache 2.0 License.
-namespace DiffuseApp.Common
+namespace Diffuse.Common
 {
     public class WizardItemModel
     {

@@ -1,7 +1,6 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
-using DiffuseApp.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;

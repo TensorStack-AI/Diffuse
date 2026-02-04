@@ -1,7 +1,7 @@
 ﻿using Diffuse.Common;
 using TensorStack.WPF;
 
-namespace DiffuseApp.Common
+namespace Diffuse.Common
 {
     public class MemoryProfileModel : BaseModel
     {

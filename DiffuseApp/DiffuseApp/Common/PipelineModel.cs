@@ -12,6 +12,7 @@ namespace Diffuse.Common
         private ExtractModel _extractModel;
         private LoraAdapterModel[] _loraAdapterModel;
         private UpscaleModel _upscaleModel;
+        private AudioModel _audioModel;
         private MemoryMode _memoryMode;
         private ProcessType _processType;
         private DataType _dataType;
@@ -50,6 +51,12 @@ namespace Diffuse.Common
         {
             get { return _upscaleModel; }
             set { SetProperty(ref _upscaleModel, value); }
+        }
+
+        public AudioModel AudioModel
+        {
+            get { return _audioModel; }
+            set { SetProperty(ref _audioModel, value); }
         }
 
         public ProcessType ProcessType

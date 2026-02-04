@@ -1,4 +1,5 @@
 ﻿using Diffuse.Common;
+using Diffuse.Views;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,17 +19,21 @@ namespace Diffuse.Controls
         private ListCollectionView _deviceCollectionView;
         private ListCollectionView _extractCollectionView;
         private ListCollectionView _upscaleCollectionView;
+        private ListCollectionView _audioCollectionView;
 
         private Device _selectedDevice;
         private ExtractModel _selectedExtractor;
         private UpscaleModel _selectedUpscaler;
+        private AudioModel _selectedAudioModel;
 
         private bool _isUpscalerEnabled;
         private bool _isExtractorEnabled;
+        private bool _isAudioEnabled;
 
         private Device _currentDevice;
         private ExtractModel _currentExtractor;
         private UpscaleModel _currentUpscaler;
+        private AudioModel _currentAudioModel;
 
 
         /// <summary>
@@ -48,6 +53,7 @@ namespace Diffuse.Controls
         public event EventHandler<PipelineModel> SelectionChanged;
         public AsyncRelayCommand LoadCommand { get; }
         public AsyncRelayCommand UnloadCommand { get; }
+        public View ViewType { get; set; }
 
         public Settings Settings
         {
@@ -85,6 +91,12 @@ namespace Diffuse.Controls
             set { SetProperty(ref _selectedUpscaler, value); ValidateSelection(); }
         }
 
+        public AudioModel SelectedAudioModel
+        {
+            get { return _selectedAudioModel; }
+            set { SetProperty(ref _selectedAudioModel, value); ValidateSelection(); }
+        }
+
         public ListCollectionView DeviceCollectionView
         {
             get { return _deviceCollectionView; }
@@ -103,6 +115,12 @@ namespace Diffuse.Controls
             set { SetProperty(ref _upscaleCollectionView, value); }
         }
 
+        public ListCollectionView AudioCollectionView
+        {
+            get { return _audioCollectionView; }
+            set { SetProperty(ref _audioCollectionView, value); }
+        }
+
         public bool IsExtractorEnabled
         {
             get { return _isExtractorEnabled; }
@@ -115,18 +133,26 @@ namespace Diffuse.Controls
             set { SetProperty(ref _isUpscalerEnabled, value); }
         }
 
+        public bool IsAudioEnabled
+        {
+            get { return _isAudioEnabled; }
+            set { SetProperty(ref _isAudioEnabled, value); }
+        }
+
 
         private Task LoadAsync()
         {
             _currentDevice = SelectedDevice;
             _currentExtractor = SelectedExtractor;
             _currentUpscaler = SelectedUpscaler;
+            _currentAudioModel = SelectedAudioModel;
 
             var pipeline = new PipelineModel
             {
                 Device = _currentDevice,
                 ExtractModel = _isExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _isUpscalerEnabled ? _currentUpscaler : default,
+                AudioModel = _isAudioEnabled ? _currentAudioModel : default,
             };
 
             ValidateSelection();
@@ -145,6 +171,7 @@ namespace Diffuse.Controls
         {
             _currentExtractor = default;
             _currentUpscaler = default;
+            _currentAudioModel = default;
             SelectionChanged?.Invoke(this, default);
             ValidateSelection();
             return Task.CompletedTask;
@@ -154,7 +181,8 @@ namespace Diffuse.Controls
         private bool CanUnload()
         {
             return _currentExtractor is not null
-                || _currentUpscaler is not null;
+                || _currentUpscaler is not null
+                || _currentAudioModel is not null;
         }
 
 
@@ -162,7 +190,8 @@ namespace Diffuse.Controls
         {
             return _currentDevice != SelectedDevice
                 || (IsExtractorEnabled && _currentExtractor != SelectedExtractor)
-                || (IsUpscalerEnabled && _currentUpscaler != SelectedUpscaler);
+                || (IsUpscalerEnabled && _currentUpscaler != SelectedUpscaler)
+                || (IsAudioEnabled && _currentAudioModel != SelectedAudioModel);
         }
 
 
@@ -206,6 +235,26 @@ namespace Diffuse.Controls
                 return true;
             };
 
+
+            //Audio models
+            AudioCollectionView = new ListCollectionView(Settings.AudioModels);
+            AudioCollectionView.Filter = (obj) =>
+            {
+                if (obj is not AudioModel model)
+                    return false;
+
+                if (_selectedDevice is null)
+                    return false;
+
+                if (ViewType == View.TextToAudio)
+                    return model.Type == AudioModelType.Supertonic;
+
+                if (ViewType == View.AudioToText)
+                    return model.Type == AudioModelType.Whisper;
+
+                return false;
+            };
+
             SelectedDevice = Settings.DefaultDevice;
             return Task.CompletedTask;
         }
@@ -217,16 +266,21 @@ namespace Diffuse.Controls
             {
                 ExtractCollectionView.Refresh();
                 SelectedExtractor = ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x == _currentExtractor)
-                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault(x => x.IsDefault)
-                                 ?? ExtractCollectionView.Cast<ExtractModel>().FirstOrDefault();
+                                 ?? ExtractCollectionView.Cast<ExtractModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
             if (UpscaleCollectionView is not null)
             {
                 UpscaleCollectionView.Refresh();
                 SelectedUpscaler = UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault(x => x == _currentUpscaler)
-                                ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault(x => x.IsDefault)
-                                ?? UpscaleCollectionView.Cast<UpscaleModel>().FirstOrDefault();
+                                ?? UpscaleCollectionView.Cast<UpscaleModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
+            }
+
+            if (AudioCollectionView is not null)
+            {
+                AudioCollectionView.Refresh();
+                SelectedAudioModel = AudioCollectionView.Cast<AudioModel>().FirstOrDefault(x => x == _currentAudioModel)
+                                  ?? AudioCollectionView.Cast<AudioModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
         }
 
@@ -242,8 +296,9 @@ namespace Diffuse.Controls
         {
             var isExtractValid = !IsExtractorEnabled || ExtractCollectionView?.IsEmpty == false;
             var isUpscaleValid = !IsUpscalerEnabled || UpscaleCollectionView?.IsEmpty == false;
+            var isAudioValid = !IsAudioEnabled || AudioCollectionView?.IsEmpty == false;
             var isCurrentValid = !HasCurrentChanged();
-            IsSelectionValid = isCurrentValid && isExtractValid && isUpscaleValid && IsPipelineLoaded;
+            IsSelectionValid = isCurrentValid && isExtractValid && isAudioValid && IsPipelineLoaded;
             LoadCommand.RaiseCanExecuteChanged();
         }
 
@@ -254,11 +309,14 @@ namespace Diffuse.Controls
                 return;
 
             SelectedDevice = pipeline.Device;
-            if (IsUpscalerEnabled && pipeline.UpscaleModel is not null)
+            if (IsUpscalerEnabled && pipeline.UpscaleModel is not null && _upscaleCollectionView.Contains(pipeline.UpscaleModel))
                 SelectedUpscaler = pipeline.UpscaleModel;
 
-            if (IsExtractorEnabled && pipeline.ExtractModel is not null)
+            if (IsExtractorEnabled && pipeline.ExtractModel is not null && _extractCollectionView.Contains(pipeline.ExtractModel))
                 SelectedExtractor = pipeline.ExtractModel;
+
+            if (IsAudioEnabled && pipeline.AudioModel is not null && _audioCollectionView.Contains(pipeline.AudioModel))
+                SelectedAudioModel = pipeline.AudioModel;
 
             ValidateSelection();
         }

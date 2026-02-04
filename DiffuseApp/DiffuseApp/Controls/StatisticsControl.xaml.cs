@@ -1,4 +1,4 @@
-﻿using DiffuseApp.Common;
+﻿using Diffuse.Common;
 using System.Windows;
 using System.Windows.Controls;
 using TensorStack.WPF.Controls;

@@ -20,7 +20,6 @@ namespace Diffuse.Views
         private ImageInput _outputImageMask;
         private ImageInput _sourceImage;
         private ImageInput _sourceImageMask;
-        private ImageInput _extractImage;
 
         public ImageInpaintView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageInpaintView> logger)
             : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)

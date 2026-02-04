@@ -7,6 +7,8 @@
              xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
              xmlns:PythonOptions="clr-namespace:TensorStack.Python.Common;assembly=TensorStack.Python"
              xmlns:Extractors="clr-namespace:TensorStack.Extractors.Common;assembly=TensorStack.Extractors"
+             xmlns:Whisper="clr-namespace:TensorStack.TextGeneration.Pipelines.Whisper;assembly=TensorStack.TextGeneration"
+             xmlns:TextGeneration="clr-namespace:TensorStack.TextGeneration.Common;assembly=TensorStack.TextGeneration"
              xmlns:Common="clr-namespace:Diffuse.Common"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -178,6 +180,24 @@
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
+            <ObjectDataProvider x:Key="TaskType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Whisper:TaskType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="LanguageType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Whisper:LanguageType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+
+            <ObjectDataProvider x:Key="EarlyStopping" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="TextGeneration:EarlyStopping"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
 
             <Style x:Key="ImageDropZoneStyle" TargetType="{x:Type Border}">
                 <Setter Property="AllowDrop" Value="False"/>
@@ -230,6 +250,46 @@
                             <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="True" />
                             <Condition Binding="{Binding IsDragDrop, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="True" />
                             <Condition Binding="{Binding DragDropType, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="Video" />
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="AllowDrop" Value="True"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource AccentColour2}"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>
+
+
+            <Style x:Key="AudioDropZoneStyle" TargetType="{x:Type Border}">
+                <Setter Property="AllowDrop" Value="False"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="True" />
+                            <Condition Binding="{Binding IsDragDrop, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="True" />
+                            <Condition Binding="{Binding DragDropType, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="Audio" />
+                        </MultiDataTrigger.Conditions>
+                        <MultiDataTrigger.Setters>
+                            <Setter Property="AllowDrop" Value="True"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource AccentColour2}"/>
+                        </MultiDataTrigger.Setters>
+                    </MultiDataTrigger>
+                </Style.Triggers>
+            </Style>
+
+
+            <Style x:Key="TextDropZoneStyle" TargetType="{x:Type Border}">
+                <Setter Property="AllowDrop" Value="False"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Style.Triggers>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="True" />
+                            <Condition Binding="{Binding IsDragDrop, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="True" />
+                            <Condition Binding="{Binding DragDropType, RelativeSource={RelativeSource AncestorType=CommonControls:ViewControl}}" Value="Text" />
                         </MultiDataTrigger.Conditions>
                         <MultiDataTrigger.Setters>
                             <Setter Property="AllowDrop" Value="True"/>
@@ -308,7 +368,7 @@
             </Style>
 
             <Style x:Key="MenuIconButton" TargetType="{x:Type CommonControls:IconButton}" BasedOn="{StaticResource {x:Type CommonControls:IconButton}}">
-                <Setter Property="Width" Value="300"/>
+                <Setter Property="Width" Value="250"/>
                 <Setter Property="Orientation" Value="Horizontal"/>
                 <Setter Property="Placement" Value="Bottom"/>
                 <Setter Property="FontSize" Value="14"/>
@@ -822,7 +882,104 @@
             </DataTemplate>
 
 
+            <DataTemplate DataType="{x:Type Common:AudioHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Generated {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Voice Style" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding Options.VoiceStyle}" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Speed" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding  Options.Speed}" />
+                                    <Run Text="x" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Duration" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding Duration, FallbackValue=00:00:00, StringFormat={}mm\\:ss\\.ff}" />
+                                    <Run Text="ms" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Seed" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding Options.Seed}" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding Options.Steps}" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Sample Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding SampleRate}" />
+                                    <Run Text="hz" />
+                                </TextBlock>
+                            </StackPanel>
+                        </UniformGrid>
+                     
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
 
+
+            <DataTemplate DataType="{x:Type Common:TextHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Generated {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Length" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding InputLength}" />
+                                </TextBlock>
+                            </StackPanel>
+                          
+                        </UniformGrid>
+
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
 
 
             <Style x:Key="SettingsListBoxItem" TargetType="{x:Type ListBoxItem}">

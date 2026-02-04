@@ -71,6 +71,7 @@ namespace Diffuse
             builder.Services.AddSingleton<IDiffusionService, DiffusionService>();
             builder.Services.AddSingleton<IEnvironmentService, EnvironmentService>();
             builder.Services.AddSingleton<IInterpolationService, InterpolationService>();
+            builder.Services.AddSingleton<IAudioService, AudioService>();
 
             // Build
             _appHost = builder.Build();

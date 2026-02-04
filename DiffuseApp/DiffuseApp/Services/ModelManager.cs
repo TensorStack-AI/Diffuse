@@ -1,9 +1,8 @@
 ﻿using Diffuse.Common;
-using DiffuseApp.Common;
 using System.Collections.Generic;
 using TensorStack.Python.Common;
 
-namespace DiffuseApp.Services
+namespace Diffuse.Services
 {
     public class ModelManager
     {
@@ -1219,7 +1218,7 @@ namespace DiffuseApp.Services
         /// <summary>
         /// Creates the wizard model templates.
         /// </summary>
-        /// <returns>System.Collections.Generic.List&lt;DiffuseApp.Common.WizardItemModel&gt;.</returns>
+        /// <returns>System.Collections.Generic.List&lt;Diffuse.Common.WizardItemModel&gt;.</returns>
         public static List<WizardItemModel> CreateWizardModelTemplates()
         {
             return

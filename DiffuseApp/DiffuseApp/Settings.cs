@@ -18,6 +18,7 @@ namespace Diffuse
     {
         private Orientation _historyOrientation;
         private int _historyItems = 500;
+        private double _uiScale = 1;
 
         [AppDefault]
         public string FileVersion { get; set; } = "2";
@@ -30,6 +31,13 @@ namespace Diffuse
         public int WriteBuffer { get; set; } = 32;
         public string VideoCodec { get; set; } = "mp4v";
         public bool IsLegacyDeviceDetection { get; set; }
+     
+        public double UIScale
+        {
+            get { return _uiScale; }
+            set { SetProperty(ref _uiScale, value); }
+        }
+
         public int HistoryItems
         {
             get { return _historyItems; }
@@ -40,7 +48,7 @@ namespace Diffuse
             get { return _historyOrientation; }
             set { SetProperty(ref _historyOrientation, value); }
         }
-        public bool IsServerDebugEnabled { get; set; } = true;
+        public bool IsServerDebugEnabled { get; set; } = false;
         public DataType DefaultDataType { get; set; }
         public MemoryMode DefaultMemoryMode { get; set; }
 
@@ -50,6 +58,9 @@ namespace Diffuse
 
         [AppDefault]
         public ObservableCollection<UpscaleModel> UpscaleModels { get; set; }
+
+        [AppDefault]
+        public ObservableCollection<AudioModel> AudioModels { get; set; }
 
         [AppDefault]
         public ObservableCollection<DiffusionModel> DiffusionModels { get; set; }
@@ -131,6 +142,14 @@ namespace Diffuse
 
                 pipeline.ExtractModel.IsDefault = true;
             }
+            if (pipeline.AudioModel != null)
+            {
+                var defaultModel = AudioModels.FirstOrDefault(x => x.IsDefault);
+                if (defaultModel is not null)
+                    defaultModel.IsDefault = false;
+
+                pipeline.AudioModel.IsDefault = true;
+            }
 
             DefaultDataType = pipeline.DataType;
             DefaultMemoryMode = pipeline.MemoryMode;
@@ -170,6 +189,9 @@ namespace Diffuse
             var extractDirectory = Path.Combine(DirectoryModel, "Extract");
             foreach (var extractModel in ExtractModels)
                 extractModel.Initialize(extractDirectory);
+            var audioDirectory = Path.Combine(DirectoryModel, "Audio");
+            foreach (var audioModel in AudioModels)
+                audioModel.Initialize(audioDirectory);
             foreach (var diffusionModel in DiffusionModels)
                 diffusionModel.Initialize(DirectoryCache);
             foreach (var loraAdapterModel in LoraAdapterModels)

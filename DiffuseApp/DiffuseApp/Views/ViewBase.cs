@@ -94,6 +94,7 @@ namespace Diffuse.Views
                 }
                 Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded upscale model.", View);
             }
+
             if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
             {
                 Logger.LogInformation("[{View}] [DownloadModels] Download extract model '{Name}'...", View, pipeline.ExtractModel.Name);
@@ -103,6 +104,17 @@ namespace Diffuse.Views
                     return false;
                 }
                 Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded extract model.", View);
+            }
+
+            if (pipeline.AudioModel is not null && !pipeline.AudioModel.IsValid)
+            {
+                Logger.LogInformation("[{View}] [DownloadModels] Download audio model '{Name}'...", View, pipeline.AudioModel.Name);
+                if (!await pipeline.AudioModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Audio")))
+                {
+                    Logger.LogError("[{View}] [DownloadModels] Failed to download audio model...", View);
+                    return false;
+                }
+                Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded audio model.", View);
             }
             return true;
         }

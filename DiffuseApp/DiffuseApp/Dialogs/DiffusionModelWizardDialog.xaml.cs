@@ -1,8 +1,7 @@
 ﻿// Copyright (c) TensorStack. All rights reserved.
 // Licensed under the Apache 2.0 License.
 using Diffuse.Common;
-using DiffuseApp.Common;
-using DiffuseApp.Services;
+using Diffuse.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

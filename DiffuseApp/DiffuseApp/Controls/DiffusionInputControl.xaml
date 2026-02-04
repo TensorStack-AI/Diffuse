@@ -98,48 +98,10 @@
 
 
                         <!--Seed-->
-                        <DockPanel Margin="0,0,2,0">
-                            <UniformGrid DockPanel.Dock="Right" Columns="2" VerticalAlignment="Bottom" Height="22">
-                                <CommonControls:AddOnButton Icon="f051" IconSize="14" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8" Command="{Binding SeedCommand}" CommandParameter="{StaticResource False}" ToolTip="New Seed"/>
-                                <CommonControls:AddOnButton Icon="f074" IconSize="14" IconColor="{StaticResource DefaultForeground}" Width="25" IconOpacity=".8" Command="{Binding SeedCommand}" CommandParameter="{StaticResource True}" ToolTip="Random Seeds"/>
-                            </UniformGrid>
-                            <StackPanel>
-                                <TextBlock Text="Seed" Style="{StaticResource FieldTextBlockStyle}" />
-                                <Grid>
-                                    <TextBox x:Name="TextBoxSeed" Text="{Binding Options.Seed, UpdateSourceTrigger=PropertyChanged}" >
-                                        <TextBox.Style>
-                                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Options.Seed}" Value="0"/>
-                                                            <Condition Binding="{Binding IsFocused, ElementName=TextBoxSeed}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Foreground" Value="Transparent"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBox.Style>
-                                    </TextBox>
-                                    <TextBlock Text="Random" IsHitTestVisible="False" Opacity=".8" Margin="4,2,0,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding Options.Seed}" Value="0"/>
-                                                            <Condition Binding="{Binding IsFocused, ElementName=TextBoxSeed}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Grid>
-                            </StackPanel>
-                        </DockPanel>
+                        <StackPanel Margin="0,0,2,0">
+                            <TextBlock Text="Seed" Style="{StaticResource FieldTextBlockStyle}" />
+                            <Controls:SeedControl Seed="{Binding Options.Seed}"/>
+                        </StackPanel>
 
 
                         <!--Scheduler-->

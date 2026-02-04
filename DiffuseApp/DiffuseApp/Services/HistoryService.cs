@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TensorStack.Audio;
 using TensorStack.Common.Common;
 using TensorStack.Image;
 using TensorStack.Video;
@@ -59,6 +60,10 @@ namespace Diffuse.Services
                     historyItem = await Json.LoadAsync<UpscaleHistory>(historyFile.FullName);
                 else if (historyFile.Name.StartsWith("Interpolate_"))
                     historyItem = await Json.LoadAsync<InterpolateHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("GenerateAudio_"))
+                    historyItem = await Json.LoadAsync<AudioHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("GenerateText_"))
+                    historyItem = await Json.LoadAsync<TextHistory>(historyFile.FullName);
                 if (historyItem == null || historyItem.Version != HistoryVersion)
                     continue;
 
@@ -206,6 +211,52 @@ namespace Diffuse.Services
         }
 
 
+        public async Task<AudioInput> AddAsync(AudioInput audioInput)
+        {
+            if (_settings.HistoryItems <= 0)
+                return audioInput;
+
+            var key = GetRandomName();
+            var history = new RecentHistory
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "wav",
+                MediaType = MediaType.Audio,
+                Timestamp = DateTime.Now,
+                Source = View.History,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.json"),
+                MediaPath = audioInput.SourceFile,
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png")
+            };
+
+            return await AddAudioInternalAsync(audioInput, history);
+        }
+
+
+        public async Task<TextInput> AddAsync(TextInput textInput)
+        {
+            if (_settings.HistoryItems <= 0)
+                return textInput;
+
+            var key = GetRandomName();
+            var history = new RecentHistory
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "txt",
+                MediaType = MediaType.Text,
+                Timestamp = DateTime.Now,
+                Source = View.History,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.json"),
+                MediaPath = textInput.SourceFile,
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.txt"),
+            };
+
+            return await AddTextInternalAsync(textInput, history);
+        }
+
+
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream, DiffusionHistory diffusionHistory)
         {
             if (_settings.HistoryItems <= 0)
@@ -310,6 +361,55 @@ namespace Diffuse.Services
         }
 
 
+        public async Task<AudioInput> AddAsync(AudioInput audio, AudioHistory audioHistory)
+        {
+            if (_settings.HistoryItems <= 0)
+                return audio;
+
+            var key = GetRandomName();
+            var history = audioHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "wav",
+                MediaType = MediaType.Audio,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.wav"),
+                //ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.png"),
+                Channels = audio.Channels,
+                Duration = audio.Duration,
+                SampleRate = audio.SampleRate
+            };
+
+            return await AddAudioInternalAsync(audio, history);
+        }
+
+
+        public async Task<TextInput> AddAsync(TextInput text, TextHistory textHistory)
+        {
+            if (_settings.HistoryItems <= 0)
+                return text;
+
+            var key = GetRandomName();
+            var history = textHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "txt",
+                MediaType = MediaType.Text,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateText_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateText_{key}.txt"),
+                //ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateText_{key}.png"),
+                InputLength = text.Length,
+                InputText = text.Text
+            };
+
+            return await AddTextInternalAsync(text, history);
+        }
+
+
         private string GetRandomName()
         {
             return Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
@@ -332,6 +432,24 @@ namespace Diffuse.Services
             await Json.SaveAsync(history.FilePath, history);
             AddHistoryItem(history);
             return newStream;
+        }
+
+
+        private async Task<AudioInput> AddAudioInternalAsync<T>(AudioInput audio, T history) where T : IHistoryItem
+        {
+            await audio.SaveAsync(history.MediaPath);
+            await Json.SaveAsync<T>(history.FilePath, history);
+            AddHistoryItem(history);
+            return audio;
+        }
+
+
+        private async Task<TextInput> AddTextInternalAsync<T>(TextInput text, T history) where T : IHistoryItem
+        {
+            await text.SaveAsync(history.MediaPath);
+            await Json.SaveAsync<T>(history.FilePath, history);
+            AddHistoryItem(history);
+            return text;
         }
 
 
@@ -364,6 +482,9 @@ namespace Diffuse.Services
         Task<VideoInputStream> AddAsync(VideoInputStream videoStream, ExtractHistory extractHistory);
         Task<VideoInputStream> AddAsync(VideoInputStream videoStream, UpscaleHistory upscaleHistory);
         Task<VideoInputStream> AddAsync(VideoInputStream videoStream, InterpolateHistory interpolateHistory);
+
+        Task<AudioInput> AddAsync(AudioInput image, AudioHistory upscaleHistory);
+        Task<TextInput> AddAsync(TextInput text, TextHistory upscaleHistory);
     }
 
 }

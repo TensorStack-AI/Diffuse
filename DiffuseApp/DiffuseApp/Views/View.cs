@@ -30,6 +30,9 @@ namespace Diffuse.Views
         VideoExtract = 251,
         VideoInterpolate = 252,
 
+        TextToAudio = 300,
+        AudioToText = 301,
+
         History = 1000,
         Gallery = 1001,
    
@@ -40,7 +43,8 @@ namespace Diffuse.Views
         Other = 0,
         Settings = 1,
         Image = 10,
-        Video = 20
+        Video = 20,
+        Audio = 30
     }
 
     public static class ViewManager
@@ -53,7 +57,7 @@ namespace Diffuse.Views
           //  {ViewCategory.Text, View.TextSummary },
             {ViewCategory.Image, View.TextToImage },
             {ViewCategory.Video, View.TextToVideo },
-       //    {ViewCategory.Audio, View.AudioTranscribe }
+            {ViewCategory.Audio, View.TextToAudio }
         };
 
 
@@ -87,7 +91,11 @@ namespace Diffuse.Views
             { View.VideoToVideo, ViewCategory.Video  },
             { View.VideoExtract, ViewCategory.Video  },
             { View.VideoUpscale, ViewCategory.Video  },
-            { View.VideoInterpolate, ViewCategory.Video  }
+            { View.VideoInterpolate, ViewCategory.Video  },
+
+             // Audio
+            { View.TextToAudio, ViewCategory.Audio  },
+            { View.AudioToText, ViewCategory.Audio  },
         };
 
 

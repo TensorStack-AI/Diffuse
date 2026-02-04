@@ -22,6 +22,7 @@
     <PackageReference Include="TensorStack.Python" Version="$(Version)" />
     <PackageReference Include="TensorStack.Upscaler" Version="$(Version)" />
     <PackageReference Include="TensorStack.Extractors" Version="$(Version)" />
+    <PackageReference Include="TensorStack.TextGeneration" Version="$(Version)" />
     <PackageReference Include="TensorStack.Providers.DML" Version="$(Version)" />
   </ItemGroup>
 
@@ -30,10 +31,10 @@
     <PackageReference Include="System.Linq.Async" Version="7.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
-    <PackageReference Include="System.Management" Version="10.0.1" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.8.6" />
+    <PackageReference Include="System.Management" Version="10.0.2" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.7" />
   </ItemGroup>
 
   <!--Binaries-->

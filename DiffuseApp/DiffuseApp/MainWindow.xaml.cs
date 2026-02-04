@@ -1,8 +1,13 @@
-﻿using System.Threading.Tasks;
-using Diffuse.Common;
+﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
 using Diffuse.Views;
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
@@ -14,9 +19,11 @@ namespace Diffuse
     /// </summary>
     public partial class MainWindow : WindowMainBase
     {
+        private readonly double _defaultWidth = 1600;
+        private readonly double _defaultHeight = 900;
+        private readonly View _defaultView = View.TextToImage;
         private View _view;
         private ViewCategory _viewCategory;
-        private View _defaultView = View.TextToImage;
 
         public MainWindow(Settings settings, NavigationService navigation, IHistoryService historyService)
         {
@@ -27,10 +34,12 @@ namespace Diffuse
             NavigateCategoryCommand = new AsyncRelayCommand<ViewCategory>(NavigateCategoryAsync, CanNavigateCategory);
             RemoveHistoryItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveHistoryItemAsync, CanRemoveHistoryItem);
             PreviewHistoryItemCommand = new AsyncRelayCommand<IHistoryItem>(PreviewHistoryItemAsync, CanPreviewHistoryItem);
+            Settings.PropertyChanged += Settings_Changed;
+            Width = _defaultWidth * Settings.UIScale;
+            Height = _defaultHeight * Settings.UIScale;
             InitializeComponent();
             NavigateCommand.Execute(_defaultView);
         }
-
 
         public Settings Settings { get; }
         public NavigationService Navigation { get; }
@@ -39,7 +48,6 @@ namespace Diffuse
         public AsyncRelayCommand<IHistoryItem> RemoveHistoryItemCommand { get; }
         public AsyncRelayCommand<IHistoryItem> PreviewHistoryItemCommand { get; }
         public IHistoryService HistoryService { get; }
-
 
         public View View
         {
@@ -111,6 +119,7 @@ namespace Diffuse
             await HistoryService.DeleteAsync(item);
         }
 
+
         private bool CanRemoveHistoryItem(IHistoryItem item)
         {
             return true;
@@ -123,9 +132,30 @@ namespace Diffuse
             await dialog.ShowDialogAsync(item);
         }
 
+
         private bool CanPreviewHistoryItem(IHistoryItem item)
         {
             return true;
         }
+
+
+        private void Settings_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.UIScale))
+            {
+                UpdateUIScale();
+            }
+        }
+
+
+        private void UpdateUIScale()
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
+            {
+                Width = _defaultWidth * Settings.UIScale;
+                Height = _defaultHeight * Settings.UIScale;
+            });
+        }
+
     }
 }

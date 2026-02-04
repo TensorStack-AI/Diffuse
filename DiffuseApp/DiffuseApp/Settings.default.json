@@ -542,6 +542,119 @@
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Pose-Coco/model.onnx" ]
     }
   ],
+  "AudioModels": [
+    {
+      "Id": 100,
+      "Name": "Whisper-Tiny",
+      "IsDefault": true,
+      "Type": "Whisper",
+      "Version": "Tiny",
+      "MinLength": 20,
+      "MaxLength": 512,
+      "Prefixes": [ "Transcribe", "Translate" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/decoder_model_merged.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/encoder_model.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/merges.txt?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/tokenizer_config.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/vocab.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/mel_filters.npz?download=true"
+      ]
+    },
+    {
+      "Id": 101,
+      "Name": "Whisper-Small",
+      "Type": "Whisper",
+      "Version": "Small",
+      "MinLength": 20,
+      "MaxLength": 512,
+      "Prefixes": [ "Transcribe", "Translate" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/decoder_model_merged.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/encoder_model.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/merges.txt?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/tokenizer_config.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/vocab.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/mel_filters.npz?download=true"
+      ]
+    },
+    {
+      "Id": 102,
+      "Name": "Whisper-Medium",
+      "Type": "Whisper",
+      "Version": "Medium",
+      "MinLength": 20,
+      "MaxLength": 512,
+      "Prefixes": [ "Transcribe", "Translate" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/decoder_model_merged.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/encoder_model.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/merges.txt?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/tokenizer_config.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/vocab.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/mel_filters.npz?download=true"
+      ]
+    },
+    {
+      "Id": 103,
+      "Name": "Whisper-Base",
+      "Type": "Whisper",
+      "Version": "Base",
+      "MinLength": 20,
+      "MaxLength": 512,
+      "Prefixes": [ "Transcribe", "Translate" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/decoder_model_merged.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/encoder_model.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/merges.txt?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/tokenizer_config.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/vocab.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/mel_filters.npz?download=true"
+      ]
+    },
+    {
+      "Id": 104,
+      "Name": "Whisper-Large",
+      "Type": "Whisper",
+      "Version": "Large",
+      "MinLength": 20,
+      "MaxLength": 512,
+      "Prefixes": [ "Transcribe", "Translate" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/decoder_model_merged.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/encoder_model.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/merges.txt?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/tokenizer_config.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/vocab.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/mel_filters.npz?download=true"
+      ]
+    },
+    {
+      "Id": 200,
+      "Name": "Supertonic",
+      "IsDefault": true,
+      "Type": "Supertonic",
+      "MaxLength": 512,
+      "Prefixes": [ "Female1", "Female2", "Female3", "Female4", "Female5", "Male1", "Male2", "Male3", "Male4", "Male5" ],
+      "UrlPaths": [
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/duration_predictor.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/text_encoder.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/unicode_indexer.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/vector_estimator.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/vocoder.onnx?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Female1.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Female2.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Female3.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Female4.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Female5.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Male1.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Male2.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Male3.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Male4.json?download=true",
+        "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/voice_styles/Male5.json?download=true"
+      ]
+    }
+  ],
   "DiffusionModels": [
     {
       "Id": 101,
@@ -1439,11 +1552,11 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
-          "MemoryModes": [ 10, 21, 32, 53, 58 ] 
+          "MemoryModes": [ 10, 21, 32, 53, 58 ]
         },
         {
           "DataType": "float16",
-          "MemoryModes": [ 10, 32, 36, 56, 68 ] 
+          "MemoryModes": [ 10, 32, 36, 56, 68 ]
         },
         {
           "DataType": "bfloat16",

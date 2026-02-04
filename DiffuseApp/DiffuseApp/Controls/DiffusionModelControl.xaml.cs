@@ -1,5 +1,4 @@
 ﻿using Diffuse.Common;
-using DiffuseApp.Common;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

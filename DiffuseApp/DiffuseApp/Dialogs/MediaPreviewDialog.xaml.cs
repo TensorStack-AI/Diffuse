@@ -3,9 +3,10 @@
 using Diffuse.Common;
 using Diffuse.Services;
 using System;
-using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using TensorStack.Audio;
 using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -20,6 +21,8 @@ namespace Diffuse.Dialogs
     {
         private ImageInput _currentImage;
         private VideoInputStream _currentVideoStream;
+        private AudioInput _currentAudio;
+        private TextInput _currentText;
 
         public MediaPreviewDialog(Settings settings, IHistoryService historyService)
         {
@@ -36,7 +39,7 @@ namespace Diffuse.Dialogs
                 {
                     if (obj is not IHistoryItem item)
                         return false;
-                    return item.MediaType == MediaType.Image || item.MediaType == MediaType.Video;
+                    return true;
                 }
             };
             Loaded += (s, e) => { MaxWidth = double.PositiveInfinity; MaxHeight = double.PositiveInfinity; };
@@ -55,6 +58,18 @@ namespace Diffuse.Dialogs
         {
             get { return _currentImage; }
             set { SetProperty(ref _currentImage, value); }
+        }
+
+        public AudioInput CurrentAudio
+        {
+            get { return _currentAudio; }
+            set { SetProperty(ref _currentAudio, value); }
+        }
+
+        public TextInput CurrentText
+        {
+            get { return _currentText; }
+            set { SetProperty(ref _currentText, value); }
         }
 
         public VideoInputStream CurrentVideoStream
@@ -116,10 +131,16 @@ namespace Diffuse.Dialogs
             {
                 Progress.Indeterminate();
 
+                CurrentText = default;
                 CurrentImage = default;
+                CurrentAudio = default;
                 CurrentVideoStream = default;
+                if (currentItem.MediaType == MediaType.Text)
+                    CurrentText = await Common.TextInput.CreateAsync(currentItem.MediaPath, Encoding.UTF8);
                 if (currentItem.MediaType == MediaType.Image)
                     CurrentImage = await ImageInput.CreateAsync(currentItem.MediaPath);
+                if (currentItem.MediaType == MediaType.Audio)
+                    CurrentAudio = await AudioInput.CreateAsync(currentItem.MediaPath);
                 if (currentItem.MediaType == MediaType.Video)
                     CurrentVideoStream = await VideoInputStream.CreateAsync(currentItem.MediaPath);
             }

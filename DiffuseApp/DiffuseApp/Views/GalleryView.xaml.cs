@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using TensorStack.Audio;
 using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -26,11 +28,13 @@ namespace Diffuse.Views
         private const string String_AllModels = "All Models";
         private IHistoryItem _selectedItem;
         private ImageInput _currentImage;
+        private AudioInput _currentAudio;
         private VideoInputStream _currentVideoStream;
         private string _filterText;
         private string _filterModelName;
         private MediaType? _filterMediaType;
         private View? _filterProcessType;
+        private TextInput _currentText;
 
         public GalleryView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<GalleryView> logger)
             : base(settings, navigationService, environmentService, historyService, logger)
@@ -69,10 +73,22 @@ namespace Diffuse.Views
             set { SetProperty(ref _currentImage, value); }
         }
 
+        public AudioInput CurrentAudio
+        {
+            get { return _currentAudio; }
+            set { SetProperty(ref _currentAudio, value); }
+        }
+
         public VideoInputStream CurrentVideoStream
         {
             get { return _currentVideoStream; }
             set { SetProperty(ref _currentVideoStream, value); }
+        }
+
+        public TextInput CurrentText
+        {
+            get { return _currentText; }
+            set { SetProperty(ref _currentText, value); }
         }
 
         public string FilterText
@@ -114,10 +130,16 @@ namespace Diffuse.Views
             {
                 Progress.Indeterminate();
 
+                CurrentText= default;
                 CurrentImage = default;
+                CurrentAudio = default;
                 CurrentVideoStream = default;
+                if (_selectedItem.MediaType == MediaType.Text)
+                    CurrentText = await Common.TextInput.CreateAsync(_selectedItem.MediaPath, Encoding.UTF8);
                 if (_selectedItem.MediaType == MediaType.Image)
                     CurrentImage = await ImageInput.CreateAsync(_selectedItem.MediaPath);
+                if (_selectedItem.MediaType == MediaType.Audio)
+                    CurrentAudio = await AudioInput.CreateAsync(_selectedItem.MediaPath);
                 if (_selectedItem.MediaType == MediaType.Video)
                     CurrentVideoStream = await VideoInputStream.CreateAsync(_selectedItem.MediaPath);
             }

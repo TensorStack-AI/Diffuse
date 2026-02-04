@@ -24,7 +24,7 @@
 
                 <StackPanel >
 
-                
+
 
                     <!--Model Settings-->
                     <GroupBox Header="Model Settings">
@@ -71,8 +71,14 @@
                     <!--Other Settings-->
                     <GroupBox Header="Other Settings" Margin="0,20,0,0">
                         <StackPanel Margin="6">
+                            <UniformGrid Columns="4" >
+                                <StackPanel>
+                                    <TextBlock Text="UI Scale" Style="{StaticResource FieldTextBlockStyle}"/>
+                                    <ComboBox ItemsSource="{Binding ScaleOptions}" SelectedValue="{Binding Settings.UIScale, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="Label" />
+                                </StackPanel>
+                            </UniformGrid>
 
-                            <StackPanel>
+                            <StackPanel Margin="0,4,0,0">
                                 <TextBlock Text="Temp Directory" Style="{StaticResource FieldTextBlockStyle}"/>
                                 <CommonControls:FilePickerTextBox FileName="{Binding Settings.DirectoryTemp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsFolderPicker="True" />
                             </StackPanel>
@@ -82,7 +88,7 @@
 
                 </StackPanel>
             </DockPanel>
-      
+
         </Grid>
     </Grid>
 </Views:ViewBase>

@@ -54,6 +54,20 @@
                     Source="{Binding CurrentVideoStream}" 
                     Progress="{Binding Progress}"
                     Visibility="{Binding HistoryCollection.CurrentItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}"/>
+
+                <CommonControls:AudioElement
+                    IsReplayEnabled="True"
+                    IsAutoPlayEnabled="True"
+                    IsLoadEnabled="False"
+                    IsSaveEnabled="True" 
+                    Source="{Binding CurrentAudio}"
+                    Visibility="{Binding HistoryCollection.CurrentItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Audio}"/>
+
+                <CommonControls:TextElement
+                    IsReadOnly="True"
+                    Text="{Binding CurrentText.Text, Mode=OneWay}"
+                    Visibility="{Binding HistoryCollection.CurrentItem.MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Text}"/>
+
             </Grid>
 
          

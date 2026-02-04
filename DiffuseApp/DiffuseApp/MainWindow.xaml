@@ -16,9 +16,12 @@
         Style="{StaticResource WindowHeadless}"
         Title="{x:Static local:App.AppDisplayName}"
         mc:Ignorable="d"
-        x:Name="UI"
-        Height="900" Width="1600">
+        x:Name="UI">
     <DockPanel DataContext="{Binding ElementName=UI}">
+
+        <DockPanel.LayoutTransform>
+            <ScaleTransform ScaleX="{Binding Settings.UIScale}" ScaleY="{Binding Settings.UIScale}" />
+        </DockPanel.LayoutTransform>
 
         <!--Main Menu-->
         <Grid DockPanel.Dock="Top" WindowChrome.IsHitTestVisibleInChrome="True">
@@ -87,9 +90,18 @@
                         IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Video}">
                     </CommonControls:IconButton>
                     <CommonControls:IconButton 
+                        Text="Audio" 
+                        Icon="f001" 
+                        IconMargin="0,-1,0,0"
+                        Style="{StaticResource MenuIconButton}"
+                        Command="{Binding NavigateCategoryCommand}" 
+                        CommandParameter="{x:Static Views:ViewCategory.Audio}" 
+                        IsSelected="{Binding ViewCategory, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Audio}">
+                    </CommonControls:IconButton>
+                    <CommonControls:IconButton 
                         Text="Gallery" 
                         Icon="e228" 
-                          IconMargin="0,-2,0,0"
+                        IconMargin="0,-2,0,0"
                         Style="{StaticResource MenuIconButton}"
                         Command="{Binding NavigateCommand}" 
                         CommandParameter="{x:Static Views:View.Gallery}" 
@@ -376,6 +388,29 @@
                                 Command="{Binding NavigateCommand}" 
                                 CommandParameter="{x:Static Views:View.VideoInterpolate}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=VideoInterpolate}">
+                            </CommonControls:IconButton>
+                        </UniformGrid>
+                    </Grid>
+
+
+                    <!--Audio-->
+                    <Grid Visibility="{Binding ViewCategory, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Audio}">
+                        <UniformGrid Columns="1" VerticalAlignment="Top" >
+                            <CommonControls:IconButton 
+                                Text="Text To Audio" 
+                                Icon="f894"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.TextToAudio}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=TextToAudio}">
+                            </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Audio To Text" 
+                                Icon="f001"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.AudioToText}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=AudioToText}">
                             </CommonControls:IconButton>
                         </UniformGrid>
                     </Grid>

@@ -23,7 +23,6 @@ namespace DiffuseApp.Common
         private readonly NamedPipeServerStream _progressChannel;
         private readonly Channel<PipelineProgress> _progressQueue;
         private readonly IProgress<PipelineProgress> _progressCallback;
-        private readonly CancellationTokenSource _serverCancellation;
         private CancellationTokenSource _pipelineCancellation;
 
         /// <summary>
@@ -245,7 +244,6 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         private async Task StopServerAsync(PipelineRequest request, CancellationToken cancellationToken)
         {
-            _serverCancellation?.SafeCancel();
             await _pipelineChannel.SendResponse(cancellationToken);
             _logger.LogInformation($"[PipelineServer] [StopServer] Server stopped.");
         }
@@ -430,8 +428,6 @@ namespace DiffuseApp.Common
         {
             _pipelineCancellation?.SafeCancel();
             _pipelineCancellation?.Dispose();
-            _serverCancellation?.SafeCancel();
-            _serverCancellation?.Dispose();
             _progressChannel?.Dispose();
             _commandChannel?.Dispose();
             _pipelineChannel?.Dispose();
