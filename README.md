@@ -84,6 +84,7 @@ Focus on usability, stability, and feature expansion.
 - GGUF model support
 - Weighted prompt support
 - Model Manager, download queuing, online templates
+- ROCM Support
 - Stability, performance, and reliability improvements
 
 ---
