@@ -57,7 +57,7 @@ On first launch or when loading a model for the first time, setup may take sever
 No manual Python setup is required.
 
 ### Device Support
-Supports CUDA and ROCM  based devices
+Supports CUDA based devices
 
 
 ---
