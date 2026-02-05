@@ -99,15 +99,19 @@
                                 <DockPanel Margin="0,3,0,0" >
                                     <StackPanel DockPanel.Dock="Top">
                                         <TextBlock Text="Audio Result" Style="{StaticResource FieldTextBlockStyle}" />
-                                        <CommonControls:AudioElement Source="{Binding ResultAudio, Mode=TwoWay}" Configuration="{Binding Settings}" IsLoadEnabled="False" IsReplayEnabled="False" />
+                                        <CommonControls:AudioElement 
+                                            Source="{Binding ResultAudio, Mode=TwoWay}" 
+                                            Configuration="{Binding Settings}" 
+                                            IsLoadEnabled="False" 
+                                            Volume="{Binding Settings.VolumeOutput, Mode=TwoWay}"
+                                            IsVolumeMute="{Binding Settings.IsVolumeOutputMute, Mode=TwoWay}"
+                                            IsReplayEnabled="False" />
                                     </StackPanel>
 
                                     <DockPanel Margin="0,10,0,0">
                                         <TextBlock DockPanel.Dock="Top" Text="Text Input" Style="{StaticResource FieldTextBlockStyle}" />
                                         <Border Style="{StaticResource TextDropZoneStyle}">
-                                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
-                                                <CommonControls:TextElement Text="{Binding SourceText, UpdateSourceTrigger=PropertyChanged}" />
-                                            </ScrollViewer>
+                                            <CommonControls:TextElement TextSource="{Binding SourceText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </Border>
                                     </DockPanel>
                                 </DockPanel>

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -51,6 +52,7 @@ namespace Diffuse.Dialogs
             ControlNetModel = new ControlNetModel
             {
                 Id = modelId,
+                Backend = BackendType.Pytorch,
                 Source = ModelSourceType.HuggingFace
             };
             return base.ShowDialogAsync();
@@ -158,7 +160,9 @@ namespace Diffuse.Dialogs
                 Id = modelId,
                 Name = controlNetModel.Name,
                 Path = controlNetModel.Path,
-                Pipeline = controlNetModel.Pipeline
+                Pipeline = controlNetModel.Pipeline,
+                Backend = controlNetModel.Backend,
+                Source = controlNetModel.Source,
             };
         }
     }

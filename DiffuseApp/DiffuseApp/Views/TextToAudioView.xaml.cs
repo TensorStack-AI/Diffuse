@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Audio;
+using TensorStack.Common;
 using TensorStack.Common.Pipeline;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
@@ -19,7 +20,7 @@ namespace Diffuse.Views
     {
         private AudioInput _resultAudio;
         private AudioInputOptions _options;
-        private string _sourceText;
+        private TextInput _sourceText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextToAudioView"/> class.
@@ -29,6 +30,7 @@ namespace Diffuse.Views
         {
             AudioService = audioService;
             Options = new AudioInputOptions();
+            SourceText = new TextInput(string.Empty);
             InitializeComponent();
         }
 
@@ -60,7 +62,7 @@ namespace Diffuse.Views
             set { SetProperty(ref _options, value); }
         }
 
-        public string SourceText
+        public TextInput SourceText
         {
             get { return _sourceText; }
             set { SetProperty(ref _sourceText, value); }
@@ -163,7 +165,7 @@ namespace Diffuse.Views
                 // Run Audio
                 var resultTensor = await AudioService.ExecuteAsync(new SupertonicRequest
                 {
-                    InputText = _sourceText,
+                    InputText = _sourceText.Text,
                     Seed = Options.Seed,
                     SilenceDuration = Options.SilenceDuration,
                     Speed = Options.Speed,
@@ -210,7 +212,7 @@ namespace Diffuse.Views
         /// </summary>
         protected override bool CanExecute()
         {
-            return !string.IsNullOrEmpty(_sourceText) && AudioService.IsLoaded && !AudioService.IsExecuting;
+            return !string.IsNullOrEmpty(_sourceText?.Text) && AudioService.IsLoaded && !AudioService.IsExecuting;
         }
 
 

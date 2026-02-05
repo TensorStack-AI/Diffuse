@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Common;
+using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -104,6 +105,7 @@ namespace Diffuse.Dialogs
             DiffusionModel = new DiffusionModel
             {
                 Id = modelId,
+                Backend = BackendType.Pytorch,
                 BaseType = DataType.Bfloat16,
                 MemoryProfile =
                 [
@@ -429,6 +431,7 @@ namespace Diffuse.Dialogs
             return new DiffusionModel
             {
                 Id = modelId,
+                Backend = diffusionModel.Backend,
                 Name = diffusionModel.Name,
                 Path = diffusionModel.Path,
                 Variant = diffusionModel.Variant,

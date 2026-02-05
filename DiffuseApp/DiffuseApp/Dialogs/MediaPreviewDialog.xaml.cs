@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using TensorStack.Audio;
+using TensorStack.Common;
 using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -136,7 +137,7 @@ namespace Diffuse.Dialogs
                 CurrentAudio = default;
                 CurrentVideoStream = default;
                 if (currentItem.MediaType == MediaType.Text)
-                    CurrentText = await Common.TextInput.CreateAsync(currentItem.MediaPath, Encoding.UTF8);
+                    CurrentText = await TensorStack.Common.TextInput.CreateAsync(currentItem.MediaPath, Encoding.UTF8);
                 if (currentItem.MediaType == MediaType.Image)
                     CurrentImage = await ImageInput.CreateAsync(currentItem.MediaPath);
                 if (currentItem.MediaType == MediaType.Audio)

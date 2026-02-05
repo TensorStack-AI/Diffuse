@@ -113,6 +113,8 @@
                                 SplitterDirection="LeftToRight"
                                 Source="{Binding ResultVideo, Mode=TwoWay}" 
                                 OverlaySource="{Binding CompareVideo, Mode=TwoWay}" 
+                                Volume="{Binding Settings.VolumeOutput, Mode=TwoWay}"
+                                IsVolumeMute="{Binding Settings.IsVolumeOutputMute, Mode=TwoWay}"
                                 IsLoadEnabled="False" 
                                 IsLoadOverlayEnabled="False"/>
                         </Grid>

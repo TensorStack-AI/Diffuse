@@ -115,6 +115,8 @@
                                     IsLoadEnabled="True" 
                                     IsSaveEnabled="False"
                                     IsLoadOverlayEnabled="False"
+                                    Volume="{Binding Settings.VolumeInput, Mode=TwoWay}"
+                                    IsVolumeMute="{Binding Settings.IsVolumeInputMute, Mode=TwoWay}"
                                     IsEnabled="{Binding DiffusionService.IsExecuting, Converter={StaticResource InverseBoolConverter}}"/>
                             </Border>
                             <Grid Margin="10,10,10,2" >
@@ -125,6 +127,8 @@
                                     SplitterDirection="LeftToRight"
                                     Source="{Binding ResultVideo, Mode=TwoWay}" 
                                     OverlaySource="{Binding CompareVideo, Mode=TwoWay}" 
+                                    Volume="{Binding Settings.VolumeOutput, Mode=TwoWay}"
+                                    IsVolumeMute="{Binding Settings.IsVolumeOutputMute, Mode=TwoWay}"
                                     IsLoadEnabled="False" 
                                     IsLoadOverlayEnabled="False"/>
                             </Grid>

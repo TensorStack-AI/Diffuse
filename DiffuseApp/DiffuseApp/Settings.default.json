@@ -1,6 +1,7 @@
 {
   "DefaultDataType": "bfloat16",
   "DefaultMemoryMode": "Auto",
+  "Vendors": [ "Nvidia" ],
   "Environments": [
     {
       "Id": 1,
@@ -67,6 +68,7 @@
   "UpscaleModels": [
     {
       "Id": 101,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV2 ESRGAN Soft 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -81,6 +83,7 @@
     },
     {
       "Id": 102,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV2 MoSR Sharp 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -95,6 +98,7 @@
     },
     {
       "Id": 103,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV2 MoSR Soft 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -109,6 +113,7 @@
     },
     {
       "Id": 104,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV2 RPLKSR Sharp 2x",
       "IsDefault": true,
       "Channels": 3,
@@ -124,6 +129,7 @@
     },
     {
       "Id": 105,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV2 RPLKSR Soft 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -138,6 +144,7 @@
     },
     {
       "Id": 106,
+      "Backend": "OnnxRuntime",
       "Name": "AnimeSharpV3 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -152,6 +159,7 @@
     },
     {
       "Id": 107,
+      "Backend": "OnnxRuntime",
       "Name": "APISR GRL GAN 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -166,6 +174,7 @@
     },
     {
       "Id": 108,
+      "Backend": "OnnxRuntime",
       "Name": "APISR RRDB GAN 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -180,6 +189,7 @@
     },
     {
       "Id": 109,
+      "Backend": "OnnxRuntime",
       "Name": "Real BSRGAN 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -194,6 +204,7 @@
     },
     {
       "Id": 110,
+      "Backend": "OnnxRuntime",
       "Name": "Real ESRGAN 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -208,6 +219,7 @@
     },
     {
       "Id": 111,
+      "Backend": "OnnxRuntime",
       "Name": "Real ESRGAN 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -222,6 +234,7 @@
     },
     {
       "Id": 112,
+      "Backend": "OnnxRuntime",
       "Name": "RealESR General 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -236,6 +249,7 @@
     },
     {
       "Id": 113,
+      "Backend": "OnnxRuntime",
       "Name": "RealWebPhoto RGT 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -250,6 +264,7 @@
     },
     {
       "Id": 114,
+      "Backend": "OnnxRuntime",
       "Name": "Swin2SR Classical 2x",
       "Channels": 3,
       "SampleSize": 0,
@@ -264,6 +279,7 @@
     },
     {
       "Id": 115,
+      "Backend": "OnnxRuntime",
       "Name": "Swin2SR Classical 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -278,6 +294,7 @@
     },
     {
       "Id": 116,
+      "Backend": "OnnxRuntime",
       "Name": "Swin2SR RealWorld BSRGAN PSN 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -292,6 +309,7 @@
     },
     {
       "Id": 117,
+      "Backend": "OnnxRuntime",
       "Name": "SwinIR BSRGAN 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -306,6 +324,7 @@
     },
     {
       "Id": 118,
+      "Backend": "OnnxRuntime",
       "Name": "UltraMix Smooth 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -320,6 +339,7 @@
     },
     {
       "Id": 119,
+      "Backend": "OnnxRuntime",
       "Name": "UltraSharp 4x",
       "Channels": 3,
       "SampleSize": 0,
@@ -336,6 +356,7 @@
   "ExtractModels": [
     {
       "Id": 101,
+      "Backend": "OnnxRuntime",
       "Name": "Canny",
       "Type": "Default",
       "Channels": 3,
@@ -354,6 +375,7 @@
     },
     {
       "Id": 102,
+      "Backend": "OnnxRuntime",
       "Name": "SoftEdge",
       "Type": "Default",
       "IsDefault": true,
@@ -373,6 +395,7 @@
     },
     {
       "Id": 103,
+      "Backend": "OnnxRuntime",
       "Name": "LineDrawing",
       "Type": "Default",
       "Channels": 3,
@@ -391,6 +414,7 @@
     },
     {
       "Id": 104,
+      "Backend": "OnnxRuntime",
       "Name": "Depth",
       "Type": "Default",
       "Channels": 3,
@@ -411,6 +435,7 @@
     },
     {
       "Id": 105,
+      "Backend": "OnnxRuntime",
       "Name": "DepthAnything-Small",
       "Type": "Default",
       "Channels": 3,
@@ -431,6 +456,7 @@
     },
     {
       "Id": 106,
+      "Backend": "OnnxRuntime",
       "Name": "DepthAnything-Base",
       "Type": "Default",
       "Channels": 3,
@@ -451,6 +477,7 @@
     },
     {
       "Id": 108,
+      "Backend": "OnnxRuntime",
       "Name": "DepthAnything-Large",
       "Type": "Default",
       "Channels": 3,
@@ -471,6 +498,7 @@
     },
     {
       "Id": 109,
+      "Backend": "OnnxRuntime",
       "Name": "BiRefNet",
       "Type": "Background",
       "Channels": 3,
@@ -483,6 +511,7 @@
     },
     {
       "Id": 110,
+      "Backend": "OnnxRuntime",
       "Name": "RMBG 1.4",
       "Type": "Background",
       "IsDefault": true,
@@ -496,6 +525,7 @@
     },
     {
       "Id": 111,
+      "Backend": "OnnxRuntime",
       "Name": "RMBG 2.0",
       "Type": "Background",
       "Channels": 3,
@@ -508,6 +538,7 @@
     },
     {
       "Id": 112,
+      "Backend": "OnnxRuntime",
       "Name": "OpenPose - Body7",
       "Type": "Pose",
       "IsDefault": true,
@@ -526,6 +557,7 @@
     },
     {
       "Id": 113,
+      "Backend": "OnnxRuntime",
       "Name": "OpenPose - Coco",
       "Type": "Pose",
       "Channels": 3,
@@ -545,6 +577,7 @@
   "AudioModels": [
     {
       "Id": 100,
+      "Backend": "OnnxRuntime",
       "Name": "Whisper-Tiny",
       "IsDefault": true,
       "Type": "Whisper",
@@ -563,6 +596,7 @@
     },
     {
       "Id": 101,
+      "Backend": "OnnxRuntime",
       "Name": "Whisper-Small",
       "Type": "Whisper",
       "Version": "Small",
@@ -580,6 +614,7 @@
     },
     {
       "Id": 102,
+      "Backend": "OnnxRuntime",
       "Name": "Whisper-Medium",
       "Type": "Whisper",
       "Version": "Medium",
@@ -597,6 +632,7 @@
     },
     {
       "Id": 103,
+      "Backend": "OnnxRuntime",
       "Name": "Whisper-Base",
       "Type": "Whisper",
       "Version": "Base",
@@ -614,6 +650,7 @@
     },
     {
       "Id": 104,
+      "Backend": "OnnxRuntime",
       "Name": "Whisper-Large",
       "Type": "Whisper",
       "Version": "Large",
@@ -631,6 +668,7 @@
     },
     {
       "Id": 200,
+      "Backend": "OnnxRuntime",
       "Name": "Supertonic",
       "IsDefault": true,
       "Type": "Supertonic",
@@ -658,6 +696,7 @@
   "DiffusionModels": [
     {
       "Id": 101,
+      "Backend": "PyTorch",
       "Name": "Z-Image Turbo",
       "Pipeline": "ZImagePipeline",
       "Path": "Tongyi-MAI/Z-Image-Turbo",
@@ -733,6 +772,7 @@
     },
     {
       "Id": 102,
+      "Backend": "PyTorch",
       "Name": "Qwen Image (2512)",
       "Pipeline": "QwenImagePipeline",
       "Path": "Qwen/Qwen-Image-2512",
@@ -811,6 +851,7 @@
     },
     {
       "Id": 104,
+      "Backend": "PyTorch",
       "Name": "Qwen Image Edit(2511)",
       "Pipeline": "QwenImagePipeline",
       "Path": "Qwen/Qwen-Image-Edit-2511",
@@ -890,6 +931,7 @@
     },
     {
       "Id": 105,
+      "Backend": "PyTorch",
       "Name": "Chroma HD",
       "Pipeline": "ChromaPipeline",
       "Path": "lodestones/Chroma1-HD",
@@ -966,6 +1008,7 @@
     },
     {
       "Id": 106,
+      "Backend": "PyTorch",
       "Name": "FLUX.1 Schnell",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-schnell-ts",
@@ -1042,6 +1085,7 @@
     },
     {
       "Id": 107,
+      "Backend": "PyTorch",
       "Name": "FLUX.1 Dev",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-dev-ts",
@@ -1119,6 +1163,7 @@
     },
     {
       "Id": 108,
+      "Backend": "PyTorch",
       "Name": "FLUX.1 Kontext",
       "Pipeline": "FluxPipeline",
       "Path": "TensorStack/FLUX.1-Kontext-dev-ts",
@@ -1196,6 +1241,7 @@
     },
     {
       "Id": 110,
+      "Backend": "PyTorch",
       "Name": "StableDiffusionXL",
       "Pipeline": "StableDiffusionXLPipeline",
       "Path": "stabilityai/stable-diffusion-xl-base-1.0",
@@ -1271,6 +1317,7 @@
     },
     {
       "Id": 111,
+      "Backend": "PyTorch",
       "Name": "Wan-T2V 2.1 1.3B",
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
@@ -1320,6 +1367,7 @@
     },
     {
       "Id": 112,
+      "Backend": "PyTorch",
       "Name": "Wan-T2V 2.1 14B",
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-T2V-14B-Diffusers",
@@ -1369,6 +1417,7 @@
     },
     {
       "Id": 113,
+      "Backend": "PyTorch",
       "Name": "Wan-I2V 2.1 14B 480P",
       "Pipeline": "WanPipeline",
       "Path": "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
@@ -1419,6 +1468,7 @@
     },
     {
       "Id": 200,
+      "Backend": "PyTorch",
       "Name": "Kandinsky5 T2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
@@ -1482,6 +1532,7 @@
     },
     {
       "Id": 201,
+      "Backend": "PyTorch",
       "Name": "Kandinsky5 I2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
@@ -1545,6 +1596,7 @@
     },
     {
       "Id": 202,
+      "Backend": "PyTorch",
       "Name": "Kandinsky5 T2V Lite",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
@@ -1586,6 +1638,7 @@
     },
     {
       "Id": 203,
+      "Backend": "PyTorch",
       "Name": "Kandinsky5 I2V Pro",
       "Pipeline": "Kandinsky5Pipeline",
       "Path": "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
@@ -1627,6 +1680,7 @@
     },
     {
       "Id": 300,
+      "Backend": "PyTorch",
       "Name": "CogVideoX T2V 2B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-2b",
@@ -1669,6 +1723,7 @@
     },
     {
       "Id": 301,
+      "Backend": "PyTorch",
       "Name": "CogVideoX T2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b",
@@ -1711,6 +1766,7 @@
     },
     {
       "Id": 302,
+      "Backend": "PyTorch",
       "Name": "CogVideoX I2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX-5b-I2V",
@@ -1753,6 +1809,7 @@
     },
     {
       "Id": 303,
+      "Backend": "PyTorch",
       "Name": "CogVideoX 1.5 T2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B",
@@ -1795,6 +1852,7 @@
     },
     {
       "Id": 304,
+      "Backend": "PyTorch",
       "Name": "CogVideoX 1.5 I2V 5B",
       "Pipeline": "CogVideoXPipeline",
       "Path": "zai-org/CogVideoX1.5-5B-I2V",
@@ -1837,6 +1895,7 @@
     },
     {
       "Id": 400,
+      "Backend": "PyTorch",
       "Name": "LTX Video",
       "Pipeline": "LTXPipeline",
       "Path": "Lightricks/LTX-Video",
@@ -1885,6 +1944,7 @@
   "LoraAdapterModels": [
     {
       "Id": 101,
+      "Backend": "PyTorch",
       "Name": "40s Cyberpunk",
       "Key": "40sCyberpunk",
       "Path": "godtoldmetodoit/zitloras",
@@ -1895,6 +1955,7 @@
     },
     {
       "Id": 102,
+      "Backend": "PyTorch",
       "Name": "80s Fantasy",
       "Key": "80sFantasy",
       "Path": "godtoldmetodoit/zitloras",
@@ -1904,6 +1965,7 @@
     },
     {
       "Id": 103,
+      "Backend": "PyTorch",
       "Name": "Coloring Book Z",
       "Key": "coloringbookz",
       "Path": "renderartist/Coloring-Book-Z-Image-Turbo-LoRA",
@@ -1916,6 +1978,7 @@
   "ControlNetModels": [
     {
       "Id": 101,
+      "Backend": "PyTorch",
       "Name": "Union",
       "Path": "InstantX/Qwen-Image-ControlNet-Union",
       "Pipeline": "QwenImagePipeline",
@@ -1924,6 +1987,7 @@
 
     {
       "Id": 102,
+      "Backend": "PyTorch",
       "Name": "Canny",
       "Path": "InstantX/FLUX.1-dev-controlnet-canny",
       "Pipeline": "FluxPipeline",
@@ -1931,6 +1995,7 @@
     },
     {
       "Id": 102,
+      "Backend": "PyTorch",
       "Name": "Canny",
       "Path": "InstantX/FLUX.1-dev-controlnet-canny",
       "Pipeline": "FluxPipeline",
@@ -1938,6 +2003,7 @@
     },
     {
       "Id": 104,
+      "Backend": "PyTorch",
       "Name": "Union",
       "Path": "xinsir/controlnet-union-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline",
@@ -1945,30 +2011,35 @@
     },
     {
       "Id": 105,
+      "Backend": "PyTorch",
       "Name": "Canny",
       "Path": "xinsir/controlnet-canny-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline"
     },
     {
       "Id": 106,
+      "Backend": "PyTorch",
       "Name": "Depth",
       "Path": "xinsir/controlnet-depth-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline"
     },
     {
       "Id": 107,
+      "Backend": "PyTorch",
       "Name": "OpenPose",
       "Path": "xinsir/controlnet-openpose-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline"
     },
     {
       "Id": 108,
+      "Backend": "PyTorch",
       "Name": "Scribble",
       "Path": "xinsir/controlnet-scribble-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline"
     },
     {
       "Id": 109,
+      "Backend": "PyTorch",
       "Name": "Tile",
       "Path": "xinsir/controlnet-tile-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline"

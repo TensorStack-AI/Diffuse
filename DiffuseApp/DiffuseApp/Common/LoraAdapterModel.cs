@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json.Serialization;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 
 namespace Diffuse.Common
@@ -11,6 +12,7 @@ namespace Diffuse.Common
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
+        public BackendType Backend { get; set; }
         public string Name { get; set; }
         public string Key { get; set; }
         public string Path { get; set; }

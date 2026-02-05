@@ -57,7 +57,12 @@
                             <StackPanel>
                                 <TextBlock Text="Audio Input" Style="{StaticResource FieldTextBlockStyle}" />
                                 <Border Style="{StaticResource AudioDropZoneStyle}">
-                                    <CommonControls:AudioElement Source="{Binding SourceAudio, Mode=TwoWay}" Configuration="{Binding Settings}" IsReplayEnabled="False" />
+                                    <CommonControls:AudioElement 
+                                        Source="{Binding SourceAudio, Mode=TwoWay}" 
+                                        Configuration="{Binding Settings}" 
+                                        Volume="{Binding Settings.VolumeInput, Mode=TwoWay}"
+                                        IsVolumeMute="{Binding Settings.IsVolumeInputMute, Mode=TwoWay}"
+                                        IsReplayEnabled="False" />
                                 </Border>
                             </StackPanel>
 
@@ -149,20 +154,20 @@
                                     </TabControl.ItemTemplate>
                                     <TabControl.ContentTemplate>
                                         <DataTemplate>
-                                            <TextBox Text="{Binding Text, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" BorderThickness="0" Margin="0,3,0,0"/>
+                                            <CommonControls:TextElement TextSource="{Binding ., Mode=TwoWay}" TextWrapping="Wrap" IsReadOnly="True" BorderThickness="0" IsLoadEnabled="False"/>
                                         </DataTemplate>
                                     </TabControl.ContentTemplate>
                                 </TabControl>
 
-                                <DockPanel Margin="0,3,0,0" Visibility="{Binding IsMultipleResult, Converter={StaticResource InverseBooleanToHiddenConverter}}">
+                                <DockPanel Margin="0,3,0,0" Visibility="{Binding IsMultipleResult, Converter={StaticResource InverseBooleanToHiddenConverter}, FallbackValue=Visible}">
                                     <TextBlock DockPanel.Dock="Top" Text="{Binding Options.Task, StringFormat={}{0} Result}" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <CommonControls:TextElement Text="{Binding Result.Text, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" Margin="0,2,0,0"/>
+                                    <CommonControls:TextElement TextSource="{Binding Result}" TextWrapping="Wrap" IsReadOnly="True" Margin="0,2,0,0" IsLoadEnabled="False"/>
                                 </DockPanel>
                             </Grid>
 
                             <DockPanel Margin="0,3,0,0" Visibility="{Binding AudioService.IsExecuting, Converter={StaticResource BooleanToHiddenConverter}}">
                                 <TextBlock DockPanel.Dock="Top" Text="{Binding Options.Task, StringFormat={}{0} Result}" Style="{StaticResource FieldTextBlockStyle}" />
-                                <CommonControls:TextElement Text="{Binding PreviewResult, Mode=OneWay}" TextWrapping="Wrap" IsReadOnly="True" Margin="0,2,0,0"/>
+                                <TextBox Text="{Binding PreviewResult}" TextWrapping="Wrap" IsReadOnly="True" Margin="0,2,0,0" />
                             </DockPanel>
                         </Grid>
                     </Border>

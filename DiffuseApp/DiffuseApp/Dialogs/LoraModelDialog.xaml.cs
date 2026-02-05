@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Common;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -92,6 +93,7 @@ namespace Diffuse.Dialogs
             LoraModel = new LoraAdapterModel
             {
                 Id = modelId,
+                Backend = BackendType.Pytorch,
                 Pipeline = Pipelines.First(),
                 Source = ModelSourceType.SingleFile
             };
@@ -255,7 +257,8 @@ namespace Diffuse.Dialogs
                 Pipeline = loraModel.Pipeline,
                 Weights = loraModel.Weights,
                 Triggers = loraModel.Triggers,
-                Source = loraModel.Source
+                Source = loraModel.Source,
+                Backend = loraModel.Backend
             };
         }
 

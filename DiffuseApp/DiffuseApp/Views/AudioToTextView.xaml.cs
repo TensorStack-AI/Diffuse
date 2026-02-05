@@ -8,6 +8,7 @@ using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Audio;
+using TensorStack.Common;
 using TensorStack.Common.Pipeline;
 using TensorStack.Image;
 using TensorStack.TextGeneration.Common;
@@ -27,6 +28,7 @@ namespace Diffuse.Views
         private bool _isMultipleResult;
         private int _selectedBeam;
         private string _previewResult;
+        private TextInput _result;
         private readonly IProgress<GenerateProgress> _generateProgress;
 
         /// <summary>
@@ -37,7 +39,6 @@ namespace Diffuse.Views
         {
             AudioService = audioService;
             Results = new ObservableCollection<TextInput>();
-            Results.CollectionChanged += (_, _) => NotifyPropertyChanged(nameof(Result));
             _generateProgress = new Progress<GenerateProgress>(OnGenerateProgress);
             InitializeComponent();
         }
@@ -62,7 +63,11 @@ namespace Diffuse.Views
         /// <summary>
         /// Gets the result.
         /// </summary>
-        public TextInput Result => Results?.FirstOrDefault();
+        public TextInput Result
+        {
+            get { return _result; }
+            set { SetProperty(ref _result, value); }
+        }
 
         /// <summary>
         /// Gets or sets the source audio.
@@ -70,7 +75,7 @@ namespace Diffuse.Views
         public AudioInput SourceAudio
         {
             get { return _sourceAudio; }
-            set { SetProperty(ref _sourceAudio, value); }
+            set { SetProperty(ref _sourceAudio, value); ExecuteCommand.RaiseCanExecuteChanged(); }
         }
 
         /// <summary>
@@ -193,6 +198,7 @@ namespace Diffuse.Views
                 Progress.Clear();
                 Statistics.Clear();
                 Results.Clear();
+                Result = null;
                 Statistics.Start();
                 PreviewResult = null;
                 Progress.Indeterminate();
@@ -219,6 +225,7 @@ namespace Diffuse.Views
 
                 Statistics.Stop();
 
+                Result = beamResults.FirstOrDefault();
                 foreach (var beamResult in beamResults)
                 {
                     Results.Add(beamResult);

@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using TensorStack.Audio;
+using TensorStack.Common;
 using TensorStack.Image;
 using TensorStack.Video;
 using TensorStack.WPF;
@@ -135,7 +136,7 @@ namespace Diffuse.Views
                 CurrentAudio = default;
                 CurrentVideoStream = default;
                 if (_selectedItem.MediaType == MediaType.Text)
-                    CurrentText = await Common.TextInput.CreateAsync(_selectedItem.MediaPath, Encoding.UTF8);
+                    CurrentText = await TensorStack.Common.TextInput.CreateAsync(_selectedItem.MediaPath, Encoding.UTF8);
                 if (_selectedItem.MediaType == MediaType.Image)
                     CurrentImage = await ImageInput.CreateAsync(_selectedItem.MediaPath);
                 if (_selectedItem.MediaType == MediaType.Audio)

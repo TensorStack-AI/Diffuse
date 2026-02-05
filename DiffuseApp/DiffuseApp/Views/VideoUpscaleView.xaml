@@ -61,9 +61,12 @@
                                 MaxHeight="{Binding ActualWidth,ElementName=LeftPanelContainer}">
                                 <CommonControls:VideoStreamElement
                                     Source="{Binding SourceVideo, Mode=TwoWay}"
+                                    Volume="{Binding Settings.VolumeInput, Mode=TwoWay}"
+                                    IsVolumeMute="{Binding Settings.IsVolumeInputMute, Mode=TwoWay}"
                                     IsLoadEnabled="True"
                                     IsLoadOverlayEnabled="False" 
-                                    IsSaveEnabled="False" />
+                                    IsSaveEnabled="False" 
+                                    IsVolumeBottom="True"/>
                             </Border>
 
                             <!--Options-->
@@ -101,6 +104,8 @@
                                 SplitterDirection="LeftToRight"
                                 Source="{Binding ResultVideo, Mode=TwoWay}" 
                                 OverlaySource="{Binding CompareVideo, Mode=TwoWay}" 
+                                Volume="{Binding Settings.VolumeOutput, Mode=TwoWay}"
+                                IsVolumeMute="{Binding Settings.IsVolumeOutputMute, Mode=TwoWay}"
                                 IsLoadEnabled="False" 
                                 IsLoadOverlayEnabled="False"/>
                         </Grid>

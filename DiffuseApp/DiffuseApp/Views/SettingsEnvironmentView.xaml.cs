@@ -83,6 +83,9 @@ namespace Diffuse.Views
                 if (obj is not EnvironmentModel model)
                     return false;
 
+                if (!Settings.Vendors.Contains(model.Vendor))
+                    return false;
+
                 if (!string.IsNullOrEmpty(_filterText))
                 {
                     return model.Name.Contains(_filterText, StringComparison.OrdinalIgnoreCase);

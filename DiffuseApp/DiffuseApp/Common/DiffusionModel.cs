@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
 
@@ -12,6 +13,7 @@ namespace Diffuse.Common
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
+        public BackendType Backend { get; set; }
         public string Name { get; set; }
         public string Pipeline { get; set; }
         public string Path { get; set; }

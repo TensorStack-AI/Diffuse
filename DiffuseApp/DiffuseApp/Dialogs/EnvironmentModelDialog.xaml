@@ -29,7 +29,7 @@
             </StackPanel>
             <StackPanel Margin="0,0,2,0">
                 <TextBlock Text="Vendor" Style="{StaticResource FieldTextBlockStyle}"/>
-                <ComboBox ItemsSource="{Binding Source={StaticResource VendorType}}" SelectedItem="{Binding EnvironmentModel.Vendor}" SelectedIndex="0" />
+                <ComboBox ItemsSource="{Binding Settings.Vendors}" SelectedItem="{Binding EnvironmentModel.Vendor}" SelectedIndex="0" />
             </StackPanel>
             <StackPanel Margin="2,0,2,0" >
                 <TextBlock Text="Type" Style="{StaticResource FieldTextBlockStyle}"/>

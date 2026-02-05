@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Common;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -61,6 +62,7 @@ namespace Diffuse.Dialogs
             ExtractModel = new ExtractModel
             {
                 Id = modelId,
+                Backend = BackendType.OnnxRuntime,
                 DefaultOptions = new ExtractInputOptions
                 {
 
@@ -197,6 +199,7 @@ namespace Diffuse.Dialogs
             return new ExtractModel
             {
                 Id = modelId,
+                Backend = extractModel.Backend,
                 Name = extractModel.Name,
                 Path = extractModel.Path,
                 Channels = extractModel.Channels,

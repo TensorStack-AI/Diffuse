@@ -33,6 +33,7 @@ namespace Diffuse
         private static string _directoryBase;
         private static string _directoryData;
         private static string _directoryPython;
+        private readonly Settings _settings;
 
         public App()
         {
@@ -59,8 +60,8 @@ namespace Diffuse
             builder.Logging.AddSerilog(logger: Log.Logger, dispose: true);
 
             // Add TensorStack.WPF
-            var settings = LoadSettingsFile();
-            builder.Services.AddWPFCommon<MainWindow, Settings>(settings);
+            _settings = LoadSettingsFile();
+            builder.Services.AddWPFCommon<MainWindow, Settings>(_settings);
 
             // Add sService
             builder.Services.AddSingleton<IHardwareService, HardwareService>();
@@ -140,6 +141,7 @@ namespace Diffuse
         {
             using (_appHost)
             {
+                await SettingsManager.SaveAsync(_settings);
                 await _appHost.StopAsync();
                 DeregisterExceptionHandlers();
                 _appMutex.WaitOne();

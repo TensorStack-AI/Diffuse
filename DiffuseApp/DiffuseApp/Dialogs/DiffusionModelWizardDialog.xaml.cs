@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -28,6 +29,7 @@ namespace Diffuse.Dialogs
         private DiffusionCheckpointModel _checkpointModel;
         private DiffusionModel _selectedTemplate;
         private string _selectedVariant;
+        private BackendType _selectedbackend = BackendType.Pytorch;
 
         public DiffusionModelWizardDialog(Settings settings)
         {
@@ -117,6 +119,13 @@ namespace Diffuse.Dialogs
             set { SetProperty(ref _checkpointModel, value); }
         }
 
+        public BackendType Selectedbackend
+        {
+            get { return _selectedbackend; }
+            set { SetProperty(ref _selectedbackend, value); }
+        }
+
+
         protected override Task SaveAsync()
         {
             _selectedTemplate.Id = GetNextModelId();
@@ -124,6 +133,7 @@ namespace Diffuse.Dialogs
             _selectedTemplate.Source = _selectedSource;
             _selectedTemplate.Path = _selectedModelPath;
             _selectedTemplate.Variant = SelectedVariant;
+            _selectedTemplate.Backend = _selectedbackend;
             if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && Utils.TryParseHuggingFaceRepo(_selectedModelPath, out var huggingfacePath))
                 _selectedTemplate.Path = huggingfacePath;
 

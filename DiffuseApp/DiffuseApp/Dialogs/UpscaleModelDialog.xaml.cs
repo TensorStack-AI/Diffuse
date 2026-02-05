@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Common;
+using TensorStack.Common.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -61,6 +62,7 @@ namespace Diffuse.Dialogs
             UpscaleModel = new UpscaleModel
             {
                 Id = modelId,
+                Backend = BackendType.OnnxRuntime,
                 DefaultOptions = new UpscaleInputOptions
                 {
                     IsTileEnabled = true,
@@ -201,6 +203,7 @@ namespace Diffuse.Dialogs
             return new UpscaleModel
             {
                 Id = modelId,
+                Backend = upscaleModel.Backend,
                 Name = upscaleModel.Name,
                 Path = upscaleModel.Path,
                 Channels = upscaleModel.Channels,

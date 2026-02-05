@@ -19,9 +19,14 @@ namespace Diffuse
         private Orientation _historyOrientation;
         private int _historyItems = 500;
         private double _uiScale = 1;
+        private double _volumeInput = 0.1;
+        private double _volumeOutput = 0.1;
+        private bool _isVolumeInputMute;
+        private bool _isVolumeOutputMute;
 
         [AppDefault]
         public string FileVersion { get; set; } = "2";
+        public VendorType[] Vendors { get; set; }
         public string DirectoryTemp { get; set; }
         public string DirectoryModel { get; set; }
         public string DirectoryCache { get; set; }
@@ -31,7 +36,32 @@ namespace Diffuse
         public int WriteBuffer { get; set; } = 32;
         public string VideoCodec { get; set; } = "mp4v";
         public bool IsLegacyDeviceDetection { get; set; }
-     
+        public bool IsServerDebugEnabled { get; set; } = false;
+
+        public double VolumeInput
+        {
+            get { return _volumeInput; }
+            set { SetProperty(ref _volumeInput, value); }
+        }
+
+        public double VolumeOutput
+        {
+            get { return _volumeOutput; }
+            set { SetProperty(ref _volumeOutput, value); }
+        }
+
+        public bool IsVolumeInputMute
+        {
+            get { return _isVolumeInputMute; }
+            set { SetProperty(ref _isVolumeInputMute, value); }
+        }
+
+        public bool IsVolumeOutputMute
+        {
+            get { return _isVolumeOutputMute; }
+            set { SetProperty(ref _isVolumeOutputMute, value); }
+        }
+
         public double UIScale
         {
             get { return _uiScale; }
@@ -48,7 +78,7 @@ namespace Diffuse
             get { return _historyOrientation; }
             set { SetProperty(ref _historyOrientation, value); }
         }
-        public bool IsServerDebugEnabled { get; set; } = false;
+
         public DataType DefaultDataType { get; set; }
         public MemoryMode DefaultMemoryMode { get; set; }
 
@@ -107,7 +137,7 @@ namespace Diffuse
 
             Provider.Initialize();
             Devices = Provider.GetDevices()
-                .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor))
+                .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor) && Vendors.Contains(x.Vendor))
                 .ToList();
             DefaultDevice = Devices.FirstOrDefault();
 

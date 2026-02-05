@@ -16,6 +16,7 @@ namespace Diffuse.Common
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
+        public BackendType Backend { get; set; }
         public string Name { get; set; }
         public bool IsDefault { get; set; }
         public int Channels { get; set; } = 3;
