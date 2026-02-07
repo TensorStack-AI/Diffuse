@@ -15,6 +15,7 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 - Automatic installation of isolated portable Python
 - Device-specific Python virtual environments
 - Automatic model downloads from Huggingface repositories
+- Saftetensors, GGUF and ONNX support
 
 ---
 
@@ -80,8 +81,8 @@ Focus on usability, stability, and feature expansion.
 - ~~Extractor pipeline support~~
 - ~~ControlNet support~~
 - ~~Inpaint/Outpaint processes~~
+- ~~GGUF model support~~
 - Advanced UI and workflow options
-- GGUF model support
 - Weighted prompt support
 - Model Manager, download queuing, online templates
 - ROCM Support
