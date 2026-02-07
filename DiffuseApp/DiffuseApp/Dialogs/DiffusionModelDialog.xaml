@@ -78,7 +78,7 @@
                                 </StackPanel>
                             </DockPanel>
                             <StackPanel>
-                                <TextBlock Text="Model Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="Model Filename (safetensors, gguf)" Style="{StaticResource FieldTextBlockStyle}" />
                                 <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.Checkpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
                             </StackPanel>
                         </StackPanel>
@@ -115,16 +115,16 @@
                             </DockPanel>
 
                             <StackPanel>
-                                <TextBlock Text="Base Model (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock Text="Base Model (safetensors, gguf))" Style="{StaticResource FieldTextBlockStyle}" />
                                 <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.ModelCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Vae (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
-                                <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.VaeCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.VaeCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;" DefaultExt="safetensors"/>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Text Encoder (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
-                                <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.TextEncoderCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                                <CommonControls:FilePickerTextBox FileName="{Binding CheckpointModel.TextEncoderCheckpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Filter="Model Files|*.safetensors;" DefaultExt="safetensors"/>
                             </StackPanel>
                             <TextBlock Text="Any combination of checkpoint files is supported. Select at least one." FontSize="10" FontStyle="Italic" Opacity=".7" HorizontalAlignment="Center"  Margin="0,3,0,0"/>
                         </StackPanel>

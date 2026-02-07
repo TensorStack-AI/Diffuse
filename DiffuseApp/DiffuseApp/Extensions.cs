@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using TensorStack.Common;
+using System.Windows;
+using System.Windows.Media;
 using TensorStack.Python.Config;
 
 namespace Diffuse
@@ -107,5 +107,43 @@ namespace Diffuse
 
         private static readonly Regex HuggingFaceRepoRegex = new(@"^(?:https?:\/\/)?(?:www\.)?huggingface\.co\/(?<repo>[^\/\s]+\/[^\/\s]+)$|^(?<repo>[^\/\s]+\/[^\/\s]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+    }
+
+
+
+    public static class FontOptions
+    {
+        public static FontWeight[] FontWeightList { get; } = new[]
+           {
+            FontWeights.Thin,
+            FontWeights.ExtraLight,
+            FontWeights.Light,
+            FontWeights.Normal,
+            FontWeights.Medium,
+            FontWeights.SemiBold,
+            FontWeights.Bold,
+            FontWeights.ExtraBold,
+            FontWeights.Black
+        };
+
+
+        public static FontStyle[] FontStyleList { get; } = new[]
+        {
+            FontStyles.Normal,
+            FontStyles.Italic,
+            FontStyles.Oblique
+        };
+
+
+        public static ICollection<FontFamily> FontFamilies { get; } = System.Windows.Media.Fonts.SystemFontFamilies;
+    }
+
+
+    public static class BrushOptions
+    {
+        public static IEnumerable<Brush> AllBrushes { get; } =
+            typeof(Brushes).GetProperties()
+                .Where(p => p.PropertyType == typeof(Brush))
+                .Select(p => (Brush)p.GetValue(null));
     }
 }

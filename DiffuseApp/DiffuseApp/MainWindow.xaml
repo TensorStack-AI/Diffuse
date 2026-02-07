@@ -335,6 +335,14 @@
                                 CommandParameter="{x:Static Views:View.ImageUpscale}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageUpscale}">
                             </CommonControls:IconButton>
+                            <CommonControls:IconButton 
+                                Text="Image Compose" 
+                                Icon="f5fd"
+                                Style="{StaticResource SubmenuIconButton}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.ImageCompose}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageCompose}">
+                            </CommonControls:IconButton>
                         </UniformGrid>
                     </Grid>
 

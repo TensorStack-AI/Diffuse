@@ -39,6 +39,11 @@
 
   <!--Binaries-->
   <ItemGroup>
+    <Reference Include="ColorPicker">
+      <HintPath>ColorPicker.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="CSnakes.Runtime">
       <HintPath>CSnakes.Runtime.dll</HintPath>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

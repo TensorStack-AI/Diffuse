@@ -198,6 +198,7 @@ namespace Diffuse
                 "Kandinsky5Pipeline",
                 "LTXPipeline",
                 "QwenImagePipeline",
+                "StableDiffusion3Pipeline",
                 "StableDiffusionXLPipeline",
                 "WanPipeline",
                 "ZImagePipeline"

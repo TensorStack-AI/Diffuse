@@ -34,7 +34,7 @@
                 </StackPanel>
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=SingleFile}">
                     <TextBlock Text="Filename (safetensors)" Style="{StaticResource FieldTextBlockStyle}" />
-                    <CommonControls:FilePickerTextBox FileName="{Binding SelectedPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;*.gguf;" DefaultExt="safetensors"/>
+                    <CommonControls:FilePickerTextBox FileName="{Binding SelectedPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsRequired="True" Filter="Model Files|*.safetensors;" DefaultExt="safetensors"/>
                 </StackPanel>
                 <StackPanel Visibility="{Binding SelectedItem, ElementName=ComboBoxSource, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=HuggingFace}">
                     <TextBlock Text="HuggingFace Url" Style="{StaticResource FieldTextBlockStyle}" />

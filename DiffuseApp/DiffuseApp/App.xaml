@@ -982,6 +982,44 @@
             </DataTemplate>
 
 
+            <DataTemplate DataType="{x:Type Common:ImageLayerHistory}">
+                <DockPanel Margin="10,0,0,0">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Composed {0}}" FontSize="20"/>
+                    <StackPanel>
+                        <Separator Opacity=".7"/>
+        
+                        <UniformGrid Columns="3" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBlock>
+                                    <Run Text="{Binding Width}" />
+                                    <Run Text="x" />
+                                    <Run Text="{Binding Height}" />
+                                    <Run Text="px" />
+                                </TextBlock>
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <StackPanel Margin="0,6,0,0" >
+                            <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
+                            <TextBlock Text="{Binding Timestamp}" />
+                        </StackPanel>
+                        <UniformGrid Columns="2" Margin="0,6,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MediaType, StringFormat={}{0} Path}" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding MediaPath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding MediaPath, Converter={StaticResource FullPathToFolderConverter}}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Info Path" Style="{StaticResource FieldTextBlockStyle}" />
+                                <CommonControls:HyperlinkControl Label="{Binding FilePath, Converter={StaticResource FullPathToFileNameConverter}}" Link="{Binding FilePath}" IsUnderlineEnabled="False" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
+                </DockPanel>
+            </DataTemplate>
+
+
+
             <Style x:Key="SettingsListBoxItem" TargetType="{x:Type ListBoxItem}">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="Margin" Value="0"/>

@@ -201,6 +201,27 @@
                                         </DockPanel>
                                     </DataTemplate>
 
+                                    <DataTemplate DataType="{x:Type Common:ImageLayerHistory}">
+                                        <DockPanel Margin="3">
+                                            <Grid DockPanel.Dock="Top">
+                                                <CommonControls:TransparentImageElement 
+                                                    Height="120" 
+                                                    Stretch="Uniform" 
+                                                    DecodePixelHeight="80"
+                                                    UriSource="{Binding ThumbPath, Converter={StaticResource StringToUriConverter}}" />
+                                            </Grid>
+                                            <StackPanel Margin="0,3,0,0">
+                                                <TextBlock TextAlignment="Center" LineHeight="14" LineStackingStrategy="BlockLineHeight">
+                                                    <Run Text="{Binding Width}" />
+                                                    <Run Text="x" />
+                                                    <Run Text="{Binding Height}" />
+                                                    <LineBreak/>
+                                                    <Run Text="{Binding Source}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+
                                 </ListBox.Resources>
 
                                 <!--ItemContainerStyle-->

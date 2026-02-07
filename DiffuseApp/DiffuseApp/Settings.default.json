@@ -27,7 +27,8 @@
         "peft==0.18.0",
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
-        "optimum-quanto==0.2.7"
+        "optimum-quanto==0.2.7",
+        "gguf==0.17.1"
       ]
     },
     {
@@ -61,7 +62,8 @@
         "peft==0.18.0",
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
-        "optimum-quanto==0.2.7"
+        "optimum-quanto==0.2.7",
+        "gguf==0.17.1"
       ]
     }
   ],

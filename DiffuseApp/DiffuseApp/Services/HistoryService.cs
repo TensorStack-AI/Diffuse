@@ -65,6 +65,8 @@ namespace Diffuse.Services
                     historyItem = await Json.LoadAsync<AudioHistory>(historyFile.FullName);
                 else if (historyFile.Name.StartsWith("GenerateText_"))
                     historyItem = await Json.LoadAsync<TextHistory>(historyFile.FullName);
+                else if (historyFile.Name.StartsWith("LayerImage_"))
+                    historyItem = await Json.LoadAsync<ImageLayerHistory>(historyFile.FullName);
                 if (historyItem == null || historyItem.Version != HistoryVersion)
                     continue;
 
@@ -183,6 +185,31 @@ namespace Diffuse.Services
 
             return await AddImageInternalAsync(image, history);
         }
+
+
+        public async Task<ImageInput> AddAsync(ImageInput image, ImageLayerHistory layerHistory)
+        {
+            if (_settings.HistoryItems <= 0)
+                return image;
+
+            var key = GetRandomName();
+            var history = layerHistory with
+            {
+                Id = key,
+                Version = HistoryVersion,
+                Extension = "png",
+                MediaType = MediaType.Image,
+                Timestamp = DateTime.Now,
+                FilePath = Path.Combine(_settings.DirectoryHistory, $"LayerImage_{key}.json"),
+                MediaPath = Path.Combine(_settings.DirectoryHistory, $"LayerImage_{key}.png"),
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"LayerImage_{key}.png"),
+                Width = image.Width,
+                Height = image.Height,
+            };
+
+            return await AddImageInternalAsync(image, history);
+        }
+
 
 
         public async Task<VideoInputStream> AddAsync(VideoInputStream videoStream)
@@ -477,6 +504,7 @@ namespace Diffuse.Services
         Task<ImageInput> AddAsync(ImageInput image, DiffusionHistory diffusionHistory);
         Task<ImageInput> AddAsync(ImageInput image, ExtractHistory extractHistory);
         Task<ImageInput> AddAsync(ImageInput image, UpscaleHistory upscaleHistory);
+        Task<ImageInput> AddAsync(ImageInput image, ImageLayerHistory layerHistory);
 
         Task<VideoInputStream> AddAsync(VideoInputStream videoStream);
         Task<VideoInputStream> AddAsync(VideoInputStream videoStream, DiffusionHistory diffusionHistory);
