@@ -117,7 +117,6 @@ namespace Diffuse.Services
                     {
                         Variant = model.Variant,
                         BaseModelPath = model.Path,
-                        ControlNetPath = controlNet?.Path,
                         Pipeline = model.Pipeline,
                         ProcessType = _currentPipeline.ProcessType,
                         Device = device.Type == DeviceType.GPU ? "cuda" : "cpu",
@@ -127,6 +126,7 @@ namespace Diffuse.Services
                         CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                         SecureToken = _settings.SecureToken,
                         LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),
+                        ControlNet = GetControlNet(controlNet),
                         MemoryMode = SetMemoryMode(_currentPipeline),
                         CheckpointConfig = model.Checkpoint.ToConfig()
                     };
@@ -169,7 +169,7 @@ namespace Diffuse.Services
                     _progressCallback = progressCallback;
                     var reloadOptions = new PipelineReloadOptions
                     {
-                        ControlNetPath = pipeline.ControlNetModel?.Path,
+                        ControlNet = GetControlNet(pipeline.ControlNetModel),
                         LoraAdapters = GetLoraAdapters(pipeline.LoraAdapterModel),
                         ProcessType = pipeline.ProcessType,
                     };
@@ -193,6 +193,8 @@ namespace Diffuse.Services
                 _cancellationTokenSource = null;
             }
         }
+
+
 
 
         /// <summary>
@@ -247,6 +249,7 @@ namespace Diffuse.Services
             IsExecuting = true;
             try
             {
+                var videoFileName = _mediaService.GetTempVideoFile();
                 options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
                 options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
                 var generateOptions = new PipelineOptions
@@ -257,8 +260,8 @@ namespace Diffuse.Services
                     Steps2 = options.Steps2,
                     GuidanceScale = options.GuidanceScale,
                     GuidanceScale2 = options.GuidanceScale2,
-                    Frames = _defaultOptions.Frames,
-                    FrameRate = _defaultOptions.FrameRate,
+                    Frames = options.Frames,
+                    FrameRate = options.FrameRate,
                     Seed = options.Seed,
                     Prompt = options.Prompt,
                     NegativePrompt = options.NegativePrompt,
@@ -269,10 +272,18 @@ namespace Diffuse.Services
                     InputControlImages = options.InputControlImages,
                     SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
                     LoraOptions = GetLoraOptions(options),
+                    TempFileName = videoFileName
                 };
 
-                var videoFileName = _mediaService.GetTempVideoFile();
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
+                if (tensorResult is null)
+                {
+                    if (!File.Exists(videoFileName))
+                        throw new Exception("Generated video result not found.");
+
+                    return new VideoInputStream(videoFileName);
+                }
+
                 var videoTensor = tensorResult.AsVideoTensor(generateOptions.FrameRate);
                 await videoTensor.SaveAync(videoFileName);
                 return new VideoInputStream(videoFileName);
@@ -434,6 +445,19 @@ namespace Diffuse.Services
                 Name = x.Key,
                 Strength = x.Strength
             })];
+        }
+
+
+        private static ControlNetConfig GetControlNet(ControlNetModel controlNetModel)
+        {
+            if (controlNetModel is null)
+                return null;
+
+            return new ControlNetConfig
+            {
+                Name = controlNetModel.Name,
+                Path = controlNetModel.Path
+            };
         }
 
 

@@ -30,7 +30,10 @@ namespace Diffuse.Common
         public int BaseImageSeqLen { get; set; } = 256;
         public int MaxImageSeqLen { get; set; } = 4096;
         public bool UseDynamicShifting { get; set; }
-
+        public int SampleRate { get; set; } = 24000;
+        public int FramesMin { get; set; }
+        public int FramesMax { get; set; }
+        public bool IsStochasticSampling { get; set; }
 
         public virtual bool Equals(DiffusionDefaultOptions other) => ReferenceEquals(this, other);
         public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);

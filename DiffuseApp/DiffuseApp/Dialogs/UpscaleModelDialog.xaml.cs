@@ -213,6 +213,8 @@ namespace Diffuse.Dialogs
                 SampleSize = upscaleModel.SampleSize,
                 ScaleFactor = upscaleModel.ScaleFactor,
                 UrlPaths = upscaleModel.UrlPaths.ToArray(),
+                IsGated = upscaleModel.IsGated,
+                Link = upscaleModel.Link,
                 DefaultOptions = new UpscaleInputOptions
                 {
                     IsTileEnabled = upscaleModel.DefaultOptions.IsTileEnabled,

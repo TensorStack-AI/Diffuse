@@ -24,6 +24,8 @@ namespace Diffuse.Common
         private int _inputImageCount = 0;
         private SchedulerInputOptions _schedulerOptions = new SchedulerInputOptions();
         private List<LoraOptionModel> _loraOptions;
+        private int _frames;
+        private float _frameRate;
 
         public int Width
         {
@@ -72,7 +74,6 @@ namespace Diffuse.Common
             get { return _negativePrompt; }
             set { SetProperty(ref _negativePrompt, value); }
         }
-
         public int Steps
         {
             get { return _steps; }
@@ -114,6 +115,19 @@ namespace Diffuse.Common
             get { return _schedulerOptions; }
             set { SetProperty(ref _schedulerOptions, value); }
         }
+
+        public int Frames
+        {
+            get { return _frames; }
+            set { SetProperty(ref _frames, value); }
+        }
+
+        public float FrameRate
+        {
+            get { return _frameRate; }
+            set { SetProperty(ref _frameRate, value); }
+        }
+
 
 
         [JsonIgnore]

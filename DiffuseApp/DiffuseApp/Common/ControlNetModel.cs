@@ -17,7 +17,8 @@ namespace Diffuse.Common
         public ModelSourceType Source { get; set; }
         public string Pipeline { get; set; }
         public bool IsDefault { get; set; }
-
+        public bool IsGated { get; set; }
+        public string Link { get; set; }
 
         [JsonIgnore]
         public bool IsValid
@@ -32,9 +33,13 @@ namespace Diffuse.Common
             if (Source == ModelSourceType.Folder)
                 IsValid = Directory.Exists(Path);
             else if (Source == ModelSourceType.SingleFile)
-                IsValid = File.Exists(Path);
+            {
+                IsValid = Utils.IsControlNetInstalled(modelDirectory, Path);
+            }
             else if (Source == ModelSourceType.HuggingFace)
-                IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
+            {
+                IsValid = Utils.IsControlNetInstalled(modelDirectory, Path);
+            }
         }
     }
 }

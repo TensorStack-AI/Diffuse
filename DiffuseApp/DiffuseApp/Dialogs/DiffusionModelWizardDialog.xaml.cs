@@ -62,6 +62,7 @@ namespace Diffuse.Dialogs
             set
             {
                 SetProperty(ref _selectedItem, value);
+                Reset();
                 SelectedOption = _selectedItem.Options?.FirstOrDefault();
             }
         }
@@ -190,7 +191,7 @@ namespace Diffuse.Dialogs
             {
                 if (_selectedSource == ModelSourceType.Folder && !Directory.Exists(_selectedModelPath))
                     yield return "Model folder not found";
-                else if (_selectedSource == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !File.Exists(CheckpointModel.Checkpoint)))
+                else if (_selectedSource == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !IsCheckpointValid(CheckpointModel.Checkpoint)))
                     yield return "Model file not found";
                 else if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(_selectedModelPath, out _))
                     yield return "HuggingFace repository not found";
@@ -199,14 +200,20 @@ namespace Diffuse.Dialogs
                 {
                     if (string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint))
                         yield return "At least one checkpoint model required";
-                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !File.Exists(CheckpointModel.ModelCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !IsCheckpointValid(CheckpointModel.ModelCheckpoint))
                         yield return "Model checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !File.Exists(CheckpointModel.VaeCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !IsCheckpointValid(CheckpointModel.VaeCheckpoint))
                         yield return "Vae checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !File.Exists(CheckpointModel.TextEncoderCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !IsCheckpointValid(CheckpointModel.TextEncoderCheckpoint))
                         yield return "TextEncoder checkpoint file not found";
                 }
             }
+        }
+
+
+        private bool IsCheckpointValid(string checkpoint)
+        {
+            return File.Exists(checkpoint) || Utils.IsCheckpointInstalled(Settings.DirectoryCache, checkpoint) || Utils.IsHuggingFaceLink(checkpoint);
         }
 
 
@@ -216,34 +223,44 @@ namespace Diffuse.Dialogs
         }
 
 
+        private void Reset()
+        {
+            SelectedName = null;
+            SelectedVariant = null;
+            SelectedModelPath = null;
+            SelectedSource = ModelSourceType.HuggingFace;
+            CheckpointModel = new DiffusionCheckpointModel();
+        }
+
+
         private void GenerateName()
         {
             if (!string.IsNullOrWhiteSpace(_selectedModelPath))
             {
-                if (_selectedSource == ModelSourceType.Checkpoint)
-                {
-                    var filename = _checkpointModel.ModelCheckpoint;
-                    if (string.IsNullOrWhiteSpace(filename))
-                        filename = _checkpointModel.VaeCheckpoint;
-                    else if (string.IsNullOrWhiteSpace(filename))
-                        filename = _checkpointModel.TextEncoderCheckpoint;
+                //if (_selectedSource == ModelSourceType.Checkpoint)
+                //{
+                //    var filename = _checkpointModel.ModelCheckpoint;
+                //    if (string.IsNullOrWhiteSpace(filename))
+                //        filename = _checkpointModel.VaeCheckpoint;
+                //    else if (string.IsNullOrWhiteSpace(filename))
+                //        filename = _checkpointModel.TextEncoderCheckpoint;
 
-                    if (!string.IsNullOrWhiteSpace(filename))
-                        SelectedName = Path.GetFileNameWithoutExtension(filename);
-                }
-                else
-                {
-                    if (File.Exists(_selectedModelPath) || Directory.Exists(_selectedModelPath))
-                    {
-                        SelectedName = Path.GetFileNameWithoutExtension(_selectedModelPath);
-                    }
-                    else
-                    {
-                        SelectedName = Utils.TryParseHuggingFaceRepo(_selectedModelPath, out var huggingfaceRepo)
-                            ? huggingfaceRepo.Split('/', '\\').LastOrDefault()
-                            : Path.GetFileNameWithoutExtension(_selectedModelPath.Split('/', '\\').LastOrDefault());
-                    }
-                }
+                //    if (!string.IsNullOrWhiteSpace(filename))
+                //        SelectedName = Path.GetFileNameWithoutExtension(filename);
+                //}
+                //else
+                //{
+                //    if (File.Exists(_selectedModelPath) || Directory.Exists(_selectedModelPath))
+                //    {
+                //        SelectedName = Path.GetFileNameWithoutExtension(_selectedModelPath);
+                //    }
+                //    else
+                //    {
+                //        SelectedName = Utils.TryParseHuggingFaceRepo(_selectedModelPath, out var huggingfaceRepo)
+                //            ? huggingfaceRepo.Split('/', '\\').LastOrDefault()
+                //            : Path.GetFileNameWithoutExtension(_selectedModelPath.Split('/', '\\').LastOrDefault());
+                //    }
+                //}
             }
         }
 

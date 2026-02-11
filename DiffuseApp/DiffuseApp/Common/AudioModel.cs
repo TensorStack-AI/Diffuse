@@ -17,6 +17,8 @@ namespace Diffuse.Common
         public BackendType Backend { get; set; }
         public string Name { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsGated { get; set; }
+        public string Link { get; set; }
         public AudioModelType Type { get; set; }
         public string Version { get; set; }
         public int MinLength { get; set; }

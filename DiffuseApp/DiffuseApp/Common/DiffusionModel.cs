@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
@@ -20,6 +21,8 @@ namespace Diffuse.Common
         public string Variant { get; set; }
         public ModelSourceType Source { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsGated { get; set; }
+        public string Link { get; set; }
         public MemoryProfile[] MemoryProfile { get; set; }
         public DataType BaseType { get; set; }
         public ProcessType[] ProcessTypes { get; set; }
@@ -46,17 +49,18 @@ namespace Diffuse.Common
                 IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
             else if (Source == ModelSourceType.SingleFile)
             {
-                IsValid = Checkpoint is not null && File.Exists(Checkpoint.Checkpoint);
+                IsValid = Checkpoint is not null && Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Checkpoint);
             }
             else if (Source == ModelSourceType.Checkpoint)
             {
                 IsValid = Checkpoint is not null
-                       && Utils.TryParseHuggingFaceRepo(Path, out _)
-                       && (string.IsNullOrEmpty(Checkpoint.VaeCheckpoint) || File.Exists(Checkpoint.VaeCheckpoint))
-                       && (string.IsNullOrEmpty(Checkpoint.ModelCheckpoint) || File.Exists(Checkpoint.ModelCheckpoint))
-                       && (string.IsNullOrEmpty(Checkpoint.TextEncoderCheckpoint) || File.Exists(Checkpoint.TextEncoderCheckpoint));
+                    && Utils.TryParseHuggingFaceRepo(Path, out _)
+                    && (string.IsNullOrEmpty(Checkpoint.VaeCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.VaeCheckpoint))
+                    && (string.IsNullOrEmpty(Checkpoint.ModelCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.ModelCheckpoint))
+                    && (string.IsNullOrEmpty(Checkpoint.TextEncoderCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoderCheckpoint));
             }
         }
+
     }
 
     public sealed class MemoryProfile : BaseModel

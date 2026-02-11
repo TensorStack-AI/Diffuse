@@ -6,6 +6,10 @@ namespace Diffuse.Common
 {
     public record SchedulerInputOptions : BaseRecord
     {
+        private float _shift = 1.0f;
+        private bool _useDynamicShifting = false;
+        private bool _stochasticSampling = false;
+
         public int NumTrainTimesteps { get; set; } = 1000;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -53,8 +57,11 @@ namespace Diffuse.Common
 
         // IsStochastic
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public bool StochasticSampling { get; set; } = false;
-
+        public bool StochasticSampling
+        {
+            get { return _stochasticSampling; }
+            set { SetProperty(ref _stochasticSampling, value); }
+        }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public float Eta { get; set; } = 0.0f;
         public float SNoise { get; set; } = 1.0f;
@@ -69,10 +76,17 @@ namespace Diffuse.Common
         public float STmax { get; set; } = 0.0f; // 0 = float.PositiveInfinity;
 
         // IsFlowMatch
-        public float Shift { get; set; } = 1.0f;
-
+        public float Shift
+        {
+            get { return _shift; }
+            set { SetProperty(ref _shift, value); }
+        }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public bool UseDynamicShifting { get; set; } = false;
+        public bool UseDynamicShifting
+        {
+            get { return _useDynamicShifting; }
+            set { SetProperty(ref _useDynamicShifting, value); }
+        }
         public float BaseShift { get; set; } = 0.5f;
         public float MaxShift { get; set; } = 1.15f;
 
@@ -81,6 +95,6 @@ namespace Diffuse.Common
 
         public int BaseImageSeqLen { get; set; }
         public int MaxImageSeqLen { get; set; }
-  
+
     }
 }

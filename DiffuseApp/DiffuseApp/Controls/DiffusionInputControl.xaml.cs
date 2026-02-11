@@ -200,6 +200,9 @@ namespace Diffuse.Controls
                 Scheduler = newOptions.Scheduler,
                 GuidanceScale = newOptions.GuidanceScale,
                 GuidanceScale2 = newOptions.GuidanceScale2,
+
+                Frames = newOptions.Frames,
+                FrameRate = newOptions.FrameRate,
                 SchedulerOptions = new SchedulerInputOptions
                 {
                     Shift = newOptions.Shift,
@@ -215,6 +218,7 @@ namespace Diffuse.Controls
                     BaseImageSeqLen = newOptions.BaseImageSeqLen,
                     MaxImageSeqLen = newOptions.MaxImageSeqLen,
                     UseDynamicShifting = newOptions.UseDynamicShifting,
+                    StochasticSampling = newOptions.IsStochasticSampling
                 }
             };
 

@@ -27,7 +27,7 @@ namespace Diffuse.Views
             AddEnvironmentCommand = new AsyncRelayCommand(AddEnvironmentAsync);
             AddEnvironmentWizardCommand = new AsyncRelayCommand(AddEnvironmentWizardAsync);
             CopyEnvironmentCommand = new AsyncRelayCommand(CopyEnvironmentAsync, () => SelectedEnvironment is not null);
-            UpdateEnvironmentCommand = new AsyncRelayCommand(UpdateEnvironmentAsync, () => SelectedEnvironment?.Id > Utils.FixedIdRange);
+            UpdateEnvironmentCommand = new AsyncRelayCommand(UpdateEnvironmentAsync);
             RemoveEnvironmentCommand = new AsyncRelayCommand(RemoveEnvironmentAsync, () => SelectedEnvironment?.Id > Utils.FixedIdRange);
             ImportEnvironmentCommand = new AsyncRelayCommand(ImportEnvironmentAsync);
             ExportEnvironmentCommand = new AsyncRelayCommand(ExportEnvironmentAsync, () => SelectedEnvironment is not null);

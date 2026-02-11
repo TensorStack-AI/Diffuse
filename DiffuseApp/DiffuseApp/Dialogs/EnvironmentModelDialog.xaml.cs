@@ -22,6 +22,7 @@ namespace Diffuse.Dialogs
         private VariableModel _currentVariable;
         private VariableModel _selectedVariable;
         private string _requirements;
+        private bool _isFixedEnvironment;
 
         public EnvironmentModelDialog(Settings settings)
         {
@@ -79,6 +80,12 @@ namespace Diffuse.Dialogs
             }
         }
 
+        public bool IsFixedEnvironment
+        {
+            get { return _isFixedEnvironment; }
+            set { SetProperty(ref _isFixedEnvironment, value); }
+        }
+
 
         public Task<bool> AddAsync()
         {
@@ -98,6 +105,7 @@ namespace Diffuse.Dialogs
             var modelId = environmentModel.Id;
             _originalEnvironmentModel = environmentModel;
             EnvironmentModel = DeepClone(environmentModel, modelId);
+            IsFixedEnvironment = modelId <= Utils.FixedIdRange;
             Populate();
             return base.ShowDialogAsync();
         }

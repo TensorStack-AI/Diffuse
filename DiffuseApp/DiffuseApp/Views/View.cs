@@ -113,5 +113,11 @@ namespace Diffuse.Views
             CurrentViewMap[category] = view;
             return category;
         }
+
+
+        internal static ViewCategory GetViewCategory(View view)
+        {
+            return ViewCategoryMap[view];
+        }
     }
 }

@@ -240,9 +240,21 @@ namespace Diffuse.Dialogs
                     yield return "Model folder not found";
                 else if (LoraModel.Source == ModelSourceType.SingleFile && !File.Exists(_selectedPath))
                     yield return "Model file not found";
-                else if (LoraModel.Source == ModelSourceType.HuggingFace && !Utils.TryParseHuggingFaceRepo(_selectedPath, out _))
+                else if (LoraModel.Source == ModelSourceType.HuggingFace && !IsLoraAdapterValid(_selectedPath, _selectedWeights))
                     yield return "HuggingFace repository not found";
             }
+        }
+
+
+        private string CreateKey()
+        {
+            return $"{new string([.. LoraModel.Name.Where(char.IsLetterOrDigit)])}{LoraModel.Id}".ToLower();
+        }
+
+
+        private bool IsLoraAdapterValid(string loraAdapterPath, string loraWeightsPath)
+        {
+            return File.Exists(loraAdapterPath) || Utils.IsLoraAdapterInstalled(Settings.DirectoryCache, loraAdapterPath, loraWeightsPath) || Utils.IsHuggingFaceLink(loraAdapterPath);
         }
 
 
@@ -258,13 +270,10 @@ namespace Diffuse.Dialogs
                 Weights = loraModel.Weights,
                 Triggers = loraModel.Triggers,
                 Source = loraModel.Source,
-                Backend = loraModel.Backend
+                Backend = loraModel.Backend,
+                IsGated = loraModel.IsGated,
+                Link = loraModel.Link,
             };
-        }
-
-        private string CreateKey()
-        {
-            return $"{new string([.. LoraModel.Name.Where(char.IsLetterOrDigit)])}{LoraModel.Id}".ToLower();
         }
     }
 }

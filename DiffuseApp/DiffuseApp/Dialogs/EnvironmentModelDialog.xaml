@@ -14,28 +14,32 @@
         Style="{StaticResource {x:Type CommonControls:DialogControl}}">
     <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:EnvironmentModelDialog}}}" Margin="15, 15, 15, 10">
 
+        <Grid DockPanel.Dock="Top" Visibility="{Binding IsFixedEnvironment, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="To maintain operational stability and debug accuracy, core settings in this default environment are read-only" Foreground="{StaticResource WarningColour}" HorizontalAlignment="Center" Margin="0,0,0,10" Opacity=".9"/>
+        </Grid>
+
         <!--Environment Settings-->
-        <UniformGrid DockPanel.Dock="Top" Columns="3">
-            <StackPanel Margin="0,0,2,0">
+        <UniformGrid DockPanel.Dock="Top" Columns="3" >
+            <StackPanel Margin="0,0,2,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
                 <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}"/>
                 <TextBox Text="{Binding EnvironmentModel.Name, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
-            <StackPanel Margin="2,0,2,0">
+            <StackPanel Margin="2,0,2,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
                 <TextBlock Text="Environment" Style="{StaticResource FieldTextBlockStyle}"/>
                 <TextBox Text="{Binding EnvironmentModel.Environment, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <StackPanel Margin="2,0,0,0" VerticalAlignment="Bottom" >
                 <CheckBox Content="Default" IsChecked="{Binding EnvironmentModel.IsDefault}" Margin="10,0,0,2"/>
             </StackPanel>
-            <StackPanel Margin="0,0,2,0">
+            <StackPanel Margin="0,0,2,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
                 <TextBlock Text="Vendor" Style="{StaticResource FieldTextBlockStyle}"/>
                 <ComboBox ItemsSource="{Binding Settings.Vendors}" SelectedItem="{Binding EnvironmentModel.Vendor}" SelectedIndex="0" />
             </StackPanel>
-            <StackPanel Margin="2,0,2,0" >
-                <TextBlock Text="Type" Style="{StaticResource FieldTextBlockStyle}"/>
+            <StackPanel Margin="2,0,2,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
+                <TextBlock Text="Type" Style="{StaticResource FieldTextBlockStyle}" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}"/>
                 <ComboBox ItemsSource="{Binding Source={StaticResource EnvironmentType}}" SelectedItem="{Binding EnvironmentModel.Type}" SelectedIndex="0" />
             </StackPanel>
-            <Grid Margin="2,0,0,0" >
+            <Grid Margin="2,0,0,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
                 <StackPanel Visibility="{Binding  EnvironmentModel.Type, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Device}">
                     <TextBlock Text="Device" Style="{StaticResource FieldTextBlockStyle}"/>
                     <ComboBox ItemsSource="{Binding Settings.Devices}" SelectedItem="{Binding EnvironmentModel.Device}" DisplayMemberPath="Name" SelectedValuePath="HardwareID" SelectedIndex="0" />
@@ -67,7 +71,7 @@
         <UniformGrid Columns="2" Margin="0,6,0,0">
 
             <!--Requirements-->
-            <DockPanel Margin="0,0,4,0">
+            <DockPanel Margin="0,0,4,0" IsEnabled="{Binding IsFixedEnvironment, Converter={StaticResource InverseBoolConverter}}">
                 <TextBlock DockPanel.Dock="Top" Text="Requirements" Style="{StaticResource FieldTextBlockStyle}"/>
                 <TextBox Text="{Binding Requirements, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"/>
             </DockPanel>

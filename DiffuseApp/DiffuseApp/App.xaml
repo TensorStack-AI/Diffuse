@@ -399,18 +399,43 @@
 
             <DataTemplate x:Key="ComboBoxDataTemplateModel">
                 <DockPanel>
-                    <CommonControls:FontAwesome DockPanel.Dock="Right" Icon="f019" Size="10" IconStyle="Solid" Opacity=".6"  >
-                        <CommonControls:FontAwesome.Style>
-                            <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
-                                <Setter Property="Color" Value="#10FFFFFF"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsValid}" Value="True">
-                                        <Setter Property="Color" Value="{StaticResource AccentColour2}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </CommonControls:FontAwesome.Style>
-                    </CommonControls:FontAwesome>
+
+                    <UniformGrid DockPanel.Dock="Right"  Columns="2">
+
+                        <!--IsGated-->
+                        <CommonControls:FontAwesome Icon="f084" Size="10" IconStyle="Solid" Opacity=".6"  Width="15" ToolTipService.InitialShowDelay="200">
+                            <CommonControls:FontAwesome.Style>
+                                <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
+                                    <Setter Property="ToolTip" Value="{x:Null}"/>
+                                    <Setter Property="Color" Value="#10FFFFFF"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsGated}" Value="True">
+                                            <Setter Property="Color" Value="{StaticResource AccentColour2}"/>
+                                            <Setter Property="ToolTip" Value="Gated Model - HuggingFace Authentication Required."/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CommonControls:FontAwesome.Style>
+                        </CommonControls:FontAwesome>
+
+                        <!--IsValid-->
+                        <CommonControls:FontAwesome Icon="f00c" Size="10" IconStyle="Solid" Opacity=".6"  ToolTipService.InitialShowDelay="200">
+                            <CommonControls:FontAwesome.Style>
+                                <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
+                                    <Setter Property="Color" Value="#10FFFFFF"/>
+                                    <Setter Property="ToolTip" Value="Model Not Downloaded"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsValid}" Value="True">
+                                            <Setter Property="Color" Value="{StaticResource SuccessColour}"/>
+                                            <Setter Property="ToolTip" Value="Model Downloaded"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </CommonControls:FontAwesome.Style>
+                        </CommonControls:FontAwesome>
+                    </UniformGrid>
+
+                  
                     <TextBlock Text="{Binding Name}" />
                 </DockPanel>
             </DataTemplate>

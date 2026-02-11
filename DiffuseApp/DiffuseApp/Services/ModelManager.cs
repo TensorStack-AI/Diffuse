@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using System.Collections.Generic;
+using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 
 namespace Diffuse.Services
@@ -20,6 +21,8 @@ namespace Diffuse.Services
                     Pipeline = "ChromaPipeline",
                     Path = "lodestones/Chroma1-HD",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/lodestones/Chroma1-HD",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 17, 19, 28, 30 ]),
@@ -57,6 +60,8 @@ namespace Diffuse.Services
                     Pipeline = "CogVideoXPipeline",
                     Path = "zai-org/CogVideoX-5b-I2V",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/zai-org/CogVideoX-2b",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 16, 54, 29, 72 ]),
@@ -86,8 +91,10 @@ namespace Diffuse.Services
                  {
                     Name = "CogVideoX_T2V_5B",
                     Pipeline = "CogVideoXPipeline",
-                     Path = "zai-org/CogVideoX-5b-I2V",
+                    Path = "zai-org/CogVideoX-5b-I2V",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/zai-org/CogVideoX-5b",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
@@ -119,6 +126,8 @@ namespace Diffuse.Services
                     Pipeline = "CogVideoXPipeline",
                     Path = "zai-org/CogVideoX-5b-I2V",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/zai-org/CogVideoX-5b-I2V",
                     MemoryProfile =
                     [
                        new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
@@ -150,6 +159,8 @@ namespace Diffuse.Services
                     Pipeline = "CogVideoXPipeline",
                     Path = "zai-org/CogVideoX1.5-5B-I2V",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/zai-org/CogVideoX1.5-5B",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
@@ -181,6 +192,8 @@ namespace Diffuse.Services
                     Pipeline = "CogVideoXPipeline",
                     Path = "zai-org/CogVideoX1.5-5B-I2V",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/zai-org/CogVideoX1.5-5B-I2V",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
@@ -215,6 +228,8 @@ namespace Diffuse.Services
                     Pipeline = "FluxPipeline",
                     Path = "TensorStack/FLUX.1-schnell-ts",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/TensorStack/FLUX.1-schnell-ts",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
@@ -251,6 +266,8 @@ namespace Diffuse.Services
                     Pipeline = "FluxPipeline",
                     Path = "TensorStack/FLUX.1-dev-ts",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/TensorStack/FLUX.1-dev-ts",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
@@ -287,6 +304,8 @@ namespace Diffuse.Services
                     Pipeline = "FluxPipeline",
                     Path = "TensorStack/FLUX.1-Kontext-dev-ts",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/TensorStack/FLUX.1-Kontext-dev-ts",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
@@ -325,6 +344,8 @@ namespace Diffuse.Services
                     Pipeline = "Flux2Pipeline",
                     Path = "black-forest-labs/FLUX.2-dev",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/black-forest-labs/FLUX.2-dev",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 64, 64, 128, 128 ]),
@@ -354,6 +375,154 @@ namespace Diffuse.Services
                         new SizeOption { Width = 1536, Height = 1024 },
                     ]
                  },
+                 new DiffusionModel
+                 {
+                    Name = "Flux2_Klein_4B",
+                    Pipeline = "Flux2KleinPipeline",
+                    Path = "black-forest-labs/FLUX.2-klein-base-4B",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Float16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Int8, [ 4, 6, 6, 9, 10 ])
+                    ],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 50,
+                        Width = 1024,
+                        Height = 1024,
+                        GuidanceScale = 4f,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift = 3,
+                        UseDynamicShifting = true
+                    },
+                    Resolutions =
+                    [
+                        new SizeOption { Width = 1024, Height = 1536 },
+                        new SizeOption { Width = 768, Height = 1344 },
+                        new SizeOption { Width = 832, Height = 1216 },
+                        new SizeOption { Width = 1024, Height = 1024, IsDefault = true },
+                        new SizeOption { Width = 1216, Height = 832 },
+                        new SizeOption { Width = 1344, Height = 768 },
+                        new SizeOption { Width = 1536, Height = 1024 },
+                    ]
+                 },
+                 new DiffusionModel
+                 {
+                    Name = "Flux2_Klein_4B_D",
+                    Pipeline = "Flux2KleinPipeline",
+                    Path = "black-forest-labs/FLUX.2-klein-base-4B",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/black-forest-labs/FLUX.2-klein-4B",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Float16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Int8, [ 4, 6, 6, 9, 10 ])
+                    ],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 4,
+                        Width = 1024,
+                        Height = 1024,
+                        GuidanceScale = 0f,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift = 3,
+                        UseDynamicShifting = true
+                    },
+                    Resolutions =
+                    [
+                        new SizeOption { Width = 1024, Height = 1536 },
+                        new SizeOption { Width = 768, Height = 1344 },
+                        new SizeOption { Width = 832, Height = 1216 },
+                        new SizeOption { Width = 1024, Height = 1024, IsDefault = true },
+                        new SizeOption { Width = 1216, Height = 832 },
+                        new SizeOption { Width = 1344, Height = 768 },
+                        new SizeOption { Width = 1536, Height = 1024 },
+                    ]
+                 },
+                 new DiffusionModel
+                 {
+                    Name = "Flux2_Klein_9B",
+                    Pipeline = "Flux2KleinPipeline",
+                    Path = "black-forest-labs/FLUX.2-klein-base-9B",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-9B",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [4, 20, 20, 34, 35 ]),
+                        new MemoryProfile(DataType.Float16, [4, 20, 20, 34, 35]),
+                        new MemoryProfile(DataType.Int8, [ 4, 10, 10, 19, 20  ])
+                    ],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 50,
+                        Width = 1024,
+                        Height = 1024,
+                        GuidanceScale = 4f,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift = 3,
+                        UseDynamicShifting = true
+                    },
+                    Resolutions =
+                    [
+                        new SizeOption { Width = 1024, Height = 1536 },
+                        new SizeOption { Width = 768, Height = 1344 },
+                        new SizeOption { Width = 832, Height = 1216 },
+                        new SizeOption { Width = 1024, Height = 1024, IsDefault = true },
+                        new SizeOption { Width = 1216, Height = 832 },
+                        new SizeOption { Width = 1344, Height = 768 },
+                        new SizeOption { Width = 1536, Height = 1024 },
+                    ]
+                 },
+                 new DiffusionModel
+                 {
+                    Name = "Flux2_Klein_9B_D",
+                    Pipeline = "Flux2KleinPipeline",
+                    Path = "black-forest-labs/FLUX.2-klein-base-9B",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/black-forest-labs/FLUX.2-klein-9B",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [4, 20, 20, 34, 35 ]),
+                        new MemoryProfile(DataType.Float16, [4, 20, 20, 34, 35]),
+                        new MemoryProfile(DataType.Int8, [ 4, 10, 10, 19, 20  ])
+                    ],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 4,
+                        Width = 1024,
+                        Height = 1024,
+                        GuidanceScale = 0f,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift = 3,
+                        UseDynamicShifting = true
+                    },
+                    Resolutions =
+                    [
+                        new SizeOption { Width = 1024, Height = 1536 },
+                        new SizeOption { Width = 768, Height = 1344 },
+                        new SizeOption { Width = 832, Height = 1216 },
+                        new SizeOption { Width = 1024, Height = 1024, IsDefault = true },
+                        new SizeOption { Width = 1216, Height = 832 },
+                        new SizeOption { Width = 1344, Height = 768 },
+                        new SizeOption { Width = 1536, Height = 1024 },
+                    ]
+                 },
 
 
                  // Kandinsky5
@@ -363,6 +532,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2I-Lite-pretrain-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 18, 30, 32 ]),
@@ -397,6 +568,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2I-Lite-pretrain-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 18, 30, 32 ]),
@@ -431,6 +604,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "Kandinsky-5.0-T2V-Lite-pretrain-10s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
@@ -461,6 +636,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "Kandinsky-5.0-T2V-Lite-pretrain-10s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
@@ -491,6 +668,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "Kandinsky-5.0-T2V-Lite-pretrain-10s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
@@ -521,6 +700,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "Kandinsky-5.0-T2V-Lite-pretrain-10s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 68 ]),
@@ -551,6 +732,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
@@ -581,6 +764,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
@@ -611,6 +796,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
@@ -641,6 +828,8 @@ namespace Diffuse.Services
                     Pipeline = "Kandinsky5Pipeline",
                     Path = "kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/kandinskylab",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
@@ -674,6 +863,8 @@ namespace Diffuse.Services
                     Pipeline = "LTXPipeline",
                     Path = "Lightricks/LTX-Video",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-Video",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
@@ -713,6 +904,8 @@ namespace Diffuse.Services
                     Pipeline = "LTXPipeline",
                     Path = "Lightricks/LTX-Video",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-Video",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
@@ -752,6 +945,8 @@ namespace Diffuse.Services
                     Pipeline = "LTXPipeline",
                     Path = "Lightricks/LTX-Video",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-Video",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
@@ -791,6 +986,8 @@ namespace Diffuse.Services
                     Pipeline = "LTXPipeline",
                     Path = "Lightricks/LTX-Video",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-Video",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
@@ -824,6 +1021,92 @@ namespace Diffuse.Services
                          new SizeOption { Width = 1280, Height = 720 }
                     ]
                  },
+                 new DiffusionModel
+                 {
+                    Name = "LTX2_19B",
+                    Pipeline = "LTX2Pipeline",
+                    Path = "Lightricks/LTX-2",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-2",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Float16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Int8, [ 12, 23, 35, 35, 74])
+                    ],
+                    ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo ],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 40,
+                        Width = 768,
+                        Height = 512,
+                        GuidanceScale = 4f,
+                        Frames = 121,
+                        FrameRate = 25,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift= 1,
+                        BaseShift= 0.95f,
+                        MaxShift= 2.05f,
+                        MaxImageSeqLen= 4096,
+                        BaseImageSeqLen= 1024,
+                        UseDynamicShifting=true,
+                        FramesMin= 65,
+                        FramesMax=257
+                    },
+                    Resolutions =
+                    [
+                         new SizeOption { Width = 512, Height = 768 },
+                         new SizeOption { Width = 512, Height = 704 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 704, Height = 768 },
+                         new SizeOption { Width = 768, Height = 512 , IsDefault = true }
+                    ]
+                 },
+                 new DiffusionModel
+                 {
+                    Name = "LTX2_19B_D",
+                    Pipeline = "LTX2Pipeline",
+                    Path = "Lightricks/LTX-2",
+                    BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Lightricks/LTX-2",
+                    MemoryProfile =
+                    [
+                        new MemoryProfile(DataType.Bfloat16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Float16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Int8, [ 12, 23, 35, 35, 74])
+                    ],
+                    ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo ],
+                    DefaultOptions = new DiffusionDefaultOptions
+                    {
+                        Steps = 8,
+                        Width = 768,
+                        Height = 512,
+                        GuidanceScale = 0f,
+                        Frames = 121,
+                        FrameRate = 25,
+                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
+                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
+                        Shift= 1,
+                        BaseShift= 0.95f,
+                        MaxShift= 2.05f,
+                        MaxImageSeqLen= 4096,
+                        BaseImageSeqLen= 1024,
+                        UseDynamicShifting=true,
+                        FramesMin= 65,
+                        FramesMax=257
+                    },
+                    Resolutions =
+                    [
+                         new SizeOption { Width = 512, Height = 768 },
+                         new SizeOption { Width = 512, Height = 704 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 704, Height = 768 },
+                         new SizeOption { Width = 768, Height = 512 , IsDefault = true }
+                    ]
+                 },
 
 
                  // Qwen Image
@@ -833,6 +1116,8 @@ namespace Diffuse.Services
                     Pipeline = "QwenImagePipeline",
                     Path = "Qwen/Qwen-Image-2512",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Qwen/Qwen-Image-2512",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 5, 38, 40, 58, 60 ]),
@@ -870,6 +1155,8 @@ namespace Diffuse.Services
                     Pipeline = "QwenImagePipeline",
                     Path = "Qwen/Qwen-Image-Edit-2512",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Qwen/Qwen-Image-Edit-2512",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 5, 38, 40, 58, 60 ]),
@@ -909,6 +1196,8 @@ namespace Diffuse.Services
                     Pipeline = "StableDiffusionXLPipeline",
                     Path = "stabilityai/stable-diffusion-xl-base-1.0",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
@@ -945,6 +1234,8 @@ namespace Diffuse.Services
                     Pipeline = "StableDiffusionXLPipeline",
                     Path = "stabilityai/sdxl-turbo",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/stabilityai/sdxl-turbo",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
@@ -983,6 +1274,8 @@ namespace Diffuse.Services
                     Pipeline = "StableDiffusionXLPipeline",
                     Path = "stabilityai/stable-diffusion-xl-base-1.0",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
@@ -1021,6 +1314,8 @@ namespace Diffuse.Services
                     Pipeline = "WanPipeline",
                     Path = "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Wan-AI",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 12, 17, 19, 31 ]),
@@ -1060,6 +1355,8 @@ namespace Diffuse.Services
                     Pipeline = "WanPipeline",
                     Path = "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Wan-AI",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
@@ -1100,6 +1397,8 @@ namespace Diffuse.Services
                     Pipeline = "WanPipeline",
                     Path = "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Wan-AI",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
@@ -1139,6 +1438,8 @@ namespace Diffuse.Services
                     Pipeline = "WanPipeline",
                     Path = "Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Wan-AI",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
@@ -1181,13 +1482,15 @@ namespace Diffuse.Services
                     Pipeline = "ZImagePipeline",
                     Path = "Tongyi-MAI/Z-Image-Turbo",
                     BaseType = DataType.Bfloat16,
+                    Backend = BackendType.Pytorch,
+                    Link = "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo",
                     MemoryProfile =
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 12, 14, 22, 24 ]),
                         new MemoryProfile(DataType.Float16, [ 4, 12, 14, 22, 24 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 8, 10, 14, 16 ])
                     ],
-                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage],
+                    ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage],
                     DefaultOptions = new DiffusionDefaultOptions
                     {
                         Steps = 9,
@@ -1196,7 +1499,7 @@ namespace Diffuse.Services
                         GuidanceScale = 0,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
+                        Shift = 3
                     },
                     Resolutions =
                     [
@@ -1258,7 +1561,11 @@ namespace Diffuse.Services
                     Name = "FLUX.2",
                     Options =
                     [
-                        new WizardOptionModel{ Name = "Dev", Template = "Flux2_Dev"},
+                        new WizardOptionModel{ Name = "Dev",            Template = "Flux2_Dev"},
+                        new WizardOptionModel{ Name = "Klein 4B",       Template = "Flux2_Klein_4B_D"},
+                        new WizardOptionModel{ Name = "Klein 4B Base",  Template = "Flux2_Klein_4B"},
+                        new WizardOptionModel{ Name = "Klein 9B",       Template = "Flux2_Klein_9B_D"},
+                        new WizardOptionModel{ Name = "Klein 9B Base",  Template = "Flux2_Klein_9B"},
                     ]
                 },
                 new WizardItemModel
@@ -1287,6 +1594,15 @@ namespace Diffuse.Services
                         new WizardOptionModel{ Name = "2B (distilled)",  Template = "LTX_2B_D"},
                         new WizardOptionModel{ Name = "13B",             Template = "LTX_13B"},
                         new WizardOptionModel{ Name = "13B (distilled)", Template = "LTX_13B_D"}
+                    ]
+                },
+                new WizardItemModel
+                {
+                    Name = "LTX-2",
+                    Options =
+                    [
+                        new WizardOptionModel{ Name = "19B",              Template = "LTX2_19B"},
+                        new WizardOptionModel{ Name = "19B (distilled)",  Template = "LTX2_19B_D"}
                     ]
                 },
 

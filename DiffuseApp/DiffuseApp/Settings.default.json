@@ -28,7 +28,8 @@
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
         "optimum-quanto==0.2.7",
-        "gguf==0.17.1"
+        "gguf==0.17.1",
+        "av==16.1.0"
       ]
     },
     {
@@ -63,7 +64,8 @@
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
         "optimum-quanto==0.2.7",
-        "gguf==0.17.1"
+        "gguf==0.17.1",
+        "av==16.1.0"
       ]
     }
   ],
@@ -81,6 +83,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV2-ESRGAN-Soft-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-ESRGAN-Soft-2x/model.onnx" ]
     },
     {
@@ -96,6 +99,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV2-MoSR-Sharp-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Sharp-2x/model.onnx" ]
     },
     {
@@ -111,6 +115,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV2-MoSR-Soft-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-MoSR-Soft-2x/model.onnx" ]
     },
     {
@@ -127,6 +132,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV2-RPLKSR-Sharp-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Sharp-2x/model.onnx" ]
     },
     {
@@ -142,6 +148,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV2-RPLKSR-Soft-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV2-RPLKSR-Soft-2x/model.onnx" ]
     },
     {
@@ -157,6 +164,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/AnimeSharpV3-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/AnimeSharpV3-2x/model.onnx" ]
     },
     {
@@ -172,6 +180,7 @@
         "TileSize": 272,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/APISR-GRL-GAN-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-GRL-GAN-4x/model.onnx" ]
     },
     {
@@ -187,6 +196,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/APISR-RRDB-GAN-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/APISR-RRDB-GAN-2x/model.onnx" ]
     },
     {
@@ -202,6 +212,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/BSRGAN-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/BSRGAN-2x/model.onnx" ]
     },
     {
@@ -217,6 +228,7 @@
         "TileSize": 528,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/RealESRGAN-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-2x/model.onnx" ]
     },
     {
@@ -232,6 +244,7 @@
         "TileSize": 272,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/RealESRGAN-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESRGAN-4x/model.onnx" ]
     },
     {
@@ -247,6 +260,7 @@
         "TileSize": 1040,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/RealESR-General-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealESR-General-4x/model.onnx" ]
     },
     {
@@ -262,6 +276,7 @@
         "TileSize": 256,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/RealWebPhoto-RGT-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/RealWebPhoto-RGT-4x/model.onnx" ]
     },
     {
@@ -277,6 +292,7 @@
         "TileSize": 208,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/Swin2SR-Classical-2x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-2x/model.onnx" ]
     },
     {
@@ -292,6 +308,7 @@
         "TileSize": 272,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/Swin2SR-Classical-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-Classical-4x/model.onnx" ]
     },
     {
@@ -307,6 +324,7 @@
         "TileSize": 208,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/Swin2SR-RealWorld-BSRGAN-PSN-4x/model.onnx" ]
     },
     {
@@ -322,6 +340,7 @@
         "TileSize": 240,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/SwinIR-BSRGAN-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/SwinIR-BSRGAN-4x/model.onnx" ]
     },
     {
@@ -337,6 +356,7 @@
         "TileSize": 272,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/UltraMix-Smooth-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraMix-Smooth-4x/model.onnx" ]
     },
     {
@@ -352,6 +372,7 @@
         "TileSize": 272,
         "TileOverlap": 16
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Upscale/UltraSharp-4x",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Upscale/UltraSharp-4x/model.onnx" ]
     }
   ],
@@ -373,6 +394,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/Canny",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Canny/model.onnx" ]
     },
     {
@@ -393,6 +415,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/SoftEdge",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/SoftEdge/model.onnx" ]
     },
     {
@@ -412,6 +435,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/LineDrawing",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/LineDrawing/model.onnx" ]
     },
     {
@@ -433,6 +457,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/Depth",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Depth/model.onnx" ]
     },
     {
@@ -454,6 +479,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/DepthAnything-Small",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Small/model.onnx" ]
     },
     {
@@ -475,6 +501,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/DepthAnything-Base",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Base/model.onnx" ]
     },
     {
@@ -496,6 +523,7 @@
         "IsTransparent": false,
         "IsTileSupported": false
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/DepthAnything-Large",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/DepthAnything-Large/model.onnx" ]
     },
     {
@@ -509,6 +537,7 @@
       "DefaultOptions": {
         "Mode": "RemoveBackground"
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/BiRefNet",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/BiRefNet/model.onnx" ]
     },
     {
@@ -523,6 +552,7 @@
       "DefaultOptions": {
         "Mode": "RemoveBackground"
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/RMBGv1.4",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/RMBGv1.4/model.onnx" ]
     },
     {
@@ -536,6 +566,7 @@
       "DefaultOptions": {
         "Mode": "RemoveBackground"
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/RMBGv2.0",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/RMBGv2.0/model.onnx" ]
     },
     {
@@ -555,6 +586,7 @@
         "BoneRadius": 8,
         "BoneThickness": 1
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/Pose-Body7",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Pose-Body7/model.onnx" ]
     },
     {
@@ -573,6 +605,7 @@
         "BoneRadius": 8,
         "BoneThickness": 1
       },
+      "Link": "https://huggingface.co/TensorStack/Diffuse/tree/main/Extractor/Pose-Coco",
       "UrlPaths": [ "https://huggingface.co/TensorStack/Diffuse/resolve/main/Extractor/Pose-Coco/model.onnx" ]
     }
   ],
@@ -587,6 +620,7 @@
       "MinLength": 20,
       "MaxLength": 512,
       "Prefixes": [ "Transcribe", "Translate" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Whisper-Tiny",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/decoder_model_merged.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Tiny/encoder_model.onnx?download=true",
@@ -605,6 +639,7 @@
       "MinLength": 20,
       "MaxLength": 512,
       "Prefixes": [ "Transcribe", "Translate" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Whisper-Small",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/decoder_model_merged.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Small/encoder_model.onnx?download=true",
@@ -623,6 +658,7 @@
       "MinLength": 20,
       "MaxLength": 512,
       "Prefixes": [ "Transcribe", "Translate" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Whisper-Medium",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/decoder_model_merged.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Medium/encoder_model.onnx?download=true",
@@ -641,6 +677,7 @@
       "MinLength": 20,
       "MaxLength": 512,
       "Prefixes": [ "Transcribe", "Translate" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Whisper-Base",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/decoder_model_merged.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Base/encoder_model.onnx?download=true",
@@ -659,6 +696,7 @@
       "MinLength": 20,
       "MaxLength": 512,
       "Prefixes": [ "Transcribe", "Translate" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Whisper-Large",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/decoder_model_merged.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Whisper-Large/encoder_model.onnx?download=true",
@@ -676,6 +714,7 @@
       "Type": "Supertonic",
       "MaxLength": 512,
       "Prefixes": [ "Female1", "Female2", "Female3", "Female4", "Female5", "Male1", "Male2", "Male3", "Male4", "Male5" ],
+      "Link": "https://huggingface.co/saddam213/DemoApp/tree/main/Text/Supertonic",
       "UrlPaths": [
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/duration_predictor.onnx?download=true",
         "https://huggingface.co/saddam213/DemoApp/resolve/main/Text/Supertonic/text_encoder.onnx?download=true",
@@ -697,7 +736,84 @@
   ],
   "DiffusionModels": [
     {
-      "Id": 101,
+      "Id": 100,
+      "Backend": "PyTorch",
+      "Name": "StableDiffusionXL",
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Path": "stabilityai/stable-diffusion-xl-base-1.0",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage", "ControlNetImageToImage" ],
+      "IsDefault": true,
+      "Link": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 7.5,
+        "Scheduler": "EulerAncestral",
+        "Schedulers": [ "LMS", "Euler", "EulerAncestral", "DDPM", "DDIM", "KDPM2", "KDPM2Ancestral", "PNDM", "Heun", "UniPC", "DPMM", "DPMS", "DPMSDE", "DEISM" ]
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 110,
       "Backend": "PyTorch",
       "Name": "Z-Image Turbo",
       "Pipeline": "ZImagePipeline",
@@ -718,7 +834,8 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage" ],
+      "Link": "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo",
       "DefaultOptions": {
         "Steps": 9,
         "Width": 1024,
@@ -773,7 +890,7 @@
       ]
     },
     {
-      "Id": 102,
+      "Id": 120,
       "Backend": "PyTorch",
       "Name": "Qwen Image (2512)",
       "Pipeline": "QwenImagePipeline",
@@ -795,6 +912,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage" ],
+      "Link": "https://huggingface.co/Qwen/Qwen-Image-2512",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -852,7 +970,7 @@
       ]
     },
     {
-      "Id": 104,
+      "Id": 121,
       "Backend": "PyTorch",
       "Name": "Qwen Image Edit(2511)",
       "Pipeline": "QwenImagePipeline",
@@ -874,6 +992,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Link": "https://huggingface.co/Qwen/Qwen-Image-Edit-2511",
       "IsDefault": true,
       "DefaultOptions": {
         "Steps": 30,
@@ -932,7 +1051,7 @@
       ]
     },
     {
-      "Id": 105,
+      "Id": 130,
       "Backend": "PyTorch",
       "Name": "Chroma HD",
       "Pipeline": "ChromaPipeline",
@@ -954,6 +1073,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage" ],
+      "Link": "https://huggingface.co/lodestones/Chroma1-HD",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1009,7 +1129,7 @@
       ]
     },
     {
-      "Id": 106,
+      "Id": 140,
       "Backend": "PyTorch",
       "Name": "FLUX.1 Schnell",
       "Pipeline": "FluxPipeline",
@@ -1031,6 +1151,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint" ],
+      "Link": "https://huggingface.co/TensorStack/FLUX.1-schnell-ts",
       "DefaultOptions": {
         "Steps": 4,
         "Width": 1024,
@@ -1086,7 +1207,7 @@
       ]
     },
     {
-      "Id": 107,
+      "Id": 141,
       "Backend": "PyTorch",
       "Name": "FLUX.1 Dev",
       "Pipeline": "FluxPipeline",
@@ -1108,6 +1229,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ImageInpaint" ],
+      "Link": "https://huggingface.co/TensorStack/FLUX.1-dev-ts",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1164,7 +1286,7 @@
       ]
     },
     {
-      "Id": 108,
+      "Id": 142,
       "Backend": "PyTorch",
       "Name": "FLUX.1 Kontext",
       "Pipeline": "FluxPipeline",
@@ -1186,6 +1308,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Link": "https://huggingface.co/TensorStack/FLUX.1-Kontext-dev-ts",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1242,36 +1365,41 @@
       ]
     },
     {
-      "Id": 110,
+      "Id": 143,
       "Backend": "PyTorch",
-      "Name": "StableDiffusionXL",
-      "Pipeline": "StableDiffusionXLPipeline",
-      "Path": "stabilityai/stable-diffusion-xl-base-1.0",
-      "Source": "HuggingFace",
+      "Name": "FLUX.2 Klein 4B",
+      "Pipeline": "Flux2KleinPipeline",
+      "Path": "black-forest-labs/FLUX.2-klein-base-4B",
+      "Source": "Checkpoint",
+      "Checkpoint": {
+        "ModelCheckpoint": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4B/blob/main/flux-2-klein-4b.safetensors"
+      },
       "MemoryProfile": [
         {
           "DataType": "int8",
-          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+          "MemoryModes": [ 4, 6, 6, 9, 10 ]
         },
         {
           "DataType": "float16",
-          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+          "MemoryModes": [ 4, 10, 10, 16, 18 ]
         },
         {
           "DataType": "bfloat16",
-          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+          "MemoryModes": [ 4, 10, 10, 16, 18 ]
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage", "ControlNetImageToImage" ],
-      "IsDefault": true,
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
+      "Link": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4B",
       "DefaultOptions": {
-        "Steps": 30,
+        "Steps": 4,
         "Width": 1024,
         "Height": 1024,
-        "GuidanceScale": 7.5,
-        "Scheduler": "EulerAncestral",
-        "Schedulers": [ "LMS", "Euler", "EulerAncestral", "DDPM", "DDIM", "KDPM2", "KDPM2Ancestral", "PNDM", "Heun", "UniPC", "DPMM", "DPMS", "DPMSDE", "DEISM" ]
+        "GuidanceScale": 0,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
       },
       "Resolutions": [
         {
@@ -1318,7 +1446,246 @@
       ]
     },
     {
-      "Id": 111,
+      "Id": 144,
+      "Backend": "PyTorch",
+      "Name": "FLUX.2 Klein 4B Base",
+      "Pipeline": "Flux2KleinPipeline",
+      "Path": "black-forest-labs/FLUX.2-klein-base-4B",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 10, 10, 16, 18 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 10, 10, 16, 18 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
+      "Link": "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B",
+      "DefaultOptions": {
+        "Steps": 50,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 4,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 145,
+      "Backend": "PyTorch",
+      "Name": "FLUX.2 Klein 9B",
+      "Pipeline": "Flux2KleinPipeline",
+      "Path": "black-forest-labs/FLUX.2-klein-base-9B",
+      "Source": "Checkpoint",
+      "Checkpoint": {
+        "ModelCheckpoint": "https://huggingface.co/black-forest-labs/FLUX.2-klein-9B/blob/main/flux-2-klein-9b.safetensors"
+      },
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/black-forest-labs/FLUX.2-klein-9B",
+      "DefaultOptions": {
+        "Steps": 4,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 0,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 146,
+      "Backend": "PyTorch",
+      "Name": "FLUX.2 Klein 9B Base",
+      "Pipeline": "Flux2KleinPipeline",
+      "Path": "black-forest-labs/FLUX.2-klein-base-9B",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/black-forest-labs/FLUX.2-klein-base-9B",
+      "DefaultOptions": {
+        "Steps": 50,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 4,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 3,
+        "UseDynamicShifting": true
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 150,
       "Backend": "PyTorch",
       "Name": "Wan-T2V 2.1 1.3B",
       "Pipeline": "WanPipeline",
@@ -1340,6 +1707,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Frames": 81,
@@ -1368,7 +1736,7 @@
       ]
     },
     {
-      "Id": 112,
+      "Id": 151,
       "Backend": "PyTorch",
       "Name": "Wan-T2V 2.1 14B",
       "Pipeline": "WanPipeline",
@@ -1390,6 +1758,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/Wan-AI/Wan2.1-T2V-14B-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Frames": 81,
@@ -1418,7 +1787,7 @@
       ]
     },
     {
-      "Id": 113,
+      "Id": 152,
       "Backend": "PyTorch",
       "Name": "Wan-I2V 2.1 14B 480P",
       "Pipeline": "WanPipeline",
@@ -1440,6 +1809,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Link": "https://huggingface.co/Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
       "IsDefault": true,
       "DefaultOptions": {
         "Steps": 30,
@@ -1469,7 +1839,7 @@
       ]
     },
     {
-      "Id": 200,
+      "Id": 160,
       "Backend": "PyTorch",
       "Name": "Kandinsky5 T2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
@@ -1491,6 +1861,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage" ],
+      "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1533,7 +1904,7 @@
       ]
     },
     {
-      "Id": 201,
+      "Id": 161,
       "Backend": "PyTorch",
       "Name": "Kandinsky5 I2I Lite",
       "Pipeline": "Kandinsky5Pipeline",
@@ -1555,6 +1926,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1024,
@@ -1597,7 +1969,7 @@
       ]
     },
     {
-      "Id": 202,
+      "Id": 162,
       "Backend": "PyTorch",
       "Name": "Kandinsky5 T2V Lite",
       "Pipeline": "Kandinsky5Pipeline",
@@ -1619,6 +1991,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 768,
@@ -1639,7 +2012,7 @@
       ]
     },
     {
-      "Id": 203,
+      "Id": 163,
       "Backend": "PyTorch",
       "Name": "Kandinsky5 I2V Pro",
       "Pipeline": "Kandinsky5Pipeline",
@@ -1661,6 +2034,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 768,
@@ -1681,7 +2055,7 @@
       ]
     },
     {
-      "Id": 300,
+      "Id": 170,
       "Backend": "PyTorch",
       "Name": "CogVideoX T2V 2B",
       "Pipeline": "CogVideoXPipeline",
@@ -1703,6 +2077,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/zai-org/CogVideoX-2b",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 720,
@@ -1724,7 +2099,7 @@
       ]
     },
     {
-      "Id": 301,
+      "Id": 171,
       "Backend": "PyTorch",
       "Name": "CogVideoX T2V 5B",
       "Pipeline": "CogVideoXPipeline",
@@ -1746,6 +2121,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/zai-org/CogVideoX-5b",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 720,
@@ -1767,7 +2143,7 @@
       ]
     },
     {
-      "Id": 302,
+      "Id": 172,
       "Backend": "PyTorch",
       "Name": "CogVideoX I2V 5B",
       "Pipeline": "CogVideoXPipeline",
@@ -1789,6 +2165,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Link": "https://huggingface.co/zai-org/CogVideoX-5b-I2V",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 720,
@@ -1810,7 +2187,7 @@
       ]
     },
     {
-      "Id": 303,
+      "Id": 173,
       "Backend": "PyTorch",
       "Name": "CogVideoX 1.5 T2V 5B",
       "Pipeline": "CogVideoXPipeline",
@@ -1832,6 +2209,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/zai-org/CogVideoX1.5-5B",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1360,
@@ -1853,7 +2231,7 @@
       ]
     },
     {
-      "Id": 304,
+      "Id": 174,
       "Backend": "PyTorch",
       "Name": "CogVideoX 1.5 I2V 5B",
       "Pipeline": "CogVideoXPipeline",
@@ -1875,6 +2253,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Link": "https://huggingface.co/zai-org/CogVideoX1.5-5B-I2V",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 1360,
@@ -1896,7 +2275,7 @@
       ]
     },
     {
-      "Id": 400,
+      "Id": 180,
       "Backend": "PyTorch",
       "Name": "LTX Video",
       "Pipeline": "LTXPipeline",
@@ -1918,6 +2297,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Link": "https://huggingface.co/Lightricks/LTX-Video",
       "DefaultOptions": {
         "Steps": 50,
         "Width": 704,
@@ -1941,6 +2321,146 @@
           "IsDefault": true
         }
       ]
+    },
+    {
+      "Id": 190,
+      "Backend": "PyTorch",
+      "Name": "LTX-2",
+      "Pipeline": "LTX2Pipeline",
+      "Path": "Lightricks/LTX-2",
+      "Source": "Checkpoint",
+      "Checkpoint": {
+        "ModelCheckpoint": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-dev-fp8.safetensors"
+      },
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Link": "https://huggingface.co/Lightricks/LTX-2",
+      "DefaultOptions": {
+        "Steps": 40,
+        "Width": 768,
+        "Height": 512,
+        "Frames": 121,
+        "FrameRate": 25,
+        "GuidanceScale": 4,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 1,
+        "BaseShift": 0.95,
+        "MaxShift": 2.05,
+        "MaxImageSeqLen": 4096,
+        "BaseImageSeqLen": 1024,
+        "UseDynamicShifting": true,
+        "IsStochasticSampling": true,
+        "FramesMin": 65,
+        "FramesMax": 257
+      },
+      "Resolutions": [
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 512,
+          "Height": 704
+        },
+        {
+          "Width": 640,
+          "Height": 640
+        },
+        {
+          "Width": 704,
+          "Height": 512
+        },
+        {
+          "Width": 768,
+          "Height": 512,
+          "IsDefault": true
+        }
+      ]
+    },
+    {
+      "Id": 192,
+      "Backend": "PyTorch",
+      "Name": "LTX-2 Distilled",
+      "Pipeline": "LTX2Pipeline",
+      "Path": "Lightricks/LTX-2",
+      "Source": "Checkpoint",
+      "Checkpoint": {
+        "ModelCheckpoint": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-distilled-fp8.safetensors"
+      },
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Link": "https://huggingface.co/Lightricks/LTX-2",
+      "DefaultOptions": {
+        "Steps": 8,
+        "Width": 768,
+        "Height": 512,
+        "Frames": 121,
+        "FrameRate": 25,
+        "GuidanceScale": 0,
+        "Scheduler": "FlowMatchEulerDiscrete",
+        "Schedulers": [ "FlowMatchEulerDiscrete" ],
+        "Shift": 1,
+        "BaseShift": 0.95,
+        "MaxShift": 2.05,
+        "MaxImageSeqLen": 4096,
+        "BaseImageSeqLen": 1024,
+        "UseDynamicShifting": true,
+        "IsStochasticSampling": true,
+        "FramesMin": 65,
+        "FramesMax": 257
+      },
+      "Resolutions": [
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 512,
+          "Height": 704
+        },
+        {
+          "Width": 640,
+          "Height": 640
+        },
+        {
+          "Width": 704,
+          "Height": 512
+        },
+        {
+          "Width": 768,
+          "Height": 512,
+          "IsDefault": true
+        }
+      ]
     }
   ],
   "LoraAdapterModels": [
@@ -1953,7 +2473,8 @@
       "Weights": "40sCyberpunkZ_000003000.safetensors",
       "Pipeline": "ZImagePipeline",
       "Source": "HuggingFace",
-      "IsDefault": true
+      "IsDefault": true,
+      "Link": "https://huggingface.co/godtoldmetodoit/zitloras"
     },
     {
       "Id": 102,
@@ -1963,7 +2484,8 @@
       "Path": "godtoldmetodoit/zitloras",
       "Weights": "80sFantasyZ_000003000.safetensors",
       "Pipeline": "ZImagePipeline",
-      "Source": "HuggingFace"
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/godtoldmetodoit/zitloras"
     },
     {
       "Id": 103,
@@ -1974,6 +2496,7 @@
       "Weights": "Coloring_Book_Z_Image_Turbo_v1_renderartist_2000.safetensors",
       "Pipeline": "ZImagePipeline",
       "Source": "HuggingFace",
+      "Link": "https://huggingface.co/renderartist/Coloring-Book-Z-Image-Turbo-LoRA",
       "Triggers": [ "c0l0ringb00k" ]
     }
   ],
@@ -1981,70 +2504,97 @@
     {
       "Id": 101,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Union",
       "Path": "InstantX/Qwen-Image-ControlNet-Union",
       "Pipeline": "QwenImagePipeline",
-      "IsDefault": true
+      "IsDefault": true,
+      "Link": "https://huggingface.co/InstantX/Qwen-Image-ControlNet-Union"
     },
 
     {
       "Id": 102,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Canny",
       "Path": "InstantX/FLUX.1-dev-controlnet-canny",
       "Pipeline": "FluxPipeline",
-      "IsDefault": true
+      "IsDefault": true,
+      "Link": "https://huggingface.co/InstantX/FLUX.1-dev-controlnet-canny"
     },
     {
       "Id": 102,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Canny",
       "Path": "InstantX/FLUX.1-dev-controlnet-canny",
       "Pipeline": "FluxPipeline",
-      "IsDefault": true
+      "IsDefault": true,
+      "Link": "https://huggingface.co/InstantX/FLUX.1-dev-controlnet-canny"
     },
     {
       "Id": 104,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Union",
       "Path": "xinsir/controlnet-union-sdxl-1.0",
       "Pipeline": "StableDiffusionXLPipeline",
-      "IsDefault": true
+      "IsDefault": true,
+      "Link": "https://huggingface.co/xinsir/controlnet-union-sdxl-1.0"
     },
     {
       "Id": 105,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Canny",
       "Path": "xinsir/controlnet-canny-sdxl-1.0",
-      "Pipeline": "StableDiffusionXLPipeline"
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Link": "https://huggingface.co/xinsir/controlnet-canny-sdxl-1.0"
     },
     {
       "Id": 106,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Depth",
       "Path": "xinsir/controlnet-depth-sdxl-1.0",
-      "Pipeline": "StableDiffusionXLPipeline"
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Link": "https://huggingface.co/xinsir/controlnet-depth-sdxl-1.0"
     },
     {
       "Id": 107,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "OpenPose",
       "Path": "xinsir/controlnet-openpose-sdxl-1.0",
-      "Pipeline": "StableDiffusionXLPipeline"
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Link": "https://huggingface.co/xinsir/controlnet-openpose-sdxl-1.0"
     },
     {
       "Id": 108,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Scribble",
       "Path": "xinsir/controlnet-scribble-sdxl-1.0",
-      "Pipeline": "StableDiffusionXLPipeline"
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Link": "https://huggingface.co/xinsir/controlnet-scribble-sdxl-1.0"
     },
     {
       "Id": 109,
       "Backend": "PyTorch",
+      "Source": "HuggingFace",
       "Name": "Tile",
       "Path": "xinsir/controlnet-tile-sdxl-1.0",
-      "Pipeline": "StableDiffusionXLPipeline"
+      "Pipeline": "StableDiffusionXLPipeline",
+      "Link": "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0"
+    },
+    {
+      "Id": 110,
+      "Backend": "PyTorch",
+      "Source": "HuggingFace",
+      "Name": "Union",
+      "Path": "hlky/Z-Image-Turbo-Fun-Controlnet-Union",
+      "Pipeline": "ZImagePipeline",
+      "Link": "https://huggingface.co/hlky/Z-Image-Turbo-Fun-Controlnet-Union"
     }
   ]
 }

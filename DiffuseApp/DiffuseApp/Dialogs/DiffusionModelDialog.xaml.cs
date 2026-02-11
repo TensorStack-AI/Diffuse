@@ -323,7 +323,7 @@ namespace Diffuse.Dialogs
             {
                 if (DiffusionModel.Source == ModelSourceType.Folder && !Directory.Exists(DiffusionModel.Path))
                     yield return "Model folder not found";
-                else if (DiffusionModel.Source == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !File.Exists(CheckpointModel.Checkpoint)))
+                else if (DiffusionModel.Source == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !IsCheckpointValid(CheckpointModel.Checkpoint)))
                     yield return "Model file not found";
                 else if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
                     yield return "HuggingFace repository not found";
@@ -332,11 +332,11 @@ namespace Diffuse.Dialogs
                 {
                     if (string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint))
                         yield return "At least one checkpoint model required";
-                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !File.Exists(CheckpointModel.ModelCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !IsCheckpointValid(CheckpointModel.ModelCheckpoint))
                         yield return "Model checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !File.Exists(CheckpointModel.VaeCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !IsCheckpointValid(CheckpointModel.VaeCheckpoint))
                         yield return "Vae checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !File.Exists(CheckpointModel.TextEncoderCheckpoint))
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !IsCheckpointValid(CheckpointModel.TextEncoderCheckpoint))
                         yield return "TextEncoder checkpoint file not found";
                 }
             }
@@ -370,6 +370,12 @@ namespace Diffuse.Dialogs
             var processTypes = GetProcessTypes();
             if (processTypes.IsNullOrEmpty())
                 yield return "ProcessTypes cannot be empty";
+        }
+
+
+        private bool IsCheckpointValid(string checkpoint)
+        {
+            return File.Exists(checkpoint) || Utils.IsCheckpointInstalled(Settings.DirectoryCache, checkpoint) || Utils.IsHuggingFaceLink(checkpoint);
         }
 
 
@@ -438,6 +444,8 @@ namespace Diffuse.Dialogs
                 Pipeline = diffusionModel.Pipeline,
                 IsDefault = diffusionModel.IsDefault,
                 BaseType = diffusionModel.BaseType,
+                IsGated = diffusionModel.IsGated,
+                Link = diffusionModel.Link,
                 MemoryProfile = diffusionModel.MemoryProfile.Select(x => new MemoryProfile
                 {
                     DataType = x.DataType,
@@ -476,6 +484,9 @@ namespace Diffuse.Dialogs
                     StepsOffset = diffusionModel.DefaultOptions.StepsOffset,
                     TimestepSpacing = diffusionModel.DefaultOptions.TimestepSpacing,
                     UseDynamicShifting = diffusionModel.DefaultOptions.UseDynamicShifting,
+                    FramesMax = diffusionModel.DefaultOptions.FramesMax,
+                    FramesMin = diffusionModel.DefaultOptions.FramesMin,
+                    SampleRate = diffusionModel.DefaultOptions.SampleRate,
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {

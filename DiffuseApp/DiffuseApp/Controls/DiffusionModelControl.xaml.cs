@@ -1,4 +1,5 @@
 ﻿using Diffuse.Common;
+using Diffuse.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +10,7 @@ using TensorStack.Common;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
+using TensorStack.WPF.Services;
 
 namespace Diffuse.Controls
 {
@@ -234,8 +236,11 @@ namespace Diffuse.Controls
         }
 
 
-        private Task LoadAsync()
+        private async Task LoadAsync()
         {
+            if (!await IsAccessGrantedAsync(SelectedModel))
+                return;
+
             _currentDevice = SelectedDevice;
             _currentModel = SelectedModel;
             _currentControlNet = SelectedControlNet;
@@ -264,7 +269,6 @@ namespace Diffuse.Controls
 
             SelectionChanged?.Invoke(this, pipeline);
             ValidateSelection();
-            return Task.CompletedTask;
         }
 
 
@@ -616,6 +620,21 @@ namespace Diffuse.Controls
 
             ValidateSelection();
         }
-    }
 
+
+
+        private async Task<bool> IsAccessGrantedAsync(DiffusionModel model)
+        {
+            if (!model.IsGated)
+                return true;
+
+            if (!string.IsNullOrEmpty(Settings.SecureToken))
+                return true;
+
+            var dialog = DialogService.GetDialog<GatedModelDialog>();
+            await dialog.ShowDialogAsync(model);
+            return false;
+        }
+
+    }
 }

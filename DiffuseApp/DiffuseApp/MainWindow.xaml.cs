@@ -5,8 +5,6 @@ using Diffuse.Views;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
 using System.Windows.Threading;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
@@ -37,6 +35,7 @@ namespace Diffuse
             Settings.PropertyChanged += Settings_Changed;
             Width = _defaultWidth * Settings.UIScale;
             Height = _defaultHeight * Settings.UIScale;
+            navigation.OnNavigated += (_, viewId) => OnNavigated(viewId);
             InitializeComponent();
             NavigateCommand.Execute(_defaultView);
         }
@@ -67,6 +66,16 @@ namespace Diffuse
             View = view;
             ViewCategory = UpdateViewMap(view);
             await Navigation.NavigateAsync((int)view);
+        }
+
+
+        private void OnNavigated(int viewId)
+        {
+            var category = ViewManager.GetViewCategory((View)viewId);
+            if (ViewCategory != category)
+            {
+                ViewCategory = category;
+            }
         }
 
 

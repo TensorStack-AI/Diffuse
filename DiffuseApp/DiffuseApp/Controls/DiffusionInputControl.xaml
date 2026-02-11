@@ -146,9 +146,6 @@
                         </UniformGrid>
                     </StackPanel>
 
-                    <!--TextToImage-->
-                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=TextToImage}">
-                    </StackPanel>
 
                     <!--ImageToImage-->
                     <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageToImage}">
@@ -171,17 +168,7 @@
                         <CommonControls:SliderControl Text="ControlNet Strength" Value="{Binding Options.ControlNetStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
                     </StackPanel>
 
-                    <!--TextToVideo-->
-                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=TextToVideo}">
-                    </StackPanel>
 
-                    <!--ImageToVideo-->
-                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageToVideo}">
-                    </StackPanel>
-
-                    <!--VideoToVideo-->
-                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=VideoToVideo}">
-                    </StackPanel>
 
                     <!--LoraStrength-->
                     <ItemsControl ItemsSource="{Binding Options.LoraOptions}">
@@ -210,6 +197,15 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
+
+                    <StackPanel Visibility="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMin, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=0}">
+                        <UniformGrid Columns="2">
+                            <CommonControls:SliderControl Text="Frames"  Minimum="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMin}" Maximum="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMax}" Value="{Binding Options.Frames}" TickFrequency="1" Margin="0,0,3,0"/>
+                            <CommonControls:SliderControl Text="Frame Rate" Value="{Binding Options.FrameRate}" Minimum="8" Maximum="60" TickFrequency="1" ValueFormat="F0" Margin="3,0,0,0"/>
+                        </UniformGrid>
+                    </StackPanel>
+
+
 
                     <!--FlowMatch-->
                     <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">

@@ -147,9 +147,15 @@ namespace Diffuse.Dialogs
                     yield return "Model folder not found";
                 else if (ControlNetModel.Source == ModelSourceType.SingleFile && !File.Exists(ControlNetModel.Path))
                     yield return "Model file not found";
-                else if (ControlNetModel.Source == ModelSourceType.HuggingFace && !Utils.TryParseHuggingFaceRepo(ControlNetModel.Path, out _))
+                else if (ControlNetModel.Source == ModelSourceType.HuggingFace && !IsLControlNetValid(ControlNetModel.Path))
                     yield return "HuggingFace repository not found";
             }
+        }
+
+
+        private bool IsLControlNetValid(string controlNetPath)
+        {
+            return File.Exists(controlNetPath) || Utils.IsCheckpointInstalled(Settings.DirectoryCache, controlNetPath) || Utils.IsHuggingFaceLink(controlNetPath);
         }
 
 
@@ -163,6 +169,8 @@ namespace Diffuse.Dialogs
                 Pipeline = controlNetModel.Pipeline,
                 Backend = controlNetModel.Backend,
                 Source = controlNetModel.Source,
+                IsGated = controlNetModel.IsGated,
+                Link = controlNetModel.Link,
             };
         }
     }

@@ -306,92 +306,106 @@
 
             <!--Default Settings-->
             <GroupBox Header="Default Options" Margin="4,0,0,0">
-                <UniformGrid Columns="4">
-                    <StackPanel>
-                        <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <ComboBox ItemsSource="{Binding Schedulers}" SelectedItem="{Binding DiffusionModel.DefaultOptions.Scheduler}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.Steps, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Steps2" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.Steps2, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="StepsOffset" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.StepsOffset, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                <StackPanel>
+                    <UniformGrid Columns="4">
+                        <StackPanel>
+                            <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <ComboBox ItemsSource="{Binding Schedulers}" SelectedItem="{Binding DiffusionModel.DefaultOptions.Scheduler}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.Steps, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Steps2" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.Steps2, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="StepsOffset" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.StepsOffset, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
 
-                    <StackPanel>
-                        <TextBlock Text="Guidance (CFG)" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.GuidanceScale, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Guidance (Model)" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.GuidanceScale2, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.Frames, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="FrameRate" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameRate, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Guidance (CFG)" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.GuidanceScale, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Guidance (Model)" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.GuidanceScale2, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.Frames, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="FrameRate" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameRate, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
 
-                    <StackPanel>
-                        <TextBlock Text="MaxImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.MaxImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="BaseImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <TextBox Text="{Binding DiffusionModel.DefaultOptions.BaseImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Shift" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.Shift, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="BaseShift" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BaseShift, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="MaxImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.MaxImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="BaseImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.BaseImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Shift" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.Shift, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="BaseShift" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BaseShift, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
 
-                    <StackPanel>
-                        <TextBlock Text="MaxShift" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.MaxShift, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Beta Schedule" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.BetaSchedule}" ItemsSource="{Binding Source={StaticResource BetaScheduleType}}"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Beta Start" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaStart, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="Beta End" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaEnd, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="MaxShift" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.MaxShift, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Beta Schedule" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.BetaSchedule}" ItemsSource="{Binding Source={StaticResource BetaScheduleType}}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Beta Start" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaStart, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Beta End" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaEnd, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
 
-                    <StackPanel>
-                        <TextBlock Text="PredictionType" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.PredictionType}" ItemsSource="{Binding Source={StaticResource PredictionType}}"/>
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="SolverType" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.SolverType}" ItemsSource="{Binding Source={StaticResource SolverType}}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <TextBlock Text="TimestepSpacing" Style="{StaticResource FieldTextBlockStyle}"/>
-                        <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.TimestepSpacing}" ItemsSource="{Binding Source={StaticResource TimestepSpacingType}}" />
-                    </StackPanel>
-                    <StackPanel>
-                        <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.UseDynamicShifting}" Content="Dynamic Shifting" Margin="4, 20,0,0"/>
-                    </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="PredictionType" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.PredictionType}" ItemsSource="{Binding Source={StaticResource PredictionType}}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="SolverType" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.SolverType}" ItemsSource="{Binding Source={StaticResource SolverType}}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="TimestepSpacing" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.TimestepSpacing}" ItemsSource="{Binding Source={StaticResource TimestepSpacingType}}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.UseDynamicShifting}" Content="Dynamic Shifting" Margin="4, 20,0,0"/>
+                        </StackPanel>
 
-                </UniformGrid>
+                    </UniformGrid>
+
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right">
+                            <CheckBox IsChecked="{Binding DiffusionModel.IsGated}" Content="Is Access Gated" Margin="4, 20,22,0"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Repository Link" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.Link, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </DockPanel>
+
+                </StackPanel>
+              
             </GroupBox>
 
         </UniformGrid>

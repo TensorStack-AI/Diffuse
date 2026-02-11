@@ -211,6 +211,8 @@ namespace Diffuse.Dialogs
                 IsDynamicOutput = extractModel.IsDynamicOutput,
                 Type = extractModel.Type,
                 UrlPaths = extractModel.UrlPaths.ToArray(),
+                IsGated = extractModel.IsGated,
+                Link = extractModel.Link,
                 DefaultOptions = new ExtractInputOptions
                 {
                     BodyConfidence = extractModel.DefaultOptions.BodyConfidence,
