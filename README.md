@@ -21,12 +21,13 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 
 
 ## Supported Pipelines
-- **Z-Image:** ZImagePipeline, ZImageImg2ImgPipeline
-- **Qwen Image:** QwenImagePipeline, QwenImageImg2ImgPipeline, QwenImageEditPlusPipeline
+- **Z-Image:** ZImagePipeline, ZImageImg2ImgPipeline, ZImageInpaintPipeline, ZImageControlNetPipeline
+- **Qwen Image:** QwenImagePipeline, QwenImageImg2ImgPipeline, QwenImageEditPlusPipeline, QwenImageControlNetPipeline
 - **FLUX.1:** FluxPipeline, FluxImg2ImgPipeline, FluxKontextPipeline, FluxControlNetPipeline
-- **FLUX.2:** Flux2Pipeline
+- **FLUX.2:** Flux2Pipeline, Flux2KleinPipeline
 - **Chroma:** ChromaPipeline, ChromaImg2ImgPipeline
-- **LTX-Video:** LTXPipeline, LTXImageToVideoPipeline
+- **LTX Video:** LTXPipeline, LTXImageToVideoPipeline
+- **LTX-2 Video:** LTX2Pipeline, LTX2ImageToVideoPipeline
 - **Wan Video:** WanPipeline, WanImageToVideoPipeline
 - **CogVideoX:** CogVideoXPipeline, CogVideoXImageToVideoPipeline, CogVideoXVideoToVideoPipeline
 - **Kandinsky5:** Kandinsky5T2IPipeline, Kandinsky5I2IPipeline, Kandinsky5T2VPipeline, Kandinsky5I2VPipeline
