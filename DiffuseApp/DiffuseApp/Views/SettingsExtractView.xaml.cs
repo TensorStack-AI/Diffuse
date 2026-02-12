@@ -33,8 +33,7 @@ namespace Diffuse.Views
             ImportExtractModelCommand = new AsyncRelayCommand(ImportExtractModelAsync);
             ExportExtractModelCommand = new AsyncRelayCommand(ExportExtractModelAsync, () => SelectedExtractModel is not null);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
-            ModelCollection = new ListCollectionView(settings.ExtractModels) { Filter = CollectionFilter() };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(ExtractModel.IsValid), ListSortDirection.Descending));
+            ModelCollection = new ListCollectionView(settings.ExtractModels) { Filter = CollectionFilter(), IsLiveSorting = true };
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(ExtractModel.Name), ListSortDirection.Ascending));
             SelectedExtractModel = settings.ExtractModels.FirstOrDefault();
             InitializeComponent();

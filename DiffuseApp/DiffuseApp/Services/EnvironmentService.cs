@@ -29,7 +29,7 @@ namespace Diffuse.Services
         }
 
 
-        public async Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        public async Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
             var environment = await GetAsync(pipeline);
             var pipelineClientConfig = new ClientConfig
@@ -43,7 +43,7 @@ namespace Diffuse.Services
 
             try
             {
-                await diffusionPipeline.LoadAsync(pipelineConfig, cancellationToken);
+                await diffusionPipeline.LoadAsync(pipelineConfig, mode, cancellationToken);
                 return diffusionPipeline;
             }
             catch (Exception)
@@ -70,19 +70,25 @@ namespace Diffuse.Services
         public async Task CreateAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
             var environment = GetEnvironment(pipeline);
-            await CreateInternalAsync(environment, false, progressCallback, cancellationToken);
+            await CreateInternalAsync(environment, EnvironmentMode.Create, progressCallback, cancellationToken);
         }
 
 
         public async Task CreateAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
-            await CreateInternalAsync(environment, false, progressCallback, cancellationToken);
+            await CreateInternalAsync(environment, EnvironmentMode.Create, progressCallback, cancellationToken);
+        }
+
+
+        public async Task UpdateAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        {
+            await CreateInternalAsync(environment, EnvironmentMode.Update, progressCallback, cancellationToken);
         }
 
 
         public async Task RebuildAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
-            await CreateInternalAsync(environment, true, progressCallback, cancellationToken);
+            await CreateInternalAsync(environment, EnvironmentMode.Rebuild, progressCallback, cancellationToken);
         }
 
 
@@ -112,16 +118,15 @@ namespace Diffuse.Services
         }
 
 
-        public async Task CreateInternalAsync(EnvironmentModel environment, bool isRebuild, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        public async Task CreateInternalAsync(EnvironmentModel environment, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
             using var pipelineClient = new PipelineClient(new ClientConfig
             {
-                IsDebugMode = false,
-                IsRebuild = isRebuild,
+                IsDebugMode = _settings.IsServerDebugEnabled,
                 Environment = FromModel(environment, _settings.IsServerDebugEnabled),
                 ServerPath = App.DirectoryServer,
             }, progressCallback, _logger);
-            await pipelineClient.StartAsync(cancellationToken);
+            await pipelineClient.StartAsync(mode, cancellationToken);
         }
 
 
@@ -170,12 +175,13 @@ namespace Diffuse.Services
     {
         Task<EnvironmentConfig> GetAsync(PipelineModel pipeline);
         Task<EnvironmentConfig> GetAsync(EnvironmentModel environment);
-        Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
+        Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
 
         bool Exists(PipelineModel pipeline);
         bool Exists(EnvironmentModel environment);
         Task CreateAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
         Task CreateAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
+        Task UpdateAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
         Task RebuildAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
         Task DeleteAsync(EnvironmentModel environment);
     }

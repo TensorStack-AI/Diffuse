@@ -27,6 +27,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 17, 19, 28, 30 ]),
                         new MemoryProfile(DataType.Float16, [ 4, 17, 19, 28, 30]),
+                        new MemoryProfile(DataType.Float8, [ 4, 17, 16, 19, 21 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 17, 16, 19, 21 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage],
@@ -66,6 +67,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 16, 54, 29, 72 ]),
                         new MemoryProfile(DataType.Float16, [ 10, 16, 54, 29, 72 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 16, 54, 23, 64 ]),
                         new MemoryProfile(DataType.Int8, [ 10, 16, 54, 23, 64 ])
                     ],
                     ProcessTypes = [ ProcessType.TextToVideo ],
@@ -99,6 +101,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 54, 36, 72 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 16, 54, 29, 72 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 16, 54, 29, 72 ])
                     ],
                     ProcessTypes = [ ProcessType.TextToVideo ],
@@ -130,8 +133,9 @@ namespace Diffuse.Services
                     Link = "https://huggingface.co/zai-org/CogVideoX-5b-I2V",
                     MemoryProfile =
                     [
-                       new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
+                        new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 54, 36, 72 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 16, 54, 29, 72 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 16, 54, 29, 72 ])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -165,6 +169,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 54, 36, 72 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 16, 54, 29, 72 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 16, 54, 29, 72 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -198,6 +203,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 54, 36, 72 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 54, 36, 72 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 16, 54, 29, 72 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 16, 54, 29, 72 ])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -234,6 +240,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
                         new MemoryProfile(DataType.Float16, [ 4, 21, 23, 30, 32 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 14, 16, 20, 22 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 14, 16, 20, 22 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage ],
@@ -272,6 +279,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
                         new MemoryProfile(DataType.Float16, [ 4, 21, 23, 30, 32 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 14, 16, 20, 22 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 14, 16, 20, 22 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint],
@@ -310,6 +318,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 21, 23, 30, 32  ]),
                         new MemoryProfile(DataType.Float16, [ 4, 21, 23, 30, 32 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 14, 16, 20, 22 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 14, 16, 20, 22 ])
                     ],
                     ProcessTypes = [ProcessType.ImageEdit ],
@@ -350,6 +359,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 64, 64, 128, 128 ]),
                         new MemoryProfile(DataType.Float16, [ 4, 64, 64, 128, 128 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 48, 48, 80, 80]),
                         new MemoryProfile(DataType.Int8, [ 4, 48, 48, 80, 80])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageEdit],
@@ -387,6 +397,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [4, 10, 10, 16, 18 ]),
                         new MemoryProfile(DataType.Float16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 6, 6, 9, 10 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 6, 6, 9, 10 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
@@ -424,6 +435,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [4, 10, 10, 16, 18 ]),
                         new MemoryProfile(DataType.Float16, [4, 10, 10, 16, 18 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 6, 6, 9, 10 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 6, 6, 9, 10 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
@@ -461,6 +473,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [4, 20, 20, 34, 35 ]),
                         new MemoryProfile(DataType.Float16, [4, 20, 20, 34, 35]),
+                        new MemoryProfile(DataType.Float8, [ 4, 10, 10, 19, 20  ]),
                         new MemoryProfile(DataType.Int8, [ 4, 10, 10, 19, 20  ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
@@ -498,6 +511,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [4, 20, 20, 34, 35 ]),
                         new MemoryProfile(DataType.Float16, [4, 20, 20, 34, 35]),
+                        new MemoryProfile(DataType.Float8, [ 4, 10, 10, 19, 20  ]),
                         new MemoryProfile(DataType.Int8, [ 4, 10, 10, 19, 20  ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageEdit],
@@ -538,6 +552,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 18, 30, 32 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 18, 30, 32 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 12, 14, 16, 18 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 12, 14, 16, 18 ])
                     ],
                     ProcessTypes = [ ProcessType.TextToImage ],
@@ -574,6 +589,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 16, 18, 30, 32 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 16, 18, 30, 32 ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 12, 14, 16, 18 ]),
                         new MemoryProfile(DataType.Int8, [ 8, 12, 14, 16, 18 ])
                     ],
                     ProcessTypes = [ ProcessType.ImageEdit ],
@@ -610,6 +626,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
                         new MemoryProfile(DataType.Float16, [ 10, 32, 36, 56, 58 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 56  ]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 56  ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -642,6 +659,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
                         new MemoryProfile(DataType.Float16, [ 10, 32, 36, 56, 58 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 56  ]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 56  ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -674,6 +692,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 58 ]),
                         new MemoryProfile(DataType.Float16, [ 10, 32, 36, 56, 58 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 56  ]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 56  ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -706,6 +725,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 10, 32, 36, 56, 68 ]),
                         new MemoryProfile(DataType.Float16, [ 10, 32, 36, 56, 68 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 58  ]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 58  ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -738,6 +758,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
                         new MemoryProfile(DataType.Float16, [10, 32, 36, 56, 68 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 64]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 64])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -770,6 +791,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
                         new MemoryProfile(DataType.Float16, [10, 32, 36, 56, 68 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 64]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 64])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -802,6 +824,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
                         new MemoryProfile(DataType.Float16, [10, 32, 36, 56, 68 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 64]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 64])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -834,6 +857,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [10, 32, 36, 56, 68]),
                         new MemoryProfile(DataType.Float16, [10, 32, 36, 56, 68 ]),
+                        new MemoryProfile(DataType.Float8, [ 10, 21, 32, 53, 64]),
                         new MemoryProfile(DataType.Int8, [ 10, 21, 32, 53, 64])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -869,6 +893,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
                         new MemoryProfile(DataType.Float16, [ 16, 23, 32, 36, 48 ]),
+                        new MemoryProfile(DataType.Float8, [ 16, 23, 23, 32, 48 ]),
                         new MemoryProfile(DataType.Int8, [ 16, 23, 23, 32, 48 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo, ProcessType.VideoToVideo  ],
@@ -890,12 +915,17 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
-                         new SizeOption { Width = 720, Height = 1280 },
-                         new SizeOption { Width = 480, Height = 832 },
-                         new SizeOption { Width = 768, Height = 512, IsDefault = true },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 832, Height = 480},
-                         new SizeOption { Width = 1280, Height = 720 }
+                         new SizeOption { Width = 480, Height = 736 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
                     ]
                  },
                  new DiffusionModel
@@ -910,6 +940,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
                         new MemoryProfile(DataType.Float16, [ 16, 23, 32, 36, 48 ]),
+                        new MemoryProfile(DataType.Float8, [ 16, 23, 23, 32, 48 ]),
                         new MemoryProfile(DataType.Int8, [ 16, 23, 23, 32, 48 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo, ProcessType.VideoToVideo   ],
@@ -931,12 +962,17 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
-                         new SizeOption { Width = 720, Height = 1280 },
-                         new SizeOption { Width = 480, Height = 832 },
-                         new SizeOption { Width = 768, Height = 512, IsDefault = true },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 832, Height = 480},
-                         new SizeOption { Width = 1280, Height = 720 }
+                         new SizeOption { Width = 480, Height = 736 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
                     ]
                  },
                  new DiffusionModel
@@ -951,6 +987,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
                         new MemoryProfile(DataType.Float16, [ 16, 23, 32, 36, 48 ]),
+                        new MemoryProfile(DataType.Float8, [ 16, 23, 23, 32, 48 ]),
                         new MemoryProfile(DataType.Int8, [ 16, 23, 23, 32, 48 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo, ProcessType.VideoToVideo   ],
@@ -972,12 +1009,17 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
-                         new SizeOption { Width = 720, Height = 1280 },
-                         new SizeOption { Width = 480, Height = 832 },
-                         new SizeOption { Width = 768, Height = 512, IsDefault = true },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 832, Height = 480},
-                         new SizeOption { Width = 1280, Height = 720 }
+                         new SizeOption { Width = 480, Height = 736 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
                     ]
                  },
                  new DiffusionModel
@@ -992,6 +1034,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 16, 23, 32, 36, 48 ]),
                         new MemoryProfile(DataType.Float16, [ 16, 23, 32, 36, 48 ]),
+                        new MemoryProfile(DataType.Float8, [ 16, 23, 23, 32, 48 ]),
                         new MemoryProfile(DataType.Int8, [ 16, 23, 23, 32, 48 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo, ProcessType.VideoToVideo   ],
@@ -1013,12 +1056,17 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
-                         new SizeOption { Width = 720, Height = 1280 },
-                         new SizeOption { Width = 480, Height = 832 },
-                         new SizeOption { Width = 768, Height = 512, IsDefault = true },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 832, Height = 480},
-                         new SizeOption { Width = 1280, Height = 720 }
+                         new SizeOption { Width = 480, Height = 736 },
+                         new SizeOption { Width = 640, Height = 640 },
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
                     ]
                  },
                  new DiffusionModel
@@ -1033,6 +1081,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 12, 42, 42, 42, 92 ]),
                         new MemoryProfile(DataType.Float16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Float8, [ 12, 23, 35, 35, 74]),
                         new MemoryProfile(DataType.Int8, [ 12, 23, 35, 35, 74])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo ],
@@ -1057,11 +1106,23 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
+                         new SizeOption { Width = 2176, Height = 3840 },
+                         new SizeOption { Width = 864, Height = 2048 },
+                         new SizeOption { Width = 1088, Height = 1920 },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 512, Height = 704 },
+                         new SizeOption { Width = 480, Height = 736 },
                          new SizeOption { Width = 640, Height = 640 },
-                         new SizeOption { Width = 704, Height = 768 },
-                         new SizeOption { Width = 768, Height = 512 , IsDefault = true }
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
+                         new SizeOption { Width = 1920, Height = 1088 },
+                         new SizeOption { Width = 2048, Height = 864 },
+                         new SizeOption { Width = 3840, Height = 2176 }
                     ]
                  },
                  new DiffusionModel
@@ -1076,6 +1137,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 12, 42, 42, 42, 92 ]),
                         new MemoryProfile(DataType.Float16, [ 12, 42, 42, 42, 92 ]),
+                        new MemoryProfile(DataType.Float8, [ 12, 23, 35, 35, 74]),
                         new MemoryProfile(DataType.Int8, [ 12, 23, 35, 35, 74])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo, ProcessType.ImageToVideo ],
@@ -1100,11 +1162,23 @@ namespace Diffuse.Services
                     },
                     Resolutions =
                     [
+                         new SizeOption { Width = 2176, Height = 3840 },
+                         new SizeOption { Width = 864, Height = 2048 },
+                         new SizeOption { Width = 1088, Height = 1920 },
+                         new SizeOption { Width = 736, Height = 1280 },
+                         new SizeOption { Width = 768, Height = 1152 },
+                         new SizeOption { Width = 544, Height = 960 },
                          new SizeOption { Width = 512, Height = 768 },
-                         new SizeOption { Width = 512, Height = 704 },
+                         new SizeOption { Width = 480, Height = 736 },
                          new SizeOption { Width = 640, Height = 640 },
-                         new SizeOption { Width = 704, Height = 768 },
-                         new SizeOption { Width = 768, Height = 512 , IsDefault = true }
+                         new SizeOption { Width = 736, Height = 480 },
+                         new SizeOption { Width = 768, Height = 512, IsDefault = true  },
+                         new SizeOption { Width = 960, Height = 544 },
+                         new SizeOption { Width = 1152, Height = 768 },
+                         new SizeOption { Width = 1280, Height = 736 },
+                         new SizeOption { Width = 1920, Height = 1088 },
+                         new SizeOption { Width = 2048, Height = 864 },
+                         new SizeOption { Width = 3840, Height = 2176 }
                     ]
                  },
 
@@ -1122,6 +1196,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 5, 38, 40, 58, 60 ]),
                         new MemoryProfile(DataType.Float16, [ 5, 38, 40, 58, 60  ]),
+                        new MemoryProfile(DataType.Float8, [ 5, 22, 25, 30, 32 ]),
                         new MemoryProfile(DataType.Int8, [ 5, 22, 25, 30, 32 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage],
@@ -1161,6 +1236,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 5, 38, 40, 58, 60 ]),
                         new MemoryProfile(DataType.Float16, [ 5, 38, 40, 58, 60  ]),
+                        new MemoryProfile(DataType.Float8, [ 5, 22, 25, 30, 32 ]),
                         new MemoryProfile(DataType.Int8, [ 5, 22, 25, 30, 32 ])
                     ],
                     ProcessTypes = [ProcessType.ImageEdit],
@@ -1202,6 +1278,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
                         new MemoryProfile(DataType.Float16, [2, 6, 8, 14, 16 ]),
+                        new MemoryProfile(DataType.Float8, [2, 4, 6, 8, 10]),
                         new MemoryProfile(DataType.Int8, [2, 4, 6, 8, 10])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage, ProcessType.ControlNetImageToImage],
@@ -1240,6 +1317,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
                         new MemoryProfile(DataType.Float16, [2, 6, 8, 14, 16 ]),
+                        new MemoryProfile(DataType.Float8, [2, 4, 6, 8, 10]),
                         new MemoryProfile(DataType.Int8, [2, 4, 6, 8, 10])
                     ],
                     ProcessTypes = [ProcessType.TextToImage],
@@ -1280,6 +1358,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [2, 6, 8, 14, 16 ]),
                         new MemoryProfile(DataType.Float16, [2, 6, 8, 14, 16 ]),
+                        new MemoryProfile(DataType.Float8, [2, 4, 6, 8, 10]),
                         new MemoryProfile(DataType.Int8, [2, 4, 6, 8, 10])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ControlNetImage, ProcessType.ControlNetImageToImage],
@@ -1320,6 +1399,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 12, 17, 19, 31 ]),
                         new MemoryProfile(DataType.Float16, [ 8, 12, 17, 19, 31 ]),
+                        new MemoryProfile(DataType.Float8, [ 6, 10, 17, 14, 26 ]),
                         new MemoryProfile(DataType.Int8, [ 6, 10, 17, 14, 26 ])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -1361,6 +1441,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
                         new MemoryProfile(DataType.Float16, [ 8, 17, 34, 40, 52  ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 21, 21, 32, 38]),
                         new MemoryProfile(DataType.Int8, [ 8, 21, 21, 32, 38])
                     ],
                     ProcessTypes = [ProcessType.TextToVideo ],
@@ -1403,6 +1484,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
                         new MemoryProfile(DataType.Float16, [ 8, 17, 34, 40, 52  ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 21, 21, 32, 38]),
                         new MemoryProfile(DataType.Int8, [ 8, 21, 21, 32, 38])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -1444,6 +1526,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 8, 17, 34, 40, 52  ]),
                         new MemoryProfile(DataType.Float16, [ 8, 17, 34, 40, 52  ]),
+                        new MemoryProfile(DataType.Float8, [ 8, 21, 21, 32, 38]),
                         new MemoryProfile(DataType.Int8, [ 8, 21, 21, 32, 38])
                     ],
                     ProcessTypes = [ProcessType.ImageToVideo ],
@@ -1488,6 +1571,7 @@ namespace Diffuse.Services
                     [
                         new MemoryProfile(DataType.Bfloat16, [ 4, 12, 14, 22, 24 ]),
                         new MemoryProfile(DataType.Float16, [ 4, 12, 14, 22, 24 ]),
+                        new MemoryProfile(DataType.Float8, [ 4, 8, 10, 14, 16 ]),
                         new MemoryProfile(DataType.Int8, [ 4, 8, 10, 14, 16 ])
                     ],
                     ProcessTypes = [ProcessType.TextToImage, ProcessType.ImageToImage, ProcessType.ImageInpaint, ProcessType.ControlNetImage],

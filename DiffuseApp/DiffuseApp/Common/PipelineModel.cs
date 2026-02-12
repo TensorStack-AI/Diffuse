@@ -1,12 +1,11 @@
-﻿using TensorStack.Common;
-using TensorStack.Python.Common;
+﻿using TensorStack.Python.Common;
 using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
     public class PipelineModel : BaseModel
     {
-        private Device _device;
+        private DeviceModel _device;
         private DiffusionModel _diffusionModel;
         private ControlNetModel _controlNetModel;
         private ExtractModel _extractModel;
@@ -17,7 +16,7 @@ namespace Diffuse.Common
         private ProcessType _processType;
         private DataType _dataType;
 
-        public Device Device
+        public DeviceModel Device
         {
             get { return _device; }
             set { SetProperty(ref _device, value); }

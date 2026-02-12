@@ -30,7 +30,7 @@ namespace Diffuse.Dialogs
         public DiffusionModelDialog(Settings settings)
         {
             Settings = settings;
-            DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Int8];
+            DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Float8, DataType.Int8];
             ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.SingleFile, ModelSourceType.Checkpoint];
             Sizes = new ObservableCollection<SizeOption>();
             Schedulers = new ObservableCollection<SchedulerType>();
@@ -110,6 +110,7 @@ namespace Diffuse.Dialogs
                 MemoryProfile =
                 [
                     new MemoryProfile(DataType.Int8, [2, 4, 8, 16, 16]),
+                    new MemoryProfile(DataType.Float8, [2, 4, 8, 16, 16]),
                     new MemoryProfile(DataType.Float16, [4, 8, 16, 24, 24]),
                     new MemoryProfile(DataType.Bfloat16, [4, 8, 16, 24, 24])
                 ],

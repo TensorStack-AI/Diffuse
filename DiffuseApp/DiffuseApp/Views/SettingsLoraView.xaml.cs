@@ -33,9 +33,7 @@ namespace Diffuse.Views
             ImportLoraModelCommand = new AsyncRelayCommand(ImportLoraModelAsync);
             ExportLoraModelCommand = new AsyncRelayCommand(ExportLoraModelAsync, () => SelectedLoraModel is not null);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
-            ModelCollection = new ListCollectionView(settings.LoraAdapterModels) { Filter = CollectionFilter() };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(LoraAdapterModel.IsValid), ListSortDirection.Descending));
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(LoraAdapterModel.Pipeline), ListSortDirection.Ascending));
+            ModelCollection = new ListCollectionView(settings.LoraAdapterModels) { Filter = CollectionFilter(), IsLiveSorting = true };
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(LoraAdapterModel.Name), ListSortDirection.Ascending));
             SelectedLoraModel = settings.LoraAdapterModels.FirstOrDefault();
             InitializeComponent();

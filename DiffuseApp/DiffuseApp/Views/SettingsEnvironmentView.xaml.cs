@@ -3,6 +3,7 @@ using Diffuse.Dialogs;
 using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -36,7 +37,8 @@ namespace Diffuse.Views
             EnvironmentServiceRebuildCommand = new AsyncRelayCommand(EnvironmentRebuildAsync, CanEnvironmentUpdate);
             EnvironmentServiceDeleteCommand = new AsyncRelayCommand(EnvironmentDeleteAsync, CanEnvironmentUpdate);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
-            ModelCollection = new ListCollectionView(settings.Environments) { Filter = CollectionFilter() };
+            ModelCollection = new ListCollectionView(settings.Environments) { Filter = CollectionFilter(), IsLiveSorting = true };
+            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(EnvironmentModel.Name), ListSortDirection.Ascending));
             SelectedEnvironment = settings.Environments.FirstOrDefault();
             InitializeComponent();
         }

@@ -2,7 +2,6 @@
 using Diffuse.Dialogs;
 using Diffuse.Services;
 using Diffuse.Views;
-using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Threading;

@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 using TensorStack.Common;
 using Logger = Microsoft.Extensions.Logging.ILogger;
 
-namespace DiffuseApp.Server
+namespace DiffuseApp.Downloader
 {
     internal class Program
     {
         private static Logger _logger;
         private static string _directoryBase;
         private static string _directoryData;
-        private static readonly ChannelConfig _channelConfig = ChannelConfig.PipelineConfig;
+        private static readonly ChannelConfig _channelConfig = ChannelConfig.DownloadConfig;
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -49,18 +49,18 @@ namespace DiffuseApp.Server
         {
             try
             {
-                _logger.LogInformation("[StartAsync] Starting Pipeline server...");
+                _logger.LogInformation("[StartAsync] Starting Download server...");
                 using (var cancellationTokenSource = new CancellationTokenSource())
                 {
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => cancellationTokenSource.SafeCancel();
 
                     // Start Server
-                    using (var pipelineServer = new PipelineServer(_directoryData, _channelConfig, _logger))
+                    using (var downloadServer = new PipelineServer(_directoryData, _channelConfig, _logger))
                     {
-                        await pipelineServer.StartAsync(cancellationTokenSource.Token);
+                        await downloadServer.StartAsync(cancellationTokenSource.Token);
                     }
                 }
-                _logger.LogInformation("[StartAsync] Pipeline server stopped.");
+                _logger.LogInformation("[StartAsync] Download server stopped.");
             }
             catch (EndOfStreamException)
             {
@@ -111,7 +111,7 @@ namespace DiffuseApp.Server
         private static string GetLogName()
         {
             var now = DateTime.Now;
-            return Path.Combine(_directoryData, @$"Logs\DiffuseServer-{DateTime.Now.ToString("dd-MM-yyyy")}-{now.Hour * 3600 + now.Minute * 60 + now.Second}.txt");
+            return Path.Combine(_directoryData, @$"Logs\DiffuseDownloader-{DateTime.Now.ToString("dd-MM-yyyy")}-{now.Hour * 3600 + now.Minute * 60 + now.Second}.txt");
         }
     }
 }

@@ -4,15 +4,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Audio;
 using TensorStack.Common;
-using TensorStack.Common.Pipeline;
-using TensorStack.Image;
 using TensorStack.TextGeneration.Common;
-using TensorStack.TextGeneration.Pipelines.Whisper;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 

@@ -1,5 +1,4 @@
-﻿using Diffuse.Common;
-using TensorStack.WPF;
+﻿using TensorStack.WPF;
 
 namespace Diffuse.Common
 {

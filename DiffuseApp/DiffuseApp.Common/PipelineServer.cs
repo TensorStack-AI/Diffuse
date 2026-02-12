@@ -2,6 +2,7 @@
 using DiffuseApp.Common.Message;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace DiffuseApp.Common
     {
         private readonly ILogger _logger;
         private readonly string _directoryBase;
+        private readonly ChannelConfig _channelConfig;
         private readonly NamedPipeServerStream _commandChannel;
         private readonly NamedPipeServerStream _pipelineChannel;
         private readonly NamedPipeServerStream _progressChannel;
@@ -31,13 +33,14 @@ namespace DiffuseApp.Common
         /// <param name="serverConfig">The server configuration.</param>
         /// <param name="pipelineConfig">The pipeline configuration.</param>
         /// <param name="logger">The logger.</param>
-        public PipelineServer(string directoryBase, ILogger logger)
+        public PipelineServer(string directoryBase, ChannelConfig channelConfig, ILogger logger)
         {
             _logger = logger;
             _directoryBase = directoryBase;
-            _progressChannel = new NamedPipeServerStream(ServerConfig.ChannelProgress, PipeDirection.Out, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
-            _commandChannel = new NamedPipeServerStream(ServerConfig.ChannelCommand, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
-            _pipelineChannel = new NamedPipeServerStream(ServerConfig.ChannelPipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, ServerConfig.ChunkSize, ServerConfig.ChunkSize);
+            _channelConfig = channelConfig;
+            _progressChannel = new NamedPipeServerStream(_channelConfig.ChannelProgress, PipeDirection.Out, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, _channelConfig.ChunkSize, _channelConfig.ChunkSize);
+            _commandChannel = new NamedPipeServerStream(_channelConfig.ChannelCommand, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, _channelConfig.ChunkSize, _channelConfig.ChunkSize);
+            _pipelineChannel = new NamedPipeServerStream(_channelConfig.ChannelPipeName, PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, _channelConfig.ChunkSize, _channelConfig.ChunkSize);
             _progressQueue = Channel.CreateUnbounded<PipelineProgress>();
             _progressCallback = new Progress<PipelineProgress>(async (p) => await _progressQueue.Writer.WriteAsync(p));
         }
@@ -46,8 +49,6 @@ namespace DiffuseApp.Common
         /// <summary>
         /// Start the Server loop
         /// </summary>
-        /// <param name="isRebuild">if set to <c>true</c> [is rebuild].</param>
-        /// <param name="isReinstall">if set to <c>true</c> [is reinstall].</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
@@ -115,7 +116,11 @@ namespace DiffuseApp.Common
                     {
                         if (pipelineState == RequestType.Environment)
                         {
-                            if (request.Type == RequestType.PipelineLoad)
+                            if (request.Type == RequestType.PipelineDownload)
+                            {
+                                await DownloadPipelineAsync(request, cancellationToken);
+                            }
+                            else if (request.Type == RequestType.PipelineLoad)
                             {
                                 pipeline = await LoadPipelineAsync(request, cancellationToken);
                             }
@@ -127,6 +132,7 @@ namespace DiffuseApp.Common
                             {
                                 await UnloadPipelineAsync(request, pipeline, cancellationToken);
                             }
+
                             else if (request.Type == RequestType.PipelineRun)
                             {
                                 await RunPipelineAsync(request, pipeline, cancellationToken);
@@ -231,7 +237,6 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         private async Task StartServerAsync(PipelineRequest request, CancellationToken cancellationToken)
         {
-
             await _pipelineChannel.SendResponse(cancellationToken);
             _logger.LogInformation($"[PipelineServer] [StartServer] Server started.");
         }
@@ -260,17 +265,21 @@ namespace DiffuseApp.Common
             {
                 CallbackMessage("Create Environment...", "Initialize");
 
-                var environment = request.Environment;
-                var pythonService = new PythonManager(environment.Config, _directoryBase, _logger);
-                if (pythonService.Exists() && !environment.IsRebuild)
+                var timestamp = Stopwatch.GetTimestamp();
+                var environmentRequest = request.Environment;
+                var pythonEnvironment = new PythonManager(environmentRequest.Config, _directoryBase, _logger);
+                if(environmentRequest.Mode == EnvironmentMode.Load || (environmentRequest.Mode == EnvironmentMode.Create && pythonEnvironment.Exists()))
                 {
-                    await pythonService.LoadAsync(_progressCallback);
+                    _logger.LogInformation("[PipelineServer] [CreateEnvironment] Loading existing environment...");
+                    await pythonEnvironment.LoadAsync(_progressCallback);
                 }
                 else
                 {
-                    await pythonService.CreateAsync(environment.IsRebuild, environment.IsReinstall, _progressCallback);
+                    _logger.LogInformation($"[PipelineServer] [CreateEnvironment] Creating environment, Mode: {environmentRequest.Mode}...");
+                    await pythonEnvironment.CreateAsync(environmentRequest.Mode, _progressCallback);
                 }
 
+                _logger.LogInformation($"[PipelineServer] [CreateEnvironment] Environment created, Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
                 await _pipelineChannel.SendResponse(cancellationToken);
 
                 CallbackMessage(string.Empty, "Initialize");
@@ -346,7 +355,6 @@ namespace DiffuseApp.Common
             try
             {
                 CallbackMessage("Loading Pipeline...", "Initialize");
-
                 await pipeline.UnloadAsync();
                 await _pipelineChannel.SendResponse(cancellationToken);
 
@@ -355,6 +363,30 @@ namespace DiffuseApp.Common
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[PipelineServer] [UnloadPipeline] An exception occurred unloading pipeline.");
+                await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
+            }
+        }
+
+
+        /// <summary>
+        /// Download the pipeline
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task DownloadPipelineAsync(PipelineRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CallbackMessage("Download Pipeline...", "Initialize");
+                var pipeline = new PythonPipeline(request.PipelineConfig, _progressCallback, _logger);
+                await pipeline.DownloadAsync();
+                await _pipelineChannel.SendResponse(cancellationToken);
+
+                CallbackMessage(string.Empty, "Initialize");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[PipelineServer] [DownloadPipeline] An exception occurred unloading pipeline.");
                 await _pipelineChannel.SendMessage(new PipelineResponse(ex), cancellationToken);
             }
         }

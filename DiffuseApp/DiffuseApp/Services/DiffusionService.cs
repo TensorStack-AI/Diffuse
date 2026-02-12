@@ -132,7 +132,7 @@ namespace Diffuse.Services
                     };
 
                     var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
-                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, relayedProgressCallback, _cancellationTokenSource.Token);
+                    _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, EnvironmentMode.Create, relayedProgressCallback, _cancellationTokenSource.Token);
                 }
                 IsLoaded = true;
             }

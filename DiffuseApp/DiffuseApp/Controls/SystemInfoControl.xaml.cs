@@ -135,12 +135,12 @@ namespace Diffuse.Controls
 
     public class DeviceInfo : BaseModel
     {
+        private double _memory;
+
         public int Id { get; init; }
         public int DeviceId { get; init; }
         public string Name { get; init; }
         public DeviceType Type { get; init; }
-        public double Memory { get; set; }
-        public int MemoryGB => (int)(Memory / 1024);
         public int HardwareID { get; init; }
         public int HardwareLUID { get; init; }
         public int HardwareVendorId { get; init; }
@@ -151,6 +151,17 @@ namespace Diffuse.Controls
         public double MemoryRemaining => MemoryGB - MemoryUsage;
         public double ProgressValue => MemoryUsage;
         public double ProgressSubValue => MemoryUsage - ProcessMemoryUsage;
+
+        public double Memory
+        {
+            get { return _memory; }
+            set
+            {
+                _memory = value;
+                MemoryGB = (int)Math.Round(_memory / 1024.0, 0, MidpointRounding.ToEven);
+            }
+        }
+        public int MemoryGB { get; set; }
     }
 
 }

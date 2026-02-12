@@ -1,12 +1,32 @@
 ﻿namespace DiffuseApp.Common.Config
 {
-    public static class ServerConfig
+    public class ChannelConfig
     {
-        public const int ChunkSize = 8 * 1024 * 1024; // 8 MB
-        public const string Name = "DiffuseServer";
-        public const string Executable = "DiffuseServer.exe";
-        public const string ChannelCommand = "DiffuseApp.Command";
-        public const string ChannelPipeName = "DiffuseApp.PipeName";
-        public const string ChannelProgress = "DiffuseApp.Progress";
+        public int ChunkSize { get; } = 32 * 1024 * 1024; // 32 MB
+        public string Name { get; init; }
+        public string Executable { get; init; }
+        public string ChannelCommand { get; init; }
+        public string ChannelPipeName { get; init; }
+        public string ChannelProgress { get; init; }
+
+
+        public readonly static ChannelConfig PipelineConfig = new ChannelConfig
+        {
+            Name = "DiffuseServer",
+            Executable = "DiffuseServer.exe",
+            ChannelCommand = "DiffuseApp.Command",
+            ChannelPipeName = "DiffuseApp.PipeName",
+            ChannelProgress = "DiffuseApp.Progress"
+        };
+
+
+        public readonly static ChannelConfig DownloadConfig = new ChannelConfig
+        {
+            Name = "DiffuseDownload",
+            Executable = "DiffuseDownload.exe",
+            ChannelCommand = "DiffuseDownload.Command",
+            ChannelPipeName = "DiffuseDownload.PipeName",
+            ChannelProgress = "DiffuseDownload.Progress"
+        };
     }
 }

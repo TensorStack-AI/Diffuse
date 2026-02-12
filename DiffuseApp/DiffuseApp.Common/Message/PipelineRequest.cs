@@ -7,7 +7,7 @@ using TensorStack.Python.Config;
 
 namespace DiffuseApp.Common.Message
 {
-    internal class PipelineRequest : IPipelineMessage
+    public class PipelineRequest : IPipelineMessage
     {
         public PipelineRequest() { }
         public PipelineRequest(RequestType type)
@@ -15,10 +15,10 @@ namespace DiffuseApp.Common.Message
             Type = type;
         }
 
-        public PipelineRequest(PipelineConfig config)
+        public PipelineRequest(PipelineConfig config, RequestType type)
         {
             PipelineConfig = config;
-            Type = RequestType.PipelineLoad;
+            Type = type;
         }
 
         public PipelineRequest(PipelineReloadOptions options)
@@ -27,13 +27,12 @@ namespace DiffuseApp.Common.Message
             Type = RequestType.PipelineReload;
         }
 
-        public PipelineRequest(EnvironmentConfig config, bool isRebuild, bool isReinstall)
+        public PipelineRequest(EnvironmentConfig config, EnvironmentMode mode)
         {
             Environment = new EnvironmentRequest
             {
                 Config = config,
-                IsRebuild = isRebuild,
-                IsReinstall = isReinstall
+                Mode = mode,
             };
             Type = RequestType.Environment;
         }

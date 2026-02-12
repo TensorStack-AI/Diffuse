@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffuseApp.Downloader", "..\TensorStack-Private\Apps\DiffuseApp.Downloader\DiffuseApp.Downloader.csproj", "{968FF245-ADAC-05E3-C2A8-390C23F28DDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,12 @@ Global
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

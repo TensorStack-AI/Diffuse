@@ -15,7 +15,7 @@
     <DockPanel DataContext="{Binding ElementName=UI}" Margin="15, 15, 15, 10">
 
         <!--Save / Cancel-->
-        <Grid DockPanel.Dock="Bottom"  >
+        <Grid DockPanel.Dock="Bottom"  Margin="0,15,0,0">
             <UniformGrid Columns="2" Height="30" HorizontalAlignment="Right">
                 <Grid IsEnabled="{Binding IsExecuting, Converter={StaticResource InverseBoolConverter}}">
                     <Button Content="Create" Command="{Binding CreateCommand}" Width="100" IsDefault="True" Visibility="{Binding IsCreate, Converter={StaticResource BooleanToVisibilityConverter}}"/>

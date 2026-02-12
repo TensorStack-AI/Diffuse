@@ -34,8 +34,6 @@ namespace Diffuse.Views
             ExportControlNetModelCommand = new AsyncRelayCommand(ExportControlNetModelAsync, () => SelectedControlNetModel is not null);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
             ModelCollection = new ListCollectionView(settings.ControlNetModels) { Filter = CollectionFilter() };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(ControlNetModel.IsValid), ListSortDirection.Descending));
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(ControlNetModel.Pipeline), ListSortDirection.Ascending));
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(ControlNetModel.Name), ListSortDirection.Ascending));
             SelectedControlNetModel = settings.ControlNetModels.FirstOrDefault();
             InitializeComponent();

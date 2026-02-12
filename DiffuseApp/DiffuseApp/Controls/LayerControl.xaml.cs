@@ -16,7 +16,6 @@ using TensorStack.Image;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
-using static Diffuse.Utils;
 
 
 namespace Diffuse.Controls

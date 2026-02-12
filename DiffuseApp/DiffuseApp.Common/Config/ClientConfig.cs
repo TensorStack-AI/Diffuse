@@ -4,8 +4,6 @@ namespace DiffuseApp.Common.Config
 {
     public class ClientConfig
     {
-        public bool IsRebuild { get; set; }
-        public bool IsReinstall { get; set; }
         public bool IsDebugMode { get; set; }
         public string ServerPath { get; set; }
         public EnvironmentConfig Environment { get; set; }

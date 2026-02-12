@@ -1,7 +1,7 @@
 {
-  "DefaultDataType": "bfloat16",
+  "DefaultDataType": "float8",
   "DefaultMemoryMode": "Auto",
-  "Vendors": [ "Nvidia" ],
+  "Vendors": [ "AMD", "Nvidia" ],
   "Environments": [
     {
       "Id": 1,
@@ -9,7 +9,10 @@
       "Type": "Vendor",
       "Vendor": "Nvidia",
       "Environment": "default-cuda",
-      "IsDefault": false,
+      "IsDefault": true,
+      "Variables": {
+        "DIFFUSERS_GGUF_CUDA_KERNELS": "true"
+      },
       "Requirements": [
         "--extra-index-url https://download.pytorch.org/whl/cu128",
         "torch==2.9.1+cu128",
@@ -19,7 +22,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers==0.36.0",
+        "diffusers@git+https://github.com/huggingface/diffusers.git@d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -55,7 +58,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers==0.36.0",
+        "diffusers@git+https://github.com/huggingface/diffusers.git@d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -748,6 +751,10 @@
           "MemoryModes": [ 2, 4, 6, 8, 10 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 2, 6, 8, 14, 16 ]
         },
@@ -822,6 +829,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 4, 8, 10, 14, 16 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 4, 8, 10, 14, 16 ]
         },
         {
@@ -902,6 +913,10 @@
           "MemoryModes": [ 5, 22, 25, 30, 32 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 5, 38, 40, 58, 60 ]
         },
@@ -979,6 +994,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 5, 22, 25, 30, 32 ]
         },
         {
@@ -1063,6 +1082,10 @@
           "MemoryModes": [ 4, 17, 16, 19, 21 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 17, 16, 19, 21 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 4, 17, 19, 28, 30 ]
         },
@@ -1138,6 +1161,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 4, 14, 16, 20, 22 ]
         },
         {
@@ -1219,6 +1246,10 @@
           "MemoryModes": [ 4, 14, 16, 20, 22 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 4, 21, 23, 30, 32 ]
         },
@@ -1295,6 +1326,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 4, 14, 16, 20, 22 ]
         },
         {
@@ -1380,6 +1415,10 @@
           "MemoryModes": [ 4, 6, 6, 9, 10 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 4, 10, 10, 16, 18 ]
         },
@@ -1455,6 +1494,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 4, 6, 6, 9, 10 ]
         },
         {
@@ -1539,6 +1582,10 @@
           "MemoryModes": [ 4, 10, 10, 19, 20 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 4, 20, 20, 34, 35 ]
         },
@@ -1615,6 +1662,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 4, 10, 10, 19, 20 ]
         },
         {
@@ -1697,6 +1748,10 @@
           "MemoryModes": [ 6, 10, 17, 14, 26 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 8, 12, 17, 19, 31 ]
         },
@@ -1745,6 +1800,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 8, 21, 21, 32, 38 ]
         },
         {
@@ -1799,6 +1858,10 @@
           "MemoryModes": [ 8, 21, 21, 32, 38 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 8, 17, 34, 40, 52 ]
         },
@@ -1848,6 +1911,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 8, 12, 14, 16, 18 ]
         },
         {
@@ -1916,6 +1983,10 @@
           "MemoryModes": [ 8, 12, 14, 16, 18 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 8, 16, 18, 30, 32 ]
         },
@@ -1981,6 +2052,10 @@
           "MemoryModes": [ 10, 21, 32, 53, 58 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 10, 21, 32, 53, 58 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 10, 32, 36, 56, 68 ]
         },
@@ -2024,6 +2099,10 @@
           "MemoryModes": [ 10, 21, 32, 53, 64 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 10, 21, 32, 53, 64 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 10, 32, 36, 56, 68 ]
         },
@@ -2064,6 +2143,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 10, 16, 54, 23, 64 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 10, 16, 54, 23, 64 ]
         },
         {
@@ -2111,6 +2194,10 @@
           "MemoryModes": [ 8, 16, 54, 29, 72 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 8, 16, 54, 36, 72 ]
         },
@@ -2152,6 +2239,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 8, 16, 54, 29, 72 ]
         },
         {
@@ -2199,6 +2290,10 @@
           "MemoryModes": [ 8, 16, 54, 29, 72 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 8, 16, 54, 36, 72 ]
         },
@@ -2240,6 +2335,10 @@
       "MemoryProfile": [
         {
           "DataType": "int8",
+          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+        },
+        {
+          "DataType": "float8",
           "MemoryModes": [ 8, 16, 54, 29, 72 ]
         },
         {
@@ -2287,6 +2386,10 @@
           "MemoryModes": [ 16, 23, 23, 32, 48 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 16, 23, 23, 32, 48 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 16, 23, 32, 36, 48 ]
         },
@@ -2316,9 +2419,49 @@
       },
       "Resolutions": [
         {
-          "Width": 704,
-          "Height": 480,
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 640,
+          "Height": 640
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512,
           "IsDefault": true
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
         }
       ]
     },
@@ -2338,6 +2481,10 @@
           "MemoryModes": [ 12, 23, 35, 35, 74 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 12, 42, 42, 42, 92 ]
         },
@@ -2354,7 +2501,7 @@
         "Width": 768,
         "Height": 512,
         "Frames": 121,
-        "FrameRate": 25,
+        "FrameRate": 24,
         "GuidanceScale": 4,
         "Scheduler": "FlowMatchEulerDiscrete",
         "Schedulers": [ "FlowMatchEulerDiscrete" ],
@@ -2364,31 +2511,78 @@
         "MaxImageSeqLen": 4096,
         "BaseImageSeqLen": 1024,
         "UseDynamicShifting": true,
-        "IsStochasticSampling": true,
         "FramesMin": 65,
         "FramesMax": 257
       },
       "Resolutions": [
         {
+          "Width": 2176,
+          "Height": 3840
+        },
+        {
+          "Width": 864,
+          "Height": 2048
+        },
+        {
+          "Width": 1088,
+          "Height": 1920
+        },
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
           "Width": 512,
           "Height": 768
         },
         {
-          "Width": 512,
-          "Height": 704
+          "Width": 480,
+          "Height": 736
         },
         {
           "Width": 640,
           "Height": 640
         },
         {
-          "Width": 704,
-          "Height": 512
+          "Width": 736,
+          "Height": 480
         },
         {
           "Width": 768,
           "Height": 512,
           "IsDefault": true
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        },
+        {
+          "Width": 1920,
+          "Height": 1088
+        },
+        {
+          "Width": 2048,
+          "Height": 864
+        },
+        {
+          "Width": 3840,
+          "Height": 2176
         }
       ]
     },
@@ -2408,6 +2602,10 @@
           "MemoryModes": [ 12, 23, 35, 35, 74 ]
         },
         {
+          "DataType": "float8",
+          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+        },
+        {
           "DataType": "float16",
           "MemoryModes": [ 12, 42, 42, 42, 92 ]
         },
@@ -2424,7 +2622,7 @@
         "Width": 768,
         "Height": 512,
         "Frames": 121,
-        "FrameRate": 25,
+        "FrameRate": 24,
         "GuidanceScale": 0,
         "Scheduler": "FlowMatchEulerDiscrete",
         "Schedulers": [ "FlowMatchEulerDiscrete" ],
@@ -2434,31 +2632,78 @@
         "MaxImageSeqLen": 4096,
         "BaseImageSeqLen": 1024,
         "UseDynamicShifting": true,
-        "IsStochasticSampling": true,
         "FramesMin": 65,
         "FramesMax": 257
       },
       "Resolutions": [
         {
+          "Width": 2176,
+          "Height": 3840
+        },
+        {
+          "Width": 864,
+          "Height": 2048
+        },
+        {
+          "Width": 1088,
+          "Height": 1920
+        },
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
           "Width": 512,
           "Height": 768
         },
         {
-          "Width": 512,
-          "Height": 704
+          "Width": 480,
+          "Height": 736
         },
         {
           "Width": 640,
           "Height": 640
         },
         {
-          "Width": 704,
-          "Height": 512
+          "Width": 736,
+          "Height": 480
         },
         {
           "Width": 768,
           "Height": 512,
           "IsDefault": true
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        },
+        {
+          "Width": 1920,
+          "Height": 1088
+        },
+        {
+          "Width": 2048,
+          "Height": 864
+        },
+        {
+          "Width": 3840,
+          "Height": 2176
         }
       ]
     }
@@ -2512,16 +2757,6 @@
       "Link": "https://huggingface.co/InstantX/Qwen-Image-ControlNet-Union"
     },
 
-    {
-      "Id": 102,
-      "Backend": "PyTorch",
-      "Source": "HuggingFace",
-      "Name": "Canny",
-      "Path": "InstantX/FLUX.1-dev-controlnet-canny",
-      "Pipeline": "FluxPipeline",
-      "IsDefault": true,
-      "Link": "https://huggingface.co/InstantX/FLUX.1-dev-controlnet-canny"
-    },
     {
       "Id": 102,
       "Backend": "PyTorch",

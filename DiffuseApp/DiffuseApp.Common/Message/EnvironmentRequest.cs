@@ -1,12 +1,13 @@
-﻿using TensorStack.Python.Config;
+﻿using DiffuseApp.Common.Config;
+using TensorStack.Python.Common;
+using TensorStack.Python.Config;
 
 namespace DiffuseApp.Common.Message
 {
 
-    internal class EnvironmentRequest
+    public class EnvironmentRequest
     {
-        public bool IsRebuild { get; set; }
-        public bool IsReinstall { get; set; }
         public EnvironmentConfig Config { get; set; }
+        public EnvironmentMode Mode { get; set; }
     }
 }

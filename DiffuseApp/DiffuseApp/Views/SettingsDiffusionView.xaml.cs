@@ -33,8 +33,7 @@ namespace Diffuse.Views
             ImportDiffusionModelCommand = new AsyncRelayCommand(ImportDiffusionModelAsync);
             ExportDiffusionModelCommand = new AsyncRelayCommand(ExportDiffusionModelAsync, () => SelectedDiffusionModel is not null);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
-            ModelCollection = new ListCollectionView(settings.DiffusionModels) { Filter = CollectionFilter() };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(DiffusionModel.IsValid), ListSortDirection.Descending));
+            ModelCollection = new ListCollectionView(settings.DiffusionModels) { Filter = CollectionFilter(), IsLiveSorting = true };
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(DiffusionModel.Name), ListSortDirection.Ascending));
             SelectedDiffusionModel = settings.DiffusionModels.FirstOrDefault();
             InitializeComponent();
@@ -107,6 +106,7 @@ namespace Diffuse.Views
             if (await dialog.AddAsync())
             {
                 await SaveAsync();
+                SelectedDiffusionModel = dialog.DiffusionModel;
             }
         }
 
@@ -117,6 +117,7 @@ namespace Diffuse.Views
             if (await dialog.ShowDialogAsync())
             {
                 await SaveAsync();
+                SelectedDiffusionModel = dialog.SelectedTemplate;
             }
         }
 
@@ -127,6 +128,7 @@ namespace Diffuse.Views
             if (await dialog.CopyAsync(SelectedDiffusionModel))
             {
                 await SaveAsync();
+                SelectedDiffusionModel = dialog.DiffusionModel;
             }
         }
 
@@ -137,6 +139,7 @@ namespace Diffuse.Views
             if (await dialog.UpdateAsync(SelectedDiffusionModel))
             {
                 await SaveAsync();
+                SelectedDiffusionModel = dialog.DiffusionModel;
             }
         }
 
@@ -146,7 +149,7 @@ namespace Diffuse.Views
             if (await DialogService.ShowMessageAsync("Delete Model", $"Are you sure you want to delete this model?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Warning, TensorStack.WPF.Dialogs.MessageBoxStyleType.Danger))
             {
                 Settings.DiffusionModels.Remove(SelectedDiffusionModel);
-                SelectedDiffusionModel = default;
+                SelectedDiffusionModel = Settings.DiffusionModels.FirstOrDefault();
                 await SaveAsync();
             }
         }

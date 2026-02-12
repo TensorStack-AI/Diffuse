@@ -105,10 +105,10 @@ namespace Diffuse
         public ObservableCollection<ExtractModel> ExtractModels { get; set; }
 
         [JsonIgnore]
-        public Device DefaultDevice { get; set; }
+        public DeviceModel DefaultDevice { get; set; }
 
         [JsonIgnore]
-        public List<Device> Devices { get; set; }
+        public List<DeviceModel> Devices { get; set; }
 
 
         public void Initialize(string directoryData)
@@ -138,6 +138,7 @@ namespace Diffuse
             Provider.Initialize();
             Devices = Provider.GetDevices()
                 .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor) && Vendors.Contains(x.Vendor))
+                .Select(x => new DeviceModel(x))
                 .ToList();
             DefaultDevice = Devices.FirstOrDefault();
 

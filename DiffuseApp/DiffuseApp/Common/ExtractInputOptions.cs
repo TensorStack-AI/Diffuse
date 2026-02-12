@@ -1,5 +1,4 @@
-﻿using TensorStack.Common;
-using TensorStack.Extractors.Common;
+﻿using TensorStack.Extractors.Common;
 using TensorStack.WPF;
 
 namespace Diffuse.Common

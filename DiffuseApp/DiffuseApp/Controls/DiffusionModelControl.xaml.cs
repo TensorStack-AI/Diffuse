@@ -27,7 +27,7 @@ namespace Diffuse.Controls
         private ListCollectionView _upscaleCollectionView;
 
         private ProcessType _processType;
-        private Device _selectedDevice;
+        private DeviceModel _selectedDevice;
         private DiffusionModel _selectedModel;
         private ControlNetModel _selectedControlNet;
         private ExtractModel _selectedExtractor;
@@ -43,7 +43,7 @@ namespace Diffuse.Controls
         private bool _isExtractorSupported;
         private bool _isExtractorEnabled;
 
-        private Device _currentDevice;
+        private DeviceModel _currentDevice;
         private DiffusionModel _currentModel;
         private ControlNetModel _currentControlNet;
         private ExtractModel _currentExtractor;
@@ -115,7 +115,7 @@ namespace Diffuse.Controls
             set { SetProperty(ref _processType, value); }
         }
 
-        public Device SelectedDevice
+        public DeviceModel SelectedDevice
         {
             get { return _selectedDevice; }
             set { SetProperty(ref _selectedDevice, value); ValidateSelection(); }
@@ -366,7 +366,7 @@ namespace Diffuse.Controls
             DeviceCollectionView = new ListCollectionView(Settings.Devices);
             DeviceCollectionView.Filter = (obj) =>
             {
-                if (obj is not Device device)
+                if (obj is not DeviceModel device)
                     return false;
 
                 return true;
@@ -456,6 +456,10 @@ namespace Diffuse.Controls
 
         private void Device_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            IsLoraSupported = _selectedDevice.IsLoraSupported;
+            if (IsLoraEnabled && !IsLoraSupported)
+                IsLoraEnabled = false;
+
             if (ModelCollectionView is not null)
             {
                 ModelCollectionView.Refresh();
@@ -535,10 +539,12 @@ namespace Diffuse.Controls
                 return;
 
             DataTypes.Clear();
-            DataTypes.Add(DataType.Int8);
-            DataTypes.Add(DataType.Float16);
-            DataTypes.Add(DataType.Bfloat16);
-            SelectedDataType = DataTypes.Contains(Settings.DefaultDataType) ? Settings.DefaultDataType : DataTypes.First();
+            foreach (var type in _selectedDevice.DataTypes)
+            {
+                DataTypes.Add(type);
+            }
+
+            SelectedDataType = DataTypes.Contains(Settings.DefaultDataType) ? Settings.DefaultDataType : DataTypes.Last();
         }
 
 

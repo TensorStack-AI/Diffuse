@@ -114,7 +114,7 @@ namespace Diffuse.Dialogs
             IsExecuting = true;
             try
             {
-                await _environmentService.CreateAsync(_environment, _progressCallback, _cancellation.Token);
+                await _environmentService.UpdateAsync(_environment, _progressCallback, _cancellation.Token);
                 await base.SaveAsync();
             }
             catch (OperationCanceledException) { }

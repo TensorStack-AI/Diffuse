@@ -33,8 +33,7 @@ namespace Diffuse.Views
             ImportUpscaleModelCommand = new AsyncRelayCommand(ImportUpscaleModelAsync);
             ExportUpscaleModelCommand = new AsyncRelayCommand(ExportUpscaleModelAsync, () => SelectedUpscaleModel is not null);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
-            ModelCollection = new ListCollectionView(settings.UpscaleModels) { Filter = CollectionFilter() };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(UpscaleModel.IsValid), ListSortDirection.Descending));
+            ModelCollection = new ListCollectionView(settings.UpscaleModels) { Filter = CollectionFilter(), IsLiveSorting = true };
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(UpscaleModel.Name), ListSortDirection.Ascending));
             SelectedUpscaleModel = settings.UpscaleModels.FirstOrDefault();
             InitializeComponent();

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using TensorStack.Common;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -21,7 +20,7 @@ namespace Diffuse.Controls
         private ListCollectionView _upscaleCollectionView;
         private ListCollectionView _audioCollectionView;
 
-        private Device _selectedDevice;
+        private DeviceModel _selectedDevice;
         private ExtractModel _selectedExtractor;
         private UpscaleModel _selectedUpscaler;
         private AudioModel _selectedAudioModel;
@@ -30,7 +29,7 @@ namespace Diffuse.Controls
         private bool _isExtractorEnabled;
         private bool _isAudioEnabled;
 
-        private Device _currentDevice;
+        private DeviceModel _currentDevice;
         private ExtractModel _currentExtractor;
         private UpscaleModel _currentUpscaler;
         private AudioModel _currentAudioModel;
@@ -73,7 +72,7 @@ namespace Diffuse.Controls
             set { SetValue(IsSelectionValidProperty, value); }
         }
 
-        public Device SelectedDevice
+        public DeviceModel SelectedDevice
         {
             get { return _selectedDevice; }
             set { SetProperty(ref _selectedDevice, value); ValidateSelection(); }
@@ -201,7 +200,7 @@ namespace Diffuse.Controls
             DeviceCollectionView = new ListCollectionView(Settings.Devices);
             DeviceCollectionView.Filter = (obj) =>
             {
-                if (obj is not Device device)
+                if (obj is not DeviceModel device)
                     return false;
 
                 return true;

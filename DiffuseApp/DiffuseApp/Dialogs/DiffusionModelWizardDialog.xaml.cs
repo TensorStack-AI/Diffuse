@@ -55,7 +55,7 @@ namespace Diffuse.Dialogs
         public List<DiffusionModel> Templates { get; }
         public List<WizardItemModel> Items { get; }
         public ModelSourceType[] ModelSources { get; }
-
+        public DiffusionModel SelectedTemplate =>  _selectedTemplate;
         public WizardItemModel SelectedItem
         {
             get { return _selectedItem; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Diffuse.Common;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Common;
@@ -67,7 +68,7 @@ namespace Diffuse.Services
         /// Load the upscale pipeline
         /// </summary>
         /// <param name="config">The configuration.</param>
-        public async Task LoadAsync(Device device)
+        public async Task LoadAsync(DeviceModel device)
         {
             try
             {
@@ -166,7 +167,7 @@ namespace Diffuse.Services
         bool IsLoading { get; }
         bool IsExecuting { get; }
         bool CanCancel { get; }
-        Task LoadAsync(Device device);
+        Task LoadAsync(DeviceModel device);
         Task UnloadAsync();
         Task CancelAsync();
         Task<VideoInputStream> ExecuteAsync(InterpolationRequest options, IProgress<RunProgress> progressCallback);
