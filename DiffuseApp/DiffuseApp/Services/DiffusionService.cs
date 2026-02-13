@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Common;
@@ -206,6 +207,7 @@ namespace Diffuse.Services
             IsExecuting = true;
             try
             {
+                var imageFileName = _mediaService.GetTempFile(MediaType.Image);
                 options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
                 options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
                 var generateOptions = new PipelineOptions
@@ -226,6 +228,8 @@ namespace Diffuse.Services
                     InputControlImages = options.InputControlImages,
                     SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
                     LoraOptions = GetLoraOptions(options),
+                    TempFileName = imageFileName,
+                    NoiseCondition = options.NoiseCondition
                 };
 
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
@@ -249,7 +253,7 @@ namespace Diffuse.Services
             IsExecuting = true;
             try
             {
-                var videoFileName = _mediaService.GetTempVideoFile();
+                var videoFileName = _mediaService.GetTempFile(MediaType.Video);
                 options.Seed = options.Seed > 0 ? options.Seed : Random.Shared.Next();
                 options.NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt;
                 var generateOptions = new PipelineOptions
@@ -272,7 +276,10 @@ namespace Diffuse.Services
                     InputControlImages = options.InputControlImages,
                     SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
                     LoraOptions = GetLoraOptions(options),
-                    TempFileName = videoFileName
+                    TempFileName = videoFileName,
+                    NoiseCondition = options.NoiseCondition,
+                    FrameChunk = options.FrameChunk,
+                    FrameChunkOverlap = options.FrameChunkOverlap,
                 };
 
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);

@@ -13,6 +13,10 @@ namespace Diffuse.Common
         public int Width { get; set; }
         public int Frames { get; set; }
         public float FrameRate { get; set; } = 16;
+        public int FrameChunk { get; set; }
+        public int FrameChunkOverlap { get; set; }
+        public int NoiseCondition { get; set; }
+
         public SchedulerType Scheduler { get; set; }
         public SchedulerType[] Schedulers { get; set; }
 

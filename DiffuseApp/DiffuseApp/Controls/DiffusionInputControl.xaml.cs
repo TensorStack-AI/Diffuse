@@ -203,6 +203,9 @@ namespace Diffuse.Controls
 
                 Frames = newOptions.Frames,
                 FrameRate = newOptions.FrameRate,
+                FrameChunk = newOptions.FrameChunk,
+                FrameChunkOverlap = newOptions.FrameChunkOverlap,
+                NoiseCondition = newOptions.NoiseCondition,
                 SchedulerOptions = new SchedulerInputOptions
                 {
                     Shift = newOptions.Shift,

@@ -174,7 +174,7 @@ namespace Diffuse.Services
             try
             {
                 IsExecuting = true;
-                var resultVideoFile = _mediaService.GetTempVideoFile();
+                var videoFileName = _mediaService.GetTempFile(MediaType.Video);
                 using (_cancellationTokenSource = new CancellationTokenSource())
                 {
                     var frameCount = request.VideoStream.FrameCount;
@@ -194,7 +194,7 @@ namespace Diffuse.Services
                         return new VideoFrame(frame.Index, processedFrame, frame.SourceFrameRate, frame.AuxFrame);
                     }
 
-                    return await _mediaService.SaveWithAudioAsync(request.VideoStream, resultVideoFile, FrameProcessor, cancellationToken);
+                    return await _mediaService.SaveWithAudioAsync(request.VideoStream, videoFileName, FrameProcessor, cancellationToken);
                 }
             }
             finally

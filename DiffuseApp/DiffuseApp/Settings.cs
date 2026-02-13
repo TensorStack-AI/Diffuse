@@ -201,6 +201,7 @@ namespace Diffuse
                 "LTXPipeline",
                 "LTX2Pipeline",
                 "QwenImagePipeline",
+                "SkyReelsV2Pipeline",
                 "StableDiffusion3Pipeline",
                 "StableDiffusionXLPipeline",
                 "WanPipeline",

@@ -22,7 +22,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@git+https://github.com/huggingface/diffusers.git@d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5",
+        "diffusers@https://github.com/huggingface/diffusers/archive/d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -58,7 +58,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@git+https://github.com/huggingface/diffusers.git@d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5",
+        "diffusers@https://github.com/huggingface/diffusers/archive/d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -2704,6 +2704,118 @@
         {
           "Width": 3840,
           "Height": 2176
+        }
+      ]
+    },
+    {
+      "Id": 200,
+      "Backend": "PyTorch",
+      "Name": "SkyReels v2 1B 540P",
+      "Pipeline": "SkyReelsV2Pipeline",
+      "Path": "Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 960,
+        "Height": 544,
+        "Frames": 97,
+        "FrameRate": 24,
+        "GuidanceScale": 0,
+        "Scheduler": "UniPC",
+        "Schedulers": [ "UniPC", "FlowMatchEulerDiscrete" ],
+        "TimestepSpacing": "linspace",
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "StepsOffset": 0,
+        "Shift": 3,
+        "FramesMin": 97,
+        "FramesMax": 2048,
+        "FrameChunk": 97,
+        "FrameChunkOverlap": 17,
+        "NoiseCondition": 20
+      },
+      "Resolutions": [
+        {
+          "Width": 960,
+          "Height": 544,
+          "IsDefault": true
+        }
+      ]
+    },
+    {
+      "Id": 201,
+      "Backend": "PyTorch",
+      "Name": "SkyReels v2 14B 540P",
+      "Pipeline": "SkyReelsV2Pipeline",
+      "Path": "Skywork/SkyReels-V2-DF-14B-540P-Diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 960,
+        "Height": 544,
+        "Frames": 97,
+        "FrameRate": 24,
+        "GuidanceScale": 0,
+        "Scheduler": "UniPC",
+        "Schedulers": [ "UniPC", "FlowMatchEulerDiscrete" ],
+        "TimestepSpacing": "linspace",
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "StepsOffset": 0,
+        "Shift": 3,
+        "FramesMin": 97,
+        "FramesMax": 2048,
+        "FrameChunk": 97,
+        "FrameChunkOverlap": 17,
+        "NoiseCondition": 20
+      },
+      "Resolutions": [
+        {
+          "Width": 960,
+          "Height": 544,
+          "IsDefault": true
         }
       ]
     }

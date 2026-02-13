@@ -26,6 +26,9 @@ namespace Diffuse.Common
         private List<LoraOptionModel> _loraOptions;
         private int _frames;
         private float _frameRate;
+        private int _noiseCondition;
+        private int _frameChunkOverlap;
+        private int _frameChunk;
 
         public int Width
         {
@@ -128,6 +131,23 @@ namespace Diffuse.Common
             set { SetProperty(ref _frameRate, value); }
         }
 
+        public int FrameChunk
+        {
+            get { return _frameChunk; }
+            set { SetProperty(ref _frameChunk, value); }
+        }
+
+        public int FrameChunkOverlap
+        {
+            get { return _frameChunkOverlap; }
+            set { SetProperty(ref _frameChunkOverlap, value); }
+        }
+
+        public int NoiseCondition
+        {
+            get { return _noiseCondition; }
+            set { SetProperty(ref _noiseCondition, value); }
+        }
 
 
         [JsonIgnore]

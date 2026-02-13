@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Diffuse.Common;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,9 +28,17 @@ namespace Diffuse.Services
         /// Gets a new temporary video filename.
         /// </summary>
         /// <returns>System.String.</returns>
-        public string GetTempVideoFile()
+        public string GetTempFile(MediaType mediaType)
         {
-            return FileHelper.RandomFileName(_settings.DirectoryTemp, "mp4");
+            var extension = mediaType switch
+            {
+                MediaType.Text => "txt",
+                MediaType.Audio => "wav",
+                MediaType.Image => "png",
+                MediaType.Video => "mp4",
+                _ => throw new NotImplementedException()
+            };
+            return FileHelper.RandomFileName(_settings.DirectoryTemp, extension);
         }
 
 
@@ -88,7 +97,7 @@ namespace Diffuse.Services
 
     public interface IMediaService : IVideoService
     {
-        string GetTempVideoFile();
+        string GetTempFile(MediaType mediaType);
         Task<VideoInputStream> GetStreamAsync(string filename);
         Task<VideoInputStream> SaveWithAudioAsync(IAsyncEnumerable<VideoFrame> processedVideo, string sourceFile, string resultVideoFile, CancellationToken cancellationToken = default);
         Task<VideoInputStream> SaveWithAudioAsync(VideoInputStream videoInput, string videoOutputFile, Func<VideoFrame, Task<VideoFrame>> frameProcessor, CancellationToken cancellationToken = default);
