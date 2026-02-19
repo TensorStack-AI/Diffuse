@@ -41,6 +41,7 @@ namespace Diffuse.Views
             ProgressCallback = new Progress<RunProgress>(OnProgress);
             CancelCommand = new AsyncRelayCommand(CancelAsync, CanCancel);
             ExecuteCommand = new AsyncRelayCommand(ExecuteAsync, CanExecute);
+            StopCommand = new AsyncRelayCommand(DiffusionService.StopAsync);
             PythonProgressCallback = new Progress<PipelineProgress>(OnProgress);
         }
 
@@ -73,6 +74,11 @@ namespace Diffuse.Views
         /// Gets or sets the cancel command.
         /// </summary>
         public AsyncRelayCommand CancelCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stop command.
+        /// </summary>
+        public AsyncRelayCommand StopCommand { get; set; }
 
         /// <summary>
         /// Gets the progress callback.
@@ -312,16 +318,30 @@ namespace Diffuse.Views
         /// </summary>
         protected virtual async Task<bool> LoadEnvironment()
         {
-            if (EnvironmentService.Exists(CurrentPipeline))
+            var environment = EnvironmentService.GetEnvironment(CurrentPipeline);
+            if ((environment.Status == EnvironmentMode.Create || environment.Status == EnvironmentMode.Load) && EnvironmentService.Exists(environment))
                 return true;
 
             var timestamp = Stopwatch.GetTimestamp();
             Logger.LogInformation("[{View}] [LoadEnvironment] Creating new environment...", ViewName);
             var environmentDialog = DialogService.GetDialog<EnvironmentDialog>();
-            if (!await environmentDialog.CreateAsync(CurrentPipeline))
+
+            if (environment.Status == EnvironmentMode.Update)
             {
-                return false;
+                if (!await environmentDialog.UpdateAsync(environment))
+                    return false;
             }
+            else if (environment.Status == EnvironmentMode.Rebuild)
+            {
+                if (!await environmentDialog.RebuildAsync(environment))
+                    return false;
+            }
+            else
+            {
+                if (!await environmentDialog.CreateAsync(environment))
+                    return false;
+            }
+
             Logger.LogInformation("[{View}] [LoadEnvironment] Environment successfully created, Elapsed: {Elapsed:c}", ViewName, Stopwatch.GetElapsedTime(timestamp));
             return true;
         }
@@ -611,7 +631,7 @@ namespace Diffuse.Views
             }
             else if (progress.IsLoading)
             {
-               // Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
+                // Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
             }
             else if (progress.IsGenerating && DiffusionService.IsExecuting)
             {

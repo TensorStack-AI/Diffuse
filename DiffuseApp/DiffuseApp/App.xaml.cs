@@ -126,8 +126,16 @@ namespace Diffuse
         private async Task AppStartup()
         {
             var historyService = _appHost.Services.GetService<IHistoryService>();
+            var hardwareService = _appHost.Services.GetService<IHardwareService>();
+
+            // Load History
             await historyService.InitializeAsync();
 
+            // Load Devices
+            var devices = hardwareService.GetGPUDevices();
+            _settings.InitializeDevices(devices);
+
+            // Open Main Window
             MainWindow = _appHost.Services.GetMainWindow();
             MainWindow.Show();
             _splashscreen.Close();

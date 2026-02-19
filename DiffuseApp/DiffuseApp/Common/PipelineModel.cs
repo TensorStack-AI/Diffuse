@@ -80,6 +80,7 @@ namespace Diffuse.Common
         public bool IsLoadRequired(PipelineModel pipeline)
         {
             return pipeline is null
+                || pipeline.Device != _device
                 || pipeline.DiffusionModel != _diffusionModel
                 || pipeline.MemoryMode != _memoryMode
                 || pipeline.DataType != _dataType;

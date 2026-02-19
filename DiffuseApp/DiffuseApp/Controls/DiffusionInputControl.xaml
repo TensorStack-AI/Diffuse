@@ -118,6 +118,51 @@
 
                     </UniformGrid>
 
+
+
+                    <!--Frames / FrameRate-->
+                    <StackPanel Visibility="{Binding Pipeline.DiffusionModel.DefaultOptions.FrameOptions, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <UniformGrid Columns="3">
+                            <StackPanel Margin="0,0,2,0">
+                                <TextBlock Text="Frames" Style="{StaticResource FieldTextBlockStyle}" />
+                                <ComboBox ItemsSource="{Binding Pipeline.DiffusionModel.DefaultOptions.FrameOptions}" SelectedItem="{Binding Options.Frames}" />
+                            </StackPanel>
+                            <StackPanel Margin="2,0,2,0">
+                                <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
+                                <ComboBox ItemsSource="{Binding FrameRates}" SelectedItem="{Binding Options.FrameRate}" >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ., StringFormat={}{0} fps}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <DockPanel Margin="2,0,0,0">
+                                <TextBlock DockPanel.Dock="Top" Text="Duration" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox IsReadOnly="True" IsHitTestVisible="False" Opacity=".8">
+                                    <TextBox.Text>
+                                        <MultiBinding Converter="{StaticResource FramesToTimeSpanConverter}" StringFormat="{}{0:mm\:ss\.ff}">
+                                            <Binding Path="Options.Frames" />
+                                            <Binding Path="Options.FrameRate" />
+                                        </MultiBinding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </DockPanel>
+                        </UniformGrid>
+
+                        <!--Frame Chunk-->
+                        <StackPanel Visibility="{Binding Pipeline.DiffusionModel.DefaultOptions.FrameChunk, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=0, FallbackValue=Collapsed}">
+                            <UniformGrid Columns="3" Margin="0,4,0,0">
+                                <CommonControls:SliderControl Text="Chunk Size" Value="{Binding Options.FrameChunk}" Minimum="1" Maximum="{Binding Pipeline.DiffusionModel.DefaultOptions.Frames}" TickFrequency="1" ValueFormat="N0" Margin="0,0,2,0"/>
+                                <CommonControls:SliderControl Text="Overlap" Value="{Binding Options.FrameChunkOverlap}" Minimum="1" Maximum="{Binding Pipeline.DiffusionModel.DefaultOptions.Frames}" TickFrequency="1" ValueFormat="N0" Margin="2,0,2,0"/>
+                                <CommonControls:SliderControl Text="Noise Condition" Value="{Binding Options.NoiseCondition}" Minimum="1" Maximum="100" TickFrequency="1" ValueFormat="N0" Margin="2,0,0,0"/>
+                            </UniformGrid>
+                        </StackPanel>
+
+                    </StackPanel>
+
+
                     <!--ImageEdit-->
                     <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageEdit}">
                         <CommonControls:SliderControl Text="Input Images" Value="{Binding Options.InputImageCount}" Minimum="1" Maximum="4" TickFrequency="1" ValueFormat="N0" />
@@ -134,8 +179,7 @@
                         </UniformGrid>
                     </StackPanel>
 
-
-                    <!--GuidanceScale-->
+                    <!--Guidance Scale-->
                     <StackPanel Visibility="{Binding IsGuidance2Enabled, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                         <CommonControls:SliderControl Text="Guidance" Value="{Binding Options.GuidanceScale}" Minimum="1" Maximum="20" TickFrequency="0.1" ValueFormat="F2"/>
                     </StackPanel>
@@ -146,10 +190,16 @@
                         </UniformGrid>
                     </StackPanel>
 
-
                     <!--ImageToImage-->
                     <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageToImage}">
                         <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
+                    </StackPanel>
+
+                    <!--VideoToVideo-->
+                    <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=VideoToVideo}">
+                        <StackPanel Visibility="{Binding Pipeline.DiffusionModel.DefaultOptions.Strength, Converter={StaticResource LessThanToVisibilityConverter}, ConverterParameter=1}">
+                            <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
+                        </StackPanel>
                     </StackPanel>
 
                     <!--ImageInpaint-->
@@ -168,9 +218,7 @@
                         <CommonControls:SliderControl Text="ControlNet Strength" Value="{Binding Options.ControlNetStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
                     </StackPanel>
 
-
-
-                    <!--LoraStrength-->
+                    <!--Lora Strength-->
                     <ItemsControl ItemsSource="{Binding Options.LoraOptions}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -198,36 +246,31 @@
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
 
-                    <StackPanel Visibility="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMin, Converter={StaticResource GreaterThanToVisibilityConverter}, ConverterParameter=0}">
-                        <UniformGrid Columns="2">
-                            <CommonControls:SliderControl Text="Frames"  Minimum="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMin}" Maximum="{Binding Pipeline.DiffusionModel.DefaultOptions.FramesMax}" Value="{Binding Options.Frames}" TickFrequency="1" Margin="0,0,3,0"/>
-                            <CommonControls:SliderControl Text="Frame Rate" Value="{Binding Options.FrameRate}" Minimum="8" Maximum="60" TickFrequency="1" ValueFormat="F0" Margin="3,0,0,0"/>
-                        </UniformGrid>
-                    </StackPanel>
 
-
-
-                    <!--FlowMatch-->
-                    <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <StackPanel>
-                            <CommonControls:SliderControl Text="Shift" Value="{Binding Options.SchedulerOptions.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                    <StackPanel Margin="0,0,0,10">
+                        <!--FlowMatch-->
+                        <StackPanel Visibility="{Binding IsSchedulerFlowMatch, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                            <StackPanel>
+                                <CommonControls:SliderControl Text="Shift" Value="{Binding Options.SchedulerOptions.Shift}"  Minimum="1" Maximum="10" TickFrequency="0.1" ValueFormat="F2"/>
+                            </StackPanel>
+                            <UniformGrid Columns="2" Margin="0,6,0,0">
+                                <Grid HorizontalAlignment="Left">
+                                    <CheckBox Content="Dynamic Shifting" IsChecked="{Binding Options.SchedulerOptions.UseDynamicShifting}" />
+                                </Grid>
+                                <Grid HorizontalAlignment="Right">
+                                    <CheckBox Content="Stochastic Sampling" IsChecked="{Binding Options.SchedulerOptions.StochasticSampling}" />
+                                </Grid>
+                            </UniformGrid>
                         </StackPanel>
-                        <UniformGrid Columns="2" Margin="0,6,0,0">
-                            <Grid HorizontalAlignment="Left">
-                                <CheckBox Content="Dynamic Shifting" IsChecked="{Binding Options.SchedulerOptions.UseDynamicShifting}" />
+
+                        <!--Karras-->
+                        <StackPanel Margin="0,6,0,0" Visibility="{Binding IsSchedulerKarras, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                            <Grid>
+                                <CheckBox Content="Karras Sigmas" IsChecked="{Binding Options.SchedulerOptions.UseKarrasSigmas}" />
                             </Grid>
-                            <Grid HorizontalAlignment="Right">
-                                <CheckBox Content="Stochastic Sampling" IsChecked="{Binding Options.SchedulerOptions.StochasticSampling}" />
-                            </Grid>
-                        </UniformGrid>
+                        </StackPanel>
                     </StackPanel>
 
-                    <!--Karras-->
-                    <StackPanel Margin="0,6,0,0" Visibility="{Binding IsSchedulerKarras, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Grid>
-                            <CheckBox Content="Karras Sigmas" IsChecked="{Binding Options.SchedulerOptions.UseKarrasSigmas}" />
-                        </Grid>
-                    </StackPanel>
                 </StackPanel>
             </TabItem>
 

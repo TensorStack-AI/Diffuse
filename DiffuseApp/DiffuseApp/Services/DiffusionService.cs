@@ -81,6 +81,9 @@ namespace Diffuse.Services
             private set { SetProperty(ref _isExecuting, value); NotifyPropertyChanged(nameof(CanCancel)); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is canceling.
+        /// </summary>
         public bool IsCanceling
         {
             get { return _isCanceling; }
@@ -101,6 +104,7 @@ namespace Diffuse.Services
         {
             IsLoaded = false;
             IsLoading = true;
+            IsCanceling = false;
             try
             {
                 using (_cancellationTokenSource = new CancellationTokenSource())
@@ -122,8 +126,11 @@ namespace Diffuse.Services
                         ProcessType = _currentPipeline.ProcessType,
                         Device = device.Type == DeviceType.GPU ? "cuda" : "cpu",
                         DeviceId = device.DeviceId,
+                        DeviceBusId = device.PCIBusId,
                         DataType = model.BaseType,
                         QuantDataType = _currentPipeline.DataType,
+                        IsOptimizeDeviceEnabled = _settings.IsOptimizeDeviceEnabled,
+                        IsOptimizeChannelsEnabled = _settings.IsOptimizeChannelsEnabled,
                         CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                         SecureToken = _settings.SecureToken,
                         LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),
@@ -134,6 +141,7 @@ namespace Diffuse.Services
 
                     var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
                     _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, EnvironmentMode.Create, relayedProgressCallback, _cancellationTokenSource.Token);
+                    _settings.ScanModels();
                 }
                 IsLoaded = true;
             }
@@ -162,6 +170,7 @@ namespace Diffuse.Services
         {
             IsLoaded = false;
             IsLoading = true;
+            IsCanceling = false;
             try
             {
                 using (_cancellationTokenSource = new CancellationTokenSource())
@@ -176,6 +185,7 @@ namespace Diffuse.Services
                     };
 
                     await _pipelineClient.ReloadAsync(reloadOptions, _cancellationTokenSource.Token);
+                    _settings.ScanModels();
                 }
                 IsLoaded = true;
             }
@@ -196,8 +206,6 @@ namespace Diffuse.Services
         }
 
 
-
-
         /// <summary>
         /// Execute the upscaler
         /// </summary>
@@ -205,6 +213,7 @@ namespace Diffuse.Services
         public async Task<ImageTensor> GenerateImageAsync(DiffusionInputOptions options)
         {
             IsExecuting = true;
+            IsCanceling = false;
             try
             {
                 var imageFileName = _mediaService.GetTempFile(MediaType.Image);
@@ -251,6 +260,7 @@ namespace Diffuse.Services
         public async Task<VideoInputStream> GenerateVideoAsync(DiffusionInputOptions options)
         {
             IsExecuting = true;
+            IsCanceling = false;
             try
             {
                 var videoFileName = _mediaService.GetTempFile(MediaType.Video);
@@ -315,12 +325,6 @@ namespace Diffuse.Services
         {
             try
             {
-                if (_isCanceling)
-                {
-                    await StopServerAsync();
-                    return;
-                }
-
                 IsCanceling = true;
                 if (_pipelineClient is not null)
                     await _pipelineClient.CancelAsync();
@@ -336,7 +340,7 @@ namespace Diffuse.Services
         /// <summary>
         /// Stop/Kill server
         /// </summary>
-        private async Task StopServerAsync()
+        public async Task StopAsync()
         {
             try
             {
@@ -366,6 +370,7 @@ namespace Diffuse.Services
             IsLoaded = false;
             IsLoading = false;
             IsExecuting = false;
+            IsCanceling = false;
         }
 
 
@@ -527,6 +532,7 @@ namespace Diffuse.Services
         Task ReloadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
         Task UnloadAsync();
         Task CancelAsync();
+        Task StopAsync();
         Task<ImageTensor> GenerateImageAsync(DiffusionInputOptions options);
         Task<VideoInputStream> GenerateVideoAsync(DiffusionInputOptions options);
     }

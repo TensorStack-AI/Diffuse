@@ -112,25 +112,20 @@ namespace Diffuse.Services
         }
 
 
-        private string GetPath(EnvironmentModel environment)
+        public EnvironmentMode GetStatus(PipelineModel pipeline)
         {
-            return Path.Combine(App.DirectoryPython, "Pipelines", $".{environment.Environment}");
+            var environment = GetEnvironment(pipeline);
+            return GetStatus(environment);
         }
 
 
-        public async Task CreateInternalAsync(EnvironmentModel environment, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        public EnvironmentMode GetStatus(EnvironmentModel environment)
         {
-            using var pipelineClient = new PipelineClient(new ClientConfig
-            {
-                IsDebugMode = _settings.IsServerDebugEnabled,
-                Environment = FromModel(environment, _settings.IsServerDebugEnabled),
-                ServerPath = App.DirectoryServer,
-            }, progressCallback, _logger);
-            await pipelineClient.StartAsync(mode, cancellationToken);
+            return environment.Status;
         }
 
 
-        private EnvironmentModel GetEnvironment(PipelineModel pipeline)
+        public EnvironmentModel GetEnvironment(PipelineModel pipeline)
         {
             var pipelineEnvironment = _settings.Environments
                 .Where(x => x.Vendor == pipeline.Device.Vendor && x.Type == EnvironmentType.Pipeline && x.Pipeline == pipeline.DiffusionModel.Pipeline)
@@ -154,6 +149,31 @@ namespace Diffuse.Services
                 return vendorEnvironment;
 
             return _settings.Environments.First();
+        }
+
+        private async Task CreateInternalAsync(EnvironmentModel environment, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        {
+            using var pipelineClient = new PipelineClient(new ClientConfig
+            {
+                IsDebugMode = _settings.IsServerDebugEnabled,
+                Environment = FromModel(environment, _settings.IsServerDebugEnabled),
+                ServerPath = App.DirectoryServer,
+            }, progressCallback, _logger);
+            await pipelineClient.StartAsync(mode, cancellationToken);
+            await SaveEnvironmentStatusAsync(environment);
+        }
+
+
+        private static string GetPath(EnvironmentModel environment)
+        {
+            return Path.Combine(App.DirectoryPython, "Pipelines", $".{environment.Environment}");
+        }
+
+
+        private async Task SaveEnvironmentStatusAsync(EnvironmentModel environment)
+        {
+            environment.Status = EnvironmentMode.Create;
+            await SettingsManager.SaveAsync(_settings);
         }
 
 
@@ -184,5 +204,9 @@ namespace Diffuse.Services
         Task UpdateAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
         Task RebuildAsync(EnvironmentModel environment, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
         Task DeleteAsync(EnvironmentModel environment);
+
+        EnvironmentMode GetStatus(PipelineModel pipeline);
+        EnvironmentMode GetStatus(EnvironmentModel environment);
+        EnvironmentModel GetEnvironment(PipelineModel pipeline);
     }
 }

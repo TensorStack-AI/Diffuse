@@ -18,11 +18,11 @@
                         <UniformGrid.Style>
                             <Style TargetType="{x:Type UniformGrid}">
                                 <Setter Property="Rows" Value="2" />
-                                <Setter Property="Height" Value="20" />
+                                <Setter Property="Height" Value="196" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding DeviceCollection.Count, ElementName=UI}" Value="2">
                                         <Setter Property="Rows" Value="1" />
-                                        <Setter Property="Height" Value="167" />
+                                        <Setter Property="Height" Value="196" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

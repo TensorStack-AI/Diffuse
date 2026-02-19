@@ -8,8 +8,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using TensorStack.Common;
-using TensorStack.Providers;
-using TensorStack.Python.Common;
 using TensorStack.WPF;
 
 namespace Diffuse
@@ -25,8 +23,9 @@ namespace Diffuse
         private bool _isVolumeOutputMute;
 
         [AppDefault]
-        public string FileVersion { get; set; } = "2";
+        public int Version { get; set; }
         public VendorType[] Vendors { get; set; }
+        public int DefaultDeviceId { get; set; }
         public string DirectoryTemp { get; set; }
         public string DirectoryModel { get; set; }
         public string DirectoryCache { get; set; }
@@ -37,6 +36,8 @@ namespace Diffuse
         public string VideoCodec { get; set; } = "mp4v";
         public bool IsLegacyDeviceDetection { get; set; }
         public bool IsServerDebugEnabled { get; set; } = false;
+        public bool IsOptimizeDeviceEnabled { get; set; } = false;
+        public bool IsOptimizeChannelsEnabled { get; set; } = false;
 
         public double VolumeInput
         {
@@ -79,9 +80,6 @@ namespace Diffuse
             set { SetProperty(ref _historyOrientation, value); }
         }
 
-        public DataType DefaultDataType { get; set; }
-        public MemoryMode DefaultMemoryMode { get; set; }
-
 
         [AppDefault]
         public ObservableCollection<EnvironmentModel> Environments { get; set; }
@@ -103,9 +101,6 @@ namespace Diffuse
 
         [AppDefault]
         public ObservableCollection<ExtractModel> ExtractModels { get; set; }
-
-        [JsonIgnore]
-        public DeviceModel DefaultDevice { get; set; }
 
         [JsonIgnore]
         public List<DeviceModel> Devices { get; set; }
@@ -135,15 +130,22 @@ namespace Diffuse
             Directory.CreateDirectory(DirectoryCache);
             Directory.CreateDirectory(DirectoryHistory);
 
-            Provider.Initialize();
-            Devices = Provider.GetDevices()
-                .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor) && Vendors.Contains(x.Vendor))
-                .Select(x => new DeviceModel(x))
-                .ToList();
-            DefaultDevice = Devices.FirstOrDefault();
-
             ScanModels();
             SettingsManager.Save(this);
+        }
+
+
+        public void InitializeDevices(IReadOnlyList<DeviceModel> devices)
+        {
+            Devices = devices
+                .Where(x => x.Type == DeviceType.GPU && !string.IsNullOrEmpty(x.HardwareVendor) && Vendors.Contains(x.Vendor))
+                .ToList();
+        }
+
+
+        public DeviceModel GetDefaultDevice()
+        {
+            return Devices.FirstOrDefault(x => x.Id == DefaultDeviceId) ?? Devices.FirstOrDefault();
         }
 
 
@@ -155,6 +157,8 @@ namespace Diffuse
                 if (defaultModel is not null)
                     defaultModel.IsDefault = false;
 
+                pipeline.DiffusionModel.UserDataType = pipeline.DataType;
+                pipeline.DiffusionModel.UserMemoryMode = pipeline.MemoryMode;
                 pipeline.DiffusionModel.IsDefault = true;
             }
             if (pipeline.UpscaleModel != null)
@@ -182,8 +186,7 @@ namespace Diffuse
                 pipeline.AudioModel.IsDefault = true;
             }
 
-            DefaultDataType = pipeline.DataType;
-            DefaultMemoryMode = pipeline.MemoryMode;
+            DefaultDeviceId = pipeline.Device.Id;
             await SettingsManager.SaveAsync(this);
         }
 

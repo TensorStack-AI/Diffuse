@@ -40,6 +40,13 @@ namespace Diffuse.Common
         }
 
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public MemoryMode? UserMemoryMode { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DataType? UserDataType { get; set; }
+
+
         public void Initialize(string modelDirectory)
         {
             if (Source == ModelSourceType.Folder)

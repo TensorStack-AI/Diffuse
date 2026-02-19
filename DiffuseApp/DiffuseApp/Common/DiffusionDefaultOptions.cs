@@ -16,6 +16,7 @@ namespace Diffuse.Common
         public int FrameChunk { get; set; }
         public int FrameChunkOverlap { get; set; }
         public int NoiseCondition { get; set; }
+        public float Strength { get; set; } = 1;
 
         public SchedulerType Scheduler { get; set; }
         public SchedulerType[] Schedulers { get; set; }
@@ -35,9 +36,8 @@ namespace Diffuse.Common
         public int MaxImageSeqLen { get; set; } = 4096;
         public bool UseDynamicShifting { get; set; }
         public int SampleRate { get; set; } = 24000;
-        public int FramesMin { get; set; }
-        public int FramesMax { get; set; }
         public bool IsStochasticSampling { get; set; }
+        public int[] FrameOptions { get; set; }
 
         public virtual bool Equals(DiffusionDefaultOptions other) => ReferenceEquals(this, other);
         public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);

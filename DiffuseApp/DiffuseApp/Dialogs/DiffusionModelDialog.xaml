@@ -391,8 +391,27 @@
                         <StackPanel>
                             <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.UseDynamicShifting}" Content="Dynamic Shifting" Margin="4, 20,0,0"/>
                         </StackPanel>
-
+                        <StackPanel>
+                            <TextBlock Text="FrameChunk" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameChunk, UpdateSourceTrigger=PropertyChanged}"  />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="FrameChunkOverlap" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameChunkOverlap, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="NoiseCondition" Style="{StaticResource FieldTextBlockStyle}"/>
+                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.NoiseCondition, UpdateSourceTrigger=PropertyChanged}"  />
+                        </StackPanel>
+                        <StackPanel>
+                            <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.IsStochasticSampling}" Content="Stochastic Sampling" Margin="4, 20,0,0"/>
+                        </StackPanel>
                     </UniformGrid>
+
+                    <StackPanel>
+                        <TextBlock Text="Frame Options" Style="{StaticResource FieldTextBlockStyle}"/>
+                        <TextBox Text="{Binding FrameOptions, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
 
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Right">

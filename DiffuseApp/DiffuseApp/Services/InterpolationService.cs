@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Common;
@@ -80,7 +81,11 @@ namespace Diffuse.Services
                     if (_currentPipeline != null)
                         await _currentPipeline.UnloadAsync(cancellationToken);
 
-                    _currentPipeline = InterpolationPipeline.Create(device.GetProvider());
+                    _currentPipeline = InterpolationPipeline.Create(new ModelConfig
+                    {
+                        ExecutionProvider = device.GetProvider(),
+                        Path = Path.Combine(App.DirectoryBase, "Interpolation.onnx")
+                    });
                     await Task.Run(() => _currentPipeline.LoadAsync(cancellationToken), cancellationToken);
                 }
             }

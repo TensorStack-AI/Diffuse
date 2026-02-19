@@ -1,6 +1,6 @@
 {
-  "DefaultDataType": "float8",
-  "DefaultMemoryMode": "Auto",
+  "Version": 2,
+  "DefaultDeviceId": -1,
   "Vendors": [ "AMD", "Nvidia" ],
   "Environments": [
     {
@@ -9,8 +9,11 @@
       "Type": "Vendor",
       "Vendor": "Nvidia",
       "Environment": "default-cuda",
+      "Version": 0,
+      "Status": "Create",
       "IsDefault": true,
       "Variables": {
+        "CUDA_VISIBLE_DEVICES": "0,1",
         "DIFFUSERS_GGUF_CUDA_KERNELS": "true"
       },
       "Requirements": [
@@ -27,7 +30,7 @@
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
         "scipy==1.16.3",
-        "peft==0.18.0",
+        "peft==0.18.1",
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
         "optimum-quanto==0.2.7",
@@ -41,6 +44,8 @@
       "Type": "Vendor",
       "Vendor": "AMD",
       "Environment": "default-rocm",
+      "Version": 0,
+      "Status": "Create",
       "IsDefault": true,
       "Variables": {
         "MIOPEN_FIND_MODE": "2",
@@ -63,7 +68,7 @@
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
         "scipy==1.16.3",
-        "peft==0.18.0",
+        "peft==0.18.1",
         "hf-xet==1.2.0",
         "torchsde==0.2.6",
         "optimum-quanto==0.2.7",
@@ -1404,11 +1409,8 @@
       "Backend": "PyTorch",
       "Name": "FLUX.2 Klein 4B",
       "Pipeline": "Flux2KleinPipeline",
-      "Path": "black-forest-labs/FLUX.2-klein-base-4B",
-      "Source": "Checkpoint",
-      "Checkpoint": {
-        "ModelCheckpoint": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4B/blob/main/flux-2-klein-4b.safetensors"
-      },
+      "Path": "black-forest-labs/FLUX.2-klein-4B",
+      "Source": "HuggingFace",
       "MemoryProfile": [
         {
           "DataType": "int8",
@@ -1571,11 +1573,8 @@
       "Backend": "PyTorch",
       "Name": "FLUX.2 Klein 9B",
       "Pipeline": "Flux2KleinPipeline",
-      "Path": "black-forest-labs/FLUX.2-klein-base-9B",
-      "Source": "Checkpoint",
-      "Checkpoint": {
-        "ModelCheckpoint": "https://huggingface.co/black-forest-labs/FLUX.2-klein-9B/blob/main/flux-2-klein-9b.safetensors"
-      },
+      "Path": "black-forest-labs/FLUX.2-klein-9B",
+      "Source": "HuggingFace",
       "MemoryProfile": [
         {
           "DataType": "int8",
@@ -1761,12 +1760,12 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToVideo" ],
+      "ProcessTypes": [ "TextToVideo", "VideoToVideo" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Frames": 81,
-        "Width": 832,
+        "Width": 720,
         "Height": 480,
         "GuidanceScale": 5,
         "Scheduler": "UniPC",
@@ -1780,11 +1779,19 @@
         "StepsOffset": 0,
         "Shift": 3,
         "BaseShift": 0.5,
-        "MaxShift": 1.15
+        "MaxShift": 1.15,
+        "Strength": 0.7,
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
-          "Width": 832,
+          "Width": 720,
           "Height": 480,
           "IsDefault": true
         }
@@ -1835,7 +1842,14 @@
         "StepsOffset": 0,
         "Shift": 3,
         "BaseShift": 0.5,
-        "MaxShift": 1.15
+        "MaxShift": 1.15,
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -1891,7 +1905,14 @@
         "StepsOffset": 0,
         "Shift": 3,
         "BaseShift": 0.5,
-        "MaxShift": 1.15
+        "MaxShift": 1.15,
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2076,7 +2097,15 @@
         "GuidanceScale": 5,
         "Scheduler": "FlowMatchEulerDiscrete",
         "Schedulers": [ "FlowMatchEulerDiscrete" ],
-        "Shift": 5
+        "Shift": 5,
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
       },
       "Resolutions": [
         {
@@ -2123,7 +2152,15 @@
         "GuidanceScale": 5,
         "Scheduler": "FlowMatchEulerDiscrete",
         "Schedulers": [ "FlowMatchEulerDiscrete" ],
-        "Shift": 5
+        "Shift": 5,
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
       },
       "Resolutions": [
         {
@@ -2165,13 +2202,20 @@
         "Steps": 30,
         "Width": 720,
         "Height": 480,
-        "Frames": 48,
+        "Frames": 49,
         "FrameRate": 8,
         "GuidanceScale": 6,
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
         "TimestepSpacing": "trailing",
-        "PredictionType": "v_prediction"
+        "PredictionType": "v_prediction",
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2213,13 +2257,20 @@
         "Steps": 30,
         "Width": 720,
         "Height": 480,
-        "Frames": 48,
+        "Frames": 49,
         "FrameRate": 8,
         "GuidanceScale": 6,
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
         "TimestepSpacing": "trailing",
-        "PredictionType": "v_prediction"
+        "PredictionType": "v_prediction",
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2267,7 +2318,14 @@
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
         "TimestepSpacing": "trailing",
-        "PredictionType": "v_prediction"
+        "PredictionType": "v_prediction",
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2315,7 +2373,14 @@
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
         "TimestepSpacing": "trailing",
-        "PredictionType": "v_prediction"
+        "PredictionType": "v_prediction",
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2363,7 +2428,14 @@
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": [ "CogVideoXDDIM", "CogVideoXDPM" ],
         "TimestepSpacing": "trailing",
-        "PredictionType": "v_prediction"
+        "PredictionType": "v_prediction",
+        "FrameOptions": [
+          17,
+          33,
+          49,
+          81,
+          161
+        ]
       },
       "Resolutions": [
         {
@@ -2415,7 +2487,15 @@
         "MaxShift": 2.05,
         "MaxImageSeqLen": 4096,
         "BaseImageSeqLen": 1024,
-        "UseDynamicShifting": true
+        "UseDynamicShifting": true,
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
       },
       "Resolutions": [
         {
@@ -2511,8 +2591,14 @@
         "MaxImageSeqLen": 4096,
         "BaseImageSeqLen": 1024,
         "UseDynamicShifting": true,
-        "FramesMin": 65,
-        "FramesMax": 257
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
       },
       "Resolutions": [
         {
@@ -2632,8 +2718,14 @@
         "MaxImageSeqLen": 4096,
         "BaseImageSeqLen": 1024,
         "UseDynamicShifting": true,
-        "FramesMin": 65,
-        "FramesMax": 257
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
       },
       "Resolutions": [
         {
@@ -2733,7 +2825,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
       "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -2749,11 +2841,21 @@
         "SolverType": "bh2",
         "StepsOffset": 0,
         "Shift": 3,
-        "FramesMin": 97,
-        "FramesMax": 2048,
         "FrameChunk": 97,
         "FrameChunkOverlap": 17,
-        "NoiseCondition": 20
+        "NoiseCondition": 20,
+        "FrameOptions": [
+          65,
+          97,
+          137,
+          257,
+          377,
+          737,
+          1457,
+          2897,
+          7217,
+          14417
+        ]
       },
       "Resolutions": [
         {
@@ -2789,8 +2891,8 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
-      "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-14B-540P-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
         "Width": 960,
@@ -2805,11 +2907,21 @@
         "SolverType": "bh2",
         "StepsOffset": 0,
         "Shift": 3,
-        "FramesMin": 97,
-        "FramesMax": 2048,
         "FrameChunk": 97,
         "FrameChunkOverlap": 17,
-        "NoiseCondition": 20
+        "NoiseCondition": 20,
+        "FrameOptions": [
+          65,
+          97,
+          137,
+          257,
+          377,
+          737,
+          1457,
+          2897,
+          7217,
+          14417
+        ]
       },
       "Resolutions": [
         {
@@ -2855,6 +2967,95 @@
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/renderartist/Coloring-Book-Z-Image-Turbo-LoRA",
       "Triggers": [ "c0l0ringb00k" ]
+    },
+    {
+      "Id": 201,
+      "Backend": "Pytorch",
+      "Name": "Camera Dolly-In",
+      "Key": "cameradollyin201",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In",
+      "Weights": "ltx-2-19b-lora-camera-control-dolly-in.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "IsDefault": true,
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In"
+    },
+    {
+      "Id": 202,
+      "Backend": "Pytorch",
+      "Name": "Camera Dolly-Out",
+      "Key": "cameradollyout202",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out",
+      "Weights": "ltx-2-19b-lora-camera-control-dolly-out.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out"
+    },
+    {
+      "Id": 203,
+      "Backend": "Pytorch",
+      "Name": "Camera Dolly-Left",
+      "Key": "cameradollyleft203",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left",
+      "Weights": "ltx-2-19b-lora-camera-control-dolly-left.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left"
+    },
+    {
+      "Id": 204,
+      "Backend": "Pytorch",
+      "Name": "Camera Dolly-Right",
+      "Key": "cameradollyright204",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right",
+      "Weights": "ltx-2-19b-lora-camera-control-dolly-right.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right"
+    },
+    {
+      "Id": 205,
+      "Backend": "Pytorch",
+      "Name": "Camera Jib-Down",
+      "Key": "camerajibdown205",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down",
+      "Weights": "ltx-2-19b-lora-camera-control-jib-down.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down"
+    },
+    {
+      "Id": 206,
+      "Backend": "Pytorch",
+      "Name": "Camera Jib-Up",
+      "Key": "camerajibup206",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up",
+      "Weights": "ltx-2-19b-lora-camera-control-jib-up.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up"
+    },
+    {
+      "Id": 207,
+      "Backend": "Pytorch",
+      "Name": "Camera Static",
+      "Key": "camerastatic207",
+      "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Static",
+      "Weights": "ltx-2-19b-lora-camera-control-static.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Static"
+    },
+    {
+      "Id": 208,
+      "Backend": "Pytorch",
+      "Name": "Detailer",
+      "Key": "detailer208",
+      "Path": "Lightricks/LTX-2-19b-IC-LoRA-Detailer",
+      "Weights": "ltx-2-19b-ic-lora-detailer.safetensors",
+      "Pipeline": "LTX2Pipeline",
+      "Source": "HuggingFace",
+      "Link": "https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Detailer"
     }
   ],
   "ControlNetModels": [

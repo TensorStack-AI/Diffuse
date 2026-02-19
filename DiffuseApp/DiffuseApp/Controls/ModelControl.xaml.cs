@@ -254,7 +254,7 @@ namespace Diffuse.Controls
                 return false;
             };
 
-            SelectedDevice = Settings.DefaultDevice;
+            SelectedDevice = Settings.GetDefaultDevice();
             return Task.CompletedTask;
         }
 

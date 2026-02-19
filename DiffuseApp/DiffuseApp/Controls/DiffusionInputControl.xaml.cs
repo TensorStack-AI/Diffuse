@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,6 +32,7 @@ namespace Diffuse.Controls
 
         public DiffusionInputControl()
         {
+            FrameRates = [8f, 12f, 16f, 24f, 25f, 30f, 60f];
             SeedCommand = new RelayCommand<bool>(GenerateSeed);
             AddTriggerWordCommand = new AsyncRelayCommand<string>(AddTriggerWordAsync);
             InitializeComponent();
@@ -44,6 +46,7 @@ namespace Diffuse.Controls
         public ProcessType ProcessType { get; set; }
         public RelayCommand<bool> SeedCommand { get; }
         public AsyncRelayCommand<string> AddTriggerWordCommand { get; }
+        public List<float> FrameRates { get; }
 
         public PipelineModel Pipeline
         {
@@ -192,7 +195,7 @@ namespace Diffuse.Controls
                 InputImageCount = ProcessType == ProcessType.ImageEdit ? (previousOptions?.InputImageCount ?? 1) : 0,
 
                 // Update
-                Strength = ProcessType == ProcessType.ImageToImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.Strength ?? 0.7f) : 1f,
+                Strength = ProcessType == ProcessType.ImageToImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.Strength ?? 0.7f) : newOptions.Strength,
                 ControlNetStrength = ProcessType == ProcessType.ControlNetImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.ControlNetStrength ?? 0.7f) : 1f,
 
                 Steps = newOptions.Steps,

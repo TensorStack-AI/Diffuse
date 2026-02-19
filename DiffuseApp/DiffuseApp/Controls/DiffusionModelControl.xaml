@@ -150,11 +150,10 @@
                 </DockPanel>
 
                 <!--MemoryMode-->
-
                 <DockPanel>
                     <TextBox DockPanel.Dock="Left" Text="Memory" IsReadOnly="True" IsHitTestVisible="False" Width="60" FontStyle="Italic" FontSize="11" Opacity="0.7" Padding="4,2,0,0"/>
                     <DockPanel>
-                        <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding SelectedDataType}" ItemsSource="{Binding DataTypes}" Width="100" SelectionChanged="Memory_SelectionChanged"/>
+                        <ComboBox DockPanel.Dock="Right" SelectedItem="{Binding SelectedDataType}" ItemsSource="{Binding SelectedDevice.DataTypes}" Width="100" SelectionChanged="Memory_SelectionChanged"/>
                         <ComboBox 
                             SelectedItem="{Binding SelectedMemoryMode}" 
                             ItemsSource="{Binding MemoryModes}"

@@ -116,6 +116,8 @@ namespace Diffuse.Views
                 }
                 Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded audio model.", View);
             }
+
+            Settings.ScanModels();
             return true;
         }
     }

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Diffuse.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading;
+using TensorStack.Common;
+using TensorStack.Providers;
 
 namespace Diffuse.Services
 {
@@ -22,6 +25,7 @@ namespace Diffuse.Services
         private readonly ManagementObjectSearcher _objectSearcherProcessorPercent;
         private readonly ManualResetEvent _updateThreadResetEvent;
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly Settings _hardwareSettings;
         private Thread _cpuUpdateThread;
         private Thread _gpuUpdateThread;
         private CPUStatus _cpuStatus;
@@ -32,8 +36,10 @@ namespace Diffuse.Services
 
         public HardwareService(Settings hardwareSettings)
         {
+            Provider.Initialize();
+            _hardwareSettings = hardwareSettings;
             _cancellationTokenSource = new CancellationTokenSource();
-            _objectSearcherDriver = new ManagementObjectSearcher("root\\CIMV2", "SELECT DeviceName, DriverVersion FROM Win32_PnPSignedDriver");
+            _objectSearcherDriver = new ManagementObjectSearcher("root\\CIMV2", "SELECT DeviceName, DriverVersion, Location FROM Win32_PnPSignedDriver");
             _objectSearcherProcessor = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name FROM Win32_Processor");
             _objectSearcherGPUEngine = new ManagementObjectSearcher("root\\CIMV2", $"SELECT Name, UtilizationPercentage FROM Win32_PerfFormattedData_GPUPerformanceCounters_GPUEngine");
             _objectSearcherGPUMemory = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name, SharedUsage, DedicatedUsage, TotalCommitted FROM Win32_PerfFormattedData_GPUPerformanceCounters_GPUAdapterMemory");
@@ -62,6 +68,22 @@ namespace Diffuse.Services
         public GPUStatus[] GPUStatus => _gpuStatus ?? [];
 
         public AdapterInfo[] Adapters => _adapters ?? [];
+
+
+        public IReadOnlyList<DeviceModel> GetGPUDevices()
+        {
+            var outputDevices = new List<DeviceModel>();
+            var providerDevices = Provider.GetDevices();
+            foreach (var device in GPUDevices)
+            {
+                var providerDevice = providerDevices.FirstOrDefault(x => x.HardwareID == device.AdapterInfo.DeviceId && x.HardwareVendorId == device.AdapterInfo.VendorId);
+                if (providerDevice == null)
+                    continue;
+
+                outputDevices.Add(new DeviceModel(providerDevice, device));
+            }
+            return outputDevices;
+        }
 
 
         private CPUDevice CreateDeviceCPU()
@@ -176,9 +198,10 @@ namespace Diffuse.Services
                         utilization.TryGetValue("3D", out var engineGraphics);
                         utilization.TryGetValue("Graphics1", out var engineGraphics1);
                         utilization.TryGetValue("Compute", out var engineCompute);
+                        utilization.TryGetValue("Compute0", out var engineCompute0);
                         utilization.TryGetValue("Compute1", out var engineCompute1);
                         result.UsageCuda = engineCuda;
-                        result.UsageCompute = engineCompute;
+                        result.UsageCompute = Math.Max(engineCompute, engineCompute0);
                         result.UsageCompute1 = engineCompute1;
                         result.UsageGraphics = engineGraphics;
                         result.UsageGraphics1 = engineGraphics1;
@@ -296,7 +319,7 @@ namespace Diffuse.Services
                             var sharedUsage = (ulong)result.Properties["SharedUsage"].Value;
                             var dedicatedUsage = (ulong)result.Properties["DedicatedUsage"].Value;
                             var totalCommitted = (ulong)result.Properties["TotalCommitted"].Value;
-                            gpuMemory[adapterId] =  new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, pid);
+                            gpuMemory[adapterId] = new GPUMemory(adapterId, sharedUsage, dedicatedUsage, totalCommitted, pid);
                         }
                     }
                 }
@@ -330,7 +353,7 @@ namespace Diffuse.Services
                             {
                                 var parts = result.Properties["Name"].Value.ToString().Split('_');
                                 int.TryParse(parts[1], out int pid);
-                                var instance = string.Concat(parts.Skip(10).Take(3));
+                                var instance = string.Concat(parts.Skip(10)).Replace(" ", string.Empty);
                                 var adapterId = string.Join('_', parts.Skip(2).Take(5));
                                 gpuUtilization.Add(new GPUUtilization(adapterId, instance, percentage, pid));
                             }
@@ -364,8 +387,9 @@ namespace Diffuse.Services
                         if (!devices.Contains(deviceName))
                             continue;
 
+                        var location = result["Location"]?.ToString() ?? string.Empty;
                         var driverVersion = result["DriverVersion"]?.ToString() ?? string.Empty;
-                        versions.Add(new DeviceInfo(deviceName.Trim(), driverVersion));
+                        versions.Add(new DeviceInfo(deviceName.Trim(), driverVersion, location));
                     }
                 }
 
@@ -483,6 +507,8 @@ namespace Diffuse.Services
 
         void Pause();
         void Resume();
+
+        IReadOnlyList<DeviceModel> GetGPUDevices();
     }
 
 
@@ -516,7 +542,7 @@ namespace Diffuse.Services
         public float MemoryAvailable { get; set; }
     }
 
-    public record struct DeviceInfo(string Name, string DriverVersion);
+    public record struct DeviceInfo(string Name, string DriverVersion, string Location);
 
     public record GPUDevice
     {
@@ -525,6 +551,8 @@ namespace Diffuse.Services
             Id = (int)adapter.Id;
             AdapterInfo = adapter;
             Name = adapter.Description;
+            Location = deviceInfo.Location;
+            PCIBusId = GetBusId(deviceInfo.Location);
             DriverVersion = deviceInfo.DriverVersion;
             MemoryTotal = adapter.DedicatedVideoMemory / 1024f / 1024f;
             SharedMemoryTotal = adapter.SharedSystemMemory / 1024f / 1024f;
@@ -533,11 +561,25 @@ namespace Diffuse.Services
 
         public int Id { get; }
         public string Name { get; }
+        public string Location { get; }
+        public int PCIBusId { get; }
         public string AdapterId { get; }
         public string DriverVersion { get; }
         public float MemoryTotal { get; }
         public float SharedMemoryTotal { get; }
         public AdapterInfo AdapterInfo { get; }
+
+        private static int GetBusId(string location)
+        {
+            var pciBusId = location.Split(',').First();
+            if (string.IsNullOrWhiteSpace(pciBusId))
+                return 0;
+
+            if (!int.TryParse(pciBusId.Replace("pci bus ", "", StringComparison.OrdinalIgnoreCase), out var pciid))
+                return 0;
+
+            return pciid;
+        }
     }
 
 

@@ -26,6 +26,7 @@ namespace Diffuse.Dialogs
         private SchedulerType _selectedScheduler;
         private DiffusionModel _originalDiffusionModel;
         private DiffusionCheckpointModel _checkpointModel;
+        private string _frameOptions;
 
         public DiffusionModelDialog(Settings settings)
         {
@@ -82,6 +83,12 @@ namespace Diffuse.Dialogs
         {
             get { return _selectedScheduler; }
             set { SetProperty(ref _selectedScheduler, value); }
+        }
+
+        public string FrameOptions
+        {
+            get { return _frameOptions; }
+            set { SetProperty(ref _frameOptions, value); }
         }
 
         public bool IsCustomPipeline
@@ -170,8 +177,9 @@ namespace Diffuse.Dialogs
 
             var defaultSize = Sizes.FirstOrDefault(x => x.IsDefault);
             DiffusionModel.DefaultOptions.Width = defaultSize.Width;
-            DiffusionModel.DefaultOptions.Height = defaultSize.Height;
+            DiffusionModel.DefaultOptions.Height = defaultSize.Height; ;
             DiffusionModel.DefaultOptions.Schedulers = Schedulers.ToArray();
+            DiffusionModel.DefaultOptions.FrameOptions = GetFrameOptions(FrameOptions);
 
             if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint || DiffusionModel.Source == ModelSourceType.SingleFile) && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
                 DiffusionModel.Path = huggingfacePath;
@@ -294,6 +302,7 @@ namespace Diffuse.Dialogs
                 Schedulers.Add(scheduler);
 
             SetProcessTypes();
+            FrameOptions = GetFrameOptions(DiffusionModel.DefaultOptions.FrameOptions);
             SelectedScheduler = DiffusionModel.DefaultOptions.Scheduler;
             SelectedSize = Sizes.FirstOrDefault(x => x.IsDefault) ?? Sizes.FirstOrDefault();
             CheckpointModel = DiffusionModel.Checkpoint ?? new DiffusionCheckpointModel();
@@ -304,6 +313,29 @@ namespace Diffuse.Dialogs
         private int GetNextModelId()
         {
             return Math.Max(Utils.FixedIdRange, Settings.DiffusionModels.Max(x => x.Id)) + 1;
+        }
+
+
+        private static string GetFrameOptions(int[] frameOptions)
+        {
+            return frameOptions.IsNullOrEmpty() ? string.Empty : string.Join(",", frameOptions);
+        }
+
+
+        private static int[] GetFrameOptions(string frameOptions)
+        {
+            if (string.IsNullOrEmpty(frameOptions))
+                return null;
+
+            var frameOptionsArray = frameOptions
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(x => int.TryParse(x, out _))
+                .Select(int.Parse)
+                .ToArray();
+
+            if (frameOptionsArray.IsNullOrEmpty())
+                return null;
+            return frameOptionsArray;
         }
 
 
@@ -485,9 +517,12 @@ namespace Diffuse.Dialogs
                     StepsOffset = diffusionModel.DefaultOptions.StepsOffset,
                     TimestepSpacing = diffusionModel.DefaultOptions.TimestepSpacing,
                     UseDynamicShifting = diffusionModel.DefaultOptions.UseDynamicShifting,
-                    FramesMax = diffusionModel.DefaultOptions.FramesMax,
-                    FramesMin = diffusionModel.DefaultOptions.FramesMin,
                     SampleRate = diffusionModel.DefaultOptions.SampleRate,
+                    FrameChunk = diffusionModel.DefaultOptions.FrameChunk,
+                    FrameChunkOverlap = diffusionModel.DefaultOptions.FrameChunkOverlap,
+                    FrameOptions = diffusionModel.DefaultOptions.FrameOptions?.ToArray(),
+                    IsStochasticSampling = diffusionModel.DefaultOptions.IsStochasticSampling,
+                    NoiseCondition = diffusionModel.DefaultOptions.NoiseCondition
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {

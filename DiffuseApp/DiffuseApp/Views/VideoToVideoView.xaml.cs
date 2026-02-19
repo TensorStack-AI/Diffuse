@@ -2,9 +2,11 @@
 using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TensorStack.Common.Tensor;
 using TensorStack.Video;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
@@ -70,8 +72,14 @@ namespace Diffuse.Views
                 CompareVideo = default;
                 Statistics.Start();
 
+                // input frames
+                var frames = await GetInputFrames().ToListAsync();
+
                 // Diffusion
-                var options = Options with { };
+                var options = Options with
+                {
+                    InputImages = frames
+                };
                 var resultTensor = await ExecuteVideoDiffusionAsync(options);
 
                 // Upscale
@@ -125,6 +133,18 @@ namespace Diffuse.Views
             });
             Logger.LogInformation("[VideoToVideo] [SaveHistory] History saved.");
             return result;
+        }
+
+
+        private async IAsyncEnumerable<ImageTensor> GetInputFrames()
+        {
+            Progress.Clear();
+            await foreach (var sourceFrame in _sourceVideo.GetAsync(Options.Width, Options.Height, Options.FrameRate, TensorStack.Common.ResizeMode.Crop).Take(Options.Frames))
+            {
+                Progress.Update(sourceFrame.Index, Options.Frames, $"Processing Input Frame: {sourceFrame.Index}/{sourceFrame.Frame}");
+                yield return sourceFrame.Frame;
+            }
+            Progress.Indeterminate("Encoding Video Frames...");
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Diffuse.Common;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using TensorStack.Python.Common;
 
 namespace Diffuse
 {
@@ -73,7 +75,7 @@ namespace Diffuse
 
         private static Settings MergeSettings(string appSettingsFile, Settings currentSettings, Settings defaultSettings)
         {
-            if (defaultSettings.FileVersion != currentSettings.FileVersion)
+            if (defaultSettings.Version != currentSettings.Version)
             {
                 // No Update Path
                 BackupFile(appSettingsFile);
@@ -90,10 +92,36 @@ namespace Diffuse
                     // Merge Templates
                     if (property.Name == nameof(defaultSettings.Environments))
                     {
-                        foreach (var environment in currentSettings.Environments.Where(x => x.Id > 1000))
+                        foreach (var environment in currentSettings.Environments)
                         {
-                            // Add back any Environments the user has created
-                            defaultSettings.Environments.Add(environment);
+                            if (environment.Id > 1000)
+                            {
+                                // Add back any Environments the user has created
+                                defaultSettings.Environments.Add(environment);
+                            }
+                            else
+                            {
+                                var defaultEnvironment = defaultSettings.Environments.FirstOrDefault(x => x.Id == environment.Id);
+                                if (defaultEnvironment == null)
+                                    continue;
+
+                                if (defaultEnvironment.Version > environment.Version)
+                                {
+                                    defaultEnvironment.Status = int.IsEvenInteger(defaultEnvironment.Version)
+                                        ? EnvironmentMode.Update 
+                                        : EnvironmentMode.Rebuild;
+                                }
+
+                                // Merge any user settings
+                                foreach (var variables in environment.Variables)
+                                {
+                                    if (defaultEnvironment.Variables.ContainsKey(variables.Key))
+                                        continue;
+
+                                    // Add back any user environment variables
+                                    defaultEnvironment.Variables.Add(variables.Key, variables.Value);
+                                }
+                            }
                         }
 
                     }
@@ -107,10 +135,23 @@ namespace Diffuse
                     }
                     if (property.Name == nameof(defaultSettings.DiffusionModels))
                     {
-                        foreach (var diffusionModel in currentSettings.DiffusionModels.Where(x => x.Id > 1000))
+                        foreach (var diffusionModel in currentSettings.DiffusionModels)
                         {
-                            // Add back any diffusion Model the user has created
-                            defaultSettings.DiffusionModels.Add(diffusionModel);
+                            if (diffusionModel.Id > 1000)
+                            {
+                                // Add back any diffusion Model the user has created
+                                defaultSettings.DiffusionModels.Add(diffusionModel);
+                            }
+                            else
+                            {
+                                var defaultDiffusionModel = defaultSettings.DiffusionModels.FirstOrDefault(x => x.Id == diffusionModel.Id);
+                                if (defaultDiffusionModel == null)
+                                    continue;
+
+                                // Merge any user settings
+                                defaultDiffusionModel.UserDataType = diffusionModel.UserDataType;
+                                defaultDiffusionModel.UserMemoryMode = diffusionModel.UserMemoryMode;
+                            }
                         }
                     }
                     if (property.Name == nameof(defaultSettings.LoraAdapterModels))

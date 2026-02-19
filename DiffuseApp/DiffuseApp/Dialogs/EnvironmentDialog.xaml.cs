@@ -17,16 +17,18 @@ namespace Diffuse.Dialogs
     public partial class EnvironmentDialog : DialogControl
     {
         private readonly IEnvironmentService _environmentService;
+        private readonly IDiffusionService _diffusionService;
         private readonly IProgress<PipelineProgress> _progressCallback;
         private bool _isExecuting;
         private PipelineModel _pipeline;
         private EnvironmentModel _environment;
         private readonly CancellationTokenSource _cancellation;
 
-        public EnvironmentDialog(IEnvironmentService environmentService)
+        public EnvironmentDialog(IEnvironmentService environmentService, IDiffusionService diffusionService)
         {
             _cancellation = new CancellationTokenSource();
             _environmentService = environmentService;
+            _diffusionService = diffusionService;
             _progressCallback = new Progress<PipelineProgress>(OnProgressUpdate);
             CancelCommand = new AsyncRelayCommand(CloseAsync);
             CreateCommand = new AsyncRelayCommand(CreateEnvironment);
@@ -96,6 +98,9 @@ namespace Diffuse.Dialogs
             IsExecuting = true;
             try
             {
+                if (_diffusionService.IsLoaded)
+                    await _diffusionService.UnloadAsync();
+
                 if (_pipeline != null)
                     await _environmentService.CreateAsync(_pipeline, _progressCallback, _cancellation.Token);
                 if (_environment != null)
@@ -114,6 +119,9 @@ namespace Diffuse.Dialogs
             IsExecuting = true;
             try
             {
+                if (_diffusionService.IsLoaded)
+                    await _diffusionService.UnloadAsync();
+
                 await _environmentService.UpdateAsync(_environment, _progressCallback, _cancellation.Token);
                 await base.SaveAsync();
             }
@@ -130,6 +138,9 @@ namespace Diffuse.Dialogs
             IsExecuting = true;
             try
             {
+                if (_diffusionService.IsLoaded)
+                    await _diffusionService.UnloadAsync();
+
                 await _environmentService.RebuildAsync(_environment, _progressCallback, _cancellation.Token);
                 await base.SaveAsync();
             }

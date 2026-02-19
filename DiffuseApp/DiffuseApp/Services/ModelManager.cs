@@ -77,12 +77,13 @@ namespace Diffuse.Services
                         Width = 720,
                         Height = 480,
                         GuidanceScale = 6f,
-                        Frames = 48,
+                        Frames = 49,
                         FrameRate = 8,
                         Scheduler = SchedulerType.CogVideoXDDIM,
                         Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
                         TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable
+                        PredictionType = PredictionType.Variable,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -111,12 +112,13 @@ namespace Diffuse.Services
                         Width = 720,
                         Height = 480,
                         GuidanceScale = 6f,
-                        Frames = 48,
+                        Frames = 49,
                         FrameRate = 8,
                         Scheduler = SchedulerType.CogVideoXDDIM,
                         Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
                         TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable
+                        PredictionType = PredictionType.Variable,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -150,7 +152,8 @@ namespace Diffuse.Services
                         Scheduler = SchedulerType.CogVideoXDDIM,
                         Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
                         TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable
+                        PredictionType = PredictionType.Variable,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -184,7 +187,8 @@ namespace Diffuse.Services
                         Scheduler = SchedulerType.CogVideoXDDIM,
                         Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
                         TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable
+                        PredictionType = PredictionType.Variable,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -218,7 +222,8 @@ namespace Diffuse.Services
                         Scheduler = SchedulerType.CogVideoXDDIM,
                         Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
                         TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable
+                        PredictionType = PredictionType.Variable,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -640,7 +645,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -673,7 +679,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -706,7 +713,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 241],
                     },
                     Resolutions =
                     [
@@ -739,7 +747,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 241],
                     },
                     Resolutions =
                     [
@@ -772,7 +781,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -805,7 +815,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -838,7 +849,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -871,7 +883,8 @@ namespace Diffuse.Services
                         FrameRate = 24,
                         Scheduler = SchedulerType.FlowMatchEulerDiscrete,
                         Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Shift = 5,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -912,6 +925,7 @@ namespace Diffuse.Services
                         MaxShift= 2.05f,
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -959,6 +973,7 @@ namespace Diffuse.Services
                         MaxShift= 2.05f,
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -1006,6 +1021,7 @@ namespace Diffuse.Services
                         MaxShift= 2.05f,
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257]
                     },
                     Resolutions =
                     [
@@ -1053,6 +1069,7 @@ namespace Diffuse.Services
                         MaxShift= 2.05f,
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -1101,8 +1118,7 @@ namespace Diffuse.Services
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
                         UseDynamicShifting=true,
-                        FramesMin= 65,
-                        FramesMax=257
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -1157,8 +1173,7 @@ namespace Diffuse.Services
                         MaxImageSeqLen= 4096,
                         BaseImageSeqLen= 1024,
                         UseDynamicShifting=true,
-                        FramesMin= 65,
-                        FramesMax=257
+                        FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
                     [
@@ -1422,7 +1437,8 @@ namespace Diffuse.Services
                         StepsOffset= 0,
                         Shift= 3,
                         BaseShift= 0.5f,
-                        MaxShift= 1.15f
+                        MaxShift= 1.15f,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -1464,7 +1480,8 @@ namespace Diffuse.Services
                         StepsOffset= 0,
                         Shift= 3,
                         BaseShift= 0.5f,
-                        MaxShift= 1.15f
+                        MaxShift= 1.15f,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -1507,7 +1524,8 @@ namespace Diffuse.Services
                         StepsOffset= 0,
                         Shift= 3,
                         BaseShift= 0.5f,
-                        MaxShift= 1.15f
+                        MaxShift= 1.15f,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [
@@ -1549,7 +1567,8 @@ namespace Diffuse.Services
                         StepsOffset= 0,
                         Shift= 3,
                         BaseShift= 0.5f,
-                        MaxShift= 1.15f
+                        MaxShift= 1.15f,
+                        FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
                     [

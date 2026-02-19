@@ -72,7 +72,6 @@ namespace Diffuse.Controls
                 new MemoryProfileModel{ MemoryMode = MemoryMode.High },
                 new MemoryProfileModel{ MemoryMode = MemoryMode.Highest }
             ];
-            DataTypes = new ObservableCollection<DataType>();
             LoadCommand = new AsyncRelayCommand(LoadAsync, CanLoad);
             UnloadCommand = new AsyncRelayCommand(UnloadAsync, CanUnload);
             LoraAdapters = new ObservableCollection<LoraAdapterModel>();
@@ -88,7 +87,6 @@ namespace Diffuse.Controls
         public AsyncRelayCommand LoadCommand { get; }
         public AsyncRelayCommand UnloadCommand { get; }
         public MemoryProfileModel[] MemoryModes { get; }
-        public ObservableCollection<DataType> DataTypes { get; }
         public ObservableCollection<LoraAdapterModel> LoraAdapters { get; set; }
 
         public Settings Settings
@@ -448,14 +446,14 @@ namespace Diffuse.Controls
                 return true;
             };
 
-            SelectedDevice = Settings.DefaultDevice;
-            SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == Settings.DefaultMemoryMode);
+            SelectedDevice = Settings.GetDefaultDevice();
             return Task.CompletedTask;
         }
 
 
         private void Device_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            SetDeviceDataTypes();
             IsLoraSupported = _selectedDevice.IsLoraSupported;
             if (IsLoraEnabled && !IsLoraSupported)
                 IsLoraEnabled = false;
@@ -481,7 +479,6 @@ namespace Diffuse.Controls
                                 ?? UpscaleCollectionView.Cast<UpscaleModel>().OrderByDescending(x => x.IsDefault).FirstOrDefault();
             }
 
-            SetDeviceDataTypes();
             RefreshMemoryProfile();
         }
 
@@ -501,6 +498,14 @@ namespace Diffuse.Controls
             }
 
             RefreshMemoryProfile();
+
+            SelectedDataType = _selectedModel.UserDataType is null
+                ? _selectedDevice.DefaultDataType
+                : _selectedModel.UserDataType.Value;
+
+            SelectedMemoryMode = _selectedModel.UserMemoryMode is null
+                ? MemoryModes.FirstOrDefault(x => x.MemoryMode == MemoryMode.Auto)
+                : MemoryModes.FirstOrDefault(x => x.MemoryMode == _selectedModel.UserMemoryMode.Value);
         }
 
 
@@ -538,13 +543,9 @@ namespace Diffuse.Controls
             if (_selectedDevice is null)
                 return;
 
-            DataTypes.Clear();
-            foreach (var type in _selectedDevice.DataTypes)
-            {
-                DataTypes.Add(type);
-            }
-
-            SelectedDataType = DataTypes.Contains(Settings.DefaultDataType) ? Settings.DefaultDataType : DataTypes.Last();
+            SelectedDataType = _selectedDevice.DataTypes.Contains(_selectedDataType)
+                ? _selectedDataType
+                : _selectedDevice.DefaultDataType;
         }
 
 
@@ -589,7 +590,7 @@ namespace Diffuse.Controls
             SelectedModel = pipeline.DiffusionModel;
 
             SelectedDataType = pipeline.DataType;
-            SelectedMemoryMode = SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == pipeline.MemoryMode);
+            SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == pipeline.MemoryMode);
 
             if (IsUpscalerSupported)
             {

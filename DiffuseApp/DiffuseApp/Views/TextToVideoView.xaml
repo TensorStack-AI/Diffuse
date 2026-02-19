@@ -46,7 +46,7 @@
                             <!--Execute/Cancel-->
                             <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="30" >
                                 <DockPanel>
-                                    <Button DockPanel.Dock="Left" Width="30" Command="{Binding CancelCommand}" Visibility="{Binding DiffusionService.IsCanceling, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Immediately stops generation by closing the backend process." ToolTipService.InitialShowDelay="200">
+                                    <Button DockPanel.Dock="Left" Width="30" Command="{Binding StopCommand}" Visibility="{Binding DiffusionService.IsCanceling, Converter={StaticResource BooleanToVisibilityConverter}}" ToolTip="Immediately stops generation by closing the backend process." ToolTipService.InitialShowDelay="200">
                                         <CommonControls:FontAwesome Icon="f00d" Color="{StaticResource DangerColour}" />
                                     </Button>
                                     <Grid IsEnabled="{Binding DiffusionService.IsCanceling, Converter={StaticResource InverseBoolConverter}}">
