@@ -32,31 +32,48 @@ Diffuse is a Windows desktop UI for Huggingface [Diffusers](https://github.com/h
 - **CogVideoX:** CogVideoXPipeline, CogVideoXImageToVideoPipeline, CogVideoXVideoToVideoPipeline
 - **Kandinsky5:** Kandinsky5T2IPipeline, Kandinsky5I2IPipeline, Kandinsky5T2VPipeline, Kandinsky5I2VPipeline
 - **StableDiffusionXL:** StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline, StableDiffusionXLControlNetPipeline, StableDiffusionXLControlNetImg2ImgPipeline
+- **SkyReelsV2Pipeline:** SkyReelsV2DiffusionForcingPipeline, SkyReelsV2DiffusionForcingImageToVideoPipeline, SkyReelsV2DiffusionForcingVideoToVideoPipeline
 
 ---
 
-## Installation
+## Installation & Upgrading
 
 ### 1. Installer Version
-1. Download and run **Diffuse_vX.X.X.exe**  
-2. Follow the on-screen instructions
+*Best for a standard Windows setup with automatic shortcuts.*
+
+* **New Install & Upgrade:** 
+    1. Download and run `Diffuse_vX.X.X.exe`.
+    2. Follow the on-screen instructions.
+
+---
 
 ### 2. Standalone Version
-1. Download and extract **Diffuse_vX.X.X.zip**  
-   *A fast SSD with plenty of free space is recommended, as model downloads can be large.*
+*Best for custom drive locations.*
 
-2. Run **Diffuse.exe**
+**New Install:** 
+1. Download and extract `Diffuse_vX.X.X.zip` to your preferred folder.
+2. Run `Diffuse.exe`.
 
-Diffuse will automatically:
-   - Install an isolated portable Python runtime  
-   - Create the required virtual environment  
-   - Download the selected model from Hugging Face  
+**Note:** A fast SSD with plenty of free space is highly recommended, as model downloads can be large.
 
-### First-run notice
-On first launch or when loading a model for the first time, setup may take several minutes while Python, dependencies, and model files are downloaded and initialized. This is expected behavior.
+**To Upgrade:** 
+1. Download the new version.
+2. Extract the contents.
+3. Copy and overwrite all files into your existing Diffuse folder.
 
+**Note:** Overwriting ensures your existing configurations and downloaded models remain intact while updating the core app.
 
-No manual Python setup is required.
+---
+
+### First-run Notice
+On the first launch or when loading a model for the first time, setup may take several minutes while components are initialized. **This is expected behavior.**
+
+Diffuse will automatically handle the following:
+* **Portable Python:** Installs an isolated, portable Python runtime.
+* **Environment:** Creates the required virtual environment.
+* **Models:** Downloads the selected model files from Hugging Face.
+
+No manual Python setup or coding knowledge is required.
 
 ### Device Support
 Supports CUDA based devices
