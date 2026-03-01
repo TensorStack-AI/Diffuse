@@ -75,6 +75,8 @@ Diffuse will automatically handle the following:
 
 No manual Python setup or coding knowledge is required.
 
+---
+
 ### Device Support
 Supports CUDA based devices
 

@@ -24,8 +24,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoInterpolateView"/> class.
         /// </summary>
-        public VideoInterpolateView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IInterpolationService interpolationService, ILogger<VideoInterpolateView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public VideoInterpolateView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, IInterpolationService interpolationService, ILogger<VideoInterpolateView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             InterpolationService = interpolationService;
             InitializeComponent();

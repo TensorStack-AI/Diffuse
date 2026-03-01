@@ -17,8 +17,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewBaseModel"/> class.
         /// </summary>
-        public ViewBaseModel(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public ViewBaseModel(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             Statistics = new StatisticsModel(Dispatcher);
             ProgressCallback = new Progress<RunProgress>(OnProgress);

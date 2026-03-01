@@ -23,8 +23,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageExtractView"/> class.
         /// </summary>
-        public ImageExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IExtractService extractService, ILogger<ImageExtractView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public ImageExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, IExtractService extractService, ILogger<ImageExtractView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             ExtractService = extractService;
             InitializeComponent();

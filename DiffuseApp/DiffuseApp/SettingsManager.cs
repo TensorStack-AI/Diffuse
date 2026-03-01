@@ -1,8 +1,8 @@
-﻿using Diffuse.Common;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Python.Common;
 
@@ -10,6 +10,8 @@ namespace Diffuse
 {
     public class SettingsManager
     {
+        private readonly static SemaphoreSlim FileLock = new SemaphoreSlim(1, 1);
+
         public static Settings Load()
         {
             var appDefaultsFile = Path.Combine(App.DirectoryData, "Settings.default.json");
@@ -54,22 +56,37 @@ namespace Diffuse
         }
 
 
-
         public static void Save(Settings settings)
         {
-            var tempJson = Path.Combine(App.DirectoryData, "Settings.temp");
-            var settingsJson = Path.Combine(App.DirectoryData, "Settings.json");
-            Json.Save(tempJson, settings);
-            File.Move(tempJson, settingsJson, true);
+            FileLock.Wait();
+            try
+            {
+                var tempJson = Path.Combine(App.DirectoryData, "Settings.temp");
+                var settingsJson = Path.Combine(App.DirectoryData, "Settings.json");
+                Json.Save(tempJson, settings);
+                File.Move(tempJson, settingsJson, true);
+            }
+            finally
+            {
+                FileLock.Release();
+            }
         }
 
 
         public static async Task SaveAsync(Settings settings)
         {
-            var tempJson = Path.Combine(App.DirectoryData, "Settings.temp");
-            var settingsJson = Path.Combine(App.DirectoryData, "Settings.json");
-            await Json.SaveAsync(tempJson, settings);
-            File.Move(tempJson, settingsJson, true);
+            await FileLock.WaitAsync();
+            try
+            {
+                var tempJson = Path.Combine(App.DirectoryData, "Settings.temp");
+                var settingsJson = Path.Combine(App.DirectoryData, "Settings.json");
+                await Json.SaveAsync(tempJson, settings);
+                File.Move(tempJson, settingsJson, true);
+            }
+            finally
+            {
+                FileLock.Release();
+            }
         }
 
 
@@ -108,7 +125,7 @@ namespace Diffuse
                                 if (defaultEnvironment.Version > environment.Version)
                                 {
                                     defaultEnvironment.Status = int.IsEvenInteger(defaultEnvironment.Version)
-                                        ? EnvironmentMode.Update 
+                                        ? EnvironmentMode.Update
                                         : EnvironmentMode.Rebuild;
                                 }
 
@@ -149,6 +166,7 @@ namespace Diffuse
                                     continue;
 
                                 // Merge any user settings
+                                defaultDiffusionModel.Status = diffusionModel.Status;
                                 defaultDiffusionModel.UserDataType = diffusionModel.UserDataType;
                                 defaultDiffusionModel.UserMemoryMode = diffusionModel.UserMemoryMode;
                             }
@@ -194,17 +212,30 @@ namespace Diffuse
 
         private static Settings LoadSettingsFile(string filePath)
         {
-            return Json.Load<Settings>(filePath);
+            FileLock.Wait();
+            try
+            {
+                return Json.Load<Settings>(filePath);
+            }
+            finally
+            {
+                FileLock.Release();
+            }
         }
 
 
         private static void BackupFile(string filePath)
         {
+            FileLock.Wait();
             try
             {
                 File.Copy(filePath, filePath.Replace(".json", ".backup"), true);
             }
             catch { }
+            finally
+            {
+                FileLock.Release();
+            }
         }
 
     }

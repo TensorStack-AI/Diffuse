@@ -10,15 +10,20 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
+  <!--Debug-->
+  <ItemGroup>
+    <ProjectReference Include="..\..\TensorStack.Python\TensorStack.Python.csproj" />
+  </ItemGroup>
+
   <!--Projects-->
   <ItemGroup>
     <ProjectReference Include="..\DiffuseApp.Common\DiffuseApp.Common.csproj" />
   </ItemGroup>
 
   <!--TensorStack-->
-  <ItemGroup>
+  <!--<ItemGroup>
     <PackageReference Include="TensorStack.Python" Version="$(Version)" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <!--Common-->
   <ItemGroup>

@@ -6,6 +6,8 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -25,8 +27,11 @@ namespace Diffuse
     {
         public static readonly string AppName = "Diffuse";                          // Diffuse
         public static readonly string AppVersion = GetAppVersion();                 // 0.3.0
-        public static readonly string AppVersionDisplay = GetAppVersionDisplay();   // v0.3.0
-        public static readonly string AppDisplayName = GetAppDisplayName();         // Diffuse v0.3.0
+        public static readonly string AppVersionTag = GetAppVersionTag();           // v0.3.0
+        public static readonly string AppVersionDisplay = GetAppVersionDisplay();   // v0.3.0-beta
+        public static readonly string AppDisplayName = GetAppDisplayName();         // Diffuse v0.3.0-beta
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Splashscreen _splashscreen = new();
         private static IHost _appHost;
         private static Mutex _appMutex;
@@ -37,6 +42,8 @@ namespace Diffuse
 
         public App()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "DiffuseApp");
             _appMutex = new Mutex(false, "Global\\TensorStack_Diffuse", out bool isNewInstance);
             if (!isNewInstance)
             {
@@ -73,19 +80,23 @@ namespace Diffuse
             builder.Services.AddSingleton<IEnvironmentService, EnvironmentService>();
             builder.Services.AddSingleton<IInterpolationService, InterpolationService>();
             builder.Services.AddSingleton<IAudioService, AudioService>();
+            builder.Services.AddSingleton<IDownloadService, Services.DownloadService>();
 
             // Build
             _appHost = builder.Build();
 
             // TensorStack.WPF
             _appHost.Services.UseWPFCommon();
+
+            UpdateCommand = new AsyncRelayCommand(UpdateApplicationAsync);
+            _ = AutoCheckForUpdates(_cancellationTokenSource.Token);
         }
 
         public static string DirectoryBase => _directoryBase;
         public static string DirectoryData => _directoryData;
         public static string DirectoryPython => _directoryPython;
         public static string DirectoryServer => _directoryBase;
-
+        public AsyncRelayCommand UpdateCommand { get; set; }
 
         /// <summary>
         /// Gets the service.
@@ -96,15 +107,27 @@ namespace Diffuse
 
 
         /// <summary>
+        /// Determines whether the application is installed.
+        /// </summary>
+        private static bool IsApplicationInstalled()
+        {
+#if RELEASE_INSTALLER
+            return true;
+#else
+            return false;
+#endif
+        }
+
+
+        /// <summary>
         /// Gets the application data directory.
         /// </summary>
         private static string GetApplicationDataDirectory()
         {
-#if RELEASE_INSTALLER
-             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Diffuse");
-#else
+            if (IsApplicationInstalled())
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Diffuse");
+
             return _directoryBase;
-#endif
         }
 
 
@@ -134,6 +157,7 @@ namespace Diffuse
             // Load Devices
             var devices = hardwareService.GetGPUDevices();
             _settings.InitializeDevices(devices);
+            _settings.PropertyChanged += async (s, e) => await OnSettingsChanged(e.PropertyName);
 
             // Open Main Window
             MainWindow = _appHost.Services.GetMainWindow();
@@ -149,6 +173,7 @@ namespace Diffuse
         {
             using (_appHost)
             {
+                await _cancellationTokenSource.CancelAsync();
                 await SettingsManager.SaveAsync(_settings);
                 await _appHost.StopAsync();
                 DeregisterExceptionHandlers();
@@ -271,7 +296,6 @@ namespace Diffuse
         /// <summary>
         /// Gets the application version.
         /// </summary>
-        /// <returns>System.String.</returns>
         private static string GetAppVersion()
         {
             var version = Assembly.GetEntryAssembly().GetName().Version;
@@ -280,12 +304,20 @@ namespace Diffuse
 
 
         /// <summary>
+        /// Gets the application version tag.
+        /// </summary>
+        private static string GetAppVersionTag()
+        {
+            return $"v{AppVersion}";
+        }
+
+
+        /// <summary>
         /// Gets the application version display name.
         /// </summary>
-        /// <returns>System.String.</returns>
         private static string GetAppVersionDisplay()
         {
-            return $"v{AppVersion}-beta";
+            return $"{AppVersionTag}-beta";
         }
 
 
@@ -321,6 +353,157 @@ namespace Diffuse
         }
 
 
+        /// <summary>
+        /// Called when Settings property changed
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        private async Task OnSettingsChanged(string propertyName)
+        {
+            if (propertyName.Equals(nameof(Settings.IsUpdateEnabled)))
+            {
+                await CheckForUpdates();
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the update information from Github.
+        /// </summary>
+        /// <returns>AppUpdate.</returns>
+        private async Task<AppUpdate> GetUpdateInfo()
+        {
+            try
+            {
+                Log.Logger.Information("[GetUpdateInfo] - Check for update...");
+                using (var response = await _httpClient.GetAsync("https://api.github.com/repos/TensorStack-AI/Diffuse/releases/latest"))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var versionResponse = await response.Content.ReadFromJsonAsync<AppVersion>();
+                    if (versionResponse == null)
+                    {
+                        Log.Logger.Error("[GetUpdateInfo] - Null response from update check.");
+                        return default;
+                    }
+
+                    Log.Logger.Information("[GetUpdateInfo] - Check for update success.");
+                    return new AppUpdate(versionResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error("[GetUpdateInfo] - An exception occured during update check, Error: {Message}", ex.Message);
+                return default;
+            }
+        }
+
+
+        /// <summary>
+        /// Checks for updates.
+        /// </summary>
+        private async Task CheckForUpdates()
+        {
+            try
+            {
+                if (_settings.IsUpdateEnabled)
+                {
+                    Log.Logger.Information("[CheckForUpdates] - Check for updates...");
+                    var updateResponse = await GetUpdateInfo();
+                    if (updateResponse is not null)
+                    {
+                        _settings.IsUpdateAvailable = updateResponse.Version != AppVersionTag;
+                        Log.Logger.Information($"[CheckForUpdates] - Check for updates complete, IsUpdateAvailable: {_settings.IsUpdateAvailable}");
+                    }
+                    else
+                    {
+                        Log.Logger.Error("[CheckForUpdates] - Null response from update check.");
+                    }
+                }
+                else
+                {
+                    _settings.IsUpdateAvailable = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"[CheckForUpdates] - An exception occured during update check, Error: {ex.Message}");
+            }
+        }
+
+
+        /// <summary>
+        /// Automaticly the check for updates.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private async Task AutoCheckForUpdates(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+                while (true)
+                {
+                    await CheckForUpdates();
+                    await Task.Delay(TimeSpan.FromMinutes(60), cancellationToken);
+                }
+            }
+            catch (OperationCanceledException) { }
+        }
+
+
+        /// <summary>
+        /// Update the application
+        /// </summary>
+        /// <exception cref="FileNotFoundException">Update File Not Found</exception>
+        private async Task UpdateApplicationAsync()
+        {
+            try
+            {
+                var updateInfo = await GetUpdateInfo();
+                if (updateInfo is null)
+                    return;
+
+                Log.Logger.Information($"[UpdateAsync] - Show UpdateDialog dialog");
+
+                var isInstalled = IsApplicationInstalled();
+                var downloadLink = isInstalled ? updateInfo.LinkInstaller : updateInfo.LinkStandalone;
+                var updateFileName = Path.Combine(_settings.DirectoryTemp, Path.GetFileName(downloadLink));
+                if (await DialogService.DownloadAsync($"Download Diffuse {updateInfo.Version}?", downloadLink, updateFileName))
+                {
+                    if (!File.Exists(updateFileName))
+                        throw new FileNotFoundException("Update File Not Found", updateFileName);
+
+                    Log.Logger.Information("[UpdateAsync] - Update downloaded successfully, Launching: {FileName}", updateFileName);
+                    if (isInstalled)
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            Verb = "runas",
+                            UseShellExecute = true,
+                            FileName = updateFileName,
+                        });
+                    }
+                    else
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            UseShellExecute = true,
+                            FileName = _settings.DirectoryTemp,
+                        });
+                    }
+
+                    Log.Logger.Information($"[UpdateAsync] - Launched Amuse installer, closing application...");
+                    Current.Shutdown();
+                    return;
+                }
+
+                Log.Logger.Information($"[UpdateAsync] - User canceled update.");
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "[UpdateAsync] - An exception occured during update navigate");
+            }
+        }
+
+
         [DllImport("USER32.DLL")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -340,5 +523,3 @@ namespace Diffuse
         }
     }
 }
-
-

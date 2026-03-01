@@ -4,6 +4,7 @@ using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -21,8 +22,10 @@ namespace Diffuse.Views
         private DiffusionModel _selectedDiffusionModel;
         private string _filterText;
 
-        public SettingsDiffusionView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsDiffusionView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+
+
+        public SettingsDiffusionView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsDiffusionView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddDiffusionModelCommand = new AsyncRelayCommand(AddDiffusionModelAsync);
@@ -32,6 +35,8 @@ namespace Diffuse.Views
             RemoveDiffusionModelCommand = new AsyncRelayCommand(RemoveDiffusionModelAsync, () => SelectedDiffusionModel?.Id > Utils.FixedIdRange);
             ImportDiffusionModelCommand = new AsyncRelayCommand(ImportDiffusionModelAsync);
             ExportDiffusionModelCommand = new AsyncRelayCommand(ExportDiffusionModelAsync, () => SelectedDiffusionModel is not null);
+            DownloadDiffusionModelCommand = new AsyncRelayCommand(DownloadDiffusionModelAsync);
+            DownloadDiffusionModelCancelCommand = new AsyncRelayCommand(DownloadDiffusionModelCancelAsync);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
             ModelCollection = new ListCollectionView(settings.DiffusionModels) { Filter = CollectionFilter(), IsLiveSorting = true };
             ModelCollection.SortDescriptions.Add(new SortDescription(nameof(DiffusionModel.Name), ListSortDirection.Ascending));
@@ -48,6 +53,8 @@ namespace Diffuse.Views
         public AsyncRelayCommand RemoveDiffusionModelCommand { get; }
         public AsyncRelayCommand ImportDiffusionModelCommand { get; }
         public AsyncRelayCommand ExportDiffusionModelCommand { get; }
+        public AsyncRelayCommand DownloadDiffusionModelCommand { get; }
+        public AsyncRelayCommand DownloadDiffusionModelCancelCommand { get; }
         public AsyncRelayCommand FilterClearCommand { get; }
         public ListCollectionView ModelCollection { get; }
 
@@ -192,6 +199,24 @@ namespace Diffuse.Views
             {
                 _selectedDiffusionModel.Id = existingId;
             }
+        }
+
+
+        private async Task DownloadDiffusionModelAsync()
+        {
+            var isEnvironmentInstalled = EnvironmentService.IsInstalled();
+            if (!isEnvironmentInstalled)
+            {
+                await DialogService.ShowErrorAsync("Environment Error", "No Environment Found, Please setup an environment and try again.");
+                return;
+            }
+            await DownloadService.QueueAsync(_selectedDiffusionModel);
+        }
+
+
+        private async Task DownloadDiffusionModelCancelAsync()
+        {
+            await DownloadService.CancelAsync(_selectedDiffusionModel);
         }
 
 

@@ -7,7 +7,7 @@ namespace Diffuse.Common
 {
     public class ControlNetModel : BaseModel
     {
-        private bool _isValid;
+        private ModelStatusType _status;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
@@ -18,28 +18,34 @@ namespace Diffuse.Common
         public string Pipeline { get; set; }
         public bool IsDefault { get; set; }
         public bool IsGated { get; set; }
-        public string Link { get; set; }
-
-        [JsonIgnore]
-        public bool IsValid
+        public ModelStatusType Status
         {
-            get { return _isValid; }
-            private set { SetProperty(ref _isValid, value); }
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
         }
+        public string Link { get; set; }
 
 
         public void Initialize(string modelDirectory)
         {
+            var isValid = false;
             if (Source == ModelSourceType.Folder)
-                IsValid = Directory.Exists(Path);
+                isValid = Directory.Exists(Path);
             else if (Source == ModelSourceType.SingleFile)
             {
-                IsValid = Utils.IsControlNetInstalled(modelDirectory, Path);
+                isValid = Utils.IsControlNetInstalled(modelDirectory, Path);
             }
             else if (Source == ModelSourceType.HuggingFace)
             {
-                IsValid = Utils.IsControlNetInstalled(modelDirectory, Path);
+                isValid = Utils.IsControlNetInstalled(modelDirectory, Path);
             }
+
+            if (Status == ModelStatusType.Pending && isValid)
+                Status = ModelStatusType.Installed;
+            else if (Status == ModelStatusType.Installed && !isValid)
+                Status = ModelStatusType.Pending;
+            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+                Status = ModelStatusType.Pending;
         }
     }
 }

@@ -15,13 +15,14 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewBase"/> class.
         /// </summary>
-        public ViewBase(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger logger)
+        public ViewBase(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger logger)
             : base(navigationService)
         {
             Logger = logger;
             Settings = settings;
             EnvironmentService = environmentService;
             HistoryService = historyService;
+            DownloadService = downloadService;
             Progress = new ProgressInfo();
             ViewName = View.ToString();
         }
@@ -67,6 +68,11 @@ namespace Diffuse.Views
         public IEnvironmentService EnvironmentService { get; }
 
         /// <summary>
+        /// Gets the download service.
+        /// </summary>
+        public IDownloadService DownloadService { get; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this view busy.
         /// </summary>
         /// <value><c>true</c> if this i view busy; otherwise, <c>false</c>.</value>
@@ -84,7 +90,7 @@ namespace Diffuse.Views
         /// <returns><c>true</c> if download succeeded, <c>false</c> otherwise.</returns>
         protected async Task<bool> DownloadModels(PipelineModel pipeline)
         {
-            if (pipeline.UpscaleModel is not null && !pipeline.UpscaleModel.IsValid)
+            if (pipeline.UpscaleModel is not null && pipeline.UpscaleModel.Status != ModelStatusType.Installed)
             {
                 Logger.LogInformation("[{View}] [DownloadModels] Download upscale model '{Name}'...", View, pipeline.UpscaleModel.Name);
                 if (!await pipeline.UpscaleModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Upscale")))
@@ -95,7 +101,7 @@ namespace Diffuse.Views
                 Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded upscale model.", View);
             }
 
-            if (pipeline.ExtractModel is not null && !pipeline.ExtractModel.IsValid)
+            if (pipeline.ExtractModel is not null && pipeline.ExtractModel.Status != ModelStatusType.Installed)
             {
                 Logger.LogInformation("[{View}] [DownloadModels] Download extract model '{Name}'...", View, pipeline.ExtractModel.Name);
                 if (!await pipeline.ExtractModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Extract")))
@@ -106,7 +112,7 @@ namespace Diffuse.Views
                 Logger.LogInformation("[{View}] [DownloadModels] Successfully downloaded extract model.", View);
             }
 
-            if (pipeline.AudioModel is not null && !pipeline.AudioModel.IsValid)
+            if (pipeline.AudioModel is not null && pipeline.AudioModel.Status != ModelStatusType.Installed)
             {
                 Logger.LogInformation("[{View}] [DownloadModels] Download audio model '{Name}'...", View, pipeline.AudioModel.Name);
                 if (!await pipeline.AudioModel.DownloadAsync(Path.Combine(Settings.DirectoryModel, "Audio")))

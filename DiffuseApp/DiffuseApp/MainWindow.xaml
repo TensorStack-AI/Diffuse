@@ -38,6 +38,14 @@
                 <!--Window Options-->
                 <Grid DockPanel.Dock="Right">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+
+                        <Button Margin="0,0,5,0" ToolTip="Update Available" Command="{Binding UpdateCommand, Source={x:Static Application.Current}}" Style="{StaticResource TransparentButton}" Visibility="{Binding Settings.IsUpdateAvailable, Converter={StaticResource BooleanToHiddenConverter}}">
+                            <StackPanel Orientation="Horizontal" Opacity=".8">
+                                <CommonControls:FontAwesome Icon="&#xf30f;" IconStyle="Light" Color="{StaticResource SuccessColour}" Margin="3,0" Size="14" />
+                                <TextBlock Text="Update" Foreground="{StaticResource SuccessColour}" Margin="1,0,0,0" FontSize="11"/>
+                            </StackPanel>
+                        </Button>
+
                         <CommonControls:IconButton 
                             Width="100"
                             Text="Settings"
@@ -253,7 +261,22 @@
                                 CommandParameter="{x:Static Views:View.Upscale}" 
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Upscale}">
                             </CommonControls:IconButton>
-
+                            <CommonControls:IconButton 
+                                Text="Downloads" 
+                                Icon="f57d"
+                                IconSize="18"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Orientation="Horizontal"
+                                Alignment="Left"
+                                Placement="Right"
+                                TextOpacity=".8"
+                                IconMargin="20,0,6,0"
+                                IconColor="{StaticResource AccentColour2}"
+                                Command="{Binding NavigateCommand}" 
+                                CommandParameter="{x:Static Views:View.Downloads}" 
+                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Downloads}">
+                            </CommonControls:IconButton>
                         </UniformGrid>
 
                         <Grid Width="180" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20,0,0,20">

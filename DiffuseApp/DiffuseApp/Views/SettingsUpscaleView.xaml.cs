@@ -21,8 +21,8 @@ namespace Diffuse.Views
         private UpscaleModel _selectedUpscaleModel;
         private string _filterText;
 
-        public SettingsUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsUpscaleView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsUpscaleView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddUpscaleModelCommand = new AsyncRelayCommand(AddUpscaleModel);

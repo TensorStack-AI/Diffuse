@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Serilog;
+using TensorStack.Common.Common;
 
 namespace Diffuse
 {
@@ -73,9 +74,9 @@ namespace Diffuse
 
         public static async Task SaveAsync<T>(string filePath, T obj)
         {
+            var temp = filePath + ".tmp";
             try
             {
-                var temp = filePath + ".tmp";
                 await using (var stream = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     await JsonSerializer.SerializeAsync(stream, obj, DefaultOptions);
@@ -85,6 +86,10 @@ namespace Diffuse
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "[Json] [SaveAsync] An exception occurred saving JSON file: {filePath}", filePath);
+            }
+            finally
+            {
+                FileHelper.DeleteFile(temp);
             }
         }
     }

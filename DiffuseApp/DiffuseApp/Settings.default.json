@@ -1,5 +1,5 @@
 {
-  "Version": 2,
+  "Version": 0,
   "DefaultDeviceId": -1,
   "Vendors": [ "AMD", "Nvidia" ],
   "Environments": [
@@ -9,7 +9,7 @@
       "Type": "Vendor",
       "Vendor": "Nvidia",
       "Environment": "default-cuda",
-      "Version": 0,
+      "Version": 2,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {
@@ -44,7 +44,7 @@
       "Type": "Vendor",
       "Vendor": "AMD",
       "Environment": "default-rocm",
-      "Version": 0,
+      "Version": 2,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {

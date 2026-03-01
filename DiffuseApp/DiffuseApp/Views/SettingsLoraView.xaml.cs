@@ -21,8 +21,8 @@ namespace Diffuse.Views
         private LoraAdapterModel _selectedLoraModel;
         private string _filterText;
 
-        public SettingsLoraView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsLoraView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsLoraView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsLoraView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddLoraModelCommand = new AsyncRelayCommand(AddLoraModelAsync);

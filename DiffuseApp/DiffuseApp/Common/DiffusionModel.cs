@@ -9,7 +9,7 @@ namespace Diffuse.Common
 {
     public class DiffusionModel : BaseModel
     {
-        private bool _isValid;
+        private ModelStatusType _status;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
@@ -21,6 +21,11 @@ namespace Diffuse.Common
         public ModelSourceType Source { get; set; }
         public bool IsDefault { get; set; }
         public bool IsGated { get; set; }
+        public ModelStatusType Status
+        {
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
+        }
         public string Link { get; set; }
         public MemoryProfile[] MemoryProfile { get; set; }
         public DataType BaseType { get; set; }
@@ -32,14 +37,6 @@ namespace Diffuse.Common
         public DiffusionCheckpointModel Checkpoint { get; set; }
 
 
-        [JsonIgnore]
-        public bool IsValid
-        {
-            get { return _isValid; }
-            private set { SetProperty(ref _isValid, value); }
-        }
-
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public MemoryMode? UserMemoryMode { get; set; }
 
@@ -49,22 +46,30 @@ namespace Diffuse.Common
 
         public void Initialize(string modelDirectory)
         {
+            var isValid = false;
             if (Source == ModelSourceType.Folder)
-                IsValid = Directory.Exists(Path);
+                isValid = Directory.Exists(Path);
             else if (Source == ModelSourceType.HuggingFace)
-                IsValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
+                isValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
             else if (Source == ModelSourceType.SingleFile)
             {
-                IsValid = Checkpoint is not null && Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Checkpoint);
+                isValid = Checkpoint is not null && Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Checkpoint);
             }
             else if (Source == ModelSourceType.Checkpoint)
             {
-                IsValid = Checkpoint is not null
+                isValid = Checkpoint is not null
                     && Utils.TryParseHuggingFaceRepo(Path, out _)
                     && (string.IsNullOrEmpty(Checkpoint.VaeCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.VaeCheckpoint))
                     && (string.IsNullOrEmpty(Checkpoint.ModelCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.ModelCheckpoint))
                     && (string.IsNullOrEmpty(Checkpoint.TextEncoderCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoderCheckpoint));
             }
+
+            if (Status == ModelStatusType.Pending && isValid)
+                Status = ModelStatusType.Installed;
+            else if(Status == ModelStatusType.Installed && !isValid)
+                Status = ModelStatusType.Pending;
+            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+                Status = ModelStatusType.Pending;
         }
 
     }

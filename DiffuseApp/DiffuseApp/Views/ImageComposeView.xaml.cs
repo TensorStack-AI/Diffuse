@@ -14,8 +14,8 @@ namespace Diffuse.Views
     public partial class ImageComposeView : ViewBase
     {
 
-        public ImageComposeView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsControlNetView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public ImageComposeView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsControlNetView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             InitializeComponent();
         }

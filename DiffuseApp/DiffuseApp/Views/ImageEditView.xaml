@@ -35,6 +35,7 @@
                                     IsUpscalerSupported="True"
                                     Settings="{Binding Settings, Mode=OneWay}" 
                                     IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
+                                    DownloadService="{Binding DownloadService, Mode=OneWay}" 
                                     SelectionChanged="SelectedPipelineChanged"/>
                             </Grid>
                         </StackPanel>

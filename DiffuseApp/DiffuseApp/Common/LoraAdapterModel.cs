@@ -7,8 +7,8 @@ namespace Diffuse.Common
 {
     public class LoraAdapterModel : BaseModel
     {
-        private bool _isValid;
         private string _weights;
+        private ModelStatusType _status;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
@@ -26,27 +26,33 @@ namespace Diffuse.Common
         public string[] Triggers { get; set; }
         public bool IsDefault { get; set; }
         public bool IsGated { get; set; }
-        public string Link { get; set; }
-
-        [JsonIgnore]
-        public bool IsValid
+        public ModelStatusType Status
         {
-            get { return _isValid; }
-            private set { SetProperty(ref _isValid, value); }
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
         }
+        public string Link { get; set; }
 
         public void Initialize(string modelDirectory)
         {
+            var isValid = false;
             if (Source == ModelSourceType.Folder)
-                IsValid = Directory.Exists(Path);
+                isValid = Directory.Exists(Path);
             else if (Source == ModelSourceType.SingleFile)
             {
-                IsValid = Utils.IsLoraAdapterInstalled(modelDirectory, Path, Weights);
+                isValid = Utils.IsLoraAdapterInstalled(modelDirectory, Path, Weights);
             }
             else if (Source == ModelSourceType.HuggingFace)
             {
-                IsValid = Utils.IsLoraAdapterInstalled(modelDirectory, Path, Weights);
+                isValid = Utils.IsLoraAdapterInstalled(modelDirectory, Path, Weights);
             }
+
+            if (Status == ModelStatusType.Pending && isValid)
+                Status = ModelStatusType.Installed;
+            else if (Status == ModelStatusType.Installed && !isValid)
+                Status = ModelStatusType.Pending;
+            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+                Status = ModelStatusType.Pending;
         }
     }
 }

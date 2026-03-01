@@ -37,8 +37,8 @@ namespace Diffuse.Views
         private View? _filterProcessType;
         private TextInput _currentText;
 
-        public GalleryView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<GalleryView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public GalleryView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<GalleryView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             RemoveFiltersCommand = new AsyncRelayCommand(RemoveFilters, CanRemoveFilters);
             DeleteItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveItemAsync, (x) => SelectedItem is not null);

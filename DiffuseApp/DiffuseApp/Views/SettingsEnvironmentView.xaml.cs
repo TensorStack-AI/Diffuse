@@ -21,8 +21,8 @@ namespace Diffuse.Views
         private EnvironmentModel _selectedEnvironment;
         private string _filterText;
 
-        public SettingsEnvironmentView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsEnvironmentView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsEnvironmentView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsEnvironmentView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddEnvironmentCommand = new AsyncRelayCommand(AddEnvironmentAsync);

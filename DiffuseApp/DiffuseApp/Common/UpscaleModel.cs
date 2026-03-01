@@ -12,7 +12,7 @@ namespace Diffuse.Common
 
     public class UpscaleModel : BaseModel
     {
-        private bool _isValid;
+        private ModelStatusType _status;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
@@ -20,6 +20,11 @@ namespace Diffuse.Common
         public string Name { get; set; }
         public bool IsDefault { get; set; }
         public bool IsGated { get; set; }
+        public ModelStatusType Status
+        {
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
+        }
         public string Link { get; set; }
         public int Channels { get; set; } = 3;
         public int SampleSize { get; set; }
@@ -34,22 +39,23 @@ namespace Diffuse.Common
         [JsonIgnore]
         public string Path { get; set; }
 
-        [JsonIgnore]
-        public bool IsValid
-        {
-            get { return _isValid; }
-            private set { SetProperty(ref _isValid, value); }
-        }
-
         public void Initialize(string modelDirectory)
         {
+            var isValid = false;
             var directory = System.IO.Path.Combine(modelDirectory, Name);
             var modelFiles = FileHelper.GetUrlFileMapping(UrlPaths, directory);
             if (modelFiles.Values.All(File.Exists))
             {
-                IsValid = true;
+                isValid = true;
                 Path = modelFiles.Values.First(x => x.EndsWith(".onnx"));
             }
+
+            if (Status == ModelStatusType.Pending && isValid)
+                Status = ModelStatusType.Installed;
+            else if (Status == ModelStatusType.Installed && !isValid)
+                Status = ModelStatusType.Pending;
+            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+                Status = ModelStatusType.Pending;
         }
 
 
@@ -59,7 +65,7 @@ namespace Diffuse.Common
             if (await DialogService.DownloadAsync($"Download '{Name}' model?", UrlPaths, directory))
                 Initialize(modelDirectory);
 
-            return IsValid;
+            return Status == ModelStatusType.Installed;
         }
     }
 }

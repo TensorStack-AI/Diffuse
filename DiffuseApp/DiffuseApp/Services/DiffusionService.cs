@@ -141,6 +141,7 @@ namespace Diffuse.Services
 
                     var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
                     _pipelineClient = await _environmentService.CreateClientAsync(_currentPipeline, pipelineConfig, EnvironmentMode.Create, relayedProgressCallback, _cancellationTokenSource.Token);
+                    model.Status = ModelStatusType.Installed;
                     _settings.ScanModels();
                 }
                 IsLoaded = true;

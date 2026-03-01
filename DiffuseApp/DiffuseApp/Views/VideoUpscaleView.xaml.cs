@@ -24,8 +24,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoUpscaleView"/> class.
         /// </summary>
-        public VideoUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IUpscaleService upscaleService, ILogger<VideoUpscaleView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public VideoUpscaleView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, IUpscaleService upscaleService, ILogger<VideoUpscaleView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             UpscaleService = upscaleService;
             InitializeComponent();

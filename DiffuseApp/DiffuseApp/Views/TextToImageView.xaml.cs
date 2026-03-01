@@ -19,8 +19,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="TextToImageView"/> class.
         /// </summary>
-        public TextToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<TextToImageView> logger)
-            : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)
+        public TextToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<TextToImageView> logger)
+            : base(settings, navigationService, environmentService, downloadService, diffusionService, extractService, upscaleService, historyService, logger)
         {
             InitializeComponent();
         }

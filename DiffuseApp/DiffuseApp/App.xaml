@@ -418,16 +418,20 @@
                             </CommonControls:FontAwesome.Style>
                         </CommonControls:FontAwesome>
 
-                        <!--IsValid-->
+                        <!--Installed | Downloading-->
                         <CommonControls:FontAwesome Icon="f00c" Size="10" IconStyle="Solid" Opacity=".6"  ToolTipService.InitialShowDelay="200">
                             <CommonControls:FontAwesome.Style>
                                 <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
                                     <Setter Property="Color" Value="#10FFFFFF"/>
-                                    <Setter Property="ToolTip" Value="Model Not Downloaded"/>
+                                    <Setter Property="ToolTip" Value="Model Not Installed"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsValid}" Value="True">
+                                        <DataTrigger Binding="{Binding Status}" Value="Installed">
                                             <Setter Property="Color" Value="{StaticResource SuccessColour}"/>
-                                            <Setter Property="ToolTip" Value="Model Downloaded"/>
+                                            <Setter Property="ToolTip" Value="Model Installed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                            <Setter Property="Color" Value="{StaticResource DangerColour}"/>
+                                            <Setter Property="ToolTip" Value="Downloading Model..."/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>

@@ -76,6 +76,8 @@
                                     <TextBlock Text="UI Scale" Style="{StaticResource FieldTextBlockStyle}"/>
                                     <ComboBox ItemsSource="{Binding ScaleOptions}" SelectedValue="{Binding Settings.UIScale, Mode=TwoWay}" SelectedValuePath="Value" DisplayMemberPath="Label" />
                                 </StackPanel>
+
+                                <CheckBox Content="Check For Updates" IsChecked="{Binding Settings.IsUpdateEnabled}" Margin="22,20,0,0"/>
                             </UniformGrid>
 
                             <StackPanel Margin="0,4,0,0">

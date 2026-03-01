@@ -24,8 +24,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoExtractView"/> class.
         /// </summary>
-        public VideoExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IExtractService extractService, ILogger<VideoExtractView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public VideoExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, IExtractService extractService, ILogger<VideoExtractView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             ExtractService = extractService;
             InitializeComponent();

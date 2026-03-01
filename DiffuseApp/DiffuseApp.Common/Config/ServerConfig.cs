@@ -23,7 +23,7 @@
         public readonly static ChannelConfig DownloadConfig = new ChannelConfig
         {
             Name = "DiffuseDownload",
-            Executable = "DiffuseDownload.exe",
+            Executable = "DiffuseDownloader.exe",
             ChannelCommand = "DiffuseDownload.Command",
             ChannelPipeName = "DiffuseDownload.PipeName",
             ChannelProgress = "DiffuseDownload.Progress"

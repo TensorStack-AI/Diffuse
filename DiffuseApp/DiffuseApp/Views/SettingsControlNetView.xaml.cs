@@ -21,8 +21,8 @@ namespace Diffuse.Views
         private ControlNetModel _selectedControlNetModel;
         private string _filterText;
 
-        public SettingsControlNetView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsControlNetView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsControlNetView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsControlNetView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddControlNetModelCommand = new AsyncRelayCommand(AddControlNetModelAsync);

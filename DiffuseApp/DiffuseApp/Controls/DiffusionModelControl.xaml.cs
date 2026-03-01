@@ -1,5 +1,6 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
+using Diffuse.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -82,6 +83,7 @@ namespace Diffuse.Controls
         public static readonly DependencyProperty SettingsProperty = DependencyProperty.Register(nameof(Settings), typeof(Settings), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnSettingsChanged()));
         public static readonly DependencyProperty IsPipelineLoadedProperty = DependencyProperty.Register(nameof(IsPipelineLoaded), typeof(bool), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnIsPipelineLoadedChanged()));
         public static readonly DependencyProperty IsSelectionValidProperty = DependencyProperty.Register(nameof(IsSelectionValid), typeof(bool), typeof(DiffusionModelControl));
+        public static readonly DependencyProperty DownloadServiceProperty = DependencyProperty.Register(nameof(DownloadService), typeof(IDownloadService), typeof(DiffusionModelControl));
 
         public event EventHandler<PipelineModel> SelectionChanged;
         public AsyncRelayCommand LoadCommand { get; }
@@ -105,6 +107,12 @@ namespace Diffuse.Controls
         {
             get { return (bool)GetValue(IsSelectionValidProperty); }
             set { SetValue(IsSelectionValidProperty, value); }
+        }
+
+        public IDownloadService DownloadService
+        {
+            get { return (IDownloadService)GetValue(DownloadServiceProperty); }
+            set { SetValue(DownloadServiceProperty, value); }
         }
 
         public ProcessType ProcessType
@@ -237,6 +245,9 @@ namespace Diffuse.Controls
         private async Task LoadAsync()
         {
             if (!await IsAccessGrantedAsync(SelectedModel))
+                return;
+
+            if (await IsDownloadingAsync(SelectedModel))
                 return;
 
             _currentDevice = SelectedDevice;
@@ -628,6 +639,25 @@ namespace Diffuse.Controls
             ValidateSelection();
         }
 
+
+        private async Task<bool> IsDownloadingAsync(DiffusionModel model)
+        {
+            if (model.Status == ModelStatusType.Downloading || model.Status == ModelStatusType.DownloadQueue || model.Status == ModelStatusType.DownloadFailed)
+            {
+                await DialogService.ShowMessageAsync("Model Downloading", "This model is downloading or queued for download", TensorStack.WPF.Dialogs.MessageDialogType.Ok, TensorStack.WPF.Dialogs.MessageBoxIconType.Info, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
+                return true;
+            }
+            else if (model.Status == ModelStatusType.Pending)
+            {
+                var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
+                if(queueDownload)
+                {
+                    await DownloadService.QueueAsync(model);
+                    return true;
+                }
+            }
+            return false;
+        }
 
 
         private async Task<bool> IsAccessGrantedAsync(DiffusionModel model)

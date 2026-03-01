@@ -51,6 +51,48 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
+
+
+            <DockPanel Grid.Column="1" Margin="10,0,0,0">
+
+                <DockPanel DockPanel.Dock="Top">
+
+                    <!--Actions-->
+                    <DockPanel DockPanel.Dock="Right"  >
+                        <TextBlock DockPanel.Dock="Top" Text="Actions" Style="{StaticResource FieldTextBlockStyle}" />
+                        <StackPanel   VerticalAlignment="Top" Width="200">
+                            <Button Content="Download Model" Command="{Binding DownloadDiffusionModelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pending}"/>
+                            <Button Content="Retry Download" Command="{Binding DownloadDiffusionModelCommand}"  Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=DownloadFailed}"/>
+                            <Button Content="Update Download" Command="{Binding DownloadDiffusionModelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Installed}"/>
+                            <Button Content="Cancel Download" Command="{Binding DownloadDiffusionModelCancelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Downloading|DownloadQueue}"/>
+                        </StackPanel>
+                    </DockPanel>
+
+                    <!--DiffusionModel-->
+                    <StackPanel>
+                        <UniformGrid Columns="3" Margin="0,0,100,0">
+                            <StackPanel Margin="0,0,2,0">
+                                <TextBlock Text="Name" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding SelectedDiffusionModel.Name}" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Margin="2,0,2,0">
+                                <TextBlock Text="Pipeline" Style="{StaticResource FieldTextBlockStyle}" />
+                                <TextBox Text="{Binding SelectedDiffusionModel.Pipeline}" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Margin="2,0,0,0">
+                                <CheckBox Content="Is Gated Access" IsChecked="{Binding SelectedDiffusionModel.IsGated}" Margin="10,18,0,2" IsHitTestVisible="False"/>
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <StackPanel Margin="2,6,2,0">
+                            <TextBlock Text="Model Link" Style="{StaticResource FieldTextBlockStyle}" />
+                            <CommonControls:HyperlinkControl Label="{Binding SelectedDiffusionModel.Link}" Link="{Binding SelectedDiffusionModel.Link}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                </DockPanel>
+
+            </DockPanel>
         </Grid>
 
     </GroupBox>

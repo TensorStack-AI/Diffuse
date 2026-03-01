@@ -23,8 +23,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageToVideoView"/> class.
         /// </summary>
-        public ImageToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageToVideoView> logger)
-            : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)
+        public ImageToVideoView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ImageToVideoView> logger)
+            : base(settings, navigationService, environmentService, downloadService, diffusionService, extractService, upscaleService, historyService, logger)
         {
             InitializeComponent();
         }
@@ -128,6 +128,9 @@ namespace Diffuse.Views
         {
             try
             {
+                if (CurrentPipeline?.ExtractModel == null)
+                    return;
+
                 IsViewBusy = true;
                 if (_sourceImage == null || _extractImage == _sourceImage)
                     return;

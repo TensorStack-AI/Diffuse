@@ -21,8 +21,8 @@ namespace Diffuse.Views
         private ExtractModel _selectedExtractModel;
         private string _filterText;
 
-        public SettingsExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsExtractView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsExtractView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsExtractView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             AddExtractModelCommand = new AsyncRelayCommand(AddExtractModelAsync);

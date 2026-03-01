@@ -22,11 +22,12 @@ namespace Diffuse
         private View _view;
         private ViewCategory _viewCategory;
 
-        public MainWindow(Settings settings, NavigationService navigation, IHistoryService historyService)
+        public MainWindow(Settings settings, NavigationService navigation, IHistoryService historyService, IDownloadService downloadService)
         {
             Settings = settings;
             Navigation = navigation;
             HistoryService = historyService;
+            DownloadService = downloadService;
             NavigateCommand = new AsyncRelayCommand<View>(NavigateAsync, CanNavigate);
             NavigateCategoryCommand = new AsyncRelayCommand<ViewCategory>(NavigateCategoryAsync, CanNavigateCategory);
             RemoveHistoryItemCommand = new AsyncRelayCommand<IHistoryItem>(RemoveHistoryItemAsync, CanRemoveHistoryItem);
@@ -46,6 +47,7 @@ namespace Diffuse
         public AsyncRelayCommand<IHistoryItem> RemoveHistoryItemCommand { get; }
         public AsyncRelayCommand<IHistoryItem> PreviewHistoryItemCommand { get; }
         public IHistoryService HistoryService { get; }
+        public IDownloadService DownloadService { get; }
 
         public View View
         {
@@ -165,5 +167,17 @@ namespace Diffuse
             });
         }
 
+
+        protected override async void OnClosing(CancelEventArgs e)
+        {
+            if (DownloadService.IsDownloading)
+            {
+                if (!await DialogService.ShowMessageAsync("Active Downloads", "There are still have active downloads running, Are you sure you want to cancel and exit?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info))
+                {
+                    e.Cancel = true;
+                }
+            }
+            base.OnClosing(e);
+        }
     }
 }

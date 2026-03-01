@@ -54,6 +54,26 @@ namespace Diffuse.Services
         }
 
 
+        public Task<DownloadClient> CreateDownloadClientAsync(IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
+        {
+            var environmentModel = _settings.Environments
+                      .Where(x => x.IsDefault && Exists(x))
+                      .OrderByDescending(x => x.IsDefault)
+                      .FirstOrDefault()
+                ?? throw new Exception("No Environment Found");
+
+            var environment = FromModel(environmentModel, _settings.IsServerDebugEnabled);
+            var pipelineClientConfig = new ClientConfig
+            {
+                Environment = environment,
+                ServerPath = App.DirectoryServer,
+                IsDebugMode = environment.IsDebug,
+            };
+
+            return Task.FromResult(new DownloadClient(pipelineClientConfig, progressCallback, _logger));
+        }
+
+
         public Task<EnvironmentConfig> GetAsync(PipelineModel pipeline)
         {
             var environment = GetEnvironment(pipeline);
@@ -109,6 +129,19 @@ namespace Diffuse.Services
         public bool Exists(EnvironmentModel environment)
         {
             return Directory.Exists(GetPath(environment));
+        }
+
+
+        public bool IsInstalled()
+        {
+            var environment = _settings.Environments
+             .Where(x => x.IsDefault && Exists(x))
+             .OrderByDescending(x => x.IsDefault)
+             .FirstOrDefault();
+            if (environment == null)
+                return false;
+
+            return Exists(environment);
         }
 
 
@@ -196,7 +229,9 @@ namespace Diffuse.Services
         Task<EnvironmentConfig> GetAsync(PipelineModel pipeline);
         Task<EnvironmentConfig> GetAsync(EnvironmentModel environment);
         Task<PipelineClient> CreateClientAsync(PipelineModel pipeline, PipelineConfig pipelineConfig, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
+        Task<DownloadClient> CreateDownloadClientAsync(IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);
 
+        bool IsInstalled();
         bool Exists(PipelineModel pipeline);
         bool Exists(EnvironmentModel environment);
         Task CreateAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default);

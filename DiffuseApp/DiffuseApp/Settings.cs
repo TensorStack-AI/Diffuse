@@ -21,6 +21,8 @@ namespace Diffuse
         private double _volumeOutput = 0.1;
         private bool _isVolumeInputMute;
         private bool _isVolumeOutputMute;
+        private bool _isUpdateEnabled = true;
+        private bool _isUpdateAvailable;
 
         [AppDefault]
         public int Version { get; set; }
@@ -74,12 +76,25 @@ namespace Diffuse
             get { return _historyItems; }
             set { SetProperty(ref _historyItems, value); }
         }
+
         public Orientation HistoryOrientation
         {
             get { return _historyOrientation; }
             set { SetProperty(ref _historyOrientation, value); }
         }
 
+        public bool IsUpdateEnabled
+        {
+            get { return _isUpdateEnabled; }
+            set { SetProperty(ref _isUpdateEnabled, value); }
+        }
+
+        [JsonIgnore]
+        public bool IsUpdateAvailable
+        {
+            get { return _isUpdateAvailable; }
+            set { SetProperty(ref _isUpdateAvailable, value); }
+        }
 
         [AppDefault]
         public ObservableCollection<EnvironmentModel> Environments { get; set; }

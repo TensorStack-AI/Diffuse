@@ -30,15 +30,14 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioToTextView"/> class.
         /// </summary>
-        public AudioToTextView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, Services.IAudioService audioService, ILogger<AudioToTextView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public AudioToTextView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, IDownloadService downloadService, Services.IAudioService audioService, ILogger<AudioToTextView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             AudioService = audioService;
             Results = new ObservableCollection<TextInput>();
             _generateProgress = new Progress<GenerateProgress>(OnGenerateProgress);
             InitializeComponent();
         }
-
 
 
         /// <summary>

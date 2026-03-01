@@ -22,8 +22,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlNetImageToImageView"/> class.
         /// </summary>
-        public ControlNetImageToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ControlNetImageToImageView> logger)
-            : base(settings, navigationService, environmentService, diffusionService, extractService, upscaleService, historyService, logger)
+        public ControlNetImageToImageView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger<ControlNetImageToImageView> logger)
+            : base(settings, navigationService, environmentService, downloadService, diffusionService, extractService, upscaleService, historyService, logger)
         {
             InitializeComponent();
         }
@@ -133,7 +133,7 @@ namespace Diffuse.Views
         {
             try
             {
-                if (!ExtractService.IsLoaded)
+                if (CurrentPipeline?.ExtractModel == null)
                     return;
 
                 IsViewBusy = true;

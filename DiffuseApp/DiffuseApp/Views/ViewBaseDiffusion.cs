@@ -31,8 +31,8 @@ namespace Diffuse.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewBaseDiffusion"/> class.
         /// </summary>
-        public ViewBaseDiffusion(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public ViewBaseDiffusion(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IDiffusionService diffusionService, IExtractService extractService, IUpscaleService upscaleService, IHistoryService historyService, ILogger logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             DiffusionService = diffusionService;
             ExtractService = extractService;

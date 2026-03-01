@@ -13,8 +13,8 @@ namespace Diffuse.Views
     /// </summary>
     public partial class SettingsGeneralView : ViewBase
     {
-        public SettingsGeneralView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IHistoryService historyService, ILogger<SettingsGeneralView> logger)
-            : base(settings, navigationService, environmentService, historyService, logger)
+        public SettingsGeneralView(Settings settings, NavigationService navigationService, IEnvironmentService environmentService, IDownloadService downloadService, IHistoryService historyService, ILogger<SettingsGeneralView> logger)
+            : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
             ScaleOptions = [.. Enumerable.Range(5, 26) .Select(x => new ScaleOption($"{x * 10}%", x / 10.0))];
