@@ -9,7 +9,7 @@
       "Type": "Vendor",
       "Vendor": "Nvidia",
       "Environment": "default-cuda",
-      "Version": 2,
+      "Version": 4,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {
@@ -25,7 +25,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@https://github.com/huggingface/diffusers/archive/d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5.zip",
+        "diffusers@https://github.com/huggingface/diffusers/archive/5570f817da44520d25c053d7da562bd5b2f46989.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -44,7 +44,7 @@
       "Type": "Vendor",
       "Vendor": "AMD",
       "Environment": "default-rocm",
-      "Version": 2,
+      "Version": 4,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {
@@ -63,7 +63,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@https://github.com/huggingface/diffusers/archive/d32483913ae1aaf6f9a0b8abce0a3bd7a78eebe5.zip",
+        "diffusers@https://github.com/huggingface/diffusers/archive/5570f817da44520d25c053d7da562bd5b2f46989.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -2928,6 +2928,333 @@
           "Width": 960,
           "Height": 544,
           "IsDefault": true
+        }
+      ]
+    },
+    {
+      "Id": 211,
+      "Backend": "PyTorch",
+      "Name": "Helios Base",
+      "Pipeline": "HeliosPipeline",
+      "Path": "BestWishYsh/Helios-Base",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Link": "https://huggingface.co/BestWishYsh/Helios-Base",
+      "DefaultOptions": {
+        "Steps": 20,
+        "Width": 640,
+        "Height": 384,
+        "Frames": 132,
+        "FrameRate": 24,
+        "GuidanceScale": 5,
+        "Scheduler": "Helios",
+        "Schedulers": [ "Helios" ],
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "FrameOptions": [
+          33,
+          66,
+          132,
+          264,
+          528,
+          1056,
+          2112,
+          4224,
+          8448,
+          16896,
+          33792
+        ]
+      },
+      "Resolutions": [
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 384,
+          "Height": 640
+        },
+        {
+          "Width": 512,
+          "Height": 512
+        },
+        {
+          "Width": 640,
+          "Height": 384,
+          "IsDefault": true
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        }
+      ]
+    },
+    {
+      "Id": 212,
+      "Backend": "PyTorch",
+      "Name": "Helios Mid",
+      "Pipeline": "HeliosPipeline",
+      "Path": "BestWishYsh/Helios-Mid",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Link": "https://huggingface.co/BestWishYsh/Helios-Mid",
+      "DefaultOptions": {
+        "Steps": 20,
+        "Width": 640,
+        "Height": 384,
+        "Frames": 132,
+        "FrameRate": 24,
+        "GuidanceScale": 0,
+        "Scheduler": "Helios",
+        "Schedulers": [ "Helios" ],
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "FrameOptions": [
+          33,
+          66,
+          132,
+          264,
+          528,
+          1056,
+          2112,
+          4224,
+          8448,
+          16896,
+          33792
+        ]
+      },
+      "Resolutions": [
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 384,
+          "Height": 640
+        },
+        {
+          "Width": 512,
+          "Height": 512
+        },
+        {
+          "Width": 640,
+          "Height": 384,
+          "IsDefault": true
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        }
+      ]
+    },
+    {
+      "Id": 213,
+      "Backend": "PyTorch",
+      "Name": "Helios Distilled",
+      "Pipeline": "HeliosPipeline",
+      "Path": "BestWishYsh/Helios-Distilled",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "DataType": "int8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float8",
+          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+        },
+        {
+          "DataType": "float16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        },
+        {
+          "DataType": "bfloat16",
+          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Link": "https://huggingface.co/BestWishYsh/Helios-Distilled",
+      "DefaultOptions": {
+        "Steps": 3,
+        "Width": 640,
+        "Height": 384,
+        "Frames": 132,
+        "FrameRate": 24,
+        "GuidanceScale": 0,
+        "Scheduler": "HeliosDMD",
+        "Schedulers": [ "HeliosDMD" ],
+        "PredictionType": "flow_prediction",
+        "SolverType": "bh2",
+        "FrameOptions": [
+          33,
+          66,
+          132,
+          264,
+          528,
+          1056,
+          2112,
+          4224,
+          8448,
+          16896,
+          33792
+        ]
+      },
+      "Resolutions": [
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 384,
+          "Height": 640
+        },
+        {
+          "Width": 512,
+          "Height": 512
+        },
+        {
+          "Width": 640,
+          "Height": 384,
+          "IsDefault": true
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
         }
       ]
     }

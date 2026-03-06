@@ -1,11 +1,7 @@
 ﻿using Diffuse.Common;
-using DiffuseApp.Common;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -99,6 +95,12 @@ namespace Diffuse.Services
             {
                 await CancelAsync(queueItem);
             }
+        }
+
+
+        public bool CanQueueItem(DiffusionModel model)
+        {
+            return _environmentService.IsInstalled();
         }
 
 
@@ -198,5 +200,6 @@ namespace Diffuse.Services
         Task CancelAllAsync();
         Task CancelAsync(DiffusionModel model);
         Task CancelAsync(DownloadQueueItem model);
+        bool CanQueueItem(DiffusionModel model);
     }
 }

@@ -215,6 +215,7 @@ namespace Diffuse
                 "FluxPipeline",
                 "Flux2Pipeline",
                 "Flux2KleinPipeline",
+                "HeliosPipeline",
                 "Kandinsky5Pipeline",
                 "LTXPipeline",
                 "LTX2Pipeline",

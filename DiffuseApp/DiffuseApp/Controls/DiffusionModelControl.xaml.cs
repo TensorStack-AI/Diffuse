@@ -649,12 +649,12 @@ namespace Diffuse.Controls
             }
             else if (model.Status == ModelStatusType.Pending)
             {
+                if (!DownloadService.CanQueueItem(model))
+                    return false;
+
                 var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
-                if(queueDownload)
-                {
-                    await DownloadService.QueueAsync(model);
-                    return true;
-                }
+                if (queueDownload)
+                    return await DownloadService.QueueAsync(model);
             }
             return false;
         }

@@ -135,13 +135,13 @@ namespace Diffuse.Services
         public bool IsInstalled()
         {
             var environment = _settings.Environments
-             .Where(x => x.IsDefault && Exists(x))
-             .OrderByDescending(x => x.IsDefault)
-             .FirstOrDefault();
+                .Where(x => Exists(x))
+                .OrderByDescending(x => x.IsDefault)
+                .FirstOrDefault();
             if (environment == null)
                 return false;
 
-            return Exists(environment);
+            return true;
         }
 
 
