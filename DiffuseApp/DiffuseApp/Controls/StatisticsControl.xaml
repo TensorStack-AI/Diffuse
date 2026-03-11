@@ -17,7 +17,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="Elapsed: " Style="{StaticResource FieldTextBlockStyle}" Margin="0,1,0,0"/>
-                <TextBlock DockPanel.Dock="Top" Text="{Binding Statistics.Elapsed, FallbackValue=00:00:00, StringFormat={}mm\\:ss\\.ff}" />
+                <TextBlock DockPanel.Dock="Top" Text="{Binding Statistics.Elapsed, FallbackValue=00:00:00:00, StringFormat={}hh\\:mm\\:ss\\.ff}" />
             </StackPanel>
         </UniformGrid>
         <CommonControls:ProgressElement Height="20" Progress="{Binding Progress}" />

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TensorStack.Common;
 using TensorStack.Common.Tensor;
+using TensorStack.Python;
 using TensorStack.Python.Common;
 using TensorStack.Python.Config;
 using TensorStack.Video;
@@ -231,12 +232,11 @@ namespace Diffuse.Services
                     Seed = options.Seed,
                     Prompt = options.Prompt,
                     NegativePrompt = options.GuidanceScale > 1f && string.IsNullOrEmpty(options.NegativePrompt) ? " " : options.NegativePrompt,
-                    Scheduler = options.Scheduler,
                     Strength = options.Strength,
                     ControlNetScale = options.ControlNetStrength,
                     InputImages = options.InputImages,
                     InputControlImages = options.InputControlImages,
-                    SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
+                    SchedulerOptions = options.SchedulerOptions.ToOptions(),
                     LoraOptions = GetLoraOptions(options),
                     TempFileName = imageFileName,
                     NoiseCondition = options.NoiseCondition
@@ -280,12 +280,11 @@ namespace Diffuse.Services
                     Seed = options.Seed,
                     Prompt = options.Prompt,
                     NegativePrompt = options.NegativePrompt,
-                    Scheduler = options.Scheduler,
                     Strength = options.Strength,
                     ControlNetScale = options.ControlNetStrength,
                     InputImages = options.InputImages,
                     InputControlImages = options.InputControlImages,
-                    SchedulerOptions = GetSchedulerOptions(options.SchedulerOptions),
+                    SchedulerOptions = options.SchedulerOptions.ToOptions(),
                     LoraOptions = GetLoraOptions(options),
                     TempFileName = videoFileName,
                     NoiseCondition = options.NoiseCondition,
@@ -390,48 +389,6 @@ namespace Diffuse.Services
                 IsLoaded = false;
             }
         }
-
-
-        private static SchedulerOptions GetSchedulerOptions(SchedulerInputOptions schedulerOptions)
-        {
-            return new SchedulerOptions
-            {
-                AlgorithmType = schedulerOptions.AlgorithmType,
-                BaseShift = schedulerOptions.BaseShift,
-                BetaEnd = schedulerOptions.BetaEnd,
-                BetaSchedule = schedulerOptions.BetaSchedule,
-                BetaStart = schedulerOptions.BetaStart,
-                ClipSample = schedulerOptions.ClipSample,
-                ClipSampleRange = schedulerOptions.ClipSampleRange,
-                DynamicThresholdingRatio = schedulerOptions.DynamicThresholdingRatio,
-                Eta = schedulerOptions.Eta,
-                LowerOrderFinal = schedulerOptions.LowerOrderFinal,
-                MaxShift = schedulerOptions.MaxShift,
-                NumTrainTimesteps = schedulerOptions.NumTrainTimesteps,
-                PredictionType = schedulerOptions.PredictionType,
-                Rho = schedulerOptions.Rho,
-                SampleMaxValue = schedulerOptions.SampleMaxValue,
-                SChurn = schedulerOptions.SChurn,
-                Shift = schedulerOptions.Shift,
-                SigmaMax = schedulerOptions.SigmaMax > 0 ? schedulerOptions.SigmaMax : null,
-                SigmaMin = schedulerOptions.SigmaMin > 0 ? schedulerOptions.SigmaMin : null,
-                SNoise = schedulerOptions.SNoise,
-                SolverOrder = schedulerOptions.SolverOrder,
-                SolverType = schedulerOptions.SolverType,
-                StepsOffset = schedulerOptions.StepsOffset,
-                STmax = schedulerOptions.STmax,
-                STmin = schedulerOptions.STmin,
-                StochasticSampling = schedulerOptions.StochasticSampling,
-                Thresholding = schedulerOptions.Thresholding,
-                TimestepSpacing = schedulerOptions.TimestepSpacing,
-                UseDynamicShifting = schedulerOptions.UseDynamicShifting,
-                UseKarrasSigmas = schedulerOptions.UseKarrasSigmas,
-                VarianceType = schedulerOptions.VarianceType,
-                BaseImageSeqLen = schedulerOptions.BaseImageSeqLen,
-                MaxImageSeqLen = schedulerOptions.MaxImageSeqLen
-            };
-        }
-
 
 
         private static List<LoraConfig> GetLoraAdapters(LoraAdapterModel[] loraAdapterModel)

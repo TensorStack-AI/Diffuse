@@ -38,7 +38,7 @@ namespace Diffuse.Views
             EnvironmentServiceDeleteCommand = new AsyncRelayCommand(EnvironmentDeleteAsync, CanEnvironmentUpdate);
             FilterClearCommand = new AsyncRelayCommand(FilterClearAsync, CanClearFilter);
             ModelCollection = new ListCollectionView(settings.Environments) { Filter = CollectionFilter(), IsLiveSorting = true };
-            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(EnvironmentModel.Name), ListSortDirection.Ascending));
+            ModelCollection.SortDescriptions.Add(new SortDescription(nameof(EnvironmentModel.Id), ListSortDirection.Ascending));
             SelectedEnvironment = settings.Environments.FirstOrDefault();
             InitializeComponent();
         }

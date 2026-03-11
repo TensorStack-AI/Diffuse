@@ -6,6 +6,7 @@
              xmlns:CoreCommon="clr-namespace:TensorStack.Common;assembly=TensorStack.Common"
              xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
              xmlns:PythonOptions="clr-namespace:TensorStack.Python.Common;assembly=TensorStack.Python"
+             xmlns:PythonScheduler="clr-namespace:TensorStack.Python.Scheduler;assembly=TensorStack.Python"
              xmlns:Extractors="clr-namespace:TensorStack.Extractors.Common;assembly=TensorStack.Extractors"
              xmlns:Whisper="clr-namespace:TensorStack.TextGeneration.Pipelines.Whisper;assembly=TensorStack.TextGeneration"
              xmlns:TextGeneration="clr-namespace:TensorStack.TextGeneration.Common;assembly=TensorStack.TextGeneration"
@@ -134,43 +135,79 @@
 
             <ObjectDataProvider x:Key="SchedulerType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:SchedulerType"/>
+                    <x:Type TypeName="PythonScheduler:SchedulerType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="TimestepSpacingType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:TimestepSpacingType"/>
+                    <x:Type TypeName="PythonScheduler:TimestepSpacingType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="AlgorithmType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:AlgorithmType"/>
+                    <x:Type TypeName="PythonScheduler:AlgorithmType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="SolverType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:SolverType"/>
+                    <x:Type TypeName="PythonScheduler:SolverType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="BetaScheduleType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:BetaScheduleType"/>
+                    <x:Type TypeName="PythonScheduler:BetaScheduleType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="PredictionType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:PredictionType"/>
+                    <x:Type TypeName="PythonScheduler:PredictionType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
             <ObjectDataProvider x:Key="VarianceType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="PythonOptions:VarianceType"/>
+                    <x:Type TypeName="PythonScheduler:VarianceType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="FinalSigmasType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:FinalSigmasType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="TimestepType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:TimestepType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            
+            <ObjectDataProvider x:Key="InterpolationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:InterpolationType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="TimeShiftType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:TimeShiftType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+            <ObjectDataProvider x:Key="SigmaScheduleType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:SigmaScheduleType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            
+            <ObjectDataProvider x:Key="UpscaleModeType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonScheduler:UpscaleModeType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
@@ -179,7 +216,7 @@
                     <x:Type TypeName="Extractors:BackgroundMode"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-
+            
             <ObjectDataProvider x:Key="TaskType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="Whisper:TaskType"/>
@@ -439,7 +476,7 @@
                         </CommonControls:FontAwesome>
                     </UniformGrid>
 
-                  
+
                     <TextBlock Text="{Binding Name}" />
                 </DockPanel>
             </DataTemplate>
@@ -527,7 +564,7 @@
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
-                                <TextBlock Text="{Binding Options.Scheduler, Converter={StaticResource EnumDescriptionConverter}}" />
+                                <TextBlock Text="{Binding Options.SchedulerOptions.Scheduler, Converter={StaticResource EnumDescriptionConverter}}" />
                             </StackPanel>
                             <StackPanel Margin="0,3,0,0">
                                 <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}" />
@@ -957,7 +994,7 @@
                                 </TextBlock>
                             </StackPanel>
                         </UniformGrid>
-                     
+
                         <StackPanel Margin="0,6,0,0" >
                             <TextBlock Text="Created" Style="{StaticResource FieldTextBlockStyle}" />
                             <TextBlock Text="{Binding Timestamp}" />
@@ -989,7 +1026,7 @@
                                     <Run Text="{Binding InputLength}" />
                                 </TextBlock>
                             </StackPanel>
-                          
+
                         </UniformGrid>
 
                         <StackPanel Margin="0,6,0,0" >
@@ -1016,7 +1053,7 @@
                     <TextBlock DockPanel.Dock="Top" Text="{Binding MediaType, StringFormat={}Composed {0}}" FontSize="20"/>
                     <StackPanel>
                         <Separator Opacity=".7"/>
-        
+
                         <UniformGrid Columns="3" Margin="0,6,0,0">
                             <StackPanel>
                                 <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />

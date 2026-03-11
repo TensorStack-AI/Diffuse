@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TensorStack.Common;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
+using TensorStack.Python.Scheduler;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -27,6 +28,7 @@ namespace Diffuse.Dialogs
         private DiffusionModel _originalDiffusionModel;
         private DiffusionCheckpointModel _checkpointModel;
         private string _frameOptions;
+        private SchedulerInputOptions[] _schedulers;
 
         public DiffusionModelDialog(Settings settings)
         {
@@ -34,14 +36,11 @@ namespace Diffuse.Dialogs
             DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Float8, DataType.Int8];
             ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.SingleFile, ModelSourceType.Checkpoint];
             Sizes = new ObservableCollection<SizeOption>();
-            Schedulers = new ObservableCollection<SchedulerType>();
             Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
             CancelCommand = new AsyncRelayCommand(CancelAsync);
             AddSizeCommand = new AsyncRelayCommand(AddSizeAsync, CanAddSize);
             RemoveSizeCommand = new AsyncRelayCommand<SizeOption>(RemoveSizeAsync);
-            AddSchedulerCommand = new AsyncRelayCommand(AddSchedulerAsync, CanAddScheduler);
-            RemoveSchedulerCommand = new AsyncRelayCommand<SchedulerType>(RemoveSchedulerAsync);
             Errors = new ObservableCollection<string>();
             InitializeComponent();
         }
@@ -52,10 +51,7 @@ namespace Diffuse.Dialogs
         public ObservableCollection<string> Errors { get; }
         public AsyncRelayCommand AddSizeCommand { get; }
         public AsyncRelayCommand<SizeOption> RemoveSizeCommand { get; }
-        public AsyncRelayCommand AddSchedulerCommand { get; }
-        public AsyncRelayCommand<SchedulerType> RemoveSchedulerCommand { get; }
         public ObservableCollection<SizeOption> Sizes { get; }
-        public ObservableCollection<SchedulerType> Schedulers { get; }
         public ObservableCollection<string> Pipelines { get; }
         public bool IsUpdateMode => _originalDiffusionModel is not null;
         public DataType[] DataTypes { get; }
@@ -79,10 +75,10 @@ namespace Diffuse.Dialogs
             set { SetProperty(ref _selectedSize, value); }
         }
 
-        public SchedulerType SelectedScheduler
+        public SchedulerInputOptions[] Schedulers
         {
-            get { return _selectedScheduler; }
-            set { SetProperty(ref _selectedScheduler, value); }
+            get { return _schedulers; }
+            set { SetProperty(ref _schedulers, value); }
         }
 
         public string FrameOptions
@@ -178,7 +174,6 @@ namespace Diffuse.Dialogs
             var defaultSize = Sizes.FirstOrDefault(x => x.IsDefault);
             DiffusionModel.DefaultOptions.Width = defaultSize.Width;
             DiffusionModel.DefaultOptions.Height = defaultSize.Height; ;
-            DiffusionModel.DefaultOptions.Schedulers = Schedulers.ToArray();
             DiffusionModel.DefaultOptions.FrameOptions = GetFrameOptions(FrameOptions);
 
             if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint || DiffusionModel.Source == ModelSourceType.SingleFile) && Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out var huggingfacePath))
@@ -270,40 +265,15 @@ namespace Diffuse.Dialogs
         }
 
 
-        private Task AddSchedulerAsync()
-        {
-            if (!CanAddScheduler())
-                return Task.CompletedTask;
-
-            Schedulers.Add(SelectedScheduler);
-            return Task.CompletedTask;
-        }
-
-
-        private bool CanAddScheduler()
-        {
-            return !Schedulers.Any(x => x == SelectedScheduler);
-        }
-
-
-        private Task RemoveSchedulerAsync(SchedulerType type)
-        {
-            Schedulers.Remove(type);
-            return Task.CompletedTask;
-        }
-
-
         private void Populate()
         {
             foreach (var size in DiffusionModel.Resolutions)
                 Sizes.Add(size);
 
-            foreach (var scheduler in DiffusionModel.DefaultOptions.Schedulers)
-                Schedulers.Add(scheduler);
+            Schedulers = DiffusionModel.DefaultOptions.Schedulers.GetSchedulers().Select(SchedulerInputOptions.Create).ToArray();
 
             SetProcessTypes();
             FrameOptions = GetFrameOptions(DiffusionModel.DefaultOptions.FrameOptions);
-            SelectedScheduler = DiffusionModel.DefaultOptions.Scheduler;
             SelectedSize = Sizes.FirstOrDefault(x => x.IsDefault) ?? Sizes.FirstOrDefault();
             CheckpointModel = DiffusionModel.Checkpoint ?? new DiffusionCheckpointModel();
             NotifyPropertyChanged(nameof(IsUpdateMode));
@@ -384,11 +354,6 @@ namespace Diffuse.Dialogs
                 yield return "Frames must be be >= 0";
             if (DiffusionModel.DefaultOptions.FrameRate < 0)
                 yield return "FrameRate must be be >= 0";
-            if (DiffusionModel.DefaultOptions.Shift < 1)
-                yield return "Shift must be be > 0";
-            if (Schedulers.IsNullOrEmpty())
-                yield return "Schedulers cannot be empty";
-
             if (!Sizes.Any())
                 yield return "Resolutions cannot be empty";
             if (!Sizes.Any(x => x.IsDefault))
@@ -496,33 +461,20 @@ namespace Diffuse.Dialogs
                 {
                     Width = diffusionModel.DefaultOptions.Width,
                     Height = diffusionModel.DefaultOptions.Height,
-                    Frames = diffusionModel.DefaultOptions.Frames,
-                    GuidanceScale = diffusionModel.DefaultOptions.GuidanceScale,
-                    GuidanceScale2 = diffusionModel.DefaultOptions.GuidanceScale2,
-                    FrameRate = diffusionModel.DefaultOptions.FrameRate,
-                    Scheduler = diffusionModel.DefaultOptions.Scheduler,
-                    Schedulers = [.. diffusionModel.DefaultOptions.Schedulers],
-                    Shift = diffusionModel.DefaultOptions.Shift,
                     Steps = diffusionModel.DefaultOptions.Steps,
                     Steps2 = diffusionModel.DefaultOptions.Steps2,
-                    BaseImageSeqLen = diffusionModel.DefaultOptions.BaseImageSeqLen,
-                    BaseShift = diffusionModel.DefaultOptions.BaseShift,
-                    BetaEnd = diffusionModel.DefaultOptions.BetaEnd,
-                    BetaSchedule = diffusionModel.DefaultOptions.BetaSchedule,
-                    BetaStart = diffusionModel.DefaultOptions.BetaStart,
-                    MaxImageSeqLen = diffusionModel.DefaultOptions.MaxImageSeqLen,
-                    MaxShift = diffusionModel.DefaultOptions.MaxShift,
-                    PredictionType = diffusionModel.DefaultOptions.PredictionType,
-                    SolverType = diffusionModel.DefaultOptions.SolverType,
-                    StepsOffset = diffusionModel.DefaultOptions.StepsOffset,
-                    TimestepSpacing = diffusionModel.DefaultOptions.TimestepSpacing,
-                    UseDynamicShifting = diffusionModel.DefaultOptions.UseDynamicShifting,
+                    GuidanceScale = diffusionModel.DefaultOptions.GuidanceScale,
+                    GuidanceScale2 = diffusionModel.DefaultOptions.GuidanceScale2,
+                    Frames = diffusionModel.DefaultOptions.Frames,
+                    FrameRate = diffusionModel.DefaultOptions.FrameRate,
                     SampleRate = diffusionModel.DefaultOptions.SampleRate,
                     FrameChunk = diffusionModel.DefaultOptions.FrameChunk,
                     FrameChunkOverlap = diffusionModel.DefaultOptions.FrameChunkOverlap,
                     FrameOptions = diffusionModel.DefaultOptions.FrameOptions?.ToArray(),
-                    IsStochasticSampling = diffusionModel.DefaultOptions.IsStochasticSampling,
-                    NoiseCondition = diffusionModel.DefaultOptions.NoiseCondition
+                    NoiseCondition = diffusionModel.DefaultOptions.NoiseCondition,
+                    Scheduler = diffusionModel.DefaultOptions.Scheduler,
+                    Schedulers = diffusionModel.DefaultOptions.Schedulers with { },
+                    Strength = diffusionModel.DefaultOptions.Strength,
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {

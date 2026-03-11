@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using TensorStack.Common.Tensor;
-using TensorStack.Python.Common;
 using TensorStack.WPF;
 
 namespace Diffuse.Common
@@ -12,7 +11,6 @@ namespace Diffuse.Common
         private int _width;
         private int _height;
         private int _seed;
-        private SchedulerType _scheduler;
         private float _guidanceScale = 1;
         private float _guidanceScale2 = 1;
         private string _prompt;
@@ -22,7 +20,7 @@ namespace Diffuse.Common
         private float _strength = 1;
         private float _controlNetStrength = 1;
         private int _inputImageCount = 0;
-        private SchedulerInputOptions _schedulerOptions = new SchedulerInputOptions();
+        private SchedulerInputOptions _schedulerOptions;
         private List<LoraOptionModel> _loraOptions;
         private int _frames;
         private float _frameRate;
@@ -48,12 +46,6 @@ namespace Diffuse.Common
             set { SetProperty(ref _seed, value); }
         }
 
-        public SchedulerType Scheduler
-        {
-            get { return _scheduler; }
-            set { SetProperty(ref _scheduler, value); }
-        }
-
         public float GuidanceScale
         {
             get { return _guidanceScale; }
@@ -77,6 +69,7 @@ namespace Diffuse.Common
             get { return _negativePrompt; }
             set { SetProperty(ref _negativePrompt, value); }
         }
+
         public int Steps
         {
             get { return _steps; }

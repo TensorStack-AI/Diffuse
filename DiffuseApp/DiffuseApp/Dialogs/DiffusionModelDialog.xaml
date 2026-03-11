@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diffuse.Dialogs"
         xmlns:CommonControls="clr-namespace:TensorStack.WPF.Controls;assembly=TensorStack.WPF"
+        xmlns:Controls="clr-namespace:Diffuse.Controls"
         mc:Ignorable="d"
         MinWidth="1100"
         MaxWidth="1100"
@@ -216,7 +217,7 @@
 
         <UniformGrid  Columns="2" Margin="0,8,0,0">
 
-            <UniformGrid Columns="2" Margin="0,0,4,0">
+            <UniformGrid Columns="1" Margin="0,0,4,0">
 
                 <!--Resolution Settings-->
                 <GroupBox Header="Resolutions">
@@ -265,41 +266,6 @@
                 </GroupBox>
 
 
-                <!--Scheduler Settings-->
-                <GroupBox Header="Schedulers">
-                    <DockPanel>
-                        <DockPanel DockPanel.Dock="Top" >
-                            <Button DockPanel.Dock="Right" Command="{Binding AddSchedulerCommand}" Height="23" Width="40" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                                <CommonControls:FontAwesome Icon="2b" IconStyle="Light" Color="{StaticResource SuccessColour}"/>
-                            </Button>
-                            <StackPanel Margin="0,0,3,0">
-                                <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}"/>
-                                <ComboBox SelectedItem="{Binding SelectedScheduler}" ItemsSource="{Binding Source={StaticResource SchedulerType}}" />
-                            </StackPanel>
-                        </DockPanel>
-                        <ListBox ItemsSource="{Binding Schedulers}" ItemContainerStyle="{StaticResource TransparentListBoxItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,3,0,0"  Background="Transparent">
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel IsItemsHost="True"  />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{StaticResource ButtonBackgroundDisabled}" Margin="2">
-                                        <DockPanel>
-                                            <Button DockPanel.Dock="Right" Command="{Binding RemoveSchedulerCommand, RelativeSource={RelativeSource AncestorType={x:Type local:DiffusionModelDialog}}}" CommandParameter="{Binding}" Style="{StaticResource TransparentButton}">
-                                                <CommonControls:FontAwesome Icon="f00d" Color="{StaticResource DangerColour}" />
-                                            </Button>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0,2,0">
-                                                <TextBlock Text="{Binding}" />
-                                            </StackPanel>
-                                        </DockPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </DockPanel>
-                </GroupBox>
 
             </UniformGrid>
 
@@ -310,7 +276,7 @@
                     <UniformGrid Columns="4">
                         <StackPanel>
                             <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <ComboBox ItemsSource="{Binding Schedulers}" SelectedItem="{Binding DiffusionModel.DefaultOptions.Scheduler}" />
+                            <ComboBox ItemsSource="{Binding Schedulers}" SelectedValue="{Binding DiffusionModel.DefaultOptions.Scheduler}" SelectedValuePath="Scheduler" DisplayMemberPath="Scheduler"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}"/>
@@ -320,10 +286,7 @@
                             <TextBlock Text="Steps2" Style="{StaticResource FieldTextBlockStyle}"/>
                             <TextBox Text="{Binding DiffusionModel.DefaultOptions.Steps2, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="StepsOffset" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.StepsOffset, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
+
 
                         <StackPanel>
                             <TextBlock Text="Guidance (CFG)" Style="{StaticResource FieldTextBlockStyle}"/>
@@ -341,56 +304,7 @@
                             <TextBlock Text="FrameRate" Style="{StaticResource FieldTextBlockStyle}"/>
                             <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameRate, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
-
-                        <StackPanel>
-                            <TextBlock Text="MaxImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.MaxImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="BaseImageSeqLen" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <TextBox Text="{Binding DiffusionModel.DefaultOptions.BaseImageSeqLen, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Shift" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.Shift, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="BaseShift" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BaseShift, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-
-                        <StackPanel>
-                            <TextBlock Text="MaxShift" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.MaxShift, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Beta Schedule" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.BetaSchedule}" ItemsSource="{Binding Source={StaticResource BetaScheduleType}}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Beta Start" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaStart, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Beta End" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <CommonControls:FloatBox FloatValue="{Binding DiffusionModel.DefaultOptions.BetaEnd, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-
-                        <StackPanel>
-                            <TextBlock Text="PredictionType" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.PredictionType}" ItemsSource="{Binding Source={StaticResource PredictionType}}"/>
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="SolverType" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.SolverType}" ItemsSource="{Binding Source={StaticResource SolverType}}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="TimestepSpacing" Style="{StaticResource FieldTextBlockStyle}"/>
-                            <ComboBox SelectedItem="{Binding DiffusionModel.DefaultOptions.TimestepSpacing}" ItemsSource="{Binding Source={StaticResource TimestepSpacingType}}" />
-                        </StackPanel>
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.UseDynamicShifting}" Content="Dynamic Shifting" Margin="4, 20,0,0"/>
-                        </StackPanel>
+  
                         <StackPanel>
                             <TextBlock Text="FrameChunk" Style="{StaticResource FieldTextBlockStyle}"/>
                             <TextBox Text="{Binding DiffusionModel.DefaultOptions.FrameChunk, UpdateSourceTrigger=PropertyChanged}"  />
@@ -403,9 +317,7 @@
                             <TextBlock Text="NoiseCondition" Style="{StaticResource FieldTextBlockStyle}"/>
                             <TextBox Text="{Binding DiffusionModel.DefaultOptions.NoiseCondition, UpdateSourceTrigger=PropertyChanged}"  />
                         </StackPanel>
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding DiffusionModel.DefaultOptions.IsStochasticSampling}" Content="Stochastic Sampling" Margin="4, 20,0,0"/>
-                        </StackPanel>
+            
                     </UniformGrid>
 
                     <StackPanel>

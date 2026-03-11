@@ -138,7 +138,7 @@ namespace Diffuse.Services
             {
                 await UpdateStatus(queueItem, ModelStatusType.Pending);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 queueItem.Progress.Clear();
                 await UpdateStatus(queueItem, ModelStatusType.DownloadFailed);

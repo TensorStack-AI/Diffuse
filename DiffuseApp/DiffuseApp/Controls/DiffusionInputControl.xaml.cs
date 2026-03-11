@@ -20,15 +20,9 @@ namespace Diffuse.Controls
         private bool _isImageInputEnabled;
         private bool _isControlNetEnabled;
         private bool _isModelOptionsVisible;
-        private bool _isSchedulerKarras;
-        private bool _isSchedulerFlowMatch;
-        private bool _isSchedulerMultiStep;
-        private bool _isSchedulerTimeStep;
-        private bool _isSchedulerStochastic;
-        private bool _isSchedulerClipSample;
-        private bool _isSchedulerThresholding;
         private bool _isSteps2Enabled;
         private bool _isGuidance2Enabled;
+        private SchedulerInputOptions[] _schedulers;
 
         public DiffusionInputControl()
         {
@@ -109,48 +103,6 @@ namespace Diffuse.Controls
             set { SetProperty(ref _isModelOptionsVisible, value); }
         }
 
-        public bool IsSchedulerKarras
-        {
-            get { return _isSchedulerKarras; }
-            set { SetProperty(ref _isSchedulerKarras, value); }
-        }
-
-        public bool IsSchedulerFlowMatch
-        {
-            get { return _isSchedulerFlowMatch; }
-            set { SetProperty(ref _isSchedulerFlowMatch, value); }
-        }
-
-        public bool IsSchedulerMultiStep
-        {
-            get { return _isSchedulerMultiStep; }
-            set { SetProperty(ref _isSchedulerMultiStep, value); }
-        }
-
-        public bool IsSchedulerTimeStep
-        {
-            get { return _isSchedulerTimeStep; }
-            set { SetProperty(ref _isSchedulerTimeStep, value); }
-        }
-
-        public bool IsSchedulerStochastic
-        {
-            get { return _isSchedulerStochastic; }
-            set { SetProperty(ref _isSchedulerStochastic, value); }
-        }
-
-        public bool IsSchedulerClipSample
-        {
-            get { return _isSchedulerClipSample; }
-            set { SetProperty(ref _isSchedulerClipSample, value); }
-        }
-
-        public bool IsSchedulerThresholding
-        {
-            get { return _isSchedulerThresholding; }
-            set { SetProperty(ref _isSchedulerThresholding, value); }
-        }
-
         public bool IsSteps2Enabled
         {
             get { return _isSteps2Enabled; }
@@ -161,6 +113,12 @@ namespace Diffuse.Controls
         {
             get { return _isGuidance2Enabled; }
             set { SetProperty(ref _isGuidance2Enabled, value); }
+        }
+
+        public SchedulerInputOptions[] Schedulers
+        {
+            get { return _schedulers; }
+            set { SetProperty(ref _schedulers, value); }
         }
 
 
@@ -200,7 +158,7 @@ namespace Diffuse.Controls
 
                 Steps = newOptions.Steps,
                 Steps2 = newOptions.Steps2,
-                Scheduler = newOptions.Scheduler,
+
                 GuidanceScale = newOptions.GuidanceScale,
                 GuidanceScale2 = newOptions.GuidanceScale2,
 
@@ -209,33 +167,20 @@ namespace Diffuse.Controls
                 FrameChunk = newOptions.FrameChunk,
                 FrameChunkOverlap = newOptions.FrameChunkOverlap,
                 NoiseCondition = newOptions.NoiseCondition,
-                SchedulerOptions = new SchedulerInputOptions
-                {
-                    Shift = newOptions.Shift,
-                    SolverType = newOptions.SolverType,
-                    PredictionType = newOptions.PredictionType,
-                    BaseShift = newOptions.BaseShift,
-                    BetaEnd = newOptions.BetaEnd,
-                    BetaSchedule = newOptions.BetaSchedule,
-                    BetaStart = newOptions.BetaStart,
-                    MaxShift = newOptions.MaxShift,
-                    StepsOffset = newOptions.StepsOffset,
-                    TimestepSpacing = newOptions.TimestepSpacing,
-                    BaseImageSeqLen = newOptions.BaseImageSeqLen,
-                    MaxImageSeqLen = newOptions.MaxImageSeqLen,
-                    UseDynamicShifting = newOptions.UseDynamicShifting,
-                    StochasticSampling = newOptions.IsStochasticSampling
-                }
             };
 
             //Resolution
             SelectedResolution = newModel?.Resolutions.FirstOrDefault(x => x.Width == _selectedResolution?.Width && x.Height == _selectedResolution?.Height)
-                              ?? newModel?.Resolutions.FirstOrDefault(x => x.IsDefault);
+                              ?? newModel?.Resolutions.OrderByDescending(x => x.IsDefault).First();
 
             // UI Flags
             IsSteps2Enabled = newPipeline.DiffusionModel.DefaultOptions.Steps2 > 0;
             IsGuidance2Enabled = newPipeline.DiffusionModel.DefaultOptions.GuidanceScale2 > 0;
             IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
+
+            //Schedulers
+            Schedulers = newOptions.Schedulers.GetSchedulers().Select(SchedulerInputOptions.Create).ToArray();
+            Options.SchedulerOptions = Schedulers.FirstOrDefault(x => x.Scheduler == newOptions.Scheduler);
             return Task.CompletedTask;
         }
 
@@ -257,21 +202,6 @@ namespace Diffuse.Controls
                 Options.Prompt += $", {triggerWord}";
             }
             return Task.CompletedTask;
-        }
-
-
-        private void ComboBoxScheduler_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (Options is null)
-                return;
-
-            IsSchedulerTimeStep = Options.Scheduler.IsTimestep();
-            IsSchedulerKarras = Options.Scheduler.IsKarras();
-            IsSchedulerFlowMatch = Options.Scheduler.IsFlowMatch();
-            IsSchedulerMultiStep = Options.Scheduler.IsMultiStep();
-            IsSchedulerStochastic = Options.Scheduler.IsStochastic();
-            IsSchedulerClipSample = Options.Scheduler.IsClipSample();
-            IsSchedulerThresholding = Options.Scheduler.IsThreshold();
         }
 
 

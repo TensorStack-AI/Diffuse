@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffuseApp.Downloader", "..\TensorStack-Private\Apps\DiffuseApp.Downloader\DiffuseApp.Downloader.csproj", "{968FF245-ADAC-05E3-C2A8-390C23F28DDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiffuseApp.Downloader", "DiffuseApp\DiffuseApp.Downloader\DiffuseApp.Downloader.csproj", "{86975514-DD20-BC36-E0B5-9B9D823E0886}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +31,8 @@ Global
 		{6B186ECB-FAF6-8CD8-DB1C-5B1BFC2AD4E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release_Installer|Any CPU.ActiveCfg = Release|Any CPU
-		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release_Installer|Any CPU.Build.0 = Release|Any CPU
+		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
+		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10468D82-30E5-3317-2964-66CC582EFE6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -41,12 +41,12 @@ Global
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11638F94-6F86-85DD-CF54-F3CC78C0FBDD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{968FF245-ADAC-05E3-C2A8-390C23F28DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Release_Installer|Any CPU.ActiveCfg = Release_Installer|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Release_Installer|Any CPU.Build.0 = Release_Installer|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86975514-DD20-BC36-E0B5-9B9D823E0886}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

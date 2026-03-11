@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
+using TensorStack.Python.Scheduler;
 
 namespace Diffuse.Services
 {
@@ -37,10 +38,14 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 4,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = false,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -52,7 +57,7 @@ namespace Diffuse.Services
                         new SizeOption { Width = 1344, Height = 768 },
                         new SizeOption { Width = 1536, Height = 1024 },
                     ]
-                 },
+                    },
 
                  // CogVideoX
                  new DiffusionModel
@@ -80,9 +85,19 @@ namespace Diffuse.Services
                         Frames = 49,
                         FrameRate = 8,
                         Scheduler = SchedulerType.CogVideoXDDIM,
-                        Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
-                        TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable,
+                        Schedulers = new SchedulerSettings
+                        {
+                            CogVideoXDDIM = new  CogVideoXDDIMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            },
+                            CogVideoXDPM = new CogVideoXDPMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -115,9 +130,19 @@ namespace Diffuse.Services
                         Frames = 49,
                         FrameRate = 8,
                         Scheduler = SchedulerType.CogVideoXDDIM,
-                        Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
-                        TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable,
+                        Schedulers = new SchedulerSettings
+                        {
+                            CogVideoXDDIM = new  CogVideoXDDIMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            },
+                            CogVideoXDPM = new CogVideoXDPMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -150,9 +175,19 @@ namespace Diffuse.Services
                         Frames = 49,
                         FrameRate = 8,
                         Scheduler = SchedulerType.CogVideoXDDIM,
-                        Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
-                        TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable,
+                        Schedulers = new SchedulerSettings
+                        {
+                            CogVideoXDDIM = new  CogVideoXDDIMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            },
+                            CogVideoXDPM = new CogVideoXDPMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -185,9 +220,19 @@ namespace Diffuse.Services
                         Frames = 81,
                         FrameRate = 16,
                         Scheduler = SchedulerType.CogVideoXDDIM,
-                        Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
-                        TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable,
+                        Schedulers = new SchedulerSettings
+                        {
+                            CogVideoXDDIM = new  CogVideoXDDIMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            },
+                            CogVideoXDPM = new CogVideoXDPMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -220,9 +265,19 @@ namespace Diffuse.Services
                         Frames = 81,
                         FrameRate = 16,
                         Scheduler = SchedulerType.CogVideoXDDIM,
-                        Schedulers = [SchedulerType.CogVideoXDDIM, SchedulerType.CogVideoXDPM],
-                        TimestepSpacing = TimestepSpacingType.Trailing,
-                        PredictionType = PredictionType.Variable,
+                        Schedulers = new SchedulerSettings
+                        {
+                            CogVideoXDDIM = new  CogVideoXDDIMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            },
+                            CogVideoXDPM = new CogVideoXDPMOptions
+                            {
+                                TimestepSpacing = TimestepSpacingType.Trailing,
+                                PredictionType = PredictionType.Variable,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -256,10 +311,15 @@ namespace Diffuse.Services
                         Height = 1024,
                         GuidanceScale = 0,
                         GuidanceScale2 = 3.5f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -295,10 +355,15 @@ namespace Diffuse.Services
                         Height = 1024,
                         GuidanceScale = 0,
                         GuidanceScale2 = 0f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 1,
-                        UseDynamicShifting = false
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 1,
+                                UseDynamicShifting = false
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -333,10 +398,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         GuidanceScale = 0,
                         GuidanceScale2 = 3.5f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -374,10 +444,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 2.5f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -412,10 +487,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 4f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -450,10 +530,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 0f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -488,10 +573,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 4f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -526,10 +616,15 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 0f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3,
-                        UseDynamicShifting = true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 3,
+                                UseDynamicShifting = true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -567,9 +662,14 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 3.5f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -604,9 +704,14 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 3.5f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -643,9 +748,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -677,9 +787,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -711,9 +826,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 241,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 241],
                     },
                     Resolutions =
@@ -745,9 +865,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 241,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 241],
                     },
                     Resolutions =
@@ -779,9 +904,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -813,9 +943,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -847,9 +982,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -881,9 +1021,14 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 121,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 5,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift = 5
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -918,13 +1063,18 @@ namespace Diffuse.Services
                         GuidanceScale = 3f,
                         Frames = 161,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -966,13 +1116,18 @@ namespace Diffuse.Services
                         GuidanceScale = 3f,
                         Frames = 161,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -1014,13 +1169,18 @@ namespace Diffuse.Services
                         GuidanceScale = 3f,
                         Frames = 161,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257]
                     },
                     Resolutions =
@@ -1062,13 +1222,18 @@ namespace Diffuse.Services
                         GuidanceScale = 3f,
                         Frames = 161,
                         FrameRate = 24,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -1110,14 +1275,18 @@ namespace Diffuse.Services
                         GuidanceScale = 4f,
                         Frames = 121,
                         FrameRate = 25,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
-                        UseDynamicShifting=true,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -1165,14 +1334,18 @@ namespace Diffuse.Services
                         GuidanceScale = 0f,
                         Frames = 121,
                         FrameRate = 25,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift= 1,
-                        BaseShift= 0.95f,
-                        MaxShift= 2.05f,
-                        MaxImageSeqLen= 4096,
-                        BaseImageSeqLen= 1024,
-                        UseDynamicShifting=true,
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 1,
+                                BaseShift= 0.95f,
+                                MaxShift= 2.05f,
+                                MaxImageSeqLen= 4096,
+                                BaseImageSeqLen= 1024,
+                            }
+                        },
                         FrameOptions= [ 65, 97, 121, 137, 161, 257],
                     },
                     Resolutions =
@@ -1222,11 +1395,16 @@ namespace Diffuse.Services
                         Height = 1328,
                         GuidanceScale = 1f,
                         GuidanceScale2 = 1f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        MaxShift= 0.9f,
-                        MaxImageSeqLen= 8192,
-                        UseDynamicShifting= true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                MaxShift= 0.9f,
+                                MaxImageSeqLen= 8192,
+                                UseDynamicShifting= true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -1262,11 +1440,16 @@ namespace Diffuse.Services
                         Height = 1024,
                         GuidanceScale = 1f,
                         GuidanceScale2 = 1f,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        MaxShift= 0.9f,
-                        MaxImageSeqLen= 8192,
-                        UseDynamicShifting= true
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                MaxShift= 0.9f,
+                                MaxImageSeqLen= 8192,
+                                UseDynamicShifting= true
+                            }
+                        }
                     },
                     Resolutions =
                     [
@@ -1304,7 +1487,25 @@ namespace Diffuse.Services
                         Height = 1024,
                         GuidanceScale = 7.5f,
                         Scheduler = SchedulerType.DDPM,
-                        Schedulers = [SchedulerType.LMS, SchedulerType.Euler, SchedulerType.EulerAncestral, SchedulerType.DDPM, SchedulerType.DDIM, SchedulerType.KDPM2, SchedulerType.KDPM2Ancestral, SchedulerType.PNDM, SchedulerType.Heun, SchedulerType.UniPC, SchedulerType.DPMM, SchedulerType.DPMS, SchedulerType.DPMSDE, SchedulerType.DEISM ],
+                        Schedulers = new SchedulerSettings
+                        {
+                            LMS = new LMSOptions(),
+                            Euler = new EulerOptions(),
+                            EulerAncestral = new EulerAncestralOptions(),
+                            DDPM = new DDPMOptions(),
+                            DDIM = new DDIMOptions(),
+                            KDPM2 = new KDPM2Options(),
+                            KDPM2Ancestral = new KDPM2AncestralOptions(),
+                            DPMSolverMultistep = new DPMSolverMultistepOptions(),
+                            DPMSolverSinglestep = new DPMSolverSinglestepOptions(),
+                            DPMSolverSDE = new DPMSolverSDEOptions(),
+                            DEISMultistep = new DEISMultistepOptions(),
+                            PNDM = new PNDMOptions(),
+                            Heun = new HeunOptions(),
+                            UniPCMultistep = new UniPCMultistepOptions(),
+                            TCD = new TCDOptions(),
+                            SASolver = new SASolverOptions()
+                        }
                     },
                     Resolutions =
                     [
@@ -1343,7 +1544,23 @@ namespace Diffuse.Services
                         Height = 512,
                         GuidanceScale = 0f,
                         Scheduler = SchedulerType.EulerAncestral,
-                        Schedulers = [SchedulerType.LMS, SchedulerType.Euler, SchedulerType.EulerAncestral, SchedulerType.DDPM, SchedulerType.DDIM, SchedulerType.KDPM2, SchedulerType.KDPM2Ancestral, SchedulerType.PNDM, SchedulerType.Heun, SchedulerType.UniPC, SchedulerType.DPMM, SchedulerType.DPMS, SchedulerType.DPMSDE, SchedulerType.DEISM],
+                        Schedulers = new SchedulerSettings
+                        {
+                            LMS = new LMSOptions(),
+                            Euler = new EulerOptions(),
+                            EulerAncestral = new EulerAncestralOptions(),
+                            DDPM = new DDPMOptions(),
+                            DDIM = new DDIMOptions(),
+                            KDPM2 = new KDPM2Options(),
+                            KDPM2Ancestral = new KDPM2AncestralOptions(),
+                            PNDM = new PNDMOptions(),
+                            Heun = new HeunOptions(),
+                            UniPCMultistep = new UniPCMultistepOptions(),
+                            DPMSolverMultistep = new DPMSolverMultistepOptions(),
+                            DPMSolverSinglestep = new DPMSolverSinglestepOptions(),
+                            DPMSolverSDE = new DPMSolverSDEOptions(),
+                            DEISMultistep = new DEISMultistepOptions(),
+                        }
                     },
                     Resolutions =
                     [
@@ -1384,7 +1601,23 @@ namespace Diffuse.Services
                         Height = 1024,
                         GuidanceScale = 2f,
                         Scheduler = SchedulerType.DDPM,
-                        Schedulers = [SchedulerType.LMS, SchedulerType.Euler, SchedulerType.EulerAncestral, SchedulerType.DDPM, SchedulerType.DDIM, SchedulerType.KDPM2, SchedulerType.KDPM2Ancestral, SchedulerType.PNDM, SchedulerType.Heun, SchedulerType.UniPC, SchedulerType.DPMM, SchedulerType.DPMS, SchedulerType.DPMSDE, SchedulerType.DEISM],
+                        Schedulers = new SchedulerSettings
+                        {
+                            LMS = new LMSOptions(),
+                            Euler = new EulerOptions(),
+                            EulerAncestral = new EulerAncestralOptions(),
+                            DDPM = new DDPMOptions(),
+                            DDIM = new DDIMOptions(),
+                            KDPM2 = new KDPM2Options(),
+                            KDPM2Ancestral = new KDPM2AncestralOptions(),
+                            PNDM = new PNDMOptions(),
+                            Heun = new HeunOptions(),
+                            UniPCMultistep = new UniPCMultistepOptions(),
+                            DPMSolverMultistep = new DPMSolverMultistepOptions(),
+                            DPMSolverSinglestep = new DPMSolverSinglestepOptions(),
+                            DPMSolverSDE = new DPMSolverSDEOptions(),
+                            DEISMultistep = new DEISMultistepOptions(),
+                        }
                     },
                     Resolutions =
                     [
@@ -1426,18 +1659,25 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 81,
                         FrameRate = 16,
-                        Scheduler = SchedulerType.UniPC,
-                        Schedulers = [SchedulerType.UniPC, SchedulerType.FlowMatchEulerDiscrete],
-                        BetaStart= 0.0001f,
-                        BetaEnd= 0.02f,
-                        BetaSchedule= BetaScheduleType.Linear,
-                        TimestepSpacing= TimestepSpacingType.Linspace,
-                        PredictionType=  PredictionType.FlowPrediction,
-                        SolverType=  SolverType.BH2,
-                        StepsOffset= 0,
-                        Shift= 3,
-                        BaseShift= 0.5f,
-                        MaxShift= 1.15f,
+                        Scheduler = SchedulerType.UniPCMultistep,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 3,
+                                BaseShift= 0.5f,
+                                MaxShift= 1.15f,
+                            },
+                            UniPCMultistep = new UniPCMultistepOptions
+                            {
+                                BetaStart= 0.0001f,
+                                BetaEnd= 0.02f,
+                                BetaSchedule= BetaScheduleType.Linear,
+                                TimestepSpacing= TimestepSpacingType.Linspace,
+                                PredictionType=  PredictionType.FlowPrediction,
+                                SolverType=  SolverType.BH2,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -1469,18 +1709,25 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 81,
                         FrameRate = 16,
-                        Scheduler = SchedulerType.UniPC,
-                        Schedulers = [SchedulerType.UniPC, SchedulerType.FlowMatchEulerDiscrete],
-                        BetaStart= 0.0001f,
-                        BetaEnd= 0.02f,
-                        BetaSchedule= BetaScheduleType.Linear,
-                        TimestepSpacing= TimestepSpacingType.Linspace,
-                        PredictionType=  PredictionType.FlowPrediction,
-                        SolverType=  SolverType.BH2,
-                        StepsOffset= 0,
-                        Shift= 3,
-                        BaseShift= 0.5f,
-                        MaxShift= 1.15f,
+                        Scheduler = SchedulerType.UniPCMultistep,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 3,
+                                BaseShift= 0.5f,
+                                MaxShift= 1.15f,
+                            },
+                            UniPCMultistep = new UniPCMultistepOptions
+                            {
+                                BetaStart= 0.0001f,
+                                BetaEnd= 0.02f,
+                                BetaSchedule= BetaScheduleType.Linear,
+                                TimestepSpacing= TimestepSpacingType.Linspace,
+                                PredictionType=  PredictionType.FlowPrediction,
+                                SolverType=  SolverType.BH2,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -1513,18 +1760,25 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 81,
                         FrameRate = 16,
-                        Scheduler = SchedulerType.UniPC,
-                        Schedulers = [SchedulerType.UniPC, SchedulerType.FlowMatchEulerDiscrete],
-                        BetaStart= 0.0001f,
-                        BetaEnd= 0.02f,
-                        BetaSchedule= BetaScheduleType.Linear,
-                        TimestepSpacing= TimestepSpacingType.Linspace,
-                        PredictionType=  PredictionType.FlowPrediction,
-                        SolverType=  SolverType.BH2,
-                        StepsOffset= 0,
-                        Shift= 3,
-                        BaseShift= 0.5f,
-                        MaxShift= 1.15f,
+                        Scheduler = SchedulerType.UniPCMultistep,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 3,
+                                BaseShift= 0.5f,
+                                MaxShift= 1.15f,
+                            },
+                            UniPCMultistep = new UniPCMultistepOptions
+                            {
+                                BetaStart= 0.0001f,
+                                BetaEnd= 0.02f,
+                                BetaSchedule= BetaScheduleType.Linear,
+                                TimestepSpacing= TimestepSpacingType.Linspace,
+                                PredictionType=  PredictionType.FlowPrediction,
+                                SolverType=  SolverType.BH2,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -1556,18 +1810,25 @@ namespace Diffuse.Services
                         GuidanceScale = 5f,
                         Frames = 81,
                         FrameRate = 16,
-                        Scheduler = SchedulerType.UniPC,
-                        Schedulers = [SchedulerType.UniPC, SchedulerType.FlowMatchEulerDiscrete],
-                        BetaStart= 0.0001f,
-                        BetaEnd= 0.02f,
-                        BetaSchedule= BetaScheduleType.Linear,
-                        TimestepSpacing= TimestepSpacingType.Linspace,
-                        PredictionType=  PredictionType.FlowPrediction,
-                        SolverType=  SolverType.BH2,
-                        StepsOffset= 0,
-                        Shift= 3,
-                        BaseShift= 0.5f,
-                        MaxShift= 1.15f,
+                        Scheduler = SchedulerType.UniPCMultistep,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 3,
+                                BaseShift= 0.5f,
+                                MaxShift= 1.15f,
+                            },
+                            UniPCMultistep = new UniPCMultistepOptions
+                            {
+                                BetaStart= 0.0001f,
+                                BetaEnd= 0.02f,
+                                BetaSchedule= BetaScheduleType.Linear,
+                                TimestepSpacing= TimestepSpacingType.Linspace,
+                                PredictionType=  PredictionType.FlowPrediction,
+                                SolverType=  SolverType.BH2,
+                            }
+                        },
                         FrameOptions = [ 17, 33, 49, 81, 161]
                     },
                     Resolutions =
@@ -1600,9 +1861,14 @@ namespace Diffuse.Services
                         Width = 1024,
                         Height = 1024,
                         GuidanceScale = 0,
-                        Scheduler = SchedulerType.FlowMatchEulerDiscrete,
-                        Schedulers = [SchedulerType.FlowMatchEulerDiscrete],
-                        Shift = 3
+                        Scheduler = SchedulerType.FlowMatchEuler,
+                        Schedulers = new SchedulerSettings
+                        {
+                            FlowMatchEuler = new FlowMatchEulerOptions
+                            {
+                                Shift= 3
+                            },
+                        }
                     },
                     Resolutions =
                     [

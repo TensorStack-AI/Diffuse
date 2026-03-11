@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using TensorStack.Python.Common;
+using TensorStack.Python.Scheduler;
 
 namespace Diffuse.Common
 {
@@ -17,26 +17,9 @@ namespace Diffuse.Common
         public int FrameChunkOverlap { get; set; }
         public int NoiseCondition { get; set; }
         public float Strength { get; set; } = 1;
-
         public SchedulerType Scheduler { get; set; }
-        public SchedulerType[] Schedulers { get; set; }
-
-
-        public float BetaStart { get; set; } = 0.00085f;
-        public float BetaEnd { get; set; } = 0.012f;
-        public BetaScheduleType BetaSchedule { get; set; } = BetaScheduleType.ScaledLinear;
-        public TimestepSpacingType TimestepSpacing { get; set; } = TimestepSpacingType.Linspace;
-        public PredictionType PredictionType { get; set; } = PredictionType.Epsilon;
-        public SolverType SolverType { get; set; }
-        public int StepsOffset { get; set; }
-        public float Shift { get; set; } = 1;
-        public float BaseShift { get; set; } = 1.15f;
-        public float MaxShift { get; set; } = 0.5f;
-        public int BaseImageSeqLen { get; set; } = 256;
-        public int MaxImageSeqLen { get; set; } = 4096;
-        public bool UseDynamicShifting { get; set; }
+        public SchedulerSettings Schedulers { get; set; }
         public int SampleRate { get; set; } = 24000;
-        public bool IsStochasticSampling { get; set; }
         public int[] FrameOptions { get; set; }
 
         public virtual bool Equals(DiffusionDefaultOptions other) => ReferenceEquals(this, other);

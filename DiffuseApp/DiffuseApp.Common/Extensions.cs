@@ -1,5 +1,4 @@
-﻿using CSnakes.Runtime.Python;
-using DiffuseApp.Common.Message;
+﻿using DiffuseApp.Common.Message;
 using System;
 using System.Collections.Generic;
 using System.IO;
