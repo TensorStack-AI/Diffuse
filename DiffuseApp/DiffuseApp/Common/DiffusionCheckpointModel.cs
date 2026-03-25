@@ -5,50 +5,86 @@ namespace Diffuse.Common
 {
     public sealed class DiffusionCheckpointModel : BaseModel
     {
-        private string _checkpoint;
-        private string _modelCheckpoint;
-        private string _vaeCheckpoint;
-        private string _textEncoderCheckpoint;
+        private string _connectors;
+        private string _vocoder;
+        private string _audioVae;
+        private string _vae;
+        private string _transformer2;
+        private string _transformer;
+        private string _textEncoder3;
+        private string _textEncoder2;
+        private string _textEncoder;
+        private string _singleFile;
 
-        /// <summary>
-        /// Gets or sets the SingleFile checkpoint.
-        /// </summary>
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Checkpoint
+        public string SingleFile
         {
-            get { return _checkpoint; }
-            set { SetProperty(ref _checkpoint, value == string.Empty ? null : value); }
+            get { return _singleFile; }
+            set { SetProperty(ref _singleFile, value == string.Empty ? null : value); }
         }
 
-        /// <summary>
-        /// Gets or sets the Transformer/Unet checkpoint.
-        /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string ModelCheckpoint
+        public string TextEncoder
         {
-            get { return _modelCheckpoint; }
-            set { SetProperty(ref _modelCheckpoint, value == string.Empty ? null : value); }
+            get { return _textEncoder; }
+            set { SetProperty(ref _textEncoder, value == string.Empty ? null : value); }
         }
 
-        /// <summary>
-        /// Gets or sets the Vae checkpoint.
-        /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string VaeCheckpoint
+        public string TextEncoder2
         {
-            get { return _vaeCheckpoint; }
-            set { SetProperty(ref _vaeCheckpoint, value == string.Empty ? null : value); }
+            get { return _textEncoder2; }
+            set { SetProperty(ref _textEncoder2, value == string.Empty ? null : value); }
         }
 
-
-        /// <summary>
-        /// Gets or sets the TextEncoder checkpoint.
-        /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string TextEncoderCheckpoint
+        public string TextEncoder3
         {
-            get { return _textEncoderCheckpoint; }
-            set { SetProperty(ref _textEncoderCheckpoint, value == string.Empty ? null : value); }
+            get { return _textEncoder3; }
+            set { SetProperty(ref _textEncoder3, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Transformer
+        {
+            get { return _transformer; }
+            set { SetProperty(ref _transformer, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Transformer2
+        {
+            get { return _transformer2; }
+            set { SetProperty(ref _transformer2, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Vae
+        {
+            get { return _vae; }
+            set { SetProperty(ref _vae, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string AudioVae
+        {
+            get { return _audioVae; }
+            set { SetProperty(ref _audioVae, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Vocoder
+        {
+            get { return _vocoder; }
+            set { SetProperty(ref _vocoder, value == string.Empty ? null : value); }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Connectors
+        {
+            get { return _connectors; }
+            set { SetProperty(ref _connectors, value == string.Empty ? null : value); }
         }
     }
 }

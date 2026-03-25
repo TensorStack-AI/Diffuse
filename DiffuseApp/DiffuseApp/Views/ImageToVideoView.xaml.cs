@@ -73,11 +73,11 @@ namespace Diffuse.Views
                 CompareVideo = default;
                 Statistics.Start();
 
-                // Diffusion
-                var options = Options with
-                {
-                    InputImage = _sourceImage
-                };
+                // Options
+                var options = Options with { };
+                options.InputImages = [_sourceImage];
+
+                // Execute
                 var resultTensor = await ExecuteVideoDiffusionAsync(options);
 
                 // Upscale

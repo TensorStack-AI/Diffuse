@@ -58,13 +58,13 @@ namespace Diffuse.Common
 
         private void OnProgress(PipelineProgress progress)
         {
-            if (!progress.IsDownloading)
+            if (progress.Key?.Equals("Download") == false)
                 return;
 
-            Speed = progress.DownloadSpeed;
-            Component = progress.DownloadModel;
-            FileName = progress.DownloadFile;
-            Progress.Update(progress.Iteration, progress.Iterations);
+            Speed = progress.Elapsed;
+            Component = progress.Subkey;
+            FileName = progress.Message;
+            Progress.Update(progress.Value, progress.Maximum);
         }
     }
 }

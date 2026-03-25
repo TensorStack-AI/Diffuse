@@ -135,13 +135,13 @@ namespace Diffuse.Views
                 CurrentImage = default;
                 CurrentAudio = default;
                 CurrentVideoStream = default;
-                if (_selectedItem.MediaType == MediaType.Text)
+                if (_selectedItem?.MediaType == MediaType.Text)
                     CurrentText = await TensorStack.Common.TextInput.CreateAsync(_selectedItem.MediaPath, Encoding.UTF8);
-                if (_selectedItem.MediaType == MediaType.Image)
+                if (_selectedItem?.MediaType == MediaType.Image)
                     CurrentImage = await ImageInput.CreateAsync(_selectedItem.MediaPath);
-                if (_selectedItem.MediaType == MediaType.Audio)
+                if (_selectedItem?.MediaType == MediaType.Audio)
                     CurrentAudio = await AudioInput.CreateAsync(_selectedItem.MediaPath);
-                if (_selectedItem.MediaType == MediaType.Video)
+                if (_selectedItem?.MediaType == MediaType.Video)
                     CurrentVideoStream = await VideoInputStream.CreateAsync(_selectedItem.MediaPath);
             }
             finally

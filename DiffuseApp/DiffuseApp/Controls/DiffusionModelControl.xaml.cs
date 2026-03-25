@@ -34,9 +34,10 @@ namespace Diffuse.Controls
         private ExtractModel _selectedExtractor;
         private UpscaleModel _selectedUpscaler;
         private MemoryProfileModel _selectedMemoryMode;
-        private DataType _selectedDataType;
+        private QualityMode _selectedQualityMode;
 
         private bool _isControlNetSupported;
+        private bool _isControlNetEnabled;
         private bool _isUpscalerSupported;
         private bool _isUpscalerEnabled;
         private bool _isLoraSupported;
@@ -51,8 +52,9 @@ namespace Diffuse.Controls
         private LoraAdapterModel[] _currentLora;
         private UpscaleModel _currentUpscaler;
         private MemoryMode _currentMemoryMode;
-        private DataType _currentDataType;
+        private QualityMode _currentQualityMode;
 
+        private bool _currentControlNetEnabled;
         private bool _currentUpscalerEnabled;
         private bool _currentLoraEnabled;
         private bool _currentExtractorEnabled;
@@ -67,11 +69,9 @@ namespace Diffuse.Controls
             [
                 new MemoryProfileModel{ MemoryMode = MemoryMode.Auto },
                 new MemoryProfileModel{ MemoryMode = MemoryMode.Balanced },
-                new MemoryProfileModel{ MemoryMode = MemoryMode.Lowest },
                 new MemoryProfileModel{ MemoryMode = MemoryMode.Low },
                 new MemoryProfileModel{ MemoryMode = MemoryMode.Medium },
-                new MemoryProfileModel{ MemoryMode = MemoryMode.High },
-                new MemoryProfileModel{ MemoryMode = MemoryMode.Highest }
+                new MemoryProfileModel{ MemoryMode = MemoryMode.High }
             ];
             LoadCommand = new AsyncRelayCommand(LoadAsync, CanLoad);
             UnloadCommand = new AsyncRelayCommand(UnloadAsync, CanUnload);
@@ -157,10 +157,10 @@ namespace Diffuse.Controls
             set { SetProperty(ref _selectedMemoryMode, value); ValidateSelection(); }
         }
 
-        public DataType SelectedDataType
+        public QualityMode SelectedQualityMode
         {
-            get { return _selectedDataType; }
-            set { SetProperty(ref _selectedDataType, value); ValidateSelection(); }
+            get { return _selectedQualityMode; }
+            set { SetProperty(ref _selectedQualityMode, value); ValidateSelection(); }
         }
 
         public ListCollectionView DeviceCollectionView
@@ -203,6 +203,12 @@ namespace Diffuse.Controls
         {
             get { return _isControlNetSupported; }
             set { SetProperty(ref _isControlNetSupported, value); }
+        }
+
+        public bool IsControlNetEnabled
+        {
+            get { return _isControlNetEnabled; }
+            set { SetProperty(ref _isControlNetEnabled, value); ValidateSelection(); }
         }
 
         public bool IsExtractorSupported
@@ -257,8 +263,9 @@ namespace Diffuse.Controls
             _currentLora = _isLoraEnabled ? [.. LoraAdapters] : default;
             _currentUpscaler = SelectedUpscaler;
             _currentMemoryMode = SelectedMemoryMode.MemoryMode;
-            _currentDataType = SelectedDataType;
+            _currentQualityMode = SelectedQualityMode;
 
+            _currentControlNetEnabled = _isControlNetEnabled;
             _currentExtractorEnabled = _isExtractorEnabled;
             _currentUpscalerEnabled = _isUpscalerEnabled;
             _currentLoraEnabled = _isLoraEnabled;
@@ -267,13 +274,13 @@ namespace Diffuse.Controls
             {
                 Device = _currentDevice,
                 DiffusionModel = _currentModel,
-                ControlNetModel = _isControlNetSupported ? _currentControlNet : default,
+                ControlNetModel = _isControlNetEnabled ? _currentControlNet : default,
                 ExtractModel = _currentExtractorEnabled ? _currentExtractor : default,
                 UpscaleModel = _currentUpscalerEnabled ? _currentUpscaler : default,
                 LoraAdapterModel = _currentLoraEnabled ? _currentLora : default,
                 MemoryMode = _currentMemoryMode,
-                DataType = _currentDataType,
-                ProcessType = _processType
+                QualityMode = _currentQualityMode,
+                ProcessType = GetProcessType()
             };
 
             SelectionChanged?.Invoke(this, pipeline);
@@ -303,6 +310,7 @@ namespace Diffuse.Controls
             _currentLora = default;
             _currentUpscaler = default;
 
+            _currentControlNetEnabled = false;
             _currentExtractorEnabled = false;
             _currentLoraEnabled = false;
             _currentUpscalerEnabled = false;
@@ -311,7 +319,7 @@ namespace Diffuse.Controls
             {
                 Device = _selectedDevice,
                 MemoryMode = _selectedMemoryMode.MemoryMode,
-                DataType = _selectedDataType,
+                QualityMode = _selectedQualityMode,
                 ProcessType = _processType
             };
 
@@ -345,7 +353,7 @@ namespace Diffuse.Controls
             var isLoraValid = !IsLoraEnabled || LoraCollectionView?.IsEmpty == false;
             var isExtractValid = !IsExtractorEnabled || ExtractCollectionView?.IsEmpty == false;
             var isUpscaleValid = !IsUpscalerEnabled || UpscaleCollectionView?.IsEmpty == false;
-            var isControlNetValid = !IsControlNetSupported || ControlNetCollectionView?.IsEmpty == false;
+            var isControlNetValid = !IsControlNetEnabled || ControlNetCollectionView?.IsEmpty == false;
             var isModelValid = ModelCollectionView?.IsEmpty == false;
             var isCurrentValid = !HasCurrentChanged();
             IsSelectionValid = isCurrentValid && isLoraValid && isExtractValid && isUpscaleValid && isControlNetValid && isModelValid && IsPipelineLoaded;
@@ -358,6 +366,7 @@ namespace Diffuse.Controls
             return _currentDevice != SelectedDevice
                 || _currentModel != SelectedModel
                 || _currentControlNet != SelectedControlNet
+                || _currentControlNetEnabled != _isControlNetEnabled
                 || _currentExtractor != SelectedExtractor
                 || _currentExtractorEnabled != _isExtractorEnabled
                 || _currentLoraEnabled != _isLoraEnabled
@@ -365,7 +374,7 @@ namespace Diffuse.Controls
                 || _currentUpscaler != SelectedUpscaler
                 || _currentUpscalerEnabled != _isUpscalerEnabled
                 || _currentMemoryMode != SelectedMemoryMode.MemoryMode
-                || _currentDataType != SelectedDataType;
+                || _currentQualityMode != SelectedQualityMode;
         }
 
 
@@ -510,9 +519,9 @@ namespace Diffuse.Controls
 
             RefreshMemoryProfile();
 
-            SelectedDataType = _selectedModel.UserDataType is null
-                ? _selectedDevice.DefaultDataType
-                : _selectedModel.UserDataType.Value;
+            SelectedQualityMode = _selectedModel.UserQualityMode is null
+                ? _selectedDevice.DefaultQualityMode
+                : _selectedModel.UserQualityMode.Value;
 
             SelectedMemoryMode = _selectedModel.UserMemoryMode is null
                 ? MemoryModes.FirstOrDefault(x => x.MemoryMode == MemoryMode.Auto)
@@ -554,9 +563,9 @@ namespace Diffuse.Controls
             if (_selectedDevice is null)
                 return;
 
-            SelectedDataType = _selectedDevice.DataTypes.Contains(_selectedDataType)
-                ? _selectedDataType
-                : _selectedDevice.DefaultDataType;
+            SelectedQualityMode = _selectedDevice.QualityModes.Contains(_selectedQualityMode)
+                ? _selectedQualityMode
+                : _selectedDevice.DefaultQualityMode;
         }
 
 
@@ -565,18 +574,17 @@ namespace Diffuse.Controls
             if (_selectedDevice is null || _selectedModel is null || _selectedMemoryMode is null)
                 return;
 
-            var profile = _selectedModel.MemoryProfile?.FirstOrDefault(x => x.DataType == _selectedDataType);
+            var deviceMemory = _selectedDevice.MemoryGB;
+            var profile = _selectedModel.MemoryProfile?.FirstOrDefault(x => x.QualityMode == _selectedQualityMode);
             if (profile is null)
                 return;
 
-            var deviceMemory = _selectedDevice.MemoryGB;
             var modeIndex = profile.GetIndex(deviceMemory);
             MemoryModes[0].MemoryGB = profile.MemoryModes.ElementAtOrDefault(modeIndex);
+            MemoryModes[0].DetectedMode = Enum.GetValues<MemoryMode>()[modeIndex + 2];
             MemoryModes[2].MemoryGB = profile.MemoryModes.ElementAtOrDefault(0);
             MemoryModes[3].MemoryGB = profile.MemoryModes.ElementAtOrDefault(1);
             MemoryModes[4].MemoryGB = profile.MemoryModes.ElementAtOrDefault(2);
-            MemoryModes[5].MemoryGB = profile.MemoryModes.ElementAtOrDefault(3);
-            MemoryModes[6].MemoryGB = profile.MemoryModes.ElementAtOrDefault(4);
         }
 
 
@@ -600,7 +608,7 @@ namespace Diffuse.Controls
             SelectedDevice = pipeline.Device;
             SelectedModel = pipeline.DiffusionModel;
 
-            SelectedDataType = pipeline.DataType;
+            SelectedQualityMode = pipeline.QualityMode;
             SelectedMemoryMode = MemoryModes.FirstOrDefault(x => x.MemoryMode == pipeline.MemoryMode);
 
             if (IsUpscalerSupported)
@@ -619,6 +627,7 @@ namespace Diffuse.Controls
 
             if (IsControlNetSupported)
             {
+                IsControlNetEnabled = pipeline.ControlNetModel is not null;
                 if (pipeline.ControlNetModel is not null)
                     SelectedControlNet = pipeline.ControlNetModel;
             }
@@ -654,7 +663,9 @@ namespace Diffuse.Controls
 
                 var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
                 if (queueDownload)
-                    return await DownloadService.QueueAsync(model);
+                    await DownloadService.QueueAsync(model);
+
+                return true;
             }
             return false;
         }
@@ -673,5 +684,17 @@ namespace Diffuse.Controls
             return false;
         }
 
+
+
+        private ProcessType GetProcessType()
+        {
+            if (_isControlNetSupported && _isControlNetEnabled)
+            {
+                if (_selectedModel.ProcessTypes.Contains(ProcessType.ImageControlNet))
+                    return ProcessType.ImageControlNet;
+
+            }
+            return _processType;
+        }
     }
 }

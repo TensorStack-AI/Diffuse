@@ -232,7 +232,8 @@ namespace Diffuse.Services
                 Width = videoStream.Width,
                 Height = videoStream.Height,
                 FrameRate = videoStream.FrameRate,
-                FrameCount = videoStream.FrameCount
+                FrameCount = videoStream.FrameCount,
+                Duration = videoStream.Duration
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -255,7 +256,9 @@ namespace Diffuse.Services
                 Source = View.History,
                 FilePath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.json"),
                 MediaPath = audioInput.SourceFile,
-                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png")
+                ThumbPath = Path.Combine(_settings.DirectoryHistory, $"Recent_{key}.png"),
+                Duration = audioInput.Duration,
+                SampleRate = audioInput.SampleRate,
             };
 
             return await AddAudioInternalAsync(audioInput, history);
@@ -304,7 +307,8 @@ namespace Diffuse.Services
                 Width = videoStream.Width,
                 Height = videoStream.Height,
                 FrameRate = videoStream.FrameRate,
-                FrameCount = videoStream.FrameCount
+                FrameCount = videoStream.FrameCount,
+                Duration = videoStream.Duration
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -330,7 +334,8 @@ namespace Diffuse.Services
                 Width = videoStream.Width,
                 Height = videoStream.Height,
                 FrameRate = videoStream.FrameRate,
-                FrameCount = videoStream.FrameCount
+                FrameCount = videoStream.FrameCount,
+                Duration = videoStream.Duration
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -356,7 +361,8 @@ namespace Diffuse.Services
                 Width = videoStream.Width,
                 Height = videoStream.Height,
                 FrameRate = videoStream.FrameRate,
-                FrameCount = videoStream.FrameCount
+                FrameCount = videoStream.FrameCount,
+                Duration = videoStream.Duration
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -382,7 +388,8 @@ namespace Diffuse.Services
                 Width = videoStream.Width,
                 Height = videoStream.Height,
                 FrameRate = videoStream.FrameRate,
-                OriginalFrameRate = videoStream.FrameCount
+                FrameCount = videoStream.FrameCount,
+                Duration = videoStream.Duration
             };
 
             return await AddVideoInternalAsync(videoStream, history);
@@ -405,7 +412,6 @@ namespace Diffuse.Services
                 FilePath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.json"),
                 MediaPath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.wav"),
                 //ThumbPath = Path.Combine(_settings.DirectoryHistory, $"GenerateAudio_{key}.png"),
-                Channels = audio.Channels,
                 Duration = audio.Duration,
                 SampleRate = audio.SampleRate
             };

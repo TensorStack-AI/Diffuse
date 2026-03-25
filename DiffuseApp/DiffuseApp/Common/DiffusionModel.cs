@@ -41,7 +41,7 @@ namespace Diffuse.Common
         public MemoryMode? UserMemoryMode { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public DataType? UserDataType { get; set; }
+        public QualityMode? UserQualityMode { get; set; }
 
 
         public void Initialize(string modelDirectory)
@@ -53,37 +53,30 @@ namespace Diffuse.Common
                 isValid = Directory.Exists(System.IO.Path.Combine(modelDirectory, Utils.GetHuggingFaceCacheId(Path)));
             else if (Source == ModelSourceType.SingleFile)
             {
-                isValid = Checkpoint is not null && Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Checkpoint);
+                isValid = Checkpoint is not null && Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.SingleFile);
             }
             else if (Source == ModelSourceType.Checkpoint)
             {
                 isValid = Checkpoint is not null
                     && Utils.TryParseHuggingFaceRepo(Path, out _)
-                    && (string.IsNullOrEmpty(Checkpoint.VaeCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.VaeCheckpoint))
-                    && (string.IsNullOrEmpty(Checkpoint.ModelCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.ModelCheckpoint))
-                    && (string.IsNullOrEmpty(Checkpoint.TextEncoderCheckpoint) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoderCheckpoint));
+                    && (string.IsNullOrEmpty(Checkpoint.TextEncoder) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoder))
+                    && (string.IsNullOrEmpty(Checkpoint.TextEncoder2) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoder2))
+                    && (string.IsNullOrEmpty(Checkpoint.TextEncoder3) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.TextEncoder3))
+                    && (string.IsNullOrEmpty(Checkpoint.Transformer) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Transformer))
+                    && (string.IsNullOrEmpty(Checkpoint.Transformer2) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Transformer2))
+                    && (string.IsNullOrEmpty(Checkpoint.Vae) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Vae))
+                    && (string.IsNullOrEmpty(Checkpoint.AudioVae) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.AudioVae))
+                    && (string.IsNullOrEmpty(Checkpoint.Vocoder) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Vocoder))
+                    && (string.IsNullOrEmpty(Checkpoint.Connectors) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Connectors));
             }
 
             if (Status == ModelStatusType.Pending && isValid)
-                Status = ModelStatusType.Installed;
-            else if(Status == ModelStatusType.Installed && !isValid)
+                Status = ModelStatusType.Unknown;
+            else if (Status == ModelStatusType.Installed && !isValid)
                 Status = ModelStatusType.Pending;
             else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
                 Status = ModelStatusType.Pending;
         }
 
-    }
-
-    public sealed class MemoryProfile : BaseModel
-    {
-        public MemoryProfile() { }
-        public MemoryProfile(DataType dataType, int[] memoryModes)
-        {
-            DataType = dataType;
-            MemoryModes = memoryModes;
-        }
-
-        public DataType DataType { get; set; }
-        public int[] MemoryModes { get; set; }
     }
 }

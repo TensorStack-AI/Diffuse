@@ -14,7 +14,7 @@
              xmlns:Common="clr-namespace:Diffuse.Common"
              xmlns:Views="clr-namespace:Diffuse.Views">
     <Grid  DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:DiffusionInputControl}}}">
-        <TabControl Margin="0,14,0,0">
+        <TabControl Margin="0,14,0,14">
 
             <!--Options-->
             <TabItem>
@@ -182,10 +182,25 @@
                             </UniformGrid>
                         </StackPanel>
 
+
                         <!--ImageToImage-->
-                        <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageToImage}">
-                            <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
-                        </StackPanel>
+                        <Grid Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageToImage}">
+
+                            <!--Default-->
+                            <StackPanel Visibility="{Binding Pipeline.ControlNetModel, Converter={StaticResource InverseNullVisibilityConverter}}">
+                                <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                            </StackPanel>
+
+                           <!--ControlNet-->
+                            <StackPanel Visibility="{Binding Pipeline.ControlNetModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                                <CommonControls:SliderControl Text="Control Strength" Value="{Binding Options.ControlNetStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
+                                <!--<DockPanel Visibility="{Binding IsImageToImageControlNetSupported, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <CheckBox DockPanel.Dock="Left" Content="Input Image" Margin="0,10,20,0"/>
+                                    <CommonControls:SliderControl Text="Input Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                                </DockPanel>-->
+                            </StackPanel>
+                        </Grid>
+
 
                         <!--VideoToVideo-->
                         <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=VideoToVideo}">
@@ -194,21 +209,15 @@
                             </StackPanel>
                         </StackPanel>
 
+
                         <!--ImageInpaint-->
                         <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ImageInpaint}">
                             <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
                         </StackPanel>
 
-                        <!--ControlNetImage-->
-                        <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ControlNetImage}">
-                            <CommonControls:SliderControl Text="ControlNet Strength" Value="{Binding Options.ControlNetStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
-                        </StackPanel>
 
-                        <!--ControlNetImageToImage-->
-                        <StackPanel Visibility="{Binding ProcessType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=ControlNetImageToImage}">
-                            <CommonControls:SliderControl Text="Strength" Value="{Binding Options.Strength}"  IsPercent="True"  Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
-                            <CommonControls:SliderControl Text="ControlNet Strength" Value="{Binding Options.ControlNetStrength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01"/>
-                        </StackPanel>
+
+
 
                         <!--Lora Strength-->
                         <ItemsControl ItemsSource="{Binding Options.LoraOptions}">
@@ -216,7 +225,7 @@
                                 <DataTemplate>
                                     <Grid>
                                         <TextBlock Text="{Binding Name, StringFormat={}({0})}" FontSize="8" Margin="0,6,0,0" Opacity=".9" HorizontalAlignment="Center"/>
-                                        <CommonControls:SliderControl Text="Lora" Value="{Binding Strength}" IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" />
+                                        <CommonControls:SliderControl Text="Lora"  IsPercent="True" Minimum="0.01" Maximum="1" TickFrequency="0.01" Value="{Binding Strength}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -302,11 +311,6 @@
                 </TabItem.Header>
                 <StackPanel VerticalAlignment="Top" Margin="0,4,0,0">
 
-                    <!--UpscaleOptions-->
-                    <GroupBox Header="Upscale Options" Margin="0,0,0,10" Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Controls:UpscaleInputControl Pipeline="{Binding Pipeline, Mode=OneWay}" Options="{Binding UpscaleOptions, Mode=OneWayToSource}" />
-                    </GroupBox>
-
                     <!--ExtractOptions-->
                     <GroupBox Header="Extract Options" Margin="0,0,0,10" Visibility="{Binding Pipeline.ExtractModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
                         <Controls:ExtractInputControl Pipeline="{Binding Pipeline, Mode=OneWay}" Options="{Binding ExtractOptions, Mode=OneWayToSource}" />
@@ -315,6 +319,19 @@
                     <!--SchedulerOptions-->
                     <GroupBox Header="Scheduler Options" Margin="0,0,0,10">
                         <Controls:SchedulerControl Options="{Binding Schedulers}" SelectedOptions="{Binding Options.SchedulerOptions, Mode=TwoWay}" IsSelectorOnly="False"/>
+                    </GroupBox>
+
+                    <!--AutoEncoder-->
+                    <GroupBox Header="Auto Encoder" Margin="0,0,0,10" >
+                        <UniformGrid Columns="2" Margin="0,6,0,4">
+                            <CheckBox Content="Enable Tiling" IsChecked="{Binding Options.IsVaeTilingEnabled}" />
+                            <CheckBox Content="Enable Slicing" IsChecked="{Binding Options.IsVaeSlicingEnabled}" />
+                        </UniformGrid>
+                    </GroupBox>
+
+                    <!--UpscaleOptions-->
+                    <GroupBox Header="Upscale Options" Margin="0,0,0,10" Visibility="{Binding Pipeline.UpscaleModel, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                        <Controls:UpscaleInputControl Pipeline="{Binding Pipeline, Mode=OneWay}" Options="{Binding UpscaleOptions, Mode=OneWayToSource}" />
                     </GroupBox>
 
                 </StackPanel>

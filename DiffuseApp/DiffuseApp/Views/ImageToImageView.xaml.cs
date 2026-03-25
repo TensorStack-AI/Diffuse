@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TensorStack.Image;
+using TensorStack.Python.Common;
 using TensorStack.WPF.Controls;
 using TensorStack.WPF.Services;
 
@@ -70,11 +71,14 @@ namespace Diffuse.Views
                 CompareImage = default;
                 Statistics.Start();
 
-                // Diffusion
-                var options = Options with
-                {
-                    InputImage = _sourceImage
-                };
+                // Options
+                var options = Options with { };
+                if (CurrentPipeline.ProcessType == ProcessType.ImageToImage)
+                    options.InputImages = [_sourceImage];
+                else if (CurrentPipeline.ProcessType == ProcessType.ImageControlNet)
+                    options.InputControlImages = [_sourceImage];
+
+                // Execute
                 var resultTensor = await ExecuteImageDiffusionAsync(options);
 
                 // Upscale
@@ -157,6 +161,7 @@ namespace Diffuse.Views
                 Options = options,
                 Model = CurrentPipeline.DiffusionModel.Name,
                 LoraModels = CurrentPipeline.LoraAdapterModel?.Select(x => x.Name).ToArray(),
+                ControlNetModel = CurrentPipeline.ControlNetModel?.Name,
                 UpscaleModel = CurrentPipeline.UpscaleModel?.Name,
                 UpscaleOptions = CurrentPipeline.UpscaleModel is not null ? UpscaleOptions : null,
                 ExtractModel = CurrentPipeline.ExtractModel?.Name,

@@ -7,13 +7,33 @@ namespace Diffuse.Common
 {
     public record DiffusionHistory : IHistoryItem
     {
-        public int Version { get; init; }
         public string Id { get; init; }
+        public int Version { get; init; }
 
         public View Source { get; init; }
         public MediaType MediaType { get; init; }
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
+
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Width { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Height { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int SampleRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public TimeSpan Duration { get; init; }
+
 
         public string Model { get; init; }
 
@@ -23,15 +43,8 @@ namespace Diffuse.Common
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string ControlNetModel { get; init; }
 
-        public int Width { get; init; }
-        public int Height { get; init; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public float FrameRate { get; init; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int FrameCount { get; init; }
         public DiffusionInputOptions Options { get; init; }
+
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string ExtractModel { get; init; }
@@ -41,6 +54,7 @@ namespace Diffuse.Common
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ExtractInputOptions ExtractOptions { get; init; }
+
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string UpscaleModel { get; init; }

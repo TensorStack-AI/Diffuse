@@ -225,7 +225,7 @@ namespace DiffuseApp.Common
             _progressCallback?.Report(new PipelineProgress
             {
                 Message = message,
-                Process = process
+                Key = process
             });
         }
 

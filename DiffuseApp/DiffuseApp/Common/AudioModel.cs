@@ -64,11 +64,4 @@ namespace Diffuse.Common
             return Status == ModelStatusType.Installed;
         }
     }
-
-
-    public enum AudioModelType
-    {
-        Whisper = 0,
-        Supertonic = 10
-    }
 }

@@ -34,8 +34,8 @@ namespace Diffuse.Dialogs
         public DiffusionModelWizardDialog(Settings settings)
         {
             Settings = settings;
-            Templates = ModelManager.CreateModelTemplates();
-            Items = ModelManager.CreateWizardModelTemplates();
+            Templates = settings.Templates.DiffusionTemplates;
+            Items = settings.Templates.DiffusionTemplateMap;
             Errors = new ObservableCollection<string>();
             CancelCommand = new AsyncRelayCommand(CancelAsync);
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
@@ -140,14 +140,20 @@ namespace Diffuse.Dialogs
 
             if (_selectedSource == ModelSourceType.SingleFile)
             {
-                _checkpointModel.VaeCheckpoint = null;
-                _checkpointModel.ModelCheckpoint = null;
-                _checkpointModel.TextEncoderCheckpoint = null;
+                _checkpointModel.TextEncoder = null;
+                _checkpointModel.TextEncoder2 = null;
+                _checkpointModel.TextEncoder3 = null;
+                _checkpointModel.Transformer = null;
+                _checkpointModel.Transformer2 = null;
+                _checkpointModel.Vae = null;
+                _checkpointModel.AudioVae = null;
+                _checkpointModel.Vocoder = null;
+                _checkpointModel.Connectors = null;
                 _selectedTemplate.Checkpoint = _checkpointModel;
             }
             if (_selectedSource == ModelSourceType.Checkpoint)
             {
-                _checkpointModel.Checkpoint = null;
+                _checkpointModel.SingleFile = null;
                 _selectedTemplate.Checkpoint = _checkpointModel;
             }
 
@@ -191,21 +197,42 @@ namespace Diffuse.Dialogs
             {
                 if (_selectedSource == ModelSourceType.Folder && !Directory.Exists(_selectedModelPath))
                     yield return "Model folder not found";
-                else if (_selectedSource == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !IsCheckpointValid(CheckpointModel.Checkpoint)))
+                else if (_selectedSource == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.SingleFile) || !IsCheckpointValid(CheckpointModel.SingleFile)))
                     yield return "Model file not found";
                 else if ((_selectedSource == ModelSourceType.HuggingFace || _selectedSource == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(_selectedModelPath, out _))
                     yield return "HuggingFace repository not found";
 
                 if (_selectedSource == ModelSourceType.Checkpoint)
                 {
-                    if (string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint))
+                    if (string.IsNullOrEmpty(CheckpointModel.TextEncoder)
+                     && string.IsNullOrEmpty(CheckpointModel.TextEncoder2)
+                     && string.IsNullOrEmpty(CheckpointModel.TextEncoder3)
+                     && string.IsNullOrEmpty(CheckpointModel.Transformer)
+                     && string.IsNullOrEmpty(CheckpointModel.Transformer2)
+                     && string.IsNullOrEmpty(CheckpointModel.Vae)
+                     && string.IsNullOrEmpty(CheckpointModel.AudioVae)
+                     && string.IsNullOrEmpty(CheckpointModel.Vocoder)
+                     && string.IsNullOrEmpty(CheckpointModel.Connectors))
                         yield return "At least one checkpoint model required";
-                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !IsCheckpointValid(CheckpointModel.ModelCheckpoint))
-                        yield return "Model checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !IsCheckpointValid(CheckpointModel.VaeCheckpoint))
-                        yield return "Vae checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !IsCheckpointValid(CheckpointModel.TextEncoderCheckpoint))
+
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder) && !IsCheckpointValid(CheckpointModel.TextEncoder))
                         yield return "TextEncoder checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder2) && !IsCheckpointValid(CheckpointModel.TextEncoder2))
+                        yield return "TextEncoder2 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder3) && !IsCheckpointValid(CheckpointModel.TextEncoder3))
+                        yield return "TextEncoder3 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Transformer) && !IsCheckpointValid(CheckpointModel.Transformer))
+                        yield return "Transformer checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Transformer2) && !IsCheckpointValid(CheckpointModel.Transformer2))
+                        yield return "Transformer2 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Vae) && !IsCheckpointValid(CheckpointModel.Vae))
+                        yield return "Vae checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.AudioVae) && !IsCheckpointValid(CheckpointModel.AudioVae))
+                        yield return "AudioVae checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Vocoder) && !IsCheckpointValid(CheckpointModel.Vocoder))
+                        yield return "Vocoder checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Connectors) && !IsCheckpointValid(CheckpointModel.Connectors))
+                        yield return "Connectors checkpoint file not found";
                 }
             }
         }

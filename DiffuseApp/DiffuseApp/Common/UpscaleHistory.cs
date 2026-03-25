@@ -7,16 +7,18 @@ namespace Diffuse.Common
 {
     public record UpscaleHistory : IHistoryItem
     {
-        public int Version { get; init; }
         public string Id { get; init; }
+        public int Version { get; init; }
         public View Source { get; init; }
         public MediaType MediaType { get; init; }
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
 
-        public string Model { get; init; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Width { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Height { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -25,13 +27,20 @@ namespace Diffuse.Common
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int FrameCount { get; init; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int SampleRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public TimeSpan Duration { get; init; }
+
+
+        public string Model { get; init; }
         public int ScaleFactor { get; init; }
         public int OriginalWidth { get; init; }
         public int OriginalHeight { get; init; }
-      
         public UpscaleInputOptions Options { get; init; }
 
-      
+
         [JsonIgnore]
         public string FilePath { get; set; }
 

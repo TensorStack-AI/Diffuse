@@ -167,7 +167,7 @@ namespace Diffuse
 
                                 // Merge any user settings
                                 defaultDiffusionModel.Status = diffusionModel.Status;
-                                defaultDiffusionModel.UserDataType = diffusionModel.UserDataType;
+                                defaultDiffusionModel.UserQualityMode = diffusionModel.UserQualityMode;
                                 defaultDiffusionModel.UserMemoryMode = diffusionModel.UserMemoryMode;
                             }
                         }

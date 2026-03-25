@@ -56,7 +56,7 @@ namespace DiffuseApp.Common.Message
         public int ControlNetTensorCount { get; set; }
 
         [JsonIgnore]
-        public List<Tensor<float>> Tensors { get; set; }
+        public IReadOnlyList<Tensor<float>> Tensors { get; set; }
 
 
         private static List<Tensor<float>> GetInputTensors(PipelineOptions options)

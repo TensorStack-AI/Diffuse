@@ -12,15 +12,17 @@ namespace Diffuse.Common
         public int Height { get; set; }
         public int Width { get; set; }
         public int Frames { get; set; }
-        public float FrameRate { get; set; } = 16;
+        public float FrameRate { get; set; } = 0;
         public int FrameChunk { get; set; }
         public int FrameChunkOverlap { get; set; }
         public int NoiseCondition { get; set; }
-        public float Strength { get; set; } = 1;
+        public float Strength { get; set; } = 0;
         public SchedulerType Scheduler { get; set; }
         public SchedulerSettings Schedulers { get; set; }
         public int SampleRate { get; set; } = 24000;
         public int[] FrameOptions { get; set; }
+        public bool IsVaeTilingEnabled { get; set; }
+        public bool IsVaeSlicingEnabled { get; set; }
 
         public virtual bool Equals(DiffusionDefaultOptions other) => ReferenceEquals(this, other);
         public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);

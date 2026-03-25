@@ -123,11 +123,11 @@ namespace Diffuse.Services
                     BaseModelPath = model.Path,
                     Pipeline = model.Pipeline,
                     DataType = model.BaseType,
-                    QuantDataType = model.BaseType,
                     CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                     SecureToken = _settings.SecureToken,
                     MemoryMode = MemoryModeType.OffloadCPU,
-                    CheckpointConfig = model.Checkpoint.ToConfig()
+                    CheckpointConfig = model.Checkpoint.ToConfig(),
+                    ProcessType = model.ProcessTypes.FirstOrDefault()
                 }, queueItem.CancellationToken);
                 await downloadClient.StopAsync();
 

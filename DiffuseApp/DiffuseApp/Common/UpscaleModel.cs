@@ -9,7 +9,6 @@ using TensorStack.WPF.Services;
 
 namespace Diffuse.Common
 {
-
     public class UpscaleModel : BaseModel
     {
         private ModelStatusType _status;

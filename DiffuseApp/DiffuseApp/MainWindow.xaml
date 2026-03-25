@@ -327,22 +327,6 @@
                                 IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ImageInpaint}">
                             </CommonControls:IconButton>
                             <CommonControls:IconButton 
-                                Text="ControlNet" 
-                                Icon="e76d"
-                                Style="{StaticResource SubmenuIconButton}"
-                                Command="{Binding NavigateCommand}" 
-                                CommandParameter="{x:Static Views:View.ControlNetImage}" 
-                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ControlNetImage}">
-                            </CommonControls:IconButton>
-                            <CommonControls:IconButton 
-                                Text="ControlNet Image" 
-                                Icon="e76e"
-                                Style="{StaticResource SubmenuIconButton}"
-                                Command="{Binding NavigateCommand}" 
-                                CommandParameter="{x:Static Views:View.ControlNetImageToImage}" 
-                                IsSelected="{Binding View, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ControlNetImageToImage}">
-                            </CommonControls:IconButton>
-                            <CommonControls:IconButton 
                                 Text="Image Extract" 
                                 Icon="f302"
                                 Style="{StaticResource SubmenuIconButton}"

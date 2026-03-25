@@ -93,11 +93,11 @@ namespace Diffuse.Views
                 CompareImage = default;
                 Statistics.Start();
 
-                // Diffusion
-                var options = Options with
-                {
-                    InputImages = [_outputImage, _outputImageMask]
-                };
+                // Options
+                var options = Options with { };
+                options.InputImages = [_outputImage, _outputImageMask];
+
+                // Execute
                 var resultTensor = await ExecuteImageDiffusionAsync(options);
 
                 // Upscale

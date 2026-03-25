@@ -96,12 +96,20 @@ namespace Diffuse.Views
                 CompareImage = default;
                 Statistics.Start();
 
-                // Diffusion
-                var images = new List<ImageTensor> { _sourceImage1, _sourceImage2, _sourceImage3, _sourceImage4 };
-                var options = Options with
+                // Images
+                var images = new List<ImageTensor>
                 {
-                    InputImages = [.. images.Where(x => x != null).Take(Options.InputImageCount)]
+                    _sourceImage1,
+                    _sourceImage2,
+                    _sourceImage3,
+                    _sourceImage4
                 };
+
+                // Options
+                var options = Options with { };
+                options.InputImages = [.. images.Where(x => x != null).Take(Options.InputImageCount)];
+
+                // Execute
                 var resultTensor = await ExecuteImageDiffusionAsync(options);
 
                 // Upscale

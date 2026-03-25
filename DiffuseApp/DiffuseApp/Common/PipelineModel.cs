@@ -14,7 +14,7 @@ namespace Diffuse.Common
         private AudioModel _audioModel;
         private MemoryMode _memoryMode;
         private ProcessType _processType;
-        private DataType _dataType;
+        private QualityMode _qualityMode;
 
         public DeviceModel Device
         {
@@ -70,10 +70,10 @@ namespace Diffuse.Common
             set { SetProperty(ref _memoryMode, value); }
         }
 
-        public DataType DataType
+        public QualityMode QualityMode
         {
-            get { return _dataType; }
-            set { SetProperty(ref _dataType, value); }
+            get { return _qualityMode; }
+            set { SetProperty(ref _qualityMode, value); }
         }
 
 
@@ -83,7 +83,7 @@ namespace Diffuse.Common
                 || pipeline.Device != _device
                 || pipeline.DiffusionModel != _diffusionModel
                 || pipeline.MemoryMode != _memoryMode
-                || pipeline.DataType != _dataType;
+                || pipeline.QualityMode != _qualityMode;
         }
 
 

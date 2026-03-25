@@ -231,7 +231,7 @@ namespace Diffuse.Views
                 {
                     Model = CurrentPipeline.AudioModel.Name,
                     Source = View.AudioToText,
-                    Options = _options
+                    AudioOptions = _options
                 });
 
                 SelectedBeam = 0;

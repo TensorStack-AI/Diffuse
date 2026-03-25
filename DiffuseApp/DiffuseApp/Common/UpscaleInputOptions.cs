@@ -1,4 +1,5 @@
-﻿using TensorStack.WPF;
+﻿using System.Text.Json.Serialization;
+using TensorStack.WPF;
 
 namespace Diffuse.Common
 {
@@ -8,18 +9,23 @@ namespace Diffuse.Common
         private int _tileSize;
         private int _tileOverlap;
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsTileEnabled
         {
             get { return _isTileEnabled; }
             set { SetProperty(ref _isTileEnabled, value); }
         }
 
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int TileSize
         {
             get { return _tileSize; }
             set { SetProperty(ref _tileSize, value); }
         }
 
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int TileOverlap
         {
             get { return _tileOverlap; }

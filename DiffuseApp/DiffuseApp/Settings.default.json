@@ -5,10 +5,10 @@
   "Environments": [
     {
       "Id": 1,
-      "Name": "CUDA (Quanto)",
+      "Name": "CUDA (12.8)",
       "Type": "Vendor",
       "Vendor": "Nvidia",
-      "Environment": "cuda-quanto",
+      "Environment": "default-cuda",
       "Version": 4,
       "Status": "Create",
       "IsDefault": true,
@@ -25,7 +25,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers==0.37.0",
+        "diffusers@https://github.com/huggingface/diffusers/archive/c02c17c6ee7ac508c56925dde4d4a3c587650dc3.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -35,45 +35,12 @@
         "torchsde==0.2.6",
         "gguf==0.17.1",
         "av==16.1.0",
-        "optimum-quanto==0.2.7"
-      ]
-    },
-    {
-      "Id": 2,
-      "Name": "CUDA (BitsAndBytes)",
-      "Type": "Vendor",
-      "Vendor": "Nvidia",
-      "Environment": "cuda-bitsandbytes",
-      "Version": 4,
-      "Status": "Create",
-      "Variables": {
-        "CUDA_VISIBLE_DEVICES": "0,1",
-        "DIFFUSERS_GGUF_CUDA_KERNELS": "true"
-      },
-      "Requirements": [
-        "--extra-index-url https://download.pytorch.org/whl/cu128",
-        "torch==2.9.1+cu128",
-        "torchaudio==2.9.1+cu128",
-        "torchvision==0.24.1+cu128",
-        "typing==3.7.4.3",
-        "wheel==0.45.1",
-        "transformers==4.57.3",
-        "accelerate==1.12.0",
-        "diffusers==0.37.0",
-        "protobuf==6.33.2",
-        "sentencepiece==0.2.1",
-        "ftfy==6.3.1",
-        "scipy==1.16.3",
-        "peft==0.18.1",
-        "hf-xet==1.2.0",
-        "torchsde==0.2.6",
-        "gguf==0.17.1",
-        "av==16.1.0",
+        "optimum-quanto==0.2.7",
         "bitsandbytes==0.49.2"
       ]
     },
     {
-      "Id": 500,
+      "Id": 100,
       "Name": "ROCM (7.2.0)",
       "Type": "Vendor",
       "Vendor": "AMD",
@@ -97,7 +64,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers==0.37.0",
+        "diffusers@https://github.com/huggingface/diffusers/archive/c02c17c6ee7ac508c56925dde4d4a3c587650dc3.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -107,7 +74,8 @@
         "torchsde==0.2.6",
         "gguf==0.17.1",
         "av==16.1.0",
-        "optimum-quanto==0.2.7"
+        "optimum-quanto==0.2.7",
+        "bitsandbytes==0.49.2"
       ]
     }
   ],
@@ -786,24 +754,20 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 4, 8 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 2, 4, 6, 8, 10 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 6, 10 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 2, 6, 8, 14, 16 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 2, 6, 8, 14, 16 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 8, 16 ]
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage", "ControlNetImageToImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
       "IsDefault": true,
       "Link": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0",
       "DefaultOptions": {
@@ -1167,7 +1131,776 @@
       ]
     },
     {
+      "Id": 101,
+      "Backend": "PyTorch",
+      "Name": "StableDiffusion 3 Medium",
+      "Pipeline": "StableDiffusion3Pipeline",
+      "Path": "stabilityai/stable-diffusion-3-medium-diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 4, 8 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 6, 10 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 8, 16 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/stabilityai/stable-diffusion-3-medium-diffusers",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 7.0,
+        "Scheduler": "DPMSolverMultistep",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 3,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
+          }
+        }
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 102,
+      "Backend": "PyTorch",
+      "Name": "StableDiffusion 3.5 Medium",
+      "Pipeline": "StableDiffusion3Pipeline",
+      "Path": "stabilityai/stable-diffusion-3.5-medium",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 12 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 10, 18 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 18, 28 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/stabilityai/stable-diffusion-3.5-medium",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 4.5,
+        "Scheduler": "DPMSolverMultistep",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 3,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
+          }
+        }
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 103,
+      "Backend": "PyTorch",
+      "Name": "StableDiffusion 3.5 Large",
+      "Pipeline": "StableDiffusion3Pipeline",
+      "Path": "stabilityai/stable-diffusion-3.5-large",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 6, 10 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 8, 12 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 10, 18 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 3.5,
+        "Scheduler": "DPMSolverMultistep",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 3,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
+          }
+        }
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 104,
+      "Backend": "PyTorch",
+      "Name": "StableDiffusion 3.5 Large Turbo",
+      "Pipeline": "StableDiffusion3Pipeline",
+      "Path": "stabilityai/stable-diffusion-3.5-large-turbo",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 12 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 10, 18 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 18, 28 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
+      "IsGated": true,
+      "Link": "https://huggingface.co/stabilityai/stable-diffusion-3.5-large-turbo",
+      "DefaultOptions": {
+        "Steps": 4,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 0,
+        "Scheduler": "DPMSolverMultistep",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 3,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
+          }
+        }
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
       "Id": 110,
+      "Backend": "PyTorch",
+      "Name": "Z-Image",
+      "Pipeline": "ZImagePipeline",
+      "Path": "Tongyi-MAI/Z-Image",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 6, 8 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 9, 14 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 14, 24 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
+      "Link": "https://huggingface.co/Tongyi-MAI/Z-Image",
+      "DefaultOptions": {
+        "Steps": 30,
+        "Width": 1024,
+        "Height": 1024,
+        "GuidanceScale": 4,
+        "Scheduler": "FlowMatchEuler",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 6,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 6,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 6,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
+          }
+        }
+      },
+      "Resolutions": [
+        {
+          "Width": 640,
+          "Height": 1536
+        },
+        {
+          "Width": 768,
+          "Height": 1344
+        },
+        {
+          "Width": 832,
+          "Height": 1280
+        },
+        {
+          "Width": 896,
+          "Height": 1152
+        },
+        {
+          "Width": 768,
+          "Height": 768
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1152,
+          "Height": 896
+        },
+        {
+          "Width": 1280,
+          "Height": 832
+        },
+        {
+          "Width": 1344,
+          "Height": 768
+        },
+        {
+          "Width": 1536,
+          "Height": 640
+        }
+      ]
+    },
+    {
+      "Id": 111,
       "Backend": "PyTorch",
       "Name": "Z-Image Turbo",
       "Pipeline": "ZImagePipeline",
@@ -1175,24 +1908,20 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 8, 10, 14, 16 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 6, 8 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 8, 10, 14, 16 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 9, 14 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 12, 14, 22, 24 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 12, 14, 22, 24 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 14, 24 ]
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
       "Link": "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo",
       "DefaultOptions": {
         "Steps": 9,
@@ -1332,24 +2061,20 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 12, 18 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 22, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 5, 38, 40, 58, 60 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 40, 60 ]
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ControlNetImage" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
       "Link": "https://huggingface.co/Qwen/Qwen-Image-2512",
       "DefaultOptions": {
         "Steps": 30,
@@ -1375,6 +2100,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         }
       },
@@ -1431,20 +2186,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 12, 18 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 5, 22, 25, 30, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 22, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 5, 38, 40, 58, 60 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 5, 38, 40, 58, 60 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 40, 60 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -1475,6 +2226,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         }
       },
@@ -1531,20 +2312,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 17, 16, 19, 21 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 14 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 17, 16, 19, 21 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 13, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 17, 19, 28, 30 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 17, 19, 28, 30 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -1688,20 +2465,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 14 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 13, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -1845,24 +2618,20 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 14 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 13, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [ "TextToImage", "ImageToImage", "ControlNetImage", "ImageInpaint" ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageControlNet", "ImageInpaint" ],
       "Link": "https://huggingface.co/TensorStack/FLUX.1-dev-ts",
       "DefaultOptions": {
         "Steps": 30,
@@ -2003,20 +2772,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 14 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 14, 16, 20, 22 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 13, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2161,20 +2926,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 4, 6 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 6, 10 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 10, 10, 16, 18 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 10, 10, 16, 18 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 10, 16 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2318,20 +3079,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 4, 6 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 6, 6, 9, 10 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 6, 10 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 10, 10, 16, 18 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 10, 10, 16, 18 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 10, 16 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2475,20 +3232,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 6, 12 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 10, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 20, 20, 34, 35 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 20, 35 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2633,20 +3386,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 6, 12 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 10, 19, 20 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 10, 20 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 20, 20, 34, 35 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 20, 20, 34, 35 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 20, 35 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2791,20 +3540,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 6, 10 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 8, 12 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 12, 18 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2816,6 +3561,8 @@
         "Width": 720,
         "Height": 480,
         "GuidanceScale": 5,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -2921,20 +3668,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 21, 38 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 21, 38 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 17, 34, 40, 52 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 34, 52 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -2946,6 +3689,8 @@
         "Width": 720,
         "Height": 480,
         "GuidanceScale": 5,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -3026,20 +3771,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 21, 38 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 21, 21, 32, 38 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 21, 38 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 17, 34, 40, 52 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 17, 34, 40, 52 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 34, 52 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3127,20 +3868,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 6, 17, 26 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 6, 17, 26 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 17, 31 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3152,6 +3889,8 @@
         "Width": 1280,
         "Height": 704,
         "GuidanceScale": 5,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -3229,20 +3968,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 6, 17, 26 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 6, 10, 17, 14, 26 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 6, 17, 26 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 12, 17, 19, 31 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 17, 31 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3255,6 +3990,8 @@
         "Height": 720,
         "GuidanceScale": 4,
         "GuidanceScale2": 3,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -3327,20 +4064,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 12 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 14, 18 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 18, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 18, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3413,20 +4146,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 8, 12 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 12, 14, 16, 18 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 14, 18 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 18, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 18, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 18, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3499,20 +4228,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 10, 21, 32, 53, 58 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 24, 28 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 10, 21, 32, 53, 58 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 24, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 10, 32, 36, 56, 68 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 10, 32, 36, 56, 68 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 24, 68 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3525,6 +4250,8 @@
         "Frames": 121,
         "FrameRate": 24,
         "GuidanceScale": 5,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -3571,20 +4298,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 10, 21, 32, 53, 64 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 24, 28 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 10, 21, 32, 53, 64 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 24, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 10, 32, 36, 56, 68 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 10, 32, 36, 56, 68 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 24, 68 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3643,20 +4366,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 10, 16, 54, 23, 64 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 10, 54, 64 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 10, 16, 54, 23, 64 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 10, 54, 64 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 10, 16, 54, 29, 72 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 10, 16, 54, 29, 72 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 10, 54, 72 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3669,6 +4388,8 @@
         "Frames": 49,
         "FrameRate": 8,
         "GuidanceScale": 6,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": {
           "CogVideoXDDIM": {
@@ -3731,20 +4452,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 54, 72 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3757,6 +4474,8 @@
         "Frames": 49,
         "FrameRate": 8,
         "GuidanceScale": 6,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": {
           "CogVideoXDDIM": {
@@ -3819,20 +4538,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 54, 72 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3907,20 +4622,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 54, 72 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -3933,6 +4644,8 @@
         "Frames": 81,
         "FrameRate": 16,
         "GuidanceScale": 6,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "CogVideoXDDIM",
         "Schedulers": {
           "CogVideoXDDIM": {
@@ -3995,20 +4708,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 8, 16, 54, 29, 72 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 8, 54, 72 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 8, 16, 54, 36, 72 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 8, 54, 72 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4083,20 +4792,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 16, 23, 23, 32, 48 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 16, 23, 48 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 16, 23, 23, 32, 48 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 16, 23, 48 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 16, 23, 32, 36, 48 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 16, 23, 32, 36, 48 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 16, 32, 48 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4109,6 +4814,8 @@
         "Frames": 161,
         "FrameRate": 24,
         "GuidanceScale": 3,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -4192,26 +4899,22 @@
       "Name": "LTX-2",
       "Pipeline": "LTX2Pipeline",
       "Path": "Lightricks/LTX-2",
-      "Source": "Checkpoint",
+      "Source": "SingleFile",
       "Checkpoint": {
-        "ModelCheckpoint": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-dev-fp8.safetensors"
+        "SingleFile": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-dev-fp8.safetensors"
       },
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 12, 35, 74 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 12, 35, 74 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 12, 42, 42, 42, 92 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 12, 42, 92 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4224,6 +4927,8 @@
         "Frames": 121,
         "FrameRate": 24,
         "GuidanceScale": 4,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -4331,26 +5036,22 @@
       "Name": "LTX-2 Distilled",
       "Pipeline": "LTX2Pipeline",
       "Path": "Lightricks/LTX-2",
-      "Source": "Checkpoint",
+      "Source": "SingleFile",
       "Checkpoint": {
-        "ModelCheckpoint": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-distilled-fp8.safetensors"
+        "SingleFile": "https://huggingface.co/Lightricks/LTX-2/blob/main/ltx-2-19b-distilled-fp8.safetensors"
       },
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 12, 35, 74 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 12, 23, 35, 35, 74 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 12, 35, 74 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 12, 42, 42, 42, 92 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 12, 42, 42, 42, 92 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 12, 42, 92 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4363,6 +5064,8 @@
         "Frames": 121,
         "FrameRate": 24,
         "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -4381,6 +5084,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         },
         "FrameOptions": [
@@ -4473,20 +5206,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4499,6 +5228,8 @@
         "Frames": 97,
         "FrameRate": 24,
         "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -4582,20 +5313,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 21, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4608,6 +5335,8 @@
         "Frames": 97,
         "FrameRate": 24,
         "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
           "FlowMatchEuler": {
@@ -4691,20 +5420,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4717,6 +5442,8 @@
         "Frames": 132,
         "FrameRate": 24,
         "GuidanceScale": 5,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "Helios",
         "Schedulers": {
           "Helios": {
@@ -4822,20 +5549,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4848,6 +5571,8 @@
         "Frames": 132,
         "FrameRate": 24,
         "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "Helios",
         "Schedulers": {
           "Helios": {
@@ -4953,20 +5678,16 @@
       "Source": "HuggingFace",
       "MemoryProfile": [
         {
-          "DataType": "int8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Draft",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float8",
-          "MemoryModes": [ 4, 10, 20, 22, 32 ]
+          "QualityMode": "Standard",
+          "MemoryModes": [ 4, 20, 32 ]
         },
         {
-          "DataType": "float16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
-        },
-        {
-          "DataType": "bfloat16",
-          "MemoryModes": [ 4, 23, 23, 30, 32 ]
+          "QualityMode": "Production",
+          "MemoryModes": [ 4, 23, 32 ]
         }
       ],
       "BaseType": "bfloat16",
@@ -4979,6 +5700,8 @@
         "Frames": 132,
         "FrameRate": 24,
         "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
         "Scheduler": "HeliosDMD",
         "Schedulers": {
           "HeliosDMD": {

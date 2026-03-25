@@ -103,6 +103,12 @@
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
+            <ObjectDataProvider x:Key="QualityMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Common:QualityMode"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
             <ObjectDataProvider x:Key="EnvironmentType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="Common:EnvironmentType"/>
@@ -124,6 +130,15 @@
             <ObjectDataProvider x:Key="ModelSourceType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="Common:ModelSourceType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+
+
+
+
+            <ObjectDataProvider x:Key="QuantizationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="PythonOptions:QuantizationType"/>
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
 
@@ -456,19 +471,37 @@
                         </CommonControls:FontAwesome>
 
                         <!--Installed | Downloading-->
-                        <CommonControls:FontAwesome Icon="f00c" Size="10" IconStyle="Solid" Opacity=".6"  ToolTipService.InitialShowDelay="200">
+                        <CommonControls:FontAwesome Size="10" IconStyle="Solid" Opacity=".6"  ToolTipService.InitialShowDelay="200">
                             <CommonControls:FontAwesome.Style>
                                 <Style TargetType="{x:Type CommonControls:FontAwesome}" BasedOn="{StaticResource {x:Type CommonControls:FontAwesome}}">
+                                    <Setter Property="Icon" Value="f00c"/>
                                     <Setter Property="Color" Value="#10FFFFFF"/>
                                     <Setter Property="ToolTip" Value="Model Not Installed"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="Installed">
+                                            <Setter Property="Icon" Value="f00c"/>
                                             <Setter Property="Color" Value="{StaticResource SuccessColour}"/>
-                                            <Setter Property="ToolTip" Value="Model Installed"/>
+                                            <Setter Property="ToolTip" Value="Installed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Unknown">
+                                            <Setter Property="Icon" Value="f0ed"/>
+                                            <Setter Property="Color" Value="{StaticResource WarningColour}"/>
+                                            <Setter Property="ToolTip" Value="Partial Download"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="DownloadQueue">
+                                            <Setter Property="Icon" Value="f0ed"/>
+                                            <Setter Property="Color" Value="{StaticResource InfoColour}"/>
+                                            <Setter Property="ToolTip" Value="Download Queued..."/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="Downloading">
+                                            <Setter Property="Icon" Value="f0ed"/>
+                                            <Setter Property="Color" Value="{StaticResource SuccessColour}"/>
+                                            <Setter Property="ToolTip" Value="Downloading..."/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="DownloadFailed">
+                                            <Setter Property="Icon" Value="f0ed"/>
                                             <Setter Property="Color" Value="{StaticResource DangerColour}"/>
-                                            <Setter Property="ToolTip" Value="Downloading Model..."/>
+                                            <Setter Property="ToolTip" Value="Download Failed"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -526,17 +559,17 @@
                             <StackPanel>
                                 <TextBlock Text="{Binding MediaType, StringFormat={}{0} Size}" Style="{StaticResource FieldTextBlockStyle}" />
                                 <TextBlock>
-                           <Run Text="{Binding Width}" />
-                           <Run Text="x" />
-                           <Run Text="{Binding Height}" />
-                           <Run Text="px" />
+                                   <Run Text="{Binding Width}" />
+                                   <Run Text="x" />
+                                   <Run Text="{Binding Height}" />
+                                   <Run Text="px" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
                                 <TextBlock Text="Frame Rate" Style="{StaticResource FieldTextBlockStyle}" />
                                 <TextBlock>
-                           <Run Text="{Binding FrameRate}" />
-                           <Run Text="fps" />
+                                   <Run Text="{Binding FrameRate}" />
+                                   <Run Text="fps" />
                                 </TextBlock>
                             </StackPanel>
                             <StackPanel Visibility="{Binding MediaType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Video}">
@@ -564,7 +597,7 @@
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
-                                <TextBlock Text="{Binding Options.SchedulerOptions.Scheduler, Converter={StaticResource EnumDescriptionConverter}}" />
+                                <TextBlock Text="{Binding Options.SchedulerOptions.Scheduler, Converter={StaticResource EnumDisplayNameConverter}}" />
                             </StackPanel>
                             <StackPanel Margin="0,3,0,0">
                                 <TextBlock Text="Steps" Style="{StaticResource FieldTextBlockStyle}" />
@@ -628,7 +661,7 @@
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Background}">
                                 <StackPanel>
                                     <TextBlock Text="Background Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding ExtractOptions.Mode, Converter={StaticResource EnumDescriptionConverter}}" />
+                                    <TextBlock Text="{Binding ExtractOptions.Mode, Converter={StaticResource EnumDisplayNameConverter}}" />
                                 </StackPanel>
                             </UniformGrid>
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pose}">
@@ -756,7 +789,7 @@
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Background}">
                                 <StackPanel>
                                     <TextBlock Text="Background Mode" Style="{StaticResource FieldTextBlockStyle}" />
-                                    <TextBlock Text="{Binding Options.Mode, Converter={StaticResource EnumDescriptionConverter}}" />
+                                    <TextBlock Text="{Binding Options.Mode, Converter={StaticResource EnumDisplayNameConverter}}" />
                                 </StackPanel>
                             </UniformGrid>
                             <UniformGrid Columns="3" Visibility="{Binding ExtractorType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pose}">

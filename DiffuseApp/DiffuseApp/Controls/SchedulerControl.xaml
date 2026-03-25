@@ -1662,7 +1662,7 @@
         <!--Scheduler Type-->
         <StackPanel DockPanel.Dock="Top">
             <TextBlock Text="Scheduler" Style="{StaticResource FieldTextBlockStyle}" />
-            <ComboBox SelectedItem="{Binding SelectedOptions}" ItemsSource="{Binding Options}" DisplayMemberPath="Scheduler"/>
+            <ComboBox SelectedItem="{Binding SelectedOptions}" ItemsSource="{Binding Options}"/>
         </StackPanel>
 
 

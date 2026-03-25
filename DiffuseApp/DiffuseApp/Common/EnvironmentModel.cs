@@ -22,11 +22,4 @@ namespace Diffuse.Common
         public Dictionary<string, string> Variables { get; set; }
       
     }
-
-    public enum EnvironmentType
-    {
-        Vendor = 0,
-        Device = 1,
-        Pipeline = 2
-    }
 }

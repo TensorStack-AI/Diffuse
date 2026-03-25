@@ -137,7 +137,7 @@ namespace Diffuse
         private static Settings LoadSettingsFile()
         {
             var configuration = SettingsManager.Load();
-            configuration.Initialize(_directoryData);
+            configuration.Initialize(_directoryData).Wait();
             return configuration;
         }
 

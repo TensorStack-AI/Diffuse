@@ -129,14 +129,14 @@ namespace Diffuse.Services
                         DeviceId = device.DeviceId,
                         DeviceBusId = device.PCIBusId,
                         DataType = model.BaseType,
-                        QuantDataType = _currentPipeline.DataType,
                         IsOptimizeDeviceEnabled = _settings.IsOptimizeDeviceEnabled,
                         IsOptimizeChannelsEnabled = _settings.IsOptimizeChannelsEnabled,
                         CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                         SecureToken = _settings.SecureToken,
                         LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),
                         ControlNet = GetControlNet(controlNet),
-                        MemoryMode = SetMemoryMode(_currentPipeline),
+                        MemoryMode = GetMemoryMode(_currentPipeline),
+                        QuantType = GetQuantizationType(_currentPipeline),
                         CheckpointConfig = model.Checkpoint.ToConfig()
                     };
 
@@ -208,6 +208,13 @@ namespace Diffuse.Services
         }
 
 
+        public Task UpdateAsync(PipelineModel pipeline)
+        {
+            _currentPipeline = pipeline;
+            return Task.CompletedTask;
+        }
+
+
         /// <summary>
         /// Execute the upscaler
         /// </summary>
@@ -239,7 +246,9 @@ namespace Diffuse.Services
                     SchedulerOptions = options.SchedulerOptions.ToOptions(),
                     LoraOptions = GetLoraOptions(options),
                     TempFileName = imageFileName,
-                    NoiseCondition = options.NoiseCondition
+                    NoiseCondition = options.NoiseCondition,
+                    EnableVaeSlicing = options.IsVaeSlicingEnabled,
+                    EnableVaeTiling = options.IsVaeTilingEnabled
                 };
 
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
@@ -290,6 +299,8 @@ namespace Diffuse.Services
                     NoiseCondition = options.NoiseCondition,
                     FrameChunk = options.FrameChunk,
                     FrameChunkOverlap = options.FrameChunkOverlap,
+                    EnableVaeSlicing = options.IsVaeSlicingEnabled,
+                    EnableVaeTiling = options.IsVaeTilingEnabled
                 };
 
                 var tensorResult = await _pipelineClient.RunAsync(generateOptions);
@@ -431,12 +442,12 @@ namespace Diffuse.Services
         }
 
 
-        private static MemoryModeType SetMemoryMode(PipelineModel pipeline)
+        private static MemoryModeType GetMemoryMode(PipelineModel pipeline)
         {
             var memoryMode = pipeline.MemoryMode;
             if (memoryMode == MemoryMode.Auto)
             {
-                var memoryProfile = pipeline.DiffusionModel.MemoryProfile.FirstOrDefault(x => x.DataType == pipeline.DataType);
+                var memoryProfile = pipeline.DiffusionModel.MemoryProfile.FirstOrDefault(x => x.QualityMode == pipeline.QualityMode);
                 if (memoryProfile != null)
                 {
                     var deviceMemory = pipeline.Device.MemoryGB;
@@ -447,13 +458,24 @@ namespace Diffuse.Services
 
             return memoryMode switch
             {
-                MemoryMode.Balanced => MemoryModeType.MultiDevice,
-                MemoryMode.Lowest => MemoryModeType.OffloadCPU,
-                MemoryMode.Low => MemoryModeType.LowMemOffloadModel,
+                MemoryMode.Balanced => MemoryModeType.Balanced,
+                MemoryMode.Low => MemoryModeType.OffloadCPU,
                 MemoryMode.Medium => MemoryModeType.OffloadModel,
-                MemoryMode.High => MemoryModeType.LowMemDevice,
-                MemoryMode.Highest => MemoryModeType.Device,
+                MemoryMode.High => MemoryModeType.Device,
                 _ => MemoryModeType.OffloadCPU,
+            };
+        }
+
+
+        private static QuantizationType GetQuantizationType(PipelineModel pipeline)
+        {
+
+            return pipeline.QualityMode switch
+            {
+                QualityMode.Draft => QuantizationType.Q4Bit,
+                QualityMode.Standard => QuantizationType.Q8Bit,
+                QualityMode.Production => QuantizationType.Q16Bit,
+                _ => QuantizationType.Q8Bit,
             };
         }
 
@@ -488,6 +510,7 @@ namespace Diffuse.Services
         bool CanCancel { get; }
         Task LoadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
         Task ReloadAsync(PipelineModel pipeline, IProgress<PipelineProgress> progressCallback);
+        Task UpdateAsync(PipelineModel pipeline);
         Task UnloadAsync();
         Task CancelAsync();
         Task StopAsync();

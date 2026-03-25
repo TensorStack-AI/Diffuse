@@ -62,21 +62,25 @@ namespace Diffuse
             if (diffusionCheckpoint is null)
                 return null;
 
-            if (!string.IsNullOrEmpty(diffusionCheckpoint.Checkpoint))
+            if (!string.IsNullOrEmpty(diffusionCheckpoint.SingleFile))
             {
                 return new CheckpointConfig
                 {
-                    ModelCheckpoint = diffusionCheckpoint.Checkpoint,
-                    TextEncoderCheckpoint = diffusionCheckpoint.Checkpoint,
-                    VaeCheckpoint = diffusionCheckpoint.Checkpoint
+                    SingleFile = diffusionCheckpoint.SingleFile
                 };
             }
 
             return new CheckpointConfig
             {
-                ModelCheckpoint = diffusionCheckpoint.ModelCheckpoint,
-                TextEncoderCheckpoint = diffusionCheckpoint.TextEncoderCheckpoint,
-                VaeCheckpoint = diffusionCheckpoint.VaeCheckpoint
+                TextEncoder = diffusionCheckpoint.TextEncoder,
+                TextEncoder2 = diffusionCheckpoint.TextEncoder2,
+                TextEncoder3 = diffusionCheckpoint.TextEncoder3,
+                Transformer = diffusionCheckpoint.Transformer,
+                Transformer2 = diffusionCheckpoint.Transformer2,
+                Vae = diffusionCheckpoint.Vae,
+                AudioVae = diffusionCheckpoint.AudioVae,
+                Vocoder = diffusionCheckpoint.Vocoder,
+                Connectors = diffusionCheckpoint.Connectors
             };
         }
 

@@ -23,6 +23,8 @@ namespace Diffuse.Controls
         private bool _isSteps2Enabled;
         private bool _isGuidance2Enabled;
         private SchedulerInputOptions[] _schedulers;
+        private bool _isImageControlNetSupported;
+        private bool _isImageToImageControlNetSupported;
 
         public DiffusionInputControl()
         {
@@ -121,6 +123,18 @@ namespace Diffuse.Controls
             set { SetProperty(ref _schedulers, value); }
         }
 
+        public bool IsImageControlNetSupported
+        {
+            get { return _isImageControlNetSupported; }
+            set { SetProperty(ref _isImageControlNetSupported, value); }
+        }
+
+        public bool IsImageToImageControlNetSupported
+        {
+            get { return _isImageToImageControlNetSupported; }
+            set { SetProperty(ref _isImageToImageControlNetSupported, value); }
+        }
+
 
         private Task OnPipelineChanged(PipelineModel oldPipeline, PipelineModel newPipeline)
         {
@@ -142,6 +156,13 @@ namespace Diffuse.Controls
                 return Task.CompletedTask;
             }
 
+            // UI Flags
+            IsSteps2Enabled = newPipeline.DiffusionModel.DefaultOptions.Steps2 > 0;
+            IsGuidance2Enabled = newPipeline.DiffusionModel.DefaultOptions.GuidanceScale2 > 0;
+            IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
+            IsImageControlNetSupported = newPipeline.DiffusionModel.ProcessTypes.Contains(ProcessType.ImageControlNet);
+            IsImageToImageControlNetSupported = newPipeline.DiffusionModel.ProcessTypes.Contains(ProcessType.ImageToImageControlNet);
+
             var previousOptions = Options;
             Options = new DiffusionInputOptions
             {
@@ -153,8 +174,8 @@ namespace Diffuse.Controls
                 InputImageCount = ProcessType == ProcessType.ImageEdit ? (previousOptions?.InputImageCount ?? 1) : 0,
 
                 // Update
-                Strength = ProcessType == ProcessType.ImageToImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.Strength ?? 0.7f) : newOptions.Strength,
-                ControlNetStrength = ProcessType == ProcessType.ControlNetImage || ProcessType == ProcessType.ControlNetImageToImage ? (previousOptions?.ControlNetStrength ?? 0.7f) : 1f,
+                Strength = ProcessType == ProcessType.ImageToImage && !IsImageControlNetSupported ? (previousOptions?.Strength ?? 0.7f) : 1f,
+                ControlNetStrength = IsImageControlNetSupported ? (previousOptions?.ControlNetStrength ?? 0.7f) : 1f,
 
                 Steps = newOptions.Steps,
                 Steps2 = newOptions.Steps2,
@@ -167,20 +188,18 @@ namespace Diffuse.Controls
                 FrameChunk = newOptions.FrameChunk,
                 FrameChunkOverlap = newOptions.FrameChunkOverlap,
                 NoiseCondition = newOptions.NoiseCondition,
+                IsVaeTilingEnabled = newOptions.IsVaeTilingEnabled,
+                IsVaeSlicingEnabled = newOptions.IsVaeSlicingEnabled
             };
 
             //Resolution
             SelectedResolution = newModel?.Resolutions.FirstOrDefault(x => x.Width == _selectedResolution?.Width && x.Height == _selectedResolution?.Height)
                               ?? newModel?.Resolutions.OrderByDescending(x => x.IsDefault).First();
 
-            // UI Flags
-            IsSteps2Enabled = newPipeline.DiffusionModel.DefaultOptions.Steps2 > 0;
-            IsGuidance2Enabled = newPipeline.DiffusionModel.DefaultOptions.GuidanceScale2 > 0;
-            IsModelOptionsVisible = newPipeline.UpscaleModel is not null || newPipeline.ExtractModel is not null;
-
             //Schedulers
             Schedulers = newOptions.Schedulers.GetSchedulers().Select(SchedulerInputOptions.Create).ToArray();
             Options.SchedulerOptions = Schedulers.FirstOrDefault(x => x.Scheduler == newOptions.Scheduler);
+
             return Task.CompletedTask;
         }
 

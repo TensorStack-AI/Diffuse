@@ -72,14 +72,14 @@ namespace Diffuse.Views
                 CompareVideo = default;
                 Statistics.Start();
 
-                // input frames
+                // Frames
                 var frames = await GetInputFrames().ToListAsync();
 
-                // Diffusion
-                var options = Options with
-                {
-                    InputImages = frames
-                };
+                // Options
+                var options = Options with { };
+                options.InputImages = frames;
+
+                // Execute
                 var resultTensor = await ExecuteVideoDiffusionAsync(options);
 
                 // Upscale

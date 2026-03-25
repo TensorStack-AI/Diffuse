@@ -70,11 +70,4 @@ namespace Diffuse.Common
             return Status == ModelStatusType.Installed;
         }
     }
-
-    public enum ExtractorType
-    {
-        Default = 0,
-        Background = 1,
-        Pose = 2
-    }
 }

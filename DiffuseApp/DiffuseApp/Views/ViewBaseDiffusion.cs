@@ -367,6 +367,10 @@ namespace Diffuse.Views
                         Logger.LogInformation("[{View}] [LoadDiffusionModel] Reloading diffusion model {Name}...", ViewName, CurrentPipeline.DiffusionModel.Name);
                         await DiffusionService.ReloadAsync(CurrentPipeline, PythonProgressCallback);
                     }
+                    else
+                    {
+                        await DiffusionService.UpdateAsync(CurrentPipeline);
+                    }
                     return true;
                 }
 
@@ -625,19 +629,32 @@ namespace Diffuse.Views
             if (CurrentPipeline is null)
                 return;
 
-            if (progress.IsDownloading)
+            if (progress.Key == "Download")
             {
-                Progress.Update(progress.Iteration, progress.Iterations, $"Downloading {CurrentPipeline.DiffusionModel.Name} files ({progress.DownloadModel})...");
+                Progress.Update(progress.Value, progress.Maximum, $"Downloading {CurrentPipeline.DiffusionModel.Name} files ({progress.Message})...");
             }
-            else if (progress.IsLoading)
+            else if (progress.Key == "Generate")
             {
-                // Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
-            }
-            else if (progress.IsGenerating && DiffusionService.IsExecuting)
-            {
-                Statistics.Update(progress);
-                Progress.Update(progress.Iteration, progress.Iterations, $"Step: {progress.Iteration}/{progress.Iterations}");
-                Logger.LogDebug("[{View}] [OnProgress] Step: {Iteration}/{Iterations}, it/s: {IterationsPerSecond:N2}, s/it: {SecondsPerIteration:N2}", ViewName, progress.Iteration, progress.Iterations, progress.IterationsPerSecond, progress.SecondsPerIteration);
+                if (progress.Subkey == "Step")
+                {
+                    Statistics.Update(progress);
+                    Progress.Update(progress.Value, progress.Maximum, $"Step: {progress.Value}/{progress.Maximum}");
+                    Logger.LogDebug("[{View}] [OnProgress] Step: {Value}/{Maximum}, it/s: {IterationsPerSecond:N2}, s/it: {SecondsPerIteration:N2}", ViewName, progress.Value, progress.Maximum, progress.IterationsPerSecond, progress.SecondsPerIteration);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(progress.Subkey))
+                    {
+                        Progress.Indeterminate(progress.Message);
+                        Logger.LogDebug("[{View}] [OnProgress] {Message}", ViewName, progress.Message);
+                    }
+                    else
+                    {
+                        Progress.Indeterminate($"Step: {progress.Subkey}...");
+                        Logger.LogDebug("[{View}] [OnProgress] Step: {Subkey}, it/s: {IterationsPerSecond:N2}, s/it: {SecondsPerIteration:N2}", ViewName, progress.Subkey, progress.IterationsPerSecond, progress.SecondsPerIteration);
+                    }
+                }
+
             }
         }
     }

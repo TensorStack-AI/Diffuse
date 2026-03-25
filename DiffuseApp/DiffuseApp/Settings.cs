@@ -1,4 +1,5 @@
 ﻿using Diffuse.Common;
+using Diffuse.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -120,8 +121,11 @@ namespace Diffuse
         [JsonIgnore]
         public List<DeviceModel> Devices { get; set; }
 
+        [JsonIgnore]
+        public TemplateSettings Templates { get; set; }
 
-        public void Initialize(string directoryData)
+
+        public async Task Initialize(string directoryData)
         {
             if (string.IsNullOrEmpty(DirectoryTemp) || !Path.Exists(DirectoryTemp))
                 DirectoryTemp = Path.Combine(directoryData, "Temp");
@@ -138,6 +142,12 @@ namespace Diffuse
                 DirectoryCache = Directory.Exists(huggingfaceCache)
                     ? huggingfaceCache
                     : Path.Combine(directoryData, "Models");
+            }
+
+            var templateSettings = Path.Combine(App.DirectoryData, "Templates.json");
+            if (File.Exists(templateSettings))
+            {
+                Templates = await Json.LoadAsync<TemplateSettings>(templateSettings);
             }
 
             Directory.CreateDirectory(DirectoryTemp);
@@ -172,7 +182,7 @@ namespace Diffuse
                 if (defaultModel is not null)
                     defaultModel.IsDefault = false;
 
-                pipeline.DiffusionModel.UserDataType = pipeline.DataType;
+                pipeline.DiffusionModel.UserQualityMode = pipeline.QualityMode;
                 pipeline.DiffusionModel.UserMemoryMode = pipeline.MemoryMode;
                 pipeline.DiffusionModel.IsDefault = true;
             }

@@ -24,7 +24,6 @@ namespace Diffuse.Dialogs
         private bool _isCustomPipeline;
         private SizeOption _selectedSize;
         private DiffusionModel _diffusionModel;
-        private SchedulerType _selectedScheduler;
         private DiffusionModel _originalDiffusionModel;
         private DiffusionCheckpointModel _checkpointModel;
         private string _frameOptions;
@@ -112,10 +111,9 @@ namespace Diffuse.Dialogs
                 BaseType = DataType.Bfloat16,
                 MemoryProfile =
                 [
-                    new MemoryProfile(DataType.Int8, [2, 4, 8, 16, 16]),
-                    new MemoryProfile(DataType.Float8, [2, 4, 8, 16, 16]),
-                    new MemoryProfile(DataType.Float16, [4, 8, 16, 24, 24]),
-                    new MemoryProfile(DataType.Bfloat16, [4, 8, 16, 24, 24])
+                    new MemoryProfile(QualityMode.Draft, [2, 8,  16]),
+                    new MemoryProfile(QualityMode.Standard, [2, 8,  16]),
+                    new MemoryProfile(QualityMode.Production, [4, 16,  24])
                 ],
                 DefaultOptions = new DiffusionDefaultOptions { },
 
@@ -181,14 +179,20 @@ namespace Diffuse.Dialogs
 
             if (DiffusionModel.Source == ModelSourceType.SingleFile)
             {
-                _checkpointModel.VaeCheckpoint = null;
-                _checkpointModel.ModelCheckpoint = null;
-                _checkpointModel.TextEncoderCheckpoint = null;
+                _checkpointModel.TextEncoder= null;
+                _checkpointModel.TextEncoder2 = null;
+                _checkpointModel.TextEncoder3 = null;
+                _checkpointModel.Transformer = null;
+                _checkpointModel.Transformer2 = null;
+                _checkpointModel.Vae = null;
+                _checkpointModel.AudioVae = null;
+                _checkpointModel.Vocoder = null;
+                _checkpointModel.Connectors = null;
                 DiffusionModel.Checkpoint = _checkpointModel;
             }
             if (DiffusionModel.Source == ModelSourceType.Checkpoint)
             {
-                _checkpointModel.Checkpoint = null;
+                _checkpointModel.SingleFile = null;
                 DiffusionModel.Checkpoint = _checkpointModel;
             }
 
@@ -326,21 +330,42 @@ namespace Diffuse.Dialogs
             {
                 if (DiffusionModel.Source == ModelSourceType.Folder && !Directory.Exists(DiffusionModel.Path))
                     yield return "Model folder not found";
-                else if (DiffusionModel.Source == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.Checkpoint) || !IsCheckpointValid(CheckpointModel.Checkpoint)))
+                else if (DiffusionModel.Source == ModelSourceType.SingleFile && (string.IsNullOrEmpty(CheckpointModel.SingleFile) || !IsCheckpointValid(CheckpointModel.SingleFile)))
                     yield return "Model file not found";
                 else if ((DiffusionModel.Source == ModelSourceType.HuggingFace || DiffusionModel.Source == ModelSourceType.Checkpoint) && !Utils.TryParseHuggingFaceRepo(DiffusionModel.Path, out _))
                     yield return "HuggingFace repository not found";
 
                 if (DiffusionModel.Source == ModelSourceType.Checkpoint)
                 {
-                    if (string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint))
+                    if (string.IsNullOrEmpty(CheckpointModel.TextEncoder) 
+                     && string.IsNullOrEmpty(CheckpointModel.TextEncoder2)
+                     && string.IsNullOrEmpty(CheckpointModel.TextEncoder3)
+                     && string.IsNullOrEmpty(CheckpointModel.Transformer)
+                     && string.IsNullOrEmpty(CheckpointModel.Transformer2)
+                     && string.IsNullOrEmpty(CheckpointModel.Vae)
+                     && string.IsNullOrEmpty(CheckpointModel.AudioVae)
+                     && string.IsNullOrEmpty(CheckpointModel.Vocoder)
+                     && string.IsNullOrEmpty(CheckpointModel.Connectors))
                         yield return "At least one checkpoint model required";
-                    if (!string.IsNullOrEmpty(CheckpointModel.ModelCheckpoint) && !IsCheckpointValid(CheckpointModel.ModelCheckpoint))
-                        yield return "Model checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.VaeCheckpoint) && !IsCheckpointValid(CheckpointModel.VaeCheckpoint))
-                        yield return "Vae checkpoint file not found";
-                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoderCheckpoint) && !IsCheckpointValid(CheckpointModel.TextEncoderCheckpoint))
+
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder) && !IsCheckpointValid(CheckpointModel.TextEncoder))
                         yield return "TextEncoder checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder2) && !IsCheckpointValid(CheckpointModel.TextEncoder2))
+                        yield return "TextEncoder2 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.TextEncoder3) && !IsCheckpointValid(CheckpointModel.TextEncoder3))
+                        yield return "TextEncoder3 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Transformer) && !IsCheckpointValid(CheckpointModel.Transformer))
+                        yield return "Transformer checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Transformer2) && !IsCheckpointValid(CheckpointModel.Transformer2))
+                        yield return "Transformer2 checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Vae) && !IsCheckpointValid(CheckpointModel.Vae))
+                        yield return "Vae checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.AudioVae) && !IsCheckpointValid(CheckpointModel.AudioVae))
+                        yield return "AudioVae checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Vocoder) && !IsCheckpointValid(CheckpointModel.Vocoder))
+                        yield return "Vocoder checkpoint file not found";
+                    if (!string.IsNullOrEmpty(CheckpointModel.Connectors) && !IsCheckpointValid(CheckpointModel.Connectors))
+                        yield return "Connectors checkpoint file not found";
                 }
             }
 
@@ -389,10 +414,10 @@ namespace Diffuse.Dialogs
                     CheckBoxImageEdit.IsChecked = true;
                 if (processType == ProcessType.ImageInpaint)
                     CheckBoxImageInpaint.IsChecked = true;
-                if (processType == ProcessType.ControlNetImage)
-                    CheckBoxControlNetImage.IsChecked = true;
-                if (processType == ProcessType.ControlNetImageToImage)
-                    CheckBoxControlNetImageToImage.IsChecked = true;
+                if (processType == ProcessType.ImageControlNet)
+                    CheckBoxImageControlNet.IsChecked = true;
+                if (processType == ProcessType.ImageToImageControlNet)
+                    CheckBoxImageToImageControlNet.IsChecked = true;
                 if (processType == ProcessType.TextToVideo)
                     CheckBoxTextToVideo.IsChecked = true;
                 if (processType == ProcessType.ImageToVideo)
@@ -415,10 +440,10 @@ namespace Diffuse.Dialogs
                     yield return ProcessType.ImageEdit;
                 if (CheckBoxImageInpaint.IsChecked == true)
                     yield return ProcessType.ImageInpaint;
-                if (CheckBoxControlNetImage.IsChecked == true)
-                    yield return ProcessType.ControlNetImage;
-                if (CheckBoxControlNetImageToImage.IsChecked == true)
-                    yield return ProcessType.ControlNetImageToImage;
+                if (CheckBoxImageToImage.IsChecked == true)
+                    yield return ProcessType.ImageToImage;
+                if (CheckBoxImageToImageControlNet.IsChecked == true)
+                    yield return ProcessType.ImageToImageControlNet;
                 if (CheckBoxTextToVideo.IsChecked == true)
                     yield return ProcessType.TextToVideo;
                 if (CheckBoxImageToVideo.IsChecked == true)
@@ -446,7 +471,7 @@ namespace Diffuse.Dialogs
                 Link = diffusionModel.Link,
                 MemoryProfile = diffusionModel.MemoryProfile.Select(x => new MemoryProfile
                 {
-                    DataType = x.DataType,
+                    QualityMode = x.QualityMode,
                     MemoryModes = x.MemoryModes.ToArray(),
                 }).ToArray(),
                 ProcessTypes = [.. diffusionModel.ProcessTypes],
@@ -478,10 +503,16 @@ namespace Diffuse.Dialogs
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {
-                    Checkpoint = diffusionModel.Checkpoint.Checkpoint,
-                    ModelCheckpoint = diffusionModel.Checkpoint.ModelCheckpoint,
-                    VaeCheckpoint = diffusionModel.Checkpoint.VaeCheckpoint,
-                    TextEncoderCheckpoint = diffusionModel.Checkpoint.TextEncoderCheckpoint
+                    SingleFile = diffusionModel.Checkpoint.SingleFile,
+                    TextEncoder = diffusionModel.Checkpoint.TextEncoder,
+                    TextEncoder2 = diffusionModel.Checkpoint.TextEncoder2,
+                    TextEncoder3 = diffusionModel.Checkpoint.TextEncoder3,
+                    Transformer = diffusionModel.Checkpoint.Transformer,
+                    Transformer2 = diffusionModel.Checkpoint.Transformer2,
+                    Vae = diffusionModel.Checkpoint.Vae,
+                    AudioVae = diffusionModel.Checkpoint.AudioVae,
+                    Vocoder = diffusionModel.Checkpoint.Vocoder,
+                    Connectors = diffusionModel.Checkpoint.Connectors
                 }
             };
         }

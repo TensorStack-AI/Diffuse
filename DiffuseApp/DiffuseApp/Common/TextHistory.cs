@@ -7,18 +7,39 @@ namespace Diffuse.Common
 {
     public record TextHistory : IHistoryItem
     {
-        public int Version { get; init; }
         public string Id { get; init; }
+        public int Version { get; init; }
         public View Source { get; init; }
         public MediaType MediaType { get; init; }
         public DateTime Timestamp { get; init; }
         public string Extension { get; init; }
+
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Width { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Height { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float FrameRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int FrameCount { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int SampleRate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public TimeSpan Duration { get; init; }
+
+
         public string Model { get; init; }
-
-
         public string InputText { get; set; }
         public int InputLength { get; set; }
-        public AudioInputOptions Options { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public AudioInputOptions AudioOptions { get; set; }
 
 
 
@@ -31,15 +52,6 @@ namespace Diffuse.Common
         [JsonIgnore]
         public string ThumbPath { get; set; }
 
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int Width { get; init; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int Height { get; init; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public float FrameRate { get; init; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int FrameCount { get; init; }
         public virtual bool Equals(UpscaleHistory other) => ReferenceEquals(this, other);
         public override int GetHashCode() => RuntimeHelpers.GetHashCode(this);
     }

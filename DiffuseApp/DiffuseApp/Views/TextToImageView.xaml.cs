@@ -60,7 +60,7 @@ namespace Diffuse.Views
                 Statistics.Start();
 
                 // Diffusion
-                var options = Options with { Strength = 1 };
+                var options = Options with { };
                 var resultTensor = await ExecuteImageDiffusionAsync(options);
 
                 // Upscale

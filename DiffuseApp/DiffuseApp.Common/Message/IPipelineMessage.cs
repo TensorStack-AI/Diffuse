@@ -5,7 +5,7 @@ namespace DiffuseApp.Common.Message
 {
     internal interface IPipelineMessage
     {
-        List<Tensor<float>> Tensors { get; set; }
+        IReadOnlyList<Tensor<float>> Tensors { get; set; }
     }
 
 }

@@ -17,7 +17,7 @@ namespace DiffuseApp.Common.Message
             Error = errorMessage;
         }
 
-        public PipelineResponse(params List<Tensor<float>> tensors)
+        public PipelineResponse(params IReadOnlyList<Tensor<float>> tensors)
         {
             Tensors = tensors;
         }
@@ -26,7 +26,7 @@ namespace DiffuseApp.Common.Message
         public bool IsCanceled { get; init; }
 
         [JsonIgnore]
-        public List<Tensor<float>> Tensors { get; set; }
+        public IReadOnlyList<Tensor<float>> Tensors { get; set; }
 
 
         [JsonIgnore]
