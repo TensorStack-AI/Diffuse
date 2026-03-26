@@ -18,6 +18,7 @@ namespace Diffuse.Common
         {
             Index = index;
             Progress = new ProgressInfo();
+            TotalProgress = new ProgressInfo();
             DiffusionModel = diffusionModel;
             ProgressCallback = new Progress<PipelineProgress>(OnProgress);
             _cancellationTokenSource = new CancellationTokenSource();
@@ -25,6 +26,7 @@ namespace Diffuse.Common
 
         public int Index { get; set; }
         public ProgressInfo Progress { get; }
+        public ProgressInfo TotalProgress { get; }
         public IProgress<PipelineProgress> ProgressCallback { get; }
         public DiffusionModel DiffusionModel { get; }
         public CancellationToken CancellationToken => _cancellationTokenSource.Token;
@@ -65,6 +67,7 @@ namespace Diffuse.Common
             Component = progress.Subkey;
             FileName = progress.Message;
             Progress.Update(progress.Value, progress.Maximum);
+            TotalProgress.Update(progress.BatchValue, progress.BatchMaximum);
         }
     }
 }

@@ -38,6 +38,7 @@
                                     Settings="{Binding Settings, Mode=OneWay}"
                                     IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
                                     DownloadService="{Binding DownloadService, Mode=OneWay}"
+                                    EnvironmentService="{Binding EnvironmentService, Mode=OneWay}"
                                     SelectionChanged="SelectedPipelineChanged"/>
                             </Grid>
                         </StackPanel>

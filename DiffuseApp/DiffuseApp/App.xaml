@@ -451,7 +451,6 @@
 
             <DataTemplate x:Key="ComboBoxDataTemplateModel">
                 <DockPanel>
-
                     <UniformGrid DockPanel.Dock="Right"  Columns="2">
 
                         <!--IsGated-->
@@ -484,9 +483,9 @@
                                             <Setter Property="ToolTip" Value="Installed"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="Unknown">
-                                            <Setter Property="Icon" Value="f0ed"/>
+                                            <Setter Property="Icon" Value="21"/>
                                             <Setter Property="Color" Value="{StaticResource WarningColour}"/>
-                                            <Setter Property="ToolTip" Value="Partial Download"/>
+                                            <Setter Property="ToolTip" Value="Unknown State"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="DownloadQueue">
                                             <Setter Property="Icon" Value="f0ed"/>

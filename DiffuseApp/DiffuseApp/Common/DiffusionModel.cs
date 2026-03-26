@@ -70,12 +70,19 @@ namespace Diffuse.Common
                     && (string.IsNullOrEmpty(Checkpoint.Connectors) || Utils.IsCheckpointInstalled(modelDirectory, Checkpoint.Connectors));
             }
 
-            if (Status == ModelStatusType.Pending && isValid)
-                Status = ModelStatusType.Unknown;
-            else if (Status == ModelStatusType.Installed && !isValid)
+            if (!isValid)
+            {
+                // Files not found
                 Status = ModelStatusType.Pending;
-            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
-                Status = ModelStatusType.Pending;
+            }
+            else
+            {
+                // Files found
+                if (Status == ModelStatusType.Pending)
+                    Status = ModelStatusType.Unknown;
+                else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+                    Status = ModelStatusType.Pending;
+            }
         }
 
     }

@@ -1,5 +1,5 @@
 {
-  "Version": 0,
+  "Version": 2,
   "DefaultDeviceId": -1,
   "Vendors": [ "AMD", "Nvidia" ],
   "Environments": [
@@ -8,8 +8,8 @@
       "Name": "CUDA (12.8)",
       "Type": "Vendor",
       "Vendor": "Nvidia",
-      "Environment": "default-cuda",
-      "Version": 4,
+      "Environment": "cuda-128",
+      "Version": 0,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {
@@ -44,8 +44,8 @@
       "Name": "ROCM (7.2.0)",
       "Type": "Vendor",
       "Vendor": "AMD",
-      "Environment": "default-rocm",
-      "Version": 4,
+      "Environment": "rocm-720",
+      "Version": 0,
       "Status": "Create",
       "IsDefault": true,
       "Variables": {
@@ -4906,11 +4906,11 @@
       "MemoryProfile": [
         {
           "QualityMode": "Draft",
-          "MemoryModes": [ 12, 35, 74 ]
+          "MemoryModes": [ 12, 16, 48 ] 
         },
         {
           "QualityMode": "Standard",
-          "MemoryModes": [ 12, 35, 74 ]
+          "MemoryModes": [ 12, 20, 64 ]
         },
         {
           "QualityMode": "Production",
@@ -5043,15 +5043,15 @@
       "MemoryProfile": [
         {
           "QualityMode": "Draft",
-          "MemoryModes": [ 12, 35, 74 ]
+          "MemoryModes": [ 12, 16, 48 ]
         },
         {
           "QualityMode": "Standard",
-          "MemoryModes": [ 12, 35, 74 ]
+          "MemoryModes": [ 12, 20, 64 ]
         },
         {
           "QualityMode": "Production",
-          "MemoryModes": [ 12, 42, 92 ]
+          "MemoryModes": [ 12, 42, 80 ]
         }
       ],
       "BaseType": "bfloat16",

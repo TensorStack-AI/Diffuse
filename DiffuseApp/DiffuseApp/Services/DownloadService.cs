@@ -59,14 +59,17 @@ namespace Diffuse.Services
 
             var index = GetNextIndex();
             var queueItem = new DownloadQueueItem(index, model);
+            await UpdateStatus(queueItem, ModelStatusType.DownloadQueue);
+
             if (_downloadQueue.Writer.TryWrite(queueItem))
             {
                 _downloadItems.Add(queueItem);
-                await UpdateStatus(queueItem, ModelStatusType.DownloadQueue);
                 NotifyPropertyChanged(nameof(CanCancel));
                 NotifyPropertyChanged(nameof(QueueLength));
                 return true;
             }
+
+            await UpdateStatus(queueItem, ModelStatusType.DownloadFailed);
             return false;
         }
 

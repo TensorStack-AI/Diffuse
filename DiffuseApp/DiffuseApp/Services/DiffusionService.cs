@@ -137,7 +137,8 @@ namespace Diffuse.Services
                         ControlNet = GetControlNet(controlNet),
                         MemoryMode = GetMemoryMode(_currentPipeline),
                         QuantType = GetQuantizationType(_currentPipeline),
-                        CheckpointConfig = model.Checkpoint.ToConfig()
+                        CheckpointConfig = model.Checkpoint.ToConfig(),
+                        IsOfflineMode = model.Status == ModelStatusType.Installed
                     };
 
                     var relayedProgressCallback = new Progress<PipelineProgress>(progress => _progressCallback?.Report(progress));
@@ -407,11 +408,12 @@ namespace Diffuse.Services
             if (loraAdapterModel.IsNullOrEmpty())
                 return default;
 
-            return [.. loraAdapterModel.Select(x => new LoraConfig
+            return [.. loraAdapterModel.Select(lora => new LoraConfig
             {
-                Path = x.Path,
-                Weights = x.Weights,
-                Name = x.Key
+                Path = lora.Path,
+                Weights = lora.Weights,
+                Name = lora.Key,
+                IsOfflineMode = lora.Status == ModelStatusType.Installed
             })];
         }
 
@@ -437,7 +439,8 @@ namespace Diffuse.Services
             return new ControlNetConfig
             {
                 Name = controlNetModel.Name,
-                Path = controlNetModel.Path
+                Path = controlNetModel.Path,
+                IsOfflineMode = controlNetModel.Status == ModelStatusType.Installed
             };
         }
 

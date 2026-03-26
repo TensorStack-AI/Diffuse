@@ -26,10 +26,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -76,35 +73,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -121,6 +91,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -148,6 +119,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -180,9 +180,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -239,13 +237,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -274,9 +266,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -333,13 +323,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -368,9 +352,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -427,13 +409,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -462,9 +438,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 1360,
@@ -521,13 +495,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -556,9 +524,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -615,13 +581,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -650,12 +610,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageInpaint",
-        "ImageControlNet"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -702,35 +657,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -747,6 +675,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -774,6 +703,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -806,11 +764,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageInpaint"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -857,35 +811,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -902,6 +829,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -929,6 +857,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -961,9 +918,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1010,35 +965,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1055,6 +983,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1082,6 +1011,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1114,10 +1072,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1164,35 +1119,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1209,6 +1137,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1236,6 +1165,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1268,11 +1226,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1319,35 +1273,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1364,6 +1291,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1391,6 +1319,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1423,11 +1380,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1474,35 +1427,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1519,6 +1445,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1546,6 +1473,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1578,11 +1534,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1629,35 +1581,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1674,6 +1599,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1701,6 +1627,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1733,11 +1688,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -1784,35 +1735,8 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": true,
@@ -1829,6 +1753,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -1856,6 +1781,35 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
@@ -1888,9 +1842,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage"
-      ],
+      "ProcessTypes": [ "TextToImage" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -1938,6 +1890,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -1984,9 +1937,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -2034,6 +1985,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2080,9 +2032,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2106,6 +2056,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2123,14 +2074,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2159,9 +2103,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2185,6 +2127,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2202,14 +2145,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2238,9 +2174,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2264,6 +2198,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2281,14 +2216,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          241
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 241 ]
       }
     },
     {
@@ -2317,9 +2245,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2343,6 +2269,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2360,14 +2287,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          241
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 241 ]
       }
     },
     {
@@ -2396,9 +2316,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2422,6 +2340,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2439,14 +2358,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2475,9 +2387,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2501,6 +2411,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2518,14 +2429,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2554,9 +2458,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2580,6 +2482,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2597,14 +2500,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2633,9 +2529,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2659,6 +2553,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 5,
             "use_dynamic_shifting": false,
@@ -2676,14 +2571,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2712,11 +2600,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo",
-        "VideoToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
       "Resolutions": [
         {
           "Width": 736,
@@ -2780,9 +2664,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -2797,14 +2682,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2833,11 +2711,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo",
-        "VideoToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
       "Resolutions": [
         {
           "Width": 736,
@@ -2901,9 +2775,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -2918,14 +2793,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -2954,11 +2822,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo",
-        "VideoToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
       "Resolutions": [
         {
           "Width": 736,
@@ -3022,9 +2886,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -3039,14 +2904,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -3075,11 +2933,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo",
-        "VideoToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
       "Resolutions": [
         {
           "Width": 736,
@@ -3143,9 +2997,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -3160,14 +3015,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -3196,10 +3044,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 2176,
@@ -3287,9 +3132,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -3304,14 +3150,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -3340,10 +3179,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo",
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 2176,
@@ -3431,9 +3267,10 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "base_shift": 0.95,
             "max_shift": 2.05,
             "base_image_seq_len": 1024,
@@ -3448,14 +3285,7 @@
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          65,
-          97,
-          121,
-          137,
-          161,
-          257
-        ]
+        "FrameOptions": [ 65, 97, 121, 137, 161, 257 ]
       }
     },
     {
@@ -3484,12 +3314,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageInpaint",
-        "ImageControlNet"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
       "Resolutions": [
         {
           "Width": 1664,
@@ -3537,6 +3362,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
             "use_dynamic_shifting": true,
@@ -3551,6 +3377,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         },
         "SampleRate": 24000,
@@ -3583,9 +3439,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageEdit"
-      ],
+      "ProcessTypes": [ "ImageEdit" ],
       "Resolutions": [
         {
           "Width": 1664,
@@ -3633,6 +3487,7 @@
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 1,
             "use_dynamic_shifting": true,
@@ -3647,6 +3502,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         },
         "SampleRate": 24000,
@@ -3679,13 +3564,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageInpaint",
-        "ImageControlNet",
-        "ImageToImageControlNet"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet", "ImageToImageControlNet" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -3745,6 +3624,7 @@
         "Scheduler": "DDPM",
         "Schedulers": {
           "LMS": {
+            "Scheduler": "LMS",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3758,6 +3638,7 @@
             "steps_offset": 0
           },
           "Euler": {
+            "Scheduler": "Euler",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3777,6 +3658,7 @@
             "final_sigmas_type": "zero"
           },
           "EulerAncestral": {
+            "Scheduler": "EulerAncestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3788,6 +3670,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDPM": {
+            "Scheduler": "DDPM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3797,7 +3680,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -3805,6 +3688,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDIM": {
+            "Scheduler": "DDIM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3814,7 +3698,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -3822,6 +3706,7 @@
             "rescale_betas_zero_snr": false
           },
           "KDPM2": {
+            "Scheduler": "KDPM2",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3835,6 +3720,7 @@
             "steps_offset": 0
           },
           "KDPM2Ancestral": {
+            "Scheduler": "KDPM2Ancestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3848,6 +3734,7 @@
             "steps_offset": 0
           },
           "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3876,6 +3763,7 @@
             "time_shift_type": "exponential"
           },
           "DPMSolverSinglestep": {
+            "Scheduler": "DPMSolverSinglestep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3900,6 +3788,7 @@
             "variance_type": null
           },
           "DPMSolverSDE": {
+            "Scheduler": "DPMSolverSDE",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3914,6 +3803,7 @@
             "steps_offset": 0
           },
           "DEISMultistep": {
+            "Scheduler": "DEISMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3938,6 +3828,7 @@
             "time_shift_type": "exponential"
           },
           "PNDM": {
+            "Scheduler": "PNDM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3950,6 +3841,7 @@
             "steps_offset": 0
           },
           "Heun": {
+            "Scheduler": "Heun",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3965,6 +3857,7 @@
             "steps_offset": 0
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -3994,6 +3887,7 @@
             "shift_terminal": null
           },
           "TCD": {
+            "Scheduler": "TCD",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4013,6 +3907,7 @@
             "rescale_betas_zero_snr": false
           },
           "SASolver": {
+            "Scheduler": "SASolver",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4066,9 +3961,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage"
-      ],
+      "ProcessTypes": [ "TextToImage" ],
       "Resolutions": [
         {
           "Width": 648,
@@ -4136,6 +4029,7 @@
         "Scheduler": "EulerAncestral",
         "Schedulers": {
           "LMS": {
+            "Scheduler": "LMS",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4149,6 +4043,7 @@
             "steps_offset": 0
           },
           "Euler": {
+            "Scheduler": "Euler",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4168,6 +4063,7 @@
             "final_sigmas_type": "zero"
           },
           "EulerAncestral": {
+            "Scheduler": "EulerAncestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4179,6 +4075,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDPM": {
+            "Scheduler": "DDPM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4188,7 +4085,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -4196,6 +4093,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDIM": {
+            "Scheduler": "DDIM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4205,7 +4103,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -4213,6 +4111,7 @@
             "rescale_betas_zero_snr": false
           },
           "KDPM2": {
+            "Scheduler": "KDPM2",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4226,6 +4125,7 @@
             "steps_offset": 0
           },
           "KDPM2Ancestral": {
+            "Scheduler": "KDPM2Ancestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4239,6 +4139,7 @@
             "steps_offset": 0
           },
           "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4267,6 +4168,7 @@
             "time_shift_type": "exponential"
           },
           "DPMSolverSinglestep": {
+            "Scheduler": "DPMSolverSinglestep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4291,6 +4193,7 @@
             "variance_type": null
           },
           "DPMSolverSDE": {
+            "Scheduler": "DPMSolverSDE",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4305,6 +4208,7 @@
             "steps_offset": 0
           },
           "DEISMultistep": {
+            "Scheduler": "DEISMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4329,6 +4233,7 @@
             "time_shift_type": "exponential"
           },
           "PNDM": {
+            "Scheduler": "PNDM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4341,6 +4246,7 @@
             "steps_offset": 0
           },
           "Heun": {
+            "Scheduler": "Heun",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4356,6 +4262,7 @@
             "steps_offset": 0
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4383,6 +4290,50 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "TCD": {
+            "Scheduler": "TCD",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.00085,
+            "beta_end": 0.012,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "original_inference_steps": 50,
+            "clip_sample": true,
+            "clip_sample_range": 1,
+            "set_alpha_to_one": true,
+            "steps_offset": 0,
+            "prediction_type": "epsilon",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "timestep_spacing": "leading",
+            "timestep_scaling": 10,
+            "rescale_betas_zero_snr": false
+          },
+          "SASolver": {
+            "Scheduler": "SASolver",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.00085,
+            "beta_end": 0.012,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "predictor_order": 2,
+            "corrector_order": 2,
+            "prediction_type": "epsilon",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "data_prediction",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": false,
+            "flow_shift": 1,
+            "variance_type": null,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0
           }
         },
         "SampleRate": 24000,
@@ -4415,12 +4366,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageControlNet",
-        "ImageToImageControlNet"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageControlNet", "ImageToImageControlNet" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -4480,6 +4426,7 @@
         "Scheduler": "DDPM",
         "Schedulers": {
           "LMS": {
+            "Scheduler": "LMS",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4493,6 +4440,7 @@
             "steps_offset": 0
           },
           "Euler": {
+            "Scheduler": "Euler",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4512,6 +4460,7 @@
             "final_sigmas_type": "zero"
           },
           "EulerAncestral": {
+            "Scheduler": "EulerAncestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4523,6 +4472,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDPM": {
+            "Scheduler": "DDPM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4532,7 +4482,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -4540,6 +4490,7 @@
             "rescale_betas_zero_snr": false
           },
           "DDIM": {
+            "Scheduler": "DDIM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4549,7 +4500,7 @@
             "prediction_type": "epsilon",
             "thresholding": false,
             "dynamic_thresholding_ratio": 0.995,
-            "clip_sample": true,
+            "clip_sample": false,
             "clip_sample_range": 1,
             "sample_max_value": 1,
             "timestep_spacing": "leading",
@@ -4557,6 +4508,7 @@
             "rescale_betas_zero_snr": false
           },
           "KDPM2": {
+            "Scheduler": "KDPM2",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4570,6 +4522,7 @@
             "steps_offset": 0
           },
           "KDPM2Ancestral": {
+            "Scheduler": "KDPM2Ancestral",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4583,6 +4536,7 @@
             "steps_offset": 0
           },
           "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4611,6 +4565,7 @@
             "time_shift_type": "exponential"
           },
           "DPMSolverSinglestep": {
+            "Scheduler": "DPMSolverSinglestep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4635,6 +4590,7 @@
             "variance_type": null
           },
           "DPMSolverSDE": {
+            "Scheduler": "DPMSolverSDE",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4649,6 +4605,7 @@
             "steps_offset": 0
           },
           "DEISMultistep": {
+            "Scheduler": "DEISMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4673,6 +4630,7 @@
             "time_shift_type": "exponential"
           },
           "PNDM": {
+            "Scheduler": "PNDM",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4685,6 +4643,7 @@
             "steps_offset": 0
           },
           "Heun": {
+            "Scheduler": "Heun",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4700,6 +4659,7 @@
             "steps_offset": 0
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.00085,
             "beta_end": 0.012,
@@ -4727,6 +4687,50 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "TCD": {
+            "Scheduler": "TCD",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.00085,
+            "beta_end": 0.012,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "original_inference_steps": 50,
+            "clip_sample": true,
+            "clip_sample_range": 1,
+            "set_alpha_to_one": true,
+            "steps_offset": 0,
+            "prediction_type": "epsilon",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "timestep_spacing": "leading",
+            "timestep_scaling": 10,
+            "rescale_betas_zero_snr": false
+          },
+          "SASolver": {
+            "Scheduler": "SASolver",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.00085,
+            "beta_end": 0.012,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "predictor_order": 2,
+            "corrector_order": 2,
+            "prediction_type": "epsilon",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "data_prediction",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": false,
+            "flow_shift": 1,
+            "variance_type": null,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0
           }
         },
         "SampleRate": 24000,
@@ -4759,9 +4763,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -4784,35 +4786,8 @@
         "Strength": 1,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": false,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": false,
@@ -4829,6 +4804,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -4856,16 +4832,39 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -4894,9 +4893,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToVideo"
-      ],
+      "ProcessTypes": [ "TextToVideo" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -4923,35 +4920,8 @@
         "Strength": 1,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": false,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": false,
@@ -4968,6 +4938,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -4995,16 +4966,39 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -5033,9 +5027,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -5058,35 +5050,8 @@
         "Strength": 1,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
-          "DPMSolverMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "scaled_linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "algorithm_type": "dpmsolver\u002B\u002B",
-            "solver_type": "midpoint",
-            "euler_at_final": false,
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "use_lu_lambdas": false,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": false,
-            "time_shift_type": "exponential"
-          },
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
             "shift": 3,
             "use_dynamic_shifting": false,
@@ -5103,6 +5068,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -5130,16 +5096,39 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": true,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
       }
     },
     {
@@ -5168,9 +5157,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "ImageToVideo"
-      ],
+      "ProcessTypes": [ "ImageToVideo" ],
       "Resolutions": [
         {
           "Width": 1280,
@@ -5193,7 +5180,55 @@
         "Strength": 1,
         "Scheduler": "UniPCMultistep",
         "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 3,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 3,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
           "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -5213,17 +5248,104 @@
             "use_beta_sigmas": false,
             "use_flow_sigmas": true,
             "use_lu_lambdas": false,
-            "flow_shift": 5,
+            "flow_shift": 3,
             "timestep_spacing": "linspace",
             "steps_offset": 0,
             "final_sigmas_type": "zero",
             "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": false,
+            "use_dynamic_shifting": true,
             "time_shift_type": "exponential"
-          },
+          }
+        },
+        "SampleRate": 24000,
+        "FrameOptions": [ 17, 33, 49, 81, 161 ]
+      }
+    },
+    {
+      "Backend": "Pytorch",
+      "Name": "ZImage_Base",
+      "Pipeline": "ZImagePipeline",
+      "Path": "Tongyi-MAI/Z-Image",
+      "Variant": null,
+      "Source": "Folder",
+      "IsDefault": false,
+      "IsGated": false,
+      "Status": "Pending",
+      "Link": "https://huggingface.co/Tongyi-MAI/Z-Image",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 2, 6, 8 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 2, 9, 14 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 2, 14, 24 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
+      "Resolutions": [
+        {
+          "Width": 1664,
+          "Height": 928
+        },
+        {
+          "Width": 1584,
+          "Height": 1056
+        },
+        {
+          "Width": 1472,
+          "Height": 1104
+        },
+        {
+          "Width": 1024,
+          "Height": 1024,
+          "IsDefault": true
+        },
+        {
+          "Width": 1328,
+          "Height": 1328
+        },
+        {
+          "Width": 1408,
+          "Height": 1408
+        },
+        {
+          "Width": 1104,
+          "Height": 1472
+        },
+        {
+          "Width": 1056,
+          "Height": 1584
+        },
+        {
+          "Width": 928,
+          "Height": 1664
+        }
+      ],
+      "DefaultOptions": {
+        "GuidanceScale": 4,
+        "GuidanceScale2": 0,
+        "Steps": 30,
+        "Steps2": 0,
+        "Height": 1024,
+        "Width": 1024,
+        "Frames": 0,
+        "FrameRate": 16,
+        "FrameChunk": 0,
+        "FrameChunkOverlap": 0,
+        "NoiseCondition": 0,
+        "Strength": 1,
+        "Scheduler": "FlowMatchEuler",
+        "Schedulers": {
           "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
             "num_train_timesteps": 1000,
-            "shift": 5,
+            "shift": 6,
             "use_dynamic_shifting": false,
             "base_shift": 0.5,
             "max_shift": 1.15,
@@ -5238,6 +5360,7 @@
             "stochastic_sampling": false
           },
           "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -5255,7 +5378,7 @@
             "use_exponential_sigmas": false,
             "use_beta_sigmas": false,
             "use_flow_sigmas": true,
-            "flow_shift": 5,
+            "flow_shift": 6,
             "timestep_spacing": "linspace",
             "steps_offset": 0,
             "final_sigmas_type": "zero",
@@ -5265,16 +5388,39 @@
             "sigma_min": null,
             "sigma_max": null,
             "shift_terminal": null
+          },
+          "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "scaled_linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "algorithm_type": "dpmsolver\u002B\u002B",
+            "solver_type": "midpoint",
+            "euler_at_final": false,
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "use_lu_lambdas": false,
+            "flow_shift": 6,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential"
           }
         },
         "SampleRate": 24000,
-        "FrameOptions": [
-          17,
-          33,
-          49,
-          81,
-          161
-        ]
+        "FrameOptions": null
       }
     },
     {
@@ -5303,12 +5449,7 @@
         }
       ],
       "BaseType": "bfloat16",
-      "ProcessTypes": [
-        "TextToImage",
-        "ImageToImage",
-        "ImageInpaint",
-        "ImageControlNet"
-      ],
+      "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
       "Resolutions": [
         {
           "Width": 1664,
@@ -5363,7 +5504,55 @@
         "Strength": 1,
         "Scheduler": "FlowMatchEuler",
         "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 6,
+            "use_dynamic_shifting": false,
+            "base_shift": 0.5,
+            "max_shift": 1.15,
+            "base_image_seq_len": 256,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 6,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          },
           "DPMSolverMultistep": {
+            "Scheduler": "DPMSolverMultistep",
             "num_train_timesteps": 1000,
             "beta_start": 0.0001,
             "beta_end": 0.02,
@@ -5383,58 +5572,13 @@
             "use_beta_sigmas": false,
             "use_flow_sigmas": true,
             "use_lu_lambdas": false,
-            "flow_shift": 3,
+            "flow_shift": 6,
             "timestep_spacing": "linspace",
             "steps_offset": 0,
             "final_sigmas_type": "zero",
             "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
+            "use_dynamic_shifting": false,
             "time_shift_type": "exponential"
-          },
-          "FlowMatchEuler": {
-            "num_train_timesteps": 1000,
-            "shift": 3,
-            "use_dynamic_shifting": true,
-            "base_shift": 0.5,
-            "max_shift": 1.15,
-            "base_image_seq_len": 256,
-            "max_image_seq_len": 4096,
-            "invert_sigmas": false,
-            "shift_terminal": null,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "time_shift_type": "exponential",
-            "stochastic_sampling": false
-          },
-          "UniPCMultistep": {
-            "num_train_timesteps": 1000,
-            "beta_start": 0.0001,
-            "beta_end": 0.02,
-            "beta_schedule": "linear",
-            "trained_betas": null,
-            "solver_order": 2,
-            "prediction_type": "flow_prediction",
-            "thresholding": false,
-            "dynamic_thresholding_ratio": 0.995,
-            "sample_max_value": 1,
-            "predict_x0": true,
-            "solver_type": "bh2",
-            "lower_order_final": true,
-            "use_karras_sigmas": false,
-            "use_exponential_sigmas": false,
-            "use_beta_sigmas": false,
-            "use_flow_sigmas": true,
-            "flow_shift": 3,
-            "timestep_spacing": "linspace",
-            "steps_offset": 0,
-            "final_sigmas_type": "zero",
-            "rescale_betas_zero_snr": false,
-            "use_dynamic_shifting": true,
-            "time_shift_type": "exponential",
-            "sigma_min": null,
-            "sigma_max": null,
-            "shift_terminal": null
           }
         },
         "SampleRate": 24000,
@@ -5652,6 +5796,10 @@
     {
       "Name": "Z-Image",
       "Options": [
+        {
+          "Name": "Base",
+          "Template": "ZImage_Base"
+        },
         {
           "Name": "Turbo",
           "Template": "ZImage_Turbo"

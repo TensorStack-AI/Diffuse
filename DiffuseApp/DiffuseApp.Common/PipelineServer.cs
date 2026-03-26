@@ -52,7 +52,6 @@ namespace DiffuseApp.Common
         /// <param name="cancellationToken">The cancellation token.</param>
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            CallbackMessage("Starting Server...", "Initialize");
             await WaitForConnectionAsync(cancellationToken);
 
             _ = StartProgressChannelAsync(cancellationToken);
@@ -217,20 +216,6 @@ namespace DiffuseApp.Common
 
 
         /// <summary>
-        /// Send a callback message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        private void CallbackMessage(string message, string process = "Generate")
-        {
-            _progressCallback?.Report(new PipelineProgress
-            {
-                Message = message,
-                Key = process
-            });
-        }
-
-
-        /// <summary>
         /// Start the server
         /// </summary>
         /// <param name="request">The request.</param>
@@ -263,8 +248,6 @@ namespace DiffuseApp.Common
         {
             try
             {
-                CallbackMessage("Create Environment...", "Initialize");
-
                 var timestamp = Stopwatch.GetTimestamp();
                 var environmentRequest = request.Environment;
                 var pythonEnvironment = new PythonManager(environmentRequest.Config, _directoryBase, _logger);
@@ -281,8 +264,6 @@ namespace DiffuseApp.Common
 
                 _logger.LogInformation($"[PipelineServer] [CreateEnvironment] Environment created, Elapsed: {Stopwatch.GetElapsedTime(timestamp)}");
                 await _pipelineChannel.SendResponse(cancellationToken);
-
-                CallbackMessage(string.Empty, "Initialize");
             }
             catch (Exception ex)
             {
@@ -301,12 +282,9 @@ namespace DiffuseApp.Common
         {
             try
             {
-                CallbackMessage("Loading Pipeline...", "Initialize");
                 var pipeline = new PythonPipeline(request.PipelineConfig, _progressCallback, _logger);
                 await pipeline.LoadAsync();
                 await _pipelineChannel.SendResponse(cancellationToken);
-
-                CallbackMessage(string.Empty, "Initialize");
                 return pipeline;
             }
             catch (Exception ex)
@@ -328,11 +306,8 @@ namespace DiffuseApp.Common
         {
             try
             {
-                CallbackMessage("Reloading Pipeline...", "Initialize");
                 await pipeline.ReloadAsync(request.PipelineReloadOptions);
                 await _pipelineChannel.SendResponse(cancellationToken);
-
-                CallbackMessage(string.Empty, "Initialize");
                 return pipeline;
             }
             catch (Exception ex)
@@ -354,11 +329,8 @@ namespace DiffuseApp.Common
         {
             try
             {
-                CallbackMessage("Loading Pipeline...", "Initialize");
                 await pipeline.UnloadAsync();
                 await _pipelineChannel.SendResponse(cancellationToken);
-
-                CallbackMessage(string.Empty, "Initialize");
             }
             catch (Exception ex)
             {
@@ -377,12 +349,9 @@ namespace DiffuseApp.Common
         {
             try
             {
-                CallbackMessage("Download Pipeline...", "Initialize");
                 var pipeline = new PythonPipeline(request.PipelineConfig, _progressCallback, _logger);
                 await pipeline.DownloadAsync();
                 await _pipelineChannel.SendResponse(cancellationToken);
-
-                CallbackMessage(string.Empty, "Initialize");
             }
             catch (Exception ex)
             {
@@ -403,12 +372,9 @@ namespace DiffuseApp.Common
             try
             {
                 _pipelineCancellation = new CancellationTokenSource();
-
-                CallbackMessage("Run Pipeline...");
                 RehydratePipelineOptions(request);
                 var response = await pipeline.GenerateAsync(request.PipelineOptions, _pipelineCancellation.Token);
                 await _pipelineChannel.SendMessage(new PipelineResponse(response));
-                CallbackMessage(string.Empty);
             }
             catch (OperationCanceledException ex)
             {

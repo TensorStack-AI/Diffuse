@@ -36,7 +36,10 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <DockPanel Margin="4">
-                                <CommonControls:ProgressElement DockPanel.Dock="Bottom" Progress="{Binding Progress}" Height="12"/>
+                                <UniformGrid DockPanel.Dock="Bottom" Rows="2" >
+                                    <CommonControls:ProgressElement Progress="{Binding Progress}" Height="8"/>
+                                    <CommonControls:ProgressElement Progress="{Binding TotalProgress}" Height="8"/>
+                                </UniformGrid>
                                 <DockPanel>
                                     <StackPanel DockPanel.Dock="Right">
                                         <Grid Margin="0,0,2,2">

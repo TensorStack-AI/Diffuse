@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TensorStack.Common;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 using TensorStack.Python.Config;
@@ -160,22 +161,28 @@ namespace Diffuse.Services
 
         public EnvironmentModel GetEnvironment(PipelineModel pipeline)
         {
+            return GetEnvironment(pipeline.Device, pipeline.DiffusionModel);
+        }
+
+
+        public EnvironmentModel GetEnvironment(Device device, DiffusionModel diffusionModel)
+        {
             var pipelineEnvironment = _settings.Environments
-                .Where(x => x.Vendor == pipeline.Device.Vendor && x.Type == EnvironmentType.Pipeline && x.Pipeline == pipeline.DiffusionModel.Pipeline)
+                .Where(x => x.Vendor == device.Vendor && x.Type == EnvironmentType.Pipeline && x.Pipeline == diffusionModel.Pipeline)
                 .OrderByDescending(x => x.IsDefault)
                 .FirstOrDefault();
             if (pipelineEnvironment != null)
                 return pipelineEnvironment;
 
             var deviceEnvironment = _settings.Environments
-                .Where(x => x.Vendor == pipeline.Device.Vendor && x.Type == EnvironmentType.Device && x.Device == pipeline.Device.HardwareID)
+                .Where(x => x.Vendor == device.Vendor && x.Type == EnvironmentType.Device && x.Device == device.HardwareID)
                 .OrderByDescending(x => x.IsDefault)
                 .FirstOrDefault();
             if (deviceEnvironment != null)
                 return deviceEnvironment;
 
             var vendorEnvironment = _settings.Environments
-                .Where(x => x.Vendor == pipeline.Device.Vendor && x.Type == EnvironmentType.Vendor)
+                .Where(x => x.Vendor == device.Vendor && x.Type == EnvironmentType.Vendor)
                 .OrderByDescending(x => x.IsDefault)
                 .FirstOrDefault();
             if (vendorEnvironment != null)
@@ -183,6 +190,7 @@ namespace Diffuse.Services
 
             return _settings.Environments.First();
         }
+
 
         private async Task CreateInternalAsync(EnvironmentModel environment, EnvironmentMode mode, IProgress<PipelineProgress> progressCallback, CancellationToken cancellationToken = default)
         {
@@ -243,5 +251,6 @@ namespace Diffuse.Services
         EnvironmentMode GetStatus(PipelineModel pipeline);
         EnvironmentMode GetStatus(EnvironmentModel environment);
         EnvironmentModel GetEnvironment(PipelineModel pipeline);
+        EnvironmentModel GetEnvironment(Device device, DiffusionModel diffusionModel);
     }
 }

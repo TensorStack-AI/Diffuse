@@ -1,5 +1,4 @@
 ﻿using Diffuse.Common;
-using Diffuse.Dialogs;
 using Diffuse.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -314,40 +313,6 @@ namespace Diffuse.Views
 
 
         /// <summary>
-        /// Loads the environment.
-        /// </summary>
-        protected virtual async Task<bool> LoadEnvironment()
-        {
-            var environment = EnvironmentService.GetEnvironment(CurrentPipeline);
-            if ((environment.Status == EnvironmentMode.Create || environment.Status == EnvironmentMode.Load) && EnvironmentService.Exists(environment))
-                return true;
-
-            var timestamp = Stopwatch.GetTimestamp();
-            Logger.LogInformation("[{View}] [LoadEnvironment] Creating new environment...", ViewName);
-            var environmentDialog = DialogService.GetDialog<EnvironmentDialog>();
-
-            if (environment.Status == EnvironmentMode.Update)
-            {
-                if (!await environmentDialog.UpdateAsync(environment))
-                    return false;
-            }
-            else if (environment.Status == EnvironmentMode.Rebuild)
-            {
-                if (!await environmentDialog.RebuildAsync(environment))
-                    return false;
-            }
-            else
-            {
-                if (!await environmentDialog.CreateAsync(environment))
-                    return false;
-            }
-
-            Logger.LogInformation("[{View}] [LoadEnvironment] Environment successfully created, Elapsed: {Elapsed:c}", ViewName, Stopwatch.GetElapsedTime(timestamp));
-            return true;
-        }
-
-
-        /// <summary>
         /// Load the Diffusion model
         /// </summary>
         private async Task<bool> LoadDiffusionModelAsync()
@@ -580,15 +545,9 @@ namespace Diffuse.Views
                 }
                 else
                 {
-                    Progress.Indeterminate("Loading Environment...");
-                    if (!await LoadEnvironment())
-                        return; // Canceled/Failed to install environment
-
-
                     Progress.Indeterminate("Downloading Models...");
                     if (!await DownloadModels(pipeline))
                         return; // Canceled/Failed to download models
-
 
                     Progress.Indeterminate($"Loading {CurrentPipeline.DiffusionModel.Name}...");
                     if (!await LoadPipelineAsync())

@@ -22,7 +22,7 @@ namespace Diffuse
         private double _volumeOutput = 0.1;
         private bool _isVolumeInputMute;
         private bool _isVolumeOutputMute;
-        private bool _isUpdateEnabled = true;
+        private bool _isUpdateEnabled = false;
         private bool _isUpdateAvailable;
 
         [AppDefault]

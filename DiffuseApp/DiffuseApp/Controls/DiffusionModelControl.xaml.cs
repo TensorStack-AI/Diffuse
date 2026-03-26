@@ -3,6 +3,7 @@ using Diffuse.Dialogs;
 using Diffuse.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -84,6 +85,7 @@ namespace Diffuse.Controls
         public static readonly DependencyProperty IsPipelineLoadedProperty = DependencyProperty.Register(nameof(IsPipelineLoaded), typeof(bool), typeof(DiffusionModelControl), new PropertyMetadata<DiffusionModelControl>((c) => c.OnIsPipelineLoadedChanged()));
         public static readonly DependencyProperty IsSelectionValidProperty = DependencyProperty.Register(nameof(IsSelectionValid), typeof(bool), typeof(DiffusionModelControl));
         public static readonly DependencyProperty DownloadServiceProperty = DependencyProperty.Register(nameof(DownloadService), typeof(IDownloadService), typeof(DiffusionModelControl));
+        public static readonly DependencyProperty EnvironmentServiceProperty = DependencyProperty.Register(nameof(EnvironmentService), typeof(IEnvironmentService), typeof(DiffusionModelControl));
 
         public event EventHandler<PipelineModel> SelectionChanged;
         public AsyncRelayCommand LoadCommand { get; }
@@ -113,6 +115,12 @@ namespace Diffuse.Controls
         {
             get { return (IDownloadService)GetValue(DownloadServiceProperty); }
             set { SetValue(DownloadServiceProperty, value); }
+        }
+
+        public IEnvironmentService EnvironmentService
+        {
+            get { return (IEnvironmentService)GetValue(EnvironmentServiceProperty); }
+            set { SetValue(EnvironmentServiceProperty, value); }
         }
 
         public ProcessType ProcessType
@@ -253,7 +261,7 @@ namespace Diffuse.Controls
             if (!await IsAccessGrantedAsync(SelectedModel))
                 return;
 
-            if (await IsDownloadingAsync(SelectedModel))
+            if (await IsDownloadingAsync(SelectedDevice, SelectedModel))
                 return;
 
             _currentDevice = SelectedDevice;
@@ -649,22 +657,31 @@ namespace Diffuse.Controls
         }
 
 
-        private async Task<bool> IsDownloadingAsync(DiffusionModel model)
+        private async Task<bool> IsDownloadingAsync(Device device, DiffusionModel model)
         {
+            if (!await LoadEnvironment(device, model))
+                return true;
+
             if (model.Status == ModelStatusType.Downloading || model.Status == ModelStatusType.DownloadQueue || model.Status == ModelStatusType.DownloadFailed)
             {
                 await DialogService.ShowMessageAsync("Model Downloading", "This model is downloading or queued for download", TensorStack.WPF.Dialogs.MessageDialogType.Ok, TensorStack.WPF.Dialogs.MessageBoxIconType.Info, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
                 return true;
             }
-            else if (model.Status == ModelStatusType.Pending)
+            else if (model.Status == ModelStatusType.Pending || model.Status == ModelStatusType.Unknown)
             {
-                if (!DownloadService.CanQueueItem(model))
-                    return false;
 
-                var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
-                if (queueDownload)
-                    await DownloadService.QueueAsync(model);
-
+                if (model.Status == ModelStatusType.Pending)
+                {
+                    var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
+                    if (queueDownload)
+                        await DownloadService.QueueAsync(model);
+                }
+                else if (model.Status == ModelStatusType.Unknown)
+                {
+                    var queueDownload = await DialogService.ShowMessageAsync("Verify Download", "Would you like to queue this model for verification?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
+                    if (queueDownload)
+                        await DownloadService.QueueAsync(model);
+                }
                 return true;
             }
             return false;
@@ -695,6 +712,32 @@ namespace Diffuse.Controls
 
             }
             return _processType;
+        }
+
+
+        private async Task<bool> LoadEnvironment(Device device, DiffusionModel diffusionModel)
+        {
+            var environment = EnvironmentService.GetEnvironment(device, diffusionModel);
+            if ((environment.Status == EnvironmentMode.Create || environment.Status == EnvironmentMode.Load) && EnvironmentService.Exists(environment))
+                return true;
+
+            var environmentDialog = DialogService.GetDialog<EnvironmentDialog>();
+            if (environment.Status == EnvironmentMode.Update)
+            {
+                if (!await environmentDialog.UpdateAsync(environment))
+                    return false;
+            }
+            else if (environment.Status == EnvironmentMode.Rebuild)
+            {
+                if (!await environmentDialog.RebuildAsync(environment))
+                    return false;
+            }
+            else
+            {
+                if (!await environmentDialog.CreateAsync(environment))
+                    return false;
+            }
+            return true;
         }
     }
 }
