@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using TensorStack.Common;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
-using TensorStack.Python.Scheduler;
 using TensorStack.WPF;
 using TensorStack.WPF.Controls;
 
@@ -21,7 +20,6 @@ namespace Diffuse.Dialogs
     /// </summary>
     public partial class DiffusionModelDialog : DialogControl
     {
-        private bool _isCustomPipeline;
         private SizeOption _selectedSize;
         private DiffusionModel _diffusionModel;
         private DiffusionModel _originalDiffusionModel;
@@ -35,7 +33,6 @@ namespace Diffuse.Dialogs
             DataTypes = [DataType.Bfloat16, DataType.Float16, DataType.Float8, DataType.Int8];
             ModelSources = [ModelSourceType.HuggingFace, ModelSourceType.Folder, ModelSourceType.SingleFile, ModelSourceType.Checkpoint];
             Sizes = new ObservableCollection<SizeOption>();
-            Pipelines = new ObservableCollection<string>(Settings.GetPipelines());
             SaveCommand = new AsyncRelayCommand(SaveAsync, CanExecuteSave);
             CancelCommand = new AsyncRelayCommand(CancelAsync);
             AddSizeCommand = new AsyncRelayCommand(AddSizeAsync, CanAddSize);
@@ -51,7 +48,6 @@ namespace Diffuse.Dialogs
         public AsyncRelayCommand AddSizeCommand { get; }
         public AsyncRelayCommand<SizeOption> RemoveSizeCommand { get; }
         public ObservableCollection<SizeOption> Sizes { get; }
-        public ObservableCollection<string> Pipelines { get; }
         public bool IsUpdateMode => _originalDiffusionModel is not null;
         public DataType[] DataTypes { get; }
         public ModelSourceType[] ModelSources { get; }
@@ -84,48 +80,6 @@ namespace Diffuse.Dialogs
         {
             get { return _frameOptions; }
             set { SetProperty(ref _frameOptions, value); }
-        }
-
-        public bool IsCustomPipeline
-        {
-            get { return _isCustomPipeline; }
-            set
-            {
-                SetProperty(ref _isCustomPipeline, value);
-                if (!_isCustomPipeline)
-                {
-                    DiffusionModel.Pipeline = Pipelines.FirstOrDefault(x => x == DiffusionModel.Pipeline) ?? Pipelines.FirstOrDefault();
-                    DiffusionModel.NotifyPropertyChanged(nameof(DiffusionModel.Pipeline));
-                }
-            }
-        }
-
-
-        public Task<bool> AddAsync()
-        {
-            var modelId = GetNextModelId();
-            DiffusionModel = new DiffusionModel
-            {
-                Id = modelId,
-                Backend = BackendType.Pytorch,
-                BaseType = DataType.Bfloat16,
-                MemoryProfile =
-                [
-                    new MemoryProfile(QualityMode.Draft, [2, 8,  16]),
-                    new MemoryProfile(QualityMode.Standard, [2, 8,  16]),
-                    new MemoryProfile(QualityMode.Production, [4, 16,  24])
-                ],
-                DefaultOptions = new DiffusionDefaultOptions { },
-
-            };
-            SelectedSize = new SizeOption
-            {
-                Height = 512,
-                Width = 512,
-                IsDefault = true
-            };
-            CheckpointModel = new DiffusionCheckpointModel();
-            return base.ShowDialogAsync();
         }
 
 
@@ -475,6 +429,7 @@ namespace Diffuse.Dialogs
                     MemoryModes = x.MemoryModes.ToArray(),
                 }).ToArray(),
                 ProcessTypes = [.. diffusionModel.ProcessTypes],
+                Vendor = diffusionModel.Vendor.IsNullOrEmpty() ? null : [.. diffusionModel.Vendor],
                 Source = diffusionModel.Source,
                 Resolutions = [.. diffusionModel.Resolutions.Select(x => new SizeOption
                 {
@@ -500,6 +455,8 @@ namespace Diffuse.Dialogs
                     Scheduler = diffusionModel.DefaultOptions.Scheduler,
                     Schedulers = diffusionModel.DefaultOptions.Schedulers with { },
                     Strength = diffusionModel.DefaultOptions.Strength,
+                    IsVaeSlicingEnabled = diffusionModel.DefaultOptions.IsVaeSlicingEnabled,
+                    IsVaeTilingEnabled = diffusionModel.DefaultOptions.IsVaeTilingEnabled,
                 },
                 Checkpoint = diffusionModel.Checkpoint is null ? null : new DiffusionCheckpointModel
                 {

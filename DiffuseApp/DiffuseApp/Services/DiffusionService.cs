@@ -131,6 +131,7 @@ namespace Diffuse.Services
                         DataType = model.BaseType,
                         IsOptimizeDeviceEnabled = _settings.IsOptimizeDeviceEnabled,
                         IsOptimizeChannelsEnabled = _settings.IsOptimizeChannelsEnabled,
+                        IsDeviceQuantizationEnabled = _settings.IsDeviceQuantizationEnabled,
                         CacheDirectory = Path.GetFullPath(_settings.DirectoryCache),
                         SecureToken = _settings.SecureToken,
                         LoraAdapters = GetLoraAdapters(_currentPipeline.LoraAdapterModel),

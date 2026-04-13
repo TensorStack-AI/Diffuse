@@ -154,6 +154,7 @@ namespace DiffuseApp.Common
                 CreateNoWindow = !Config.IsDebugMode,
                 UseShellExecute = false,
                 FileName = Path.Combine(Config.ServerPath, ChannelConfig.Executable),
+                Arguments = ChannelConfig.Arguments.IsNullOrEmpty() ? null : string.Join(' ', ChannelConfig.Arguments)
             };
 
             // Environment Variables

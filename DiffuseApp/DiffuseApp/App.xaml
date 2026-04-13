@@ -487,6 +487,11 @@
                                             <Setter Property="Color" Value="{StaticResource WarningColour}"/>
                                             <Setter Property="ToolTip" Value="Unknown State"/>
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Verifying">
+                                            <Setter Property="Icon" Value="21"/>
+                                            <Setter Property="Color" Value="{StaticResource InfoColour}"/>
+                                            <Setter Property="ToolTip" Value="Verifying..."/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="DownloadQueue">
                                             <Setter Property="Icon" Value="f0ed"/>
                                             <Setter Property="Color" Value="{StaticResource InfoColour}"/>

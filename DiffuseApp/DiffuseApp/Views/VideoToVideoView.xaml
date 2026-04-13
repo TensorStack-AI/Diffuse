@@ -36,8 +36,9 @@
                                     IsExtractorSupported="True"
                                     Settings="{Binding Settings, Mode=OneWay}"
                                     IsPipelineLoaded="{Binding IsPipelineLoaded, Mode=OneWay}"
-                                    DownloadService="{Binding DownloadService, Mode=OneWay}"
-                                    EnvironmentService="{Binding EnvironmentService, Mode=OneWay}"
+                                    DownloadService="{Binding DownloadService, Mode=OneTime}"
+                                    EnvironmentService="{Binding EnvironmentService, Mode=OneTime}"
+                                    NavigationService="{Binding NavigationService, Mode=OneTime}"
                                     SelectionChanged="SelectedPipelineChanged"/>
                             </Grid>
                         </StackPanel>

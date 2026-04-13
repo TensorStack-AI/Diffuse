@@ -1,6 +1,7 @@
 ﻿using Diffuse.Common;
 using Diffuse.Dialogs;
 using Diffuse.Services;
+using Diffuse.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -86,6 +87,7 @@ namespace Diffuse.Controls
         public static readonly DependencyProperty IsSelectionValidProperty = DependencyProperty.Register(nameof(IsSelectionValid), typeof(bool), typeof(DiffusionModelControl));
         public static readonly DependencyProperty DownloadServiceProperty = DependencyProperty.Register(nameof(DownloadService), typeof(IDownloadService), typeof(DiffusionModelControl));
         public static readonly DependencyProperty EnvironmentServiceProperty = DependencyProperty.Register(nameof(EnvironmentService), typeof(IEnvironmentService), typeof(DiffusionModelControl));
+        public static readonly DependencyProperty NavigationServiceProperty = DependencyProperty.Register(nameof(NavigationService), typeof(NavigationService), typeof(DiffusionModelControl));
 
         public event EventHandler<PipelineModel> SelectionChanged;
         public AsyncRelayCommand LoadCommand { get; }
@@ -121,6 +123,12 @@ namespace Diffuse.Controls
         {
             get { return (IEnvironmentService)GetValue(EnvironmentServiceProperty); }
             set { SetValue(EnvironmentServiceProperty, value); }
+        }
+
+        public NavigationService NavigationService
+        {
+            get { return (NavigationService)GetValue(NavigationServiceProperty); }
+            set { SetValue(NavigationServiceProperty, value); }
         }
 
         public ProcessType ProcessType
@@ -411,6 +419,9 @@ namespace Diffuse.Controls
                 if (!model.ProcessTypes.Contains(_processType))
                     return false;
 
+                if (!model.Vendor.IsNullOrEmpty() && !model.Vendor.Contains(_selectedDevice.Vendor))
+                    return false;
+
                 if (IsControlNetSupported && !Settings.ControlNetModels.Any(x => x.Pipeline.Equals(model.Pipeline)))
                     return false;
 
@@ -667,6 +678,11 @@ namespace Diffuse.Controls
                 await DialogService.ShowMessageAsync("Model Downloading", "This model is downloading or queued for download", TensorStack.WPF.Dialogs.MessageDialogType.Ok, TensorStack.WPF.Dialogs.MessageBoxIconType.Info, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
                 return true;
             }
+            else if(model.Status == ModelStatusType.Verifying)
+            {
+                await DialogService.ShowMessageAsync("Verifying Model", "This model is verifying or queued for verification", TensorStack.WPF.Dialogs.MessageDialogType.Ok, TensorStack.WPF.Dialogs.MessageBoxIconType.Info, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
+                return true;
+            }
             else if (model.Status == ModelStatusType.Pending || model.Status == ModelStatusType.Unknown)
             {
 
@@ -674,13 +690,19 @@ namespace Diffuse.Controls
                 {
                     var queueDownload = await DialogService.ShowMessageAsync("Queue Download", "Would you like to queue this model for download?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
                     if (queueDownload)
-                        await DownloadService.QueueAsync(model);
+                    {
+                        await DownloadService.QueueAsync(model, false);
+                        await NavigationService.NavigateAsync((int)View.Downloads);
+                    }
                 }
                 else if (model.Status == ModelStatusType.Unknown)
                 {
                     var queueDownload = await DialogService.ShowMessageAsync("Verify Download", "Would you like to queue this model for verification?", TensorStack.WPF.Dialogs.MessageDialogType.YesNo, TensorStack.WPF.Dialogs.MessageBoxIconType.Question, TensorStack.WPF.Dialogs.MessageBoxStyleType.Info);
                     if (queueDownload)
-                        await DownloadService.QueueAsync(model);
+                    {
+                        await DownloadService.QueueAsync(model, true);
+                        await NavigationService.NavigateAsync((int)View.Downloads);
+                    }
                 }
                 return true;
             }

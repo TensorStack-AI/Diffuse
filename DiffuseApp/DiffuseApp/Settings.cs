@@ -41,6 +41,7 @@ namespace Diffuse
         public bool IsServerDebugEnabled { get; set; } = false;
         public bool IsOptimizeDeviceEnabled { get; set; } = false;
         public bool IsOptimizeChannelsEnabled { get; set; } = false;
+        public bool IsDeviceQuantizationEnabled { get; set; } = false;
 
         public double VolumeInput
         {
@@ -123,7 +124,7 @@ namespace Diffuse
 
         [JsonIgnore]
         public TemplateSettings Templates { get; set; }
-
+     
 
         public async Task Initialize(string directoryData)
         {
@@ -228,7 +229,8 @@ namespace Diffuse
                 "HeliosPipeline",
                 "Kandinsky5Pipeline",
                 "LTXPipeline",
-                "LTX2Pipeline",
+                "LTX20Pipeline",
+                "LTX23Pipeline",
                 "QwenImagePipeline",
                 "SkyReelsV2Pipeline",
                 "StableDiffusion3Pipeline",

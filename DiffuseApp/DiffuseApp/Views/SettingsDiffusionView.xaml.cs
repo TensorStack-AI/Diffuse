@@ -28,7 +28,6 @@ namespace Diffuse.Views
             : base(settings, navigationService, environmentService, downloadService, historyService, logger)
         {
             SaveCommand = new AsyncRelayCommand(SaveAsync);
-            AddDiffusionModelCommand = new AsyncRelayCommand(AddDiffusionModelAsync);
             AddDiffusionModelWizardCommand = new AsyncRelayCommand(AddDiffusionModelWizardAsync);
             CopyDiffusionModelCommand = new AsyncRelayCommand(CopyDiffusionModelAsync, () => SelectedDiffusionModel is not null);
             UpdateDiffusionModelCommand = new AsyncRelayCommand(UpdateDiffusionModelAsync, () => SelectedDiffusionModel?.Id > Utils.FixedIdRange);
@@ -46,7 +45,6 @@ namespace Diffuse.Views
 
         public override View View => View.Diffusion;
         public AsyncRelayCommand SaveCommand { get; }
-        public AsyncRelayCommand AddDiffusionModelCommand { get; }
         public AsyncRelayCommand AddDiffusionModelWizardCommand { get; }
         public AsyncRelayCommand CopyDiffusionModelCommand { get; }
         public AsyncRelayCommand UpdateDiffusionModelCommand { get; }
@@ -104,17 +102,6 @@ namespace Diffuse.Views
         private bool CanClearFilter()
         {
             return !string.IsNullOrWhiteSpace(_filterText);
-        }
-
-
-        private async Task AddDiffusionModelAsync()
-        {
-            var dialog = DialogService.GetDialog<DiffusionModelDialog>();
-            if (await dialog.AddAsync())
-            {
-                await SaveAsync();
-                SelectedDiffusionModel = dialog.DiffusionModel;
-            }
         }
 
 
@@ -210,7 +197,7 @@ namespace Diffuse.Views
                 await DialogService.ShowErrorAsync("Environment Error", "No Environment Found, Please setup an environment and try again.");
                 return;
             }
-            await DownloadService.QueueAsync(_selectedDiffusionModel);
+            await DownloadService.QueueAsync(_selectedDiffusionModel, false);
         }
 
 

@@ -14,9 +14,10 @@ namespace Diffuse.Common
         private string _component;
         private string _fileName;
 
-        public DownloadQueueItem(int index, DiffusionModel diffusionModel)
+        public DownloadQueueItem(int index, DiffusionModel diffusionModel, bool isVerify)
         {
             Index = index;
+            IsVerify = isVerify;
             Progress = new ProgressInfo();
             TotalProgress = new ProgressInfo();
             DiffusionModel = diffusionModel;
@@ -33,6 +34,7 @@ namespace Diffuse.Common
         public ModelStatusType Status => DiffusionModel.Status;
         public string Name => DiffusionModel.Name;
         public string Pipeline => DiffusionModel.Pipeline;
+        public bool IsVerify { get; set; }
 
         public float Speed
         {

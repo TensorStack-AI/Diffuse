@@ -5,6 +5,7 @@
         public int ChunkSize { get; } = 32 * 1024 * 1024; // 32 MB
         public string Name { get; init; }
         public string Executable { get; init; }
+        public string[] Arguments { get; set; }
         public string ChannelCommand { get; init; }
         public string ChannelPipeName { get; init; }
         public string ChannelProgress { get; init; }
@@ -23,7 +24,8 @@
         public readonly static ChannelConfig DownloadConfig = new ChannelConfig
         {
             Name = "DiffuseDownload",
-            Executable = "DiffuseDownloader.exe",
+            Executable = "DiffuseServer.exe",
+            Arguments = ["download"],
             ChannelCommand = "DiffuseDownload.Command",
             ChannelPipeName = "DiffuseDownload.PipeName",
             ChannelProgress = "DiffuseDownload.Progress"

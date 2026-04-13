@@ -25,7 +25,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@https://github.com/huggingface/diffusers/archive/c02c17c6ee7ac508c56925dde4d4a3c587650dc3.zip",
+        "diffusers@https://github.com/huggingface/diffusers/archive/8070f6ec54a7699d5ee285090d9735d9c9b205d7.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -64,7 +64,7 @@
         "wheel==0.45.1",
         "transformers==4.57.3",
         "accelerate==1.12.0",
-        "diffusers@https://github.com/huggingface/diffusers/archive/c02c17c6ee7ac508c56925dde4d4a3c587650dc3.zip",
+        "diffusers@https://github.com/huggingface/diffusers/archive/8070f6ec54a7699d5ee285090d9735d9c9b205d7.zip",
         "protobuf==6.33.2",
         "sentencepiece==0.2.1",
         "ftfy==6.3.1",
@@ -2075,6 +2075,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Qwen/Qwen-Image-2512",
       "DefaultOptions": {
         "Steps": 30,
@@ -2200,6 +2201,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Qwen/Qwen-Image-Edit-2511",
       "IsDefault": true,
       "DefaultOptions": {
@@ -3554,6 +3556,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -3682,6 +3685,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.1-T2V-14B-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -3785,6 +3789,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.1-I2V-14B-480P-Diffusers",
       "IsDefault": true,
       "DefaultOptions": {
@@ -3882,6 +3887,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.2-TI2V-5B-Diffusers",
       "DefaultOptions": {
         "Steps": 50,
@@ -3982,6 +3988,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B-Diffusers",
       "DefaultOptions": {
         "Steps": 40,
@@ -4078,6 +4085,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-T2I-Lite-sft-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -4160,6 +4168,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-I2I-Lite-sft-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -4242,6 +4251,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-T2V-Lite-sft-5s-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -4312,6 +4322,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/kandinskylab/Kandinsky-5.0-I2V-Pro-sft-5s-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -4380,6 +4391,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/zai-org/CogVideoX-2b",
       "DefaultOptions": {
         "Steps": 30,
@@ -4466,6 +4478,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/zai-org/CogVideoX-5b",
       "DefaultOptions": {
         "Steps": 30,
@@ -4552,6 +4565,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/zai-org/CogVideoX-5b-I2V",
       "DefaultOptions": {
         "Steps": 30,
@@ -4636,6 +4650,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/zai-org/CogVideoX1.5-5B",
       "DefaultOptions": {
         "Steps": 30,
@@ -4722,6 +4737,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/zai-org/CogVideoX1.5-5B-I2V",
       "DefaultOptions": {
         "Steps": 30,
@@ -4897,7 +4913,7 @@
       "Id": 190,
       "Backend": "PyTorch",
       "Name": "LTX-2",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Path": "Lightricks/LTX-2",
       "Source": "SingleFile",
       "Checkpoint": {
@@ -4906,7 +4922,7 @@
       "MemoryProfile": [
         {
           "QualityMode": "Draft",
-          "MemoryModes": [ 12, 16, 48 ] 
+          "MemoryModes": [ 12, 16, 48 ]
         },
         {
           "QualityMode": "Standard",
@@ -4919,6 +4935,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Lightricks/LTX-2",
       "DefaultOptions": {
         "Steps": 40,
@@ -4947,6 +4964,36 @@
             "use_beta_sigmas": false,
             "time_shift_type": "exponential",
             "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
           }
         },
         "FrameOptions": [
@@ -5034,7 +5081,7 @@
       "Id": 192,
       "Backend": "PyTorch",
       "Name": "LTX-2 Distilled",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Path": "Lightricks/LTX-2",
       "Source": "SingleFile",
       "Checkpoint": {
@@ -5056,6 +5103,337 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
+      "Link": "https://huggingface.co/Lightricks/LTX-2",
+      "DefaultOptions": {
+        "Steps": 8,
+        "Width": 768,
+        "Height": 512,
+        "Frames": 121,
+        "FrameRate": 24,
+        "GuidanceScale": 0,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
+        "Scheduler": "FlowMatchEuler",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 1,
+            "use_dynamic_shifting": true,
+            "base_shift": 0.95,
+            "max_shift": 2.05,
+            "base_image_seq_len": 1024,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": null,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          }
+        },
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
+      },
+      "Resolutions": [
+        {
+          "Width": 2176,
+          "Height": 3840
+        },
+        {
+          "Width": 864,
+          "Height": 2048
+        },
+        {
+          "Width": 1088,
+          "Height": 1920
+        },
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 640,
+          "Height": 640
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512,
+          "IsDefault": true
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        },
+        {
+          "Width": 1920,
+          "Height": 1088
+        },
+        {
+          "Width": 2048,
+          "Height": 864
+        },
+        {
+          "Width": 3840,
+          "Height": 2176
+        }
+      ]
+    },
+    {
+      "Id": 193,
+      "Backend": "PyTorch",
+      "Name": "LTX-2.3",
+      "Pipeline": "LTX23Pipeline",
+      "Path": "dg845/LTX-2.3-Diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 12, 20, 48 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 12, 23, 64 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 12, 46, 92 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
+      "Link": "https://huggingface.co/Lightricks/LTX-2",
+      "DefaultOptions": {
+        "Steps": 40,
+        "Width": 768,
+        "Height": 512,
+        "Frames": 121,
+        "FrameRate": 24,
+        "GuidanceScale": 3,
+        "IsVaeTilingEnabled": true,
+        "IsVaeSlicingEnabled": true,
+        "Scheduler": "FlowMatchEuler",
+        "Schedulers": {
+          "FlowMatchEuler": {
+            "Scheduler": "FlowMatchEuler",
+            "num_train_timesteps": 1000,
+            "shift": 1,
+            "use_dynamic_shifting": true,
+            "base_shift": 0.95,
+            "max_shift": 2.05,
+            "base_image_seq_len": 1024,
+            "max_image_seq_len": 4096,
+            "invert_sigmas": false,
+            "shift_terminal": 0.1,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "time_shift_type": "exponential",
+            "stochastic_sampling": false
+          },
+          "UniPCMultistep": {
+            "Scheduler": "UniPCMultistep",
+            "num_train_timesteps": 1000,
+            "beta_start": 0.0001,
+            "beta_end": 0.02,
+            "beta_schedule": "linear",
+            "trained_betas": null,
+            "solver_order": 2,
+            "prediction_type": "flow_prediction",
+            "thresholding": false,
+            "dynamic_thresholding_ratio": 0.995,
+            "sample_max_value": 1,
+            "predict_x0": true,
+            "solver_type": "bh2",
+            "lower_order_final": true,
+            "use_karras_sigmas": false,
+            "use_exponential_sigmas": false,
+            "use_beta_sigmas": false,
+            "use_flow_sigmas": true,
+            "flow_shift": 1,
+            "timestep_spacing": "linspace",
+            "steps_offset": 0,
+            "final_sigmas_type": "zero",
+            "rescale_betas_zero_snr": false,
+            "use_dynamic_shifting": false,
+            "time_shift_type": "exponential",
+            "sigma_min": null,
+            "sigma_max": null,
+            "shift_terminal": null
+          }
+        },
+        "FrameOptions": [
+          65,
+          97,
+          121,
+          137,
+          161,
+          257
+        ]
+      },
+      "Resolutions": [
+        {
+          "Width": 2176,
+          "Height": 3840
+        },
+        {
+          "Width": 864,
+          "Height": 2048
+        },
+        {
+          "Width": 1088,
+          "Height": 1920
+        },
+        {
+          "Width": 736,
+          "Height": 1280
+        },
+        {
+          "Width": 768,
+          "Height": 1152
+        },
+        {
+          "Width": 544,
+          "Height": 960
+        },
+        {
+          "Width": 512,
+          "Height": 768
+        },
+        {
+          "Width": 480,
+          "Height": 736
+        },
+        {
+          "Width": 640,
+          "Height": 640
+        },
+        {
+          "Width": 736,
+          "Height": 480
+        },
+        {
+          "Width": 768,
+          "Height": 512,
+          "IsDefault": true
+        },
+        {
+          "Width": 960,
+          "Height": 544
+        },
+        {
+          "Width": 1152,
+          "Height": 768
+        },
+        {
+          "Width": 1280,
+          "Height": 736
+        },
+        {
+          "Width": 1920,
+          "Height": 1088
+        },
+        {
+          "Width": 2048,
+          "Height": 864
+        },
+        {
+          "Width": 3840,
+          "Height": 2176
+        }
+      ]
+    },
+    {
+      "Id": 194,
+      "Backend": "PyTorch",
+      "Name": "LTX-2.3 Distilled",
+      "Pipeline": "LTX23Pipeline",
+      "Path": "dg845/LTX-2.3-Distilled-Diffusers",
+      "Source": "HuggingFace",
+      "MemoryProfile": [
+        {
+          "QualityMode": "Draft",
+          "MemoryModes": [ 12, 20, 48 ]
+        },
+        {
+          "QualityMode": "Standard",
+          "MemoryModes": [ 12, 23, 64 ]
+        },
+        {
+          "QualityMode": "Production",
+          "MemoryModes": [ 12, 46, 92 ]
+        }
+      ],
+      "BaseType": "bfloat16",
+      "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Lightricks/LTX-2",
       "DefaultOptions": {
         "Steps": 8,
@@ -5220,6 +5598,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-1.3B-540P-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -5327,6 +5706,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/Skywork/SkyReels-V2-DF-14B-540P-Diffusers",
       "DefaultOptions": {
         "Steps": 30,
@@ -5434,6 +5814,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/BestWishYsh/Helios-Base",
       "DefaultOptions": {
         "Steps": 20,
@@ -5563,6 +5944,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/BestWishYsh/Helios-Mid",
       "DefaultOptions": {
         "Steps": 20,
@@ -5692,6 +6074,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo", "VideoToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Link": "https://huggingface.co/BestWishYsh/Helios-Distilled",
       "DefaultOptions": {
         "Steps": 3,
@@ -5836,7 +6219,7 @@
       "Key": "cameradollyin201",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In",
       "Weights": "ltx-2-19b-lora-camera-control-dolly-in.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "IsDefault": true,
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-In"
@@ -5848,7 +6231,7 @@
       "Key": "cameradollyout202",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out",
       "Weights": "ltx-2-19b-lora-camera-control-dolly-out.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Out"
     },
@@ -5859,7 +6242,7 @@
       "Key": "cameradollyleft203",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left",
       "Weights": "ltx-2-19b-lora-camera-control-dolly-left.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Left"
     },
@@ -5870,7 +6253,7 @@
       "Key": "cameradollyright204",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right",
       "Weights": "ltx-2-19b-lora-camera-control-dolly-right.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Dolly-Right"
     },
@@ -5881,7 +6264,7 @@
       "Key": "camerajibdown205",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down",
       "Weights": "ltx-2-19b-lora-camera-control-jib-down.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Down"
     },
@@ -5892,7 +6275,7 @@
       "Key": "camerajibup206",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up",
       "Weights": "ltx-2-19b-lora-camera-control-jib-up.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Jib-Up"
     },
@@ -5903,7 +6286,7 @@
       "Key": "camerastatic207",
       "Path": "Lightricks/LTX-2-19b-LoRA-Camera-Control-Static",
       "Weights": "ltx-2-19b-lora-camera-control-static.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-LoRA-Camera-Control-Static"
     },
@@ -5914,7 +6297,7 @@
       "Key": "detailer208",
       "Path": "Lightricks/LTX-2-19b-IC-LoRA-Detailer",
       "Weights": "ltx-2-19b-ic-lora-detailer.safetensors",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Source": "HuggingFace",
       "Link": "https://huggingface.co/Lightricks/LTX-2-19b-IC-LoRA-Detailer"
     }

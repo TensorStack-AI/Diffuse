@@ -52,13 +52,13 @@ namespace Diffuse.Services
         }
 
 
-        public async Task<bool> QueueAsync(DiffusionModel model)
+        public async Task<bool> QueueAsync(DiffusionModel model, bool isVerify)
         {
             if (_downloadItems.Any(x => x.DiffusionModel.Id == model.Id))
                 return false;
 
             var index = GetNextIndex();
-            var queueItem = new DownloadQueueItem(index, model);
+            var queueItem = new DownloadQueueItem(index, model, isVerify);
             await UpdateStatus(queueItem, ModelStatusType.DownloadQueue);
 
             if (_downloadQueue.Writer.TryWrite(queueItem))
@@ -114,7 +114,7 @@ namespace Diffuse.Services
 
             IsDownloading = true;
             var model = queueItem.DiffusionModel;
-            await UpdateStatus(queueItem, ModelStatusType.Downloading);
+            await UpdateStatus(queueItem, queueItem.IsVerify ? ModelStatusType.Verifying : ModelStatusType.Downloading);
 
             try
             {
@@ -139,12 +139,12 @@ namespace Diffuse.Services
             }
             catch (OperationCanceledException)
             {
-                await UpdateStatus(queueItem, ModelStatusType.Pending);
+                await UpdateStatus(queueItem, queueItem.IsVerify ? ModelStatusType.Unknown : ModelStatusType.Pending);
             }
             catch (Exception)
             {
                 queueItem.Progress.Clear();
-                await UpdateStatus(queueItem, ModelStatusType.DownloadFailed);
+                await UpdateStatus(queueItem, queueItem.IsVerify ? ModelStatusType.Unknown : ModelStatusType.DownloadFailed);
             }
             finally
             {
@@ -199,7 +199,7 @@ namespace Diffuse.Services
         ObservableCollection<DownloadQueueItem> Queue { get; }
 
         void Shutdown();
-        Task<bool> QueueAsync(DiffusionModel model);
+        Task<bool> QueueAsync(DiffusionModel model, bool isVerify);
         Task CancelAllAsync();
         Task CancelAsync(DiffusionModel model);
         Task CancelAsync(DownloadQueueItem model);

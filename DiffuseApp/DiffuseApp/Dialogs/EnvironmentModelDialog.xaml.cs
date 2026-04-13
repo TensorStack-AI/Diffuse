@@ -96,6 +96,7 @@ namespace Diffuse.Dialogs
                 Name = "My Environment",
                 Environment = "environment-new"
             };
+            Populate();
             return base.ShowDialogAsync();
         }
 
@@ -235,7 +236,7 @@ namespace Diffuse.Dialogs
         {
             Variables.Clear();
             Pipelines.Clear();
-            Requirements = string.Join(Environment.NewLine, EnvironmentModel.Requirements);
+            Requirements = EnvironmentModel.Requirements != null ? string.Join(Environment.NewLine, EnvironmentModel.Requirements) : string.Empty;
             if (!EnvironmentModel.Variables.IsNullOrEmpty())
             {
                 foreach (var variable in EnvironmentModel.Variables)

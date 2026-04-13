@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
+using TensorStack.Common;
 using TensorStack.Common.Common;
 using TensorStack.Python.Common;
 using TensorStack.WPF;
@@ -21,6 +22,7 @@ namespace Diffuse.Common
         public ModelSourceType Source { get; set; }
         public bool IsDefault { get; set; }
         public bool IsGated { get; set; }
+        public VendorType[] Vendor { get; set; }
         public ModelStatusType Status
         {
             get { return _status; }
@@ -78,7 +80,7 @@ namespace Diffuse.Common
             else
             {
                 // Files found
-                if (Status == ModelStatusType.Pending)
+                if (Status == ModelStatusType.Pending || Status == ModelStatusType.Verifying)
                     Status = ModelStatusType.Unknown;
                 else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
                     Status = ModelStatusType.Pending;

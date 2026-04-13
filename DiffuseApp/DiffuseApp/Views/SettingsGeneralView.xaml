@@ -105,6 +105,10 @@
                                     <CheckBox Content="Optimize Channels" IsChecked="{Binding Settings.IsOptimizeChannelsEnabled}" />
                                     <TextBlock Text="Set the model channel order NCHW -> NHWC" FontSize="11" FontStyle="Italic" Opacity=".6" Margin="22,0,0,0"/>
                                 </StackPanel>
+                                <StackPanel Margin="0,4,0,0">
+                                    <CheckBox Content="Device Quantization" IsChecked="{Binding Settings.IsDeviceQuantizationEnabled}" />
+                                    <TextBlock Text="Quantize model on GPU device" FontSize="11" FontStyle="Italic" Opacity=".6" Margin="22,0,0,0"/>
+                                </StackPanel>
                             </UniformGrid>
                         </StackPanel>
                     </GroupBox>

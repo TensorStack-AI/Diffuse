@@ -181,6 +181,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -267,6 +268,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -353,6 +355,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 720,
@@ -439,6 +442,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1360,
@@ -525,6 +529,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -1843,6 +1848,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -1938,6 +1944,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 640,
@@ -2033,6 +2040,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2104,6 +2112,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2175,6 +2184,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2246,6 +2256,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 768,
@@ -2317,6 +2328,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2388,6 +2400,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2459,6 +2472,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -2530,6 +2544,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1024,
@@ -3021,7 +3036,7 @@
     {
       "Backend": "Pytorch",
       "Name": "LTX2_19B",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Path": "Lightricks/LTX-2",
       "Variant": null,
       "Source": "Folder",
@@ -3045,6 +3060,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 2176,
@@ -3156,7 +3172,7 @@
     {
       "Backend": "Pytorch",
       "Name": "LTX2_19B_D",
-      "Pipeline": "LTX2Pipeline",
+      "Pipeline": "LTX20Pipeline",
       "Path": "Lightricks/LTX-2",
       "Variant": null,
       "Source": "Folder",
@@ -3180,6 +3196,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo", "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 2176,
@@ -3315,6 +3332,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToImage", "ImageToImage", "ImageInpaint", "ImageControlNet" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1664,
@@ -3440,6 +3458,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageEdit" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1664,
@@ -4764,6 +4783,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -4894,6 +4914,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "TextToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -5028,6 +5049,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 832,
@@ -5158,6 +5180,7 @@
       ],
       "BaseType": "bfloat16",
       "ProcessTypes": [ "ImageToVideo" ],
+      "Vendor": [ "Nvidia" ],
       "Resolutions": [
         {
           "Width": 1280,

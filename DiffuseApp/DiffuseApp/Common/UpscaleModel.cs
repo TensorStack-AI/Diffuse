@@ -53,7 +53,7 @@ namespace Diffuse.Common
                 Status = ModelStatusType.Installed;
             else if (Status == ModelStatusType.Installed && !isValid)
                 Status = ModelStatusType.Pending;
-            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed)
+            else if (Status == ModelStatusType.Downloading || Status == ModelStatusType.DownloadQueue || Status == ModelStatusType.DownloadFailed || Status == ModelStatusType.Verifying)
                 Status = ModelStatusType.Pending;
         }
 

@@ -1,5 +1,4 @@
-﻿using CommandLine;
-using DiffuseApp.Common;
+﻿using DiffuseApp.Common;
 using DiffuseApp.Common.Config;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -17,7 +16,7 @@ namespace DiffuseApp.Server
         private static Logger _logger;
         private static string _directoryBase;
         private static string _directoryData;
-        private static readonly ChannelConfig _channelConfig = ChannelConfig.PipelineConfig;
+        private static ChannelConfig _channelConfig;
 
         /// <summary>
         /// Defines the entry point of the application.
@@ -25,6 +24,10 @@ namespace DiffuseApp.Server
         /// <param name="args">The arguments.</param>
         static async Task Main(string[] args)
         {
+            _channelConfig = args.IsNullOrEmpty() || !args[0].Equals("download", StringComparison.OrdinalIgnoreCase)
+                ? ChannelConfig.PipelineConfig
+                : ChannelConfig.DownloadConfig;
+
             using (var mutex = new Mutex(true, $"Global\\{_channelConfig.Name}", out var createdNew))
             {
                 if (!createdNew)
@@ -33,9 +36,7 @@ namespace DiffuseApp.Server
                 _directoryBase = AppDomain.CurrentDomain.BaseDirectory;
                 _directoryData = GetApplicationDataDirectory();
                 _logger = ConfigureLogging();
-                await Parser.Default
-                    .ParseArguments<Options>(args)
-                    .WithParsedAsync(StartAsync);
+                await StartAsync();
             }
         }
 
@@ -45,11 +46,11 @@ namespace DiffuseApp.Server
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        private static async Task StartAsync(Options options)
+        private static async Task StartAsync()
         {
             try
             {
-                _logger.LogInformation("[StartAsync] Starting Pipeline server...");
+                _logger.LogInformation("[StartAsync] Starting {Name}...", _channelConfig.Name);
                 using (var cancellationTokenSource = new CancellationTokenSource())
                 {
                     AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => cancellationTokenSource.SafeCancel();
@@ -60,7 +61,7 @@ namespace DiffuseApp.Server
                         await pipelineServer.StartAsync(cancellationTokenSource.Token);
                     }
                 }
-                _logger.LogInformation("[StartAsync] Pipeline server stopped.");
+                _logger.LogInformation("[StartAsync] {Name} stopped.", _channelConfig.Name);
             }
             catch (EndOfStreamException)
             {
@@ -111,7 +112,7 @@ namespace DiffuseApp.Server
         private static string GetLogName()
         {
             var now = DateTime.Now;
-            return Path.Combine(_directoryData, @$"Logs\DiffuseServer-{DateTime.Now.ToString("dd-MM-yyyy")}-{now.Hour * 3600 + now.Minute * 60 + now.Second}.txt");
+            return Path.Combine(_directoryData, @$"Logs\{_channelConfig.Name}-{DateTime.Now.ToString("dd-MM-yyyy")}-{now.Hour * 3600 + now.Minute * 60 + now.Second}.txt");
         }
     }
 }

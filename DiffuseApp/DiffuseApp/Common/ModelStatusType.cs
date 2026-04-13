@@ -4,8 +4,9 @@
     {
         Pending = 0,
         Unknown = 1,
-        Downloading = 10,
-        DownloadQueue = 11,
+        Verifying = 10,
+        Downloading = 11,
+        DownloadQueue = 12,
         DownloadFailed = 13,
         Installed = 20,
     }

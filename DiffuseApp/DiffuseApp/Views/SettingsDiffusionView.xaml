@@ -26,9 +26,9 @@
                 </DockPanel>
 
                 <StackPanel DockPanel.Dock="Bottom">
-                    <CommonControls:IconButton Text="Add Model Wizard" FontSize="13" Icon="e2ca" IconStyle="Light" IconColor="{StaticResource SuccessColour}" Command="{Binding AddDiffusionModelWizardCommand}" Height="40"  />
+                    <!--<CommonControls:IconButton Text="Add Model Wizard" FontSize="13" Icon="e2ca" IconStyle="Light" IconColor="{StaticResource SuccessColour}" Command="{Binding AddDiffusionModelWizardCommand}" Height="40"  />-->
                     <UniformGrid  Columns="3" Height="50">
-                        <CommonControls:IconButton Text="Add" FontSize="13" Icon="2b" IconStyle="Light" IconColor="{StaticResource SuccessColour}" Command="{Binding AddDiffusionModelCommand}" />
+                        <CommonControls:IconButton Text="Add" FontSize="13" Icon="2b" IconStyle="Light" IconColor="{StaticResource SuccessColour}" Command="{Binding AddDiffusionModelWizardCommand}" />
                         <CommonControls:IconButton Text="Copy" FontSize="13" Icon="f24d" IconStyle="Light" IconColor="{StaticResource InfoColour}" Command="{Binding CopyDiffusionModelCommand}" />
                         <CommonControls:IconButton Text="Edit" FontSize="13" Icon="f0ad" IconStyle="Light" IconColor="{StaticResource InfoColour}" Command="{Binding UpdateDiffusionModelCommand}" />
                         <CommonControls:IconButton Text="Import" FontSize="13" Icon="f56f" IconStyle="Light" IconColor="{StaticResource InfoColour}" Command="{Binding ImportDiffusionModelCommand}" />
@@ -64,7 +64,7 @@
                             <Button Content="Download Model" Command="{Binding DownloadDiffusionModelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Pending}"/>
                             <Button Content="Retry Download" Command="{Binding DownloadDiffusionModelCommand}"  Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=DownloadFailed}"/>
                             <Button Content="Update Download" Command="{Binding DownloadDiffusionModelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Installed|Unknown}"/>
-                            <Button Content="Cancel Download" Command="{Binding DownloadDiffusionModelCancelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Downloading|DownloadQueue}"/>
+                            <Button Content="Cancel Download" Command="{Binding DownloadDiffusionModelCancelCommand}" Height="32" Visibility="{Binding SelectedDiffusionModel.Status, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=Downloading|DownloadQueue|Verifying}"/>
                         </StackPanel>
                     </DockPanel>
 
